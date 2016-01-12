@@ -1,0 +1,255 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.redhat.rcm</groupId>
+    <artifactId>redhat-releng-tools</artifactId>
+    <version>3</version>
+  </parent>
+  
+  <groupId>com.redhat.red.build</groupId>
+  <artifactId>kojiji</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <name>Kojiji</name>
+  <description>Koji Java Interface</description>
+  <url>https://github.com/release-engineering/kojiji</url>
+
+  <scm>
+    <connection>scm:git:https://github.com/release-engineering/kojiji.git</connection>
+    <developerConnection>scm:git:git@github.com:release-engineering/kojiji.git</developerConnection>
+    <url>https://github.com/release-engineering/kojiji</url>
+  </scm>
+
+  <properties>
+    <javaVersion>1.8</javaVersion>
+    <jhttpcVersion>1.1-SNAPSHOT</jhttpcVersion>
+    <rwxVersion>0.2.2-SNAPSHOT</rwxVersion>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.commonjava.boms</groupId>
+        <artifactId>web-commons-bom</artifactId>
+        <version>17</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.commonjava.rwx</groupId>
+        <artifactId>rwx-bindings</artifactId>
+        <version>${rwxVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.commonjava.rwx</groupId>
+        <artifactId>rwx-core</artifactId>
+        <version>${rwxVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.commonjava.rwx</groupId>
+        <artifactId>rwx-http</artifactId>
+        <version>${rwxVersion}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.commonjava.util</groupId>
+        <artifactId>jhttpc</artifactId>
+        <version>${jhttpcVersion}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  
+  <dependencies>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.commonjava.rwx</groupId>
+      <artifactId>rwx-bindings</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.commonjava.rwx</groupId>
+      <artifactId>rwx-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.commonjava.rwx</groupId>
+      <artifactId>rwx-http</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.commonjava.util</groupId>
+      <artifactId>jhttpc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>log4j-over-slf4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <!-- See: https://github.com/wouterd/docker-maven-plugin -->
+          <groupId>net.wouterdanes.docker</groupId>
+          <artifactId>docker-maven-plugin</artifactId>
+          <version>4.0.2-SNAPSHOT</version>
+          <executions>
+            <execution>
+              <id>start-IT-containers</id>
+              <goals>
+                <goal>start-containers</goal>
+              </goals>
+              <phase>pre-integration-test</phase>
+              <configuration>
+                <!-- <forceCleanup>false</forceCleanup> -->
+                <providerName>${dockerProvider}</providerName>
+                <containers>
+                  <container>
+                    <id>selfsigned</id>
+                    <image>${dockerImage}</image>
+                    <env>
+                      <CA_TYPE>self</CA_TYPE>
+                      <CA_HOST>test.myco.com</CA_HOST>
+                    </env>
+                    <hostname>test.myco.com</hostname>
+                    <waitForStartup>${dockerWaitFor}</waitForStartup>
+                  </container>
+                  <container>
+                    <id>rootsigned</id>
+                    <image>${dockerImage}</image>
+                    <env>
+                      <CA_TYPE>single</CA_TYPE>
+                      <CA_HOST>test.myco.com</CA_HOST>
+                    </env>
+                    <hostname>test.myco.com</hostname>
+                    <waitForStartup>${dockerWaitFor}</waitForStartup>
+                  </container>
+                  <container>
+                    <id>intersigned</id>
+                    <image>${dockerImage}</image>
+                    <env>
+                      <CA_TYPE>multi</CA_TYPE>
+                      <CA_HOST>test.myco.com</CA_HOST>
+                    </env>
+                    <hostname>test.myco.com</hostname>
+                    <waitForStartup>${dockerWaitFor}</waitForStartup>
+                  </container>
+                </containers>
+              </configuration>
+            </execution>
+            <execution>
+              <id>stop-IT-containers</id>
+              <goals>
+                <goal>stop-containers</goal>
+              </goals>
+              <phase>post-integration-test</phase>
+              <configuration>
+                <logs>${project.build.directory}/docker-logs</logs>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+          <executions>
+            <execution>
+              <id>record-docker-properties</id>
+              <goals>
+                <goal>run</goal>
+              </goals>
+              <phase>pre-integration-test</phase>
+              <configuration>
+                <target>
+                  <echo file="${project.build.directory}/docker.properties">
+                    <![CDATA[
+docker.containers.selfsigned.ports.80/tcp.host=${docker.containers.selfsigned.ports.80/tcp.host}
+docker.containers.selfsigned.ports.443/tcp.host=${docker.containers.selfsigned.ports.443/tcp.host}
+docker.containers.selfsigned.ports.80/tcp.port=${docker.containers.selfsigned.ports.80/tcp.port}
+docker.containers.selfsigned.ports.443/tcp.port=${docker.containers.selfsigned.ports.443/tcp.port}
+
+docker.containers.rootsigned.ports.80/tcp.host=${docker.containers.rootsigned.ports.80/tcp.host}
+docker.containers.rootsigned.ports.443/tcp.host=${docker.containers.rootsigned.ports.443/tcp.host}
+docker.containers.rootsigned.ports.80/tcp.port=${docker.containers.rootsigned.ports.80/tcp.port}
+docker.containers.rootsigned.ports.443/tcp.port=${docker.containers.rootsigned.ports.443/tcp.port}
+
+docker.containers.intersigned.ports.80/tcp.host=${docker.containers.intersigned.ports.80/tcp.host}
+docker.containers.intersigned.ports.443/tcp.host=${docker.containers.intersigned.ports.443/tcp.host}
+docker.containers.intersigned.ports.80/tcp.port=${docker.containers.intersigned.ports.80/tcp.port}
+docker.containers.intersigned.ports.443/tcp.port=${docker.containers.intersigned.ports.443/tcp.port}
+
+javax.net.debug=ssl:handshake:verbose
+]]>
+                  </echo>
+                </target>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.19</version>
+          <executions>
+            <execution>
+              <id>functional-tests</id>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+              <configuration>
+                <includes>
+                  <include>**/*IT.java</include>
+                </includes>
+                <forkCount>1C</forkCount>
+                <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                <systemPropertiesFile>${project.build.directory}/docker.properties</systemPropertiesFile>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>local-its</id>
+
+      <properties>
+        <dockerProvider>local</dockerProvider>
+      </properties>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>net.wouterdanes.docker</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>
