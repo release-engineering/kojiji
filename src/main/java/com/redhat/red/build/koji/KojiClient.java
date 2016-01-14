@@ -118,6 +118,7 @@ public class KojiClient
     public void setup()
     {
         Logger logger = LoggerFactory.getLogger( getClass() );
+        logger.debug( "SETUP: Starting KojiClient for: " + config.getKojiURL() );
         try
         {
             xmlrpcClient = new HC4SyncObjectClient( httpFactory, bindery, config.getKojiSiteConfig() );

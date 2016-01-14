@@ -12,4 +12,8 @@ public interface KojiConfig
     SiteConfig getKojiSiteConfig() throws IOException;
 
     String getKojiURL();
+
+    String getKojiClientCertificatePassword();
+
+    String getKojiSiteId();
 }

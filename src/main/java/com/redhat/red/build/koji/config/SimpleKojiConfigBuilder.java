@@ -11,13 +11,13 @@ public class SimpleKojiConfigBuilder
 
     private String clientKeyCertificateFile;
 
-    private String clientCertificatePassword;
+    private String kojiClientCertificatePassword;
 
     private String serverCertificateFile;
 
     private Boolean trustSelfSigned;
 
-    private String id = DEFAULT_KOJI_SITE_ID;
+    private String kojiSiteId = DEFAULT_KOJI_SITE_ID;
 
     private String kojiURL;
 
@@ -32,7 +32,7 @@ public class SimpleKojiConfigBuilder
 
     public SimpleKojiConfig build()
     {
-        return new SimpleKojiConfig( id, kojiURL, clientKeyCertificateFile, clientCertificatePassword, serverCertificateFile, timeout, trustSelfSigned );
+        return new SimpleKojiConfig( kojiSiteId, kojiURL, clientKeyCertificateFile, kojiClientCertificatePassword, serverCertificateFile, timeout, trustSelfSigned );
     }
 
     public String getClientKeyCertificateFile()
@@ -46,14 +46,14 @@ public class SimpleKojiConfigBuilder
         return this;
     }
 
-    public String getClientCertificatePassword()
+    public String getKojiClientCertificatePassword()
     {
-        return clientCertificatePassword;
+        return kojiClientCertificatePassword;
     }
 
-    public SimpleKojiConfigBuilder withClientCertificatePassword( String clientCertificatePassword )
+    public SimpleKojiConfigBuilder withKojiClientCertificatePassword( String clientCertificatePassword )
     {
-        this.clientCertificatePassword = clientCertificatePassword;
+        this.kojiClientCertificatePassword = clientCertificatePassword;
         return this;
     }
 
@@ -79,14 +79,14 @@ public class SimpleKojiConfigBuilder
         return this;
     }
 
-    public String getId()
+    public String getKojiSiteId()
     {
-        return id;
+        return kojiSiteId;
     }
 
-    public SimpleKojiConfigBuilder withId( String id )
+    public SimpleKojiConfigBuilder withKojiSiteId( String id )
     {
-        this.id = id;
+        this.kojiSiteId = id;
         return this;
     }
 

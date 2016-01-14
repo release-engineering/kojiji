@@ -1,0 +1,11 @@
+<?xml version='1.0'?>
+<methodCall>
+  <methodName>getTag</methodName>
+  <params>
+    <param>
+      <value>
+        <string>test-tag</string>
+      </value>
+    </param>
+  </params>
+</methodCall>

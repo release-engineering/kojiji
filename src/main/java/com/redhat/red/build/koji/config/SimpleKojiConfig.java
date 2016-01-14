@@ -16,6 +16,8 @@ public class SimpleKojiConfig
 {
     private static final String DEFAULT_KOJI_SITE_ID = "koji";
 
+    private static final int DEFAULT_TIMEOUT_SECONDS = 30;
+
     private String clientKeyCertificateFile;
 
     private String clientCertificatePassword;
@@ -51,7 +53,7 @@ public class SimpleKojiConfig
 
         if ( kojiSiteConfig == null )
         {
-            SiteConfigBuilder builder = new SiteConfigBuilder( getId(), getKojiURL() );
+            SiteConfigBuilder builder = new SiteConfigBuilder( getKojiSiteId(), getKojiURL() );
             File keyCert = new File( getClientKeyCertificateFile() );
             if ( keyCert.exists() )
             {
@@ -88,7 +90,7 @@ public class SimpleKojiConfig
         return clientKeyCertificateFile;
     }
 
-    public String getClientCertificatePassword()
+    public String getKojiClientCertificatePassword()
     {
         return clientCertificatePassword;
     }
@@ -100,16 +102,16 @@ public class SimpleKojiConfig
 
     public Boolean getTrustSelfSigned()
     {
-        return trustSelfSigned;
+        return trustSelfSigned == null ? false : trustSelfSigned;
     }
 
-    public String getId()
+    public String getKojiSiteId()
     {
         return id;
     }
 
     public Integer getTimeout()
     {
-        return timeout;
+        return timeout == null ? DEFAULT_TIMEOUT_SECONDS : timeout;
     }
 }
