@@ -16,27 +16,24 @@
 package com.redhat.red.build.koji.model.messages;
 
 import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
 import org.commonjava.rwx.binding.anno.Request;
-import org.commonjava.rwx.binding.anno.Response;
 
 /**
  * Created by jdcasey on 12/3/15.
  */
-@Response
-public class ApiVersionResponse
+@Request( method = "getUser")
+public class UserRequest
 {
     @DataIndex( 0 )
-    private int apiVersion;
+    private String username;
 
-    @IndexRefs( { 0 } )
-    public ApiVersionResponse( int apiVersion )
+    public UserRequest( String username )
     {
-        this.apiVersion = apiVersion;
+        this.username = username;
     }
 
-    public int getApiVersion()
+    public String getUsername()
     {
-        return apiVersion;
+        return username;
     }
 }

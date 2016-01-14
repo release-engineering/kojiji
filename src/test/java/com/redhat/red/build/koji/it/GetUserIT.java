@@ -13,30 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.red.build.koji.model.messages;
+package com.redhat.red.build.koji.it;
 
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Request;
-import org.commonjava.rwx.binding.anno.Response;
+import com.redhat.red.build.koji.KojiClient;
+import com.redhat.red.build.koji.model.KojiSessionInfo;
+import com.redhat.red.build.koji.model.KojiUserInfo;
+import org.junit.Test;
 
 /**
- * Created by jdcasey on 12/3/15.
+ * Created by jdcasey on 11/13/15.
  */
-@Response
-public class ApiVersionResponse
+public class GetUserIT
+    extends AbstractIT
 {
-    @DataIndex( 0 )
-    private int apiVersion;
 
-    @IndexRefs( { 0 } )
-    public ApiVersionResponse( int apiVersion )
+    @Test
+    public void getKojiAdminUserInfo()
+            throws Exception
     {
-        this.apiVersion = apiVersion;
-    }
-
-    public int getApiVersion()
-    {
-        return apiVersion;
+        KojiClient client = newKojiClient();
+        KojiUserInfo userInfo = client.getUserInfo( "kojiadmin" );
+        System.out.println(userInfo);
     }
 }

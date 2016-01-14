@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Red Hat, Inc. (jdcasey@commonjava.org)
+ * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,5 +73,17 @@ public class KojiUserInfo
     public String getUserName()
     {
         return userName;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "KojiUserInfo{" +
+                "status=" + status +
+                ", userType=" + userType +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", kerberosPrincipal='" + kerberosPrincipal + '\'' +
+                '}';
     }
 }

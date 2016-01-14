@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Red Hat, Inc. (jdcasey@commonjava.org)
+ * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import com.redhat.red.build.koji.model.messages.LoginRequest;
 import com.redhat.red.build.koji.model.messages.LoginResponse;
 import com.redhat.red.build.koji.model.messages.LogoutRequest;
 import com.redhat.red.build.koji.model.messages.LogoutResponse;
+import com.redhat.red.build.koji.model.messages.UserRequest;
 import com.redhat.red.build.koji.model.messages.UserResponse;
 import com.redhat.red.build.koji.model.messages.ApiVersionResponse;
 import org.commonjava.rwx.error.XmlRpcException;
@@ -174,10 +175,22 @@ public class KojiClient
         }
     }
 
-    public KojiUserInfo getUserInfo()
+    public KojiUserInfo getUserInfo( String username )
             throws KojiClientException
     {
-        return getUserInfo( null );
+        checkConnection();
+
+        try
+        {
+            UserResponse response = xmlrpcClient.call( new UserRequest( username ), UserResponse.class,
+                                                       NO_OP_URL_BUILDER, STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getUserInfo();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve current user info: %s", e, e.getMessage() );
+        }
     }
 
     public KojiUserInfo getUserInfo( KojiSessionInfo session )

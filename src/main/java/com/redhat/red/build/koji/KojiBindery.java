@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Red Hat, Inc. (jdcasey@commonjava.org)
+ * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import com.redhat.red.build.koji.model.messages.LogoutRequest;
 import com.redhat.red.build.koji.model.messages.LogoutResponse;
 import com.redhat.red.build.koji.model.messages.TagRequest;
 import com.redhat.red.build.koji.model.messages.TagResponse;
+import com.redhat.red.build.koji.model.messages.UserRequest;
 import com.redhat.red.build.koji.model.messages.UserResponse;
 import com.redhat.red.build.koji.model.messages.AllPermissionsResponse;
 import com.redhat.red.build.koji.model.messages.ApiVersionResponse;
@@ -53,7 +54,7 @@ public class KojiBindery
     {
         Class<?>[] classes =
                 { LoginRequest.class, LoginResponse.class, ApiVersionRequest.class, ApiVersionResponse.class,
-                        LoggedInUserRequest.class, UserResponse.class, LogoutRequest.class, LogoutResponse.class,
+                        UserRequest.class, LoggedInUserRequest.class, UserResponse.class, LogoutRequest.class, LogoutResponse.class,
                         TagRequest.class, TagResponse.class, AllPermissionsRequest.class, AllPermissionsResponse.class,
                         CheckPermissionRequest.class, ConfirmationResponse.class };
 
