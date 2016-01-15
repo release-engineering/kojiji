@@ -226,7 +226,7 @@ docker.containers.koji-hub.ports.443/tcp.host=${docker.containers.koji-hub.ports
 docker.containers.koji-hub.ports.80/tcp.port=${docker.containers.koji-hub.ports.80/tcp.port}
 docker.containers.koji-hub.ports.443/tcp.port=${docker.containers.koji-hub.ports.443/tcp.port}
 
-javax.net.debug=ssl:handshake:verbose
+#javax.net.debug=ssl:handshake:verbose
 ]]>
                   </echo>
                 </target>

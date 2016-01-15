@@ -43,4 +43,12 @@ public class AllPermissionsResponse
     {
         return permissions;
     }
+
+    @Override
+    public String toString()
+    {
+        return "AllPermissionsResponse{" +
+                "permissions=" + permissions +
+                '}';
+    }
 }

@@ -19,6 +19,7 @@ import com.redhat.red.build.koji.model.util.StringListValueBinder;
 import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.KeyRefs;
+import org.commonjava.rwx.binding.anno.SkipNull;
 import org.commonjava.rwx.binding.anno.StructPart;
 
 import java.util.List;
@@ -34,31 +35,36 @@ public class KojiTagInfo
     private boolean useKojiKeywords = true;
 
     @DataKey( "id" )
-    private int id;
+    @SkipNull
+    private Integer id;
 
     @DataKey( "name" )
     private String name;
 
     @DataKey( "perm" )
+    @SkipNull
     private String permission;
 
     @DataKey( "perm_id" )
-    private int permissionId;
+    @SkipNull
+    private Integer permissionId;
 
     @DataKey( "arches" )
     @Converter( StringListValueBinder.class )
     private List<String> arches;
 
     @DataKey( "locked" )
-    private boolean locked;
+    @SkipNull
+    private Boolean locked;
 
     @DataKey( "maven_support" )
-    private boolean mavenSupport;
+    private boolean mavenSupport = true;
 
     @DataKey( "maven_include_all" )
-    private boolean mavenIncludeAll;
+    private boolean mavenIncludeAll = true;
 
-    @KeyRefs( {"id", "name", "perm", "perm_id", "arches", "locked", "maven_support", "maven_include_all" } )
+    public KojiTagInfo(){}
+
     public KojiTagInfo( int id, String name, String permission, int permissionId, List<String> arches, boolean locked,
                         boolean mavenSupport, boolean mavenIncludeAll )
     {
@@ -70,6 +76,11 @@ public class KojiTagInfo
         this.locked = locked;
         this.mavenSupport = mavenSupport;
         this.mavenIncludeAll = mavenIncludeAll;
+    }
+
+    public KojiTagInfo(String name)
+    {
+        this.name = name;
     }
 
     public int getId()
@@ -160,5 +171,35 @@ public class KojiTagInfo
     public void setUseKojiKeywords( boolean useKojiKeywords )
     {
         this.useKojiKeywords = useKojiKeywords;
+    }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( !( o instanceof KojiTagInfo ) )
+        {
+            return false;
+        }
+
+        KojiTagInfo that = (KojiTagInfo) o;
+
+        if ( getId() != that.getId() )
+        {
+            return false;
+        }
+        return getName().equals( that.getName() );
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = getId();
+        result = 31 * result + getName().hashCode();
+        return result;
     }
 }

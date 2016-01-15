@@ -64,6 +64,6 @@ public class TagRequestTest
         TagRequest parsed = bindery.parse( generator, TagRequest.class );
         assertNotNull( parsed );
 
-        assertThat( parsed.getTagName(), equalTo( TAG ) );
+        assertThat( parsed.getTagIdOrName().getName(), equalTo( TAG ) );
     }
 }

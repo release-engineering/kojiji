@@ -16,17 +16,27 @@
 package com.redhat.red.build.koji;
 
 import com.redhat.red.build.koji.config.KojiConfig;
+import com.redhat.red.build.koji.model.KojiPermission;
 import com.redhat.red.build.koji.model.KojiSessionInfo;
+import com.redhat.red.build.koji.model.KojiTagInfo;
 import com.redhat.red.build.koji.model.KojiUserInfo;
+import com.redhat.red.build.koji.model.messages.AllPermissionsRequest;
+import com.redhat.red.build.koji.model.messages.AllPermissionsResponse;
 import com.redhat.red.build.koji.model.messages.ApiVersionRequest;
+import com.redhat.red.build.koji.model.messages.ApiVersionResponse;
+import com.redhat.red.build.koji.model.messages.CheckPermissionRequest;
+import com.redhat.red.build.koji.model.messages.ConfirmationResponse;
+import com.redhat.red.build.koji.model.messages.CreateTagRequest;
+import com.redhat.red.build.koji.model.messages.IdResponse;
 import com.redhat.red.build.koji.model.messages.LoggedInUserRequest;
 import com.redhat.red.build.koji.model.messages.LoginRequest;
 import com.redhat.red.build.koji.model.messages.LoginResponse;
 import com.redhat.red.build.koji.model.messages.LogoutRequest;
 import com.redhat.red.build.koji.model.messages.LogoutResponse;
+import com.redhat.red.build.koji.model.messages.TagRequest;
+import com.redhat.red.build.koji.model.messages.TagResponse;
 import com.redhat.red.build.koji.model.messages.UserRequest;
 import com.redhat.red.build.koji.model.messages.UserResponse;
-import com.redhat.red.build.koji.model.messages.ApiVersionResponse;
 import org.commonjava.rwx.error.XmlRpcException;
 import org.commonjava.rwx.http.RequestModifier;
 import org.commonjava.rwx.http.UrlBuilder;
@@ -40,6 +50,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -156,6 +167,26 @@ public class KojiClient
         }
     }
 
+    public int getApiVersion()
+        throws KojiClientException
+    {
+        checkConnection();
+
+        Logger logger = LoggerFactory.getLogger( getClass() );
+        try
+        {
+            ApiVersionResponse response =
+                    xmlrpcClient.call( new ApiVersionRequest(), ApiVersionResponse.class, NO_OP_URL_BUILDER,
+                                       STANDARD_REQUEST_MODIFIER );
+
+            return response.getApiVersion();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Cannot retrieve koji API version from: %s. (Reason: %s)", e, config.getKojiURL(), e.getMessage() );
+        }
+    }
+
     public KojiSessionInfo login()
             throws KojiClientException
     {
@@ -175,7 +206,7 @@ public class KojiClient
         }
     }
 
-    public KojiUserInfo getUserInfo( String username )
+    public KojiUserInfo getLoggedInUserInfo( String username )
             throws KojiClientException
     {
         checkConnection();
@@ -193,7 +224,7 @@ public class KojiClient
         }
     }
 
-    public KojiUserInfo getUserInfo( KojiSessionInfo session )
+    public KojiUserInfo getLoggedInUserInfo( KojiSessionInfo session )
             throws KojiClientException
     {
         checkConnection();
@@ -237,4 +268,95 @@ public class KojiClient
         }
     }
 
+    public Set<KojiPermission> getAllPermissions( KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+        try
+        {
+            AllPermissionsResponse response = xmlrpcClient.call( new AllPermissionsRequest(), AllPermissionsResponse.class,
+                                                                 sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getPermissions();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve listing of koji permissions: %s", e, e.getMessage() );
+        }
+    }
+
+    public boolean hasPermission( String permission, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+        try
+        {
+            ConfirmationResponse response =
+                    xmlrpcClient.call( new CheckPermissionRequest( permission ), ConfirmationResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.isSuccess();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to check whether logged-in user has permission: %s. Reason: %s", e, permission, e.getMessage() );
+        }
+    }
+
+    public int createTag( CreateTagRequest request, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            IdResponse response =
+                    xmlrpcClient.call( request, IdResponse.class, sessionUrlBuilder( session ),
+                                       STANDARD_REQUEST_MODIFIER );
+
+            return response.getId();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to create tag: %s. Reason: %s", e, request, e.getMessage() );
+        }
+    }
+
+    public KojiTagInfo getTag( int tagId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            TagResponse response =
+                    xmlrpcClient.call( new TagRequest( tagId ), TagResponse.class, sessionUrlBuilder( session ),
+                                       STANDARD_REQUEST_MODIFIER );
+
+            return response.getTagInfo();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve tag: %s. Reason: %s", e, tagId, e.getMessage() );
+        }
+    }
+
+    public KojiTagInfo getTag( String tagName, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            TagResponse response =
+                    xmlrpcClient.call( new TagRequest( tagName ), TagResponse.class, sessionUrlBuilder( session ),
+                                       STANDARD_REQUEST_MODIFIER );
+
+            return response.getTagInfo();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve tag: %s. Reason: %s", e, tagName, e.getMessage() );
+        }
+    }
 }

@@ -153,27 +153,35 @@ public class AbstractIT
     public void teardown()
             throws Exception
     {
-        System.out.println( "Downloading httpd logs to: " + downloadDir );
+        if ( downloadContainerConfigs() )
+        {
+            System.out.println( "Downloading httpd logs to: " + downloadDir );
 
-        List<String> paths =
-                Arrays.asList( "clients/%s/serverca.crt", "clients/%s/clientca.crt", "clients/%s/client.crt",
-                               "clients/%s/client.pem", "httpd/conf/httpd.conf", "httpd/conf.d/kojihub.conf",
-                               "httpd/conf.d/test-accessories.conf", "logs/httpd/error_log", "logs/httpd/ssl_error_log",
-                               "logs/httpd/access_log", "logs/httpd/ssl_access_log", "logs/httpd/ssl_request_log" );
+            List<String> paths =
+                    Arrays.asList( "clients/%s/serverca.crt", "clients/%s/clientca.crt", "clients/%s/client.crt",
+                                   "clients/%s/client.pem", "httpd/conf/httpd.conf", "httpd/conf.d/kojihub.conf",
+                                   "httpd/conf.d/test-accessories.conf", "logs/httpd/error_log", "logs/httpd/ssl_error_log",
+                                   "logs/httpd/access_log", "logs/httpd/ssl_access_log", "logs/httpd/ssl_request_log" );
 
-        withNewClient( ( client ) -> {
-            paths.forEach( ( path ) -> {
-                if ( path.contains( "%s" ) )
-                {
-                    path = String.format( path, getKojiUser() );
-                }
+            withNewClient( ( client ) -> {
+                paths.forEach( ( path ) -> {
+                    if ( path.contains( "%s" ) )
+                    {
+                        path = String.format( path, getKojiUser() );
+                    }
 
-                downloadFile( path, client );
+                    downloadFile( path, client );
+                } );
             } );
-        } );
+        }
 
         factory.close();
         System.out.println( "\n\n #### END: " + name.getMethodName() + "#### \n\n" );
+    }
+
+    private boolean downloadContainerConfigs()
+    {
+        return false;
     }
 
     protected File downloadFile( String path, CloseableHttpClient client )
@@ -216,13 +224,13 @@ public class AbstractIT
             {
                 IOUtils.closeQuietly( stream );
                 System.out.println(
-                        "\n\n ##### END: " + name.getMethodName() + " :: " + SITE_CERT_PATH + " #####\n\n" );
+                        "\n\n ##### END: " + name.getMethodName() + " :: " + url + " #####\n\n" );
             }
         }
         else
         {
             System.out.println( "Cannot retrieve: " + path + ". Status was: " + response.getStatusLine() );
-            System.out.println( "\n\n ##### END: " + name.getMethodName() + " :: " + SITE_CERT_PATH + " #####\n\n" );
+            System.out.println( "\n\n ##### END: " + name.getMethodName() + " :: " + url + " #####\n\n" );
         }
 
         return null;

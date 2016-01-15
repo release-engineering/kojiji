@@ -22,6 +22,7 @@ import org.commonjava.rwx.binding.spi.BindingContext;
 import org.commonjava.rwx.binding.spi.value.AbstractValueBinder;
 import org.commonjava.rwx.error.XmlRpcException;
 import org.commonjava.rwx.spi.XmlRpcListener;
+import org.commonjava.rwx.util.LambdaHolder;
 import org.commonjava.rwx.vocab.ValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.apache.commons.lang.StringUtils.join;
 
@@ -65,7 +67,7 @@ public class StringListValueBinder
     }
 
     @Override
-    protected Binder valueInternal( Object value, ValueType type )
+    public Binder value( Object value, ValueType type )
             throws XmlRpcException
     {
         if ( value == null )
@@ -100,7 +102,27 @@ public class StringListValueBinder
 
         logger.trace( "Got {} parts:\n  {}", parts.size(), StringUtils.join( parts, "\n  " ) );
 
-        getParent().value( parts, ValueType.ARRAY );
-        return getParent();
+        Binder parent = getParent();
+//        AtomicInteger idx = new AtomicInteger( 0 );
+//        LambdaHolder<XmlRpcException> errorHolder = new LambdaHolder<>();
+//
+//        parent.startArray();
+//        parts.forEach( (part)->{
+//            try
+//            {
+//                int i = idx.getAndIncrement();
+//                parent.startArrayElement( i );
+//                parent.arrayElement( i, part, ValueType.STRING );
+//                parent.endArrayElement();
+//            }
+//            catch ( XmlRpcException e )
+//            {
+//                errorHolder.set( e );
+//            }
+//        });
+//        parent.endArray();
+        parent.value( parts, ValueType.ARRAY );
+
+        return parent;
     }
 }

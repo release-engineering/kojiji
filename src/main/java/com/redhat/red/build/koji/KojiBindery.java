@@ -19,6 +19,8 @@ import com.redhat.red.build.koji.model.messages.AllPermissionsRequest;
 import com.redhat.red.build.koji.model.messages.ApiVersionRequest;
 import com.redhat.red.build.koji.model.messages.CheckPermissionRequest;
 import com.redhat.red.build.koji.model.messages.ConfirmationResponse;
+import com.redhat.red.build.koji.model.messages.CreateTagRequest;
+import com.redhat.red.build.koji.model.messages.IdResponse;
 import com.redhat.red.build.koji.model.messages.LoggedInUserRequest;
 import com.redhat.red.build.koji.model.messages.LoginRequest;
 import com.redhat.red.build.koji.model.messages.LoginResponse;
@@ -52,11 +54,11 @@ public class KojiBindery
     private static Map<Class<?>, Mapping<?>> getRecipes()
             throws BindException
     {
-        Class<?>[] classes =
-                { LoginRequest.class, LoginResponse.class, ApiVersionRequest.class, ApiVersionResponse.class,
-                        UserRequest.class, LoggedInUserRequest.class, UserResponse.class, LogoutRequest.class, LogoutResponse.class,
-                        TagRequest.class, TagResponse.class, AllPermissionsRequest.class, AllPermissionsResponse.class,
-                        CheckPermissionRequest.class, ConfirmationResponse.class };
+        Class<?>[] classes = { AllPermissionsRequest.class, AllPermissionsResponse.class, ApiVersionRequest.class,
+                ApiVersionResponse.class, CheckPermissionRequest.class, ConfirmationResponse.class,
+                CreateTagRequest.class, IdResponse.class, LoggedInUserRequest.class, LoginRequest.class,
+                LoginResponse.class, LogoutRequest.class, LogoutResponse.class, TagRequest.class, TagResponse.class,
+                UserRequest.class, UserResponse.class };
 
         return new ReflectionMapper().loadRecipes( classes );
     }

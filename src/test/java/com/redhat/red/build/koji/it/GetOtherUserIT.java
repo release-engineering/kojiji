@@ -16,23 +16,22 @@
 package com.redhat.red.build.koji.it;
 
 import com.redhat.red.build.koji.KojiClient;
-import com.redhat.red.build.koji.model.KojiSessionInfo;
 import com.redhat.red.build.koji.model.KojiUserInfo;
 import org.junit.Test;
 
 /**
  * Created by jdcasey on 11/13/15.
  */
-public class GetUserIT
+public class GetOtherUserIT
     extends AbstractIT
 {
 
     @Test
-    public void getKojiAdminUserInfo()
+    public void getTestUserInfo()
             throws Exception
     {
         KojiClient client = newKojiClient();
-        KojiUserInfo userInfo = client.getUserInfo( "kojiadmin" );
+        KojiUserInfo userInfo = client.getLoggedInUserInfo( "testuser" );
         System.out.println(userInfo);
     }
 }

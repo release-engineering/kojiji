@@ -15,26 +15,47 @@
  */
 package com.redhat.red.build.koji.model;
 
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import com.redhat.red.build.koji.model.util.IdOrNameValueBinder;
+import org.commonjava.rwx.binding.anno.Converter;
 
 /**
- * Created by jdcasey on 1/6/16.
+ * Created by jdcasey on 1/15/16.
  */
-@StructPart
-public class KojiPermission
+@Converter( IdOrNameValueBinder.class )
+public class KojiIdOrName
 {
-    @DataKey( "name" )
     private String name;
 
-    @DataKey( "id" )
-    private int id;
+    private Integer id;
 
-    @KeyRefs( {"id", "name"} )
-    public KojiPermission( int id, String name )
+    public static KojiIdOrName getFor( Object value )
+    {
+        if ( value instanceof Integer )
+        {
+            return new KojiIdOrName( (Integer) value );
+        }
+
+        KojiIdOrName result;
+        try
+        {
+            int i = Integer.parseInt( value.toString() );
+            result = new KojiIdOrName( i );
+        }
+        catch ( NumberFormatException e )
+        {
+            result = new KojiIdOrName( value.toString() );
+        }
+
+        return result;
+    }
+
+    public KojiIdOrName( String name )
     {
         this.name = name;
+    }
+
+    public KojiIdOrName( int id )
+    {
         this.id = id;
     }
 
@@ -43,17 +64,8 @@ public class KojiPermission
         return name;
     }
 
-    public int getId()
+    public Integer getId()
     {
         return id;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "KojiPermission{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
-                '}';
     }
 }
