@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.redhat.red.build.koji.model.util;
 
 import org.apache.commons.lang.StringUtils;
@@ -7,6 +22,7 @@ import org.commonjava.rwx.binding.spi.BindingContext;
 import org.commonjava.rwx.binding.spi.value.AbstractValueBinder;
 import org.commonjava.rwx.error.XmlRpcException;
 import org.commonjava.rwx.spi.XmlRpcListener;
+import org.commonjava.rwx.util.LambdaHolder;
 import org.commonjava.rwx.vocab.ValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +32,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.apache.commons.lang.StringUtils.join;
 
@@ -50,7 +67,7 @@ public class StringListValueBinder
     }
 
     @Override
-    protected Binder valueInternal( Object value, ValueType type )
+    public Binder value( Object value, ValueType type )
             throws XmlRpcException
     {
         if ( value == null )
@@ -85,7 +102,27 @@ public class StringListValueBinder
 
         logger.trace( "Got {} parts:\n  {}", parts.size(), StringUtils.join( parts, "\n  " ) );
 
-        getParent().value( parts, ValueType.ARRAY );
-        return getParent();
+        Binder parent = getParent();
+//        AtomicInteger idx = new AtomicInteger( 0 );
+//        LambdaHolder<XmlRpcException> errorHolder = new LambdaHolder<>();
+//
+//        parent.startArray();
+//        parts.forEach( (part)->{
+//            try
+//            {
+//                int i = idx.getAndIncrement();
+//                parent.startArrayElement( i );
+//                parent.arrayElement( i, part, ValueType.STRING );
+//                parent.endArrayElement();
+//            }
+//            catch ( XmlRpcException e )
+//            {
+//                errorHolder.set( e );
+//            }
+//        });
+//        parent.endArray();
+        parent.value( parts, ValueType.ARRAY );
+
+        return parent;
     }
 }

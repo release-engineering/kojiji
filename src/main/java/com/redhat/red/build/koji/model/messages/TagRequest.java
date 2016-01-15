@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Red Hat, Inc. (jdcasey@commonjava.org)
+ * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package com.redhat.red.build.koji.model.messages;
 
+import com.redhat.red.build.koji.model.KojiIdOrName;
+import com.redhat.red.build.koji.model.util.IdOrNameValueBinder;
+import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
 import org.commonjava.rwx.binding.anno.Request;
 
 /**
@@ -26,16 +28,28 @@ import org.commonjava.rwx.binding.anno.Request;
 public class TagRequest
 {
     @DataIndex( 0 )
-    private String tagName;
+    @Converter( IdOrNameValueBinder.class )
+    private KojiIdOrName tagIdOrName;
 
-    @IndexRefs( 0 )
+    public TagRequest(){}
+
     public TagRequest( String tagName )
     {
-        this.tagName = tagName;
+        this.tagIdOrName = new KojiIdOrName( tagName );
     }
 
-    public String getTagName()
+    public TagRequest( int tagId )
     {
-        return tagName;
+        this.tagIdOrName = new KojiIdOrName( tagId );
+    }
+
+    public KojiIdOrName getTagIdOrName()
+    {
+        return tagIdOrName;
+    }
+
+    public void setTagIdOrName( KojiIdOrName tagIdOrName )
+    {
+        this.tagIdOrName = tagIdOrName;
     }
 }

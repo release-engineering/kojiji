@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Red Hat, Inc. (jdcasey@commonjava.org)
+ * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,7 +48,9 @@ public class TagResponseTest
     {
         EventStreamParserImpl eventParser = new EventStreamParserImpl();
         LoggingXmlRpcListener parser = new LoggingXmlRpcListener( eventParser );
-        bindery.render( parser, newResponse() );
+
+        List<String> arches = Arrays.asList( "x86_64", "i386" );
+        bindery.render( parser, newResponse( arches ) );
 
         List<Event<?>> objectEvents = eventParser.getEvents();
         eventParser.clearEvents();
@@ -65,7 +68,9 @@ public class TagResponseTest
         logger.info( "START RENDER" );
         EventStreamParserImpl eventParser = new EventStreamParserImpl();
         LoggingXmlRpcListener parser = new LoggingXmlRpcListener( eventParser );
-        bindery.render( parser, newResponse() );
+
+        List<String> arches = Arrays.asList( "x86_64", "i386" );
+        bindery.render( parser, newResponse( arches ) );
 
         logger.info( "END RENDER" );
 
@@ -81,10 +86,40 @@ public class TagResponseTest
         assertNotNull( tagInfo );
 
         assertThat( tagInfo.getName(), equalTo( TAG ) );
+        assertThat( tagInfo.getArches(), equalTo( arches ) );
     }
 
-    private TagResponse newResponse()
+    @Test
+    public void roundTrip_SingleArch()
+            throws Exception
     {
-        return new TagResponse( new KojiTagInfo( 1001, "test-tag", "admin", 1, Collections.singletonList("x86_64"), true, true, true ) );
+        Logger logger = LoggerFactory.getLogger( getClass() );
+        logger.info( "START RENDER" );
+        EventStreamParserImpl eventParser = new EventStreamParserImpl();
+        LoggingXmlRpcListener parser = new LoggingXmlRpcListener( eventParser );
+
+        List<String> arches = Collections.singletonList( "x86_64" );
+        bindery.render( parser, newResponse( arches ) );
+
+        logger.info( "END RENDER" );
+
+        List<Event<?>> objectEvents = eventParser.getEvents();
+        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
+
+        logger.info( "START PARSE" );
+        TagResponse parsed = bindery.parse( generator, TagResponse.class );
+        logger.info( "END PARSE" );
+        assertNotNull( parsed );
+
+        KojiTagInfo tagInfo = parsed.getTagInfo();
+        assertNotNull( tagInfo );
+
+        assertThat( tagInfo.getName(), equalTo( TAG ) );
+        assertThat( tagInfo.getArches(), equalTo( arches ) );
+    }
+
+    private TagResponse newResponse( List<String> arches )
+    {
+        return new TagResponse( new KojiTagInfo( 1001, "test-tag", "admin", 1, arches, true, true, true ) );
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Red Hat, Inc. (jdcasey@commonjava.org)
+ * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ import com.redhat.red.build.koji.model.messages.AllPermissionsRequest;
 import com.redhat.red.build.koji.model.messages.ApiVersionRequest;
 import com.redhat.red.build.koji.model.messages.CheckPermissionRequest;
 import com.redhat.red.build.koji.model.messages.ConfirmationResponse;
+import com.redhat.red.build.koji.model.messages.CreateTagRequest;
+import com.redhat.red.build.koji.model.messages.IdResponse;
 import com.redhat.red.build.koji.model.messages.LoggedInUserRequest;
 import com.redhat.red.build.koji.model.messages.LoginRequest;
 import com.redhat.red.build.koji.model.messages.LoginResponse;
@@ -26,6 +28,7 @@ import com.redhat.red.build.koji.model.messages.LogoutRequest;
 import com.redhat.red.build.koji.model.messages.LogoutResponse;
 import com.redhat.red.build.koji.model.messages.TagRequest;
 import com.redhat.red.build.koji.model.messages.TagResponse;
+import com.redhat.red.build.koji.model.messages.UserRequest;
 import com.redhat.red.build.koji.model.messages.UserResponse;
 import com.redhat.red.build.koji.model.messages.AllPermissionsResponse;
 import com.redhat.red.build.koji.model.messages.ApiVersionResponse;
@@ -51,11 +54,11 @@ public class KojiBindery
     private static Map<Class<?>, Mapping<?>> getRecipes()
             throws BindException
     {
-        Class<?>[] classes =
-                { LoginRequest.class, LoginResponse.class, ApiVersionRequest.class, ApiVersionResponse.class,
-                        LoggedInUserRequest.class, UserResponse.class, LogoutRequest.class, LogoutResponse.class,
-                        TagRequest.class, TagResponse.class, AllPermissionsRequest.class, AllPermissionsResponse.class,
-                        CheckPermissionRequest.class, ConfirmationResponse.class };
+        Class<?>[] classes = { AllPermissionsRequest.class, AllPermissionsResponse.class, ApiVersionRequest.class,
+                ApiVersionResponse.class, CheckPermissionRequest.class, ConfirmationResponse.class,
+                CreateTagRequest.class, IdResponse.class, LoggedInUserRequest.class, LoginRequest.class,
+                LoginResponse.class, LogoutRequest.class, LogoutResponse.class, TagRequest.class, TagResponse.class,
+                UserRequest.class, UserResponse.class };
 
         return new ReflectionMapper().loadRecipes( classes );
     }

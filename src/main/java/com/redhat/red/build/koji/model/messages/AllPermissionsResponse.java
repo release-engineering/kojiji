@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Red Hat, Inc. (jdcasey@commonjava.org)
+ * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,5 +42,13 @@ public class AllPermissionsResponse
     public Set<KojiPermission> getPermissions()
     {
         return permissions;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "AllPermissionsResponse{" +
+                "permissions=" + permissions +
+                '}';
     }
 }

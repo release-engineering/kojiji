@@ -1,3 +1,20 @@
+<!--
+
+    Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -26,6 +43,15 @@
     <javaVersion>1.8</javaVersion>
     <jhttpcVersion>1.1-SNAPSHOT</jhttpcVersion>
     <rwxVersion>0.2.2-SNAPSHOT</rwxVersion>
+    <httpcVersion>4.4</httpcVersion>
+
+    <dbImage>postgres:9.4</dbImage>
+    <hubImage>docker.io/buildchimp/koji-dojo-hub</hubImage>
+
+    <dbWaitFor>database system is ready to accept connections</dbWaitFor>
+    <hubWaitFor>Starting HTTPd</hubWaitFor>
+
+    <dockerProvider>local</dockerProvider>
   </properties>
 
   <dependencyManagement>
@@ -59,6 +85,11 @@
         <artifactId>jhttpc</artifactId>
         <version>${jhttpcVersion}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>${httpcVersion}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   
@@ -86,6 +117,14 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
@@ -93,6 +132,17 @@
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -108,7 +158,7 @@
           <!-- See: https://github.com/wouterd/docker-maven-plugin -->
           <groupId>net.wouterdanes.docker</groupId>
           <artifactId>docker-maven-plugin</artifactId>
-          <version>4.0.2-SNAPSHOT</version>
+          <version>4.1.0</version>
           <executions>
             <execution>
               <id>start-IT-containers</id>
@@ -121,34 +171,25 @@
                 <providerName>${dockerProvider}</providerName>
                 <containers>
                   <container>
-                    <id>selfsigned</id>
-                    <image>${dockerImage}</image>
+                    <id>koji-db</id>
+                    <image>${dbImage}</image>
                     <env>
-                      <CA_TYPE>self</CA_TYPE>
-                      <CA_HOST>test.myco.com</CA_HOST>
+                      <POSTGRES_DB>koji</POSTGRES_DB>
+                      <POSTGRES_USER>koji</POSTGRES_USER>
+                      <POSTGRES_PASSWORD>mypassword</POSTGRES_PASSWORD>
                     </env>
-                    <hostname>test.myco.com</hostname>
-                    <waitForStartup>${dockerWaitFor}</waitForStartup>
+                    <waitForStartup>${dbWaitFor}</waitForStartup>
                   </container>
                   <container>
-                    <id>rootsigned</id>
-                    <image>${dockerImage}</image>
-                    <env>
-                      <CA_TYPE>single</CA_TYPE>
-                      <CA_HOST>test.myco.com</CA_HOST>
-                    </env>
-                    <hostname>test.myco.com</hostname>
-                    <waitForStartup>${dockerWaitFor}</waitForStartup>
-                  </container>
-                  <container>
-                    <id>intersigned</id>
-                    <image>${dockerImage}</image>
-                    <env>
-                      <CA_TYPE>multi</CA_TYPE>
-                      <CA_HOST>test.myco.com</CA_HOST>
-                    </env>
-                    <hostname>test.myco.com</hostname>
-                    <waitForStartup>${dockerWaitFor}</waitForStartup>
+                    <id>koji-hub</id>
+                    <image>${hubImage}</image>
+                    <waitForStartup>${hubWaitFor}</waitForStartup>
+                    <links>
+                      <link>
+                        <containerId>koji-db</containerId>
+                        <containerAlias>koji-db</containerAlias>
+                      </link>
+                    </links>
                   </container>
                 </containers>
               </configuration>
@@ -177,24 +218,15 @@
               <phase>pre-integration-test</phase>
               <configuration>
                 <target>
+                  <!--suppress MavenModelInspection -->
                   <echo file="${project.build.directory}/docker.properties">
                     <![CDATA[
-docker.containers.selfsigned.ports.80/tcp.host=${docker.containers.selfsigned.ports.80/tcp.host}
-docker.containers.selfsigned.ports.443/tcp.host=${docker.containers.selfsigned.ports.443/tcp.host}
-docker.containers.selfsigned.ports.80/tcp.port=${docker.containers.selfsigned.ports.80/tcp.port}
-docker.containers.selfsigned.ports.443/tcp.port=${docker.containers.selfsigned.ports.443/tcp.port}
+docker.containers.koji-hub.ports.80/tcp.host=${docker.containers.koji-hub.ports.80/tcp.host}
+docker.containers.koji-hub.ports.443/tcp.host=${docker.containers.koji-hub.ports.443/tcp.host}
+docker.containers.koji-hub.ports.80/tcp.port=${docker.containers.koji-hub.ports.80/tcp.port}
+docker.containers.koji-hub.ports.443/tcp.port=${docker.containers.koji-hub.ports.443/tcp.port}
 
-docker.containers.rootsigned.ports.80/tcp.host=${docker.containers.rootsigned.ports.80/tcp.host}
-docker.containers.rootsigned.ports.443/tcp.host=${docker.containers.rootsigned.ports.443/tcp.host}
-docker.containers.rootsigned.ports.80/tcp.port=${docker.containers.rootsigned.ports.80/tcp.port}
-docker.containers.rootsigned.ports.443/tcp.port=${docker.containers.rootsigned.ports.443/tcp.port}
-
-docker.containers.intersigned.ports.80/tcp.host=${docker.containers.intersigned.ports.80/tcp.host}
-docker.containers.intersigned.ports.443/tcp.host=${docker.containers.intersigned.ports.443/tcp.host}
-docker.containers.intersigned.ports.80/tcp.port=${docker.containers.intersigned.ports.80/tcp.port}
-docker.containers.intersigned.ports.443/tcp.port=${docker.containers.intersigned.ports.443/tcp.port}
-
-javax.net.debug=ssl:handshake:verbose
+#javax.net.debug=ssl:handshake:verbose
 ]]>
                   </echo>
                 </target>
@@ -230,10 +262,6 @@ javax.net.debug=ssl:handshake:verbose
   <profiles>
     <profile>
       <id>local-its</id>
-
-      <properties>
-        <dockerProvider>local</dockerProvider>
-      </properties>
 
       <build>
         <plugins>

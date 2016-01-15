@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.redhat.red.build.koji.config;
 
 import org.apache.commons.io.FileUtils;
@@ -15,6 +30,8 @@ public class SimpleKojiConfig
     implements KojiConfig
 {
     private static final String DEFAULT_KOJI_SITE_ID = "koji";
+
+    private static final int DEFAULT_TIMEOUT_SECONDS = 30;
 
     private String clientKeyCertificateFile;
 
@@ -51,7 +68,7 @@ public class SimpleKojiConfig
 
         if ( kojiSiteConfig == null )
         {
-            SiteConfigBuilder builder = new SiteConfigBuilder( getId(), getKojiURL() );
+            SiteConfigBuilder builder = new SiteConfigBuilder( getKojiSiteId(), getKojiURL() );
             File keyCert = new File( getClientKeyCertificateFile() );
             if ( keyCert.exists() )
             {
@@ -88,7 +105,7 @@ public class SimpleKojiConfig
         return clientKeyCertificateFile;
     }
 
-    public String getClientCertificatePassword()
+    public String getKojiClientCertificatePassword()
     {
         return clientCertificatePassword;
     }
@@ -100,16 +117,16 @@ public class SimpleKojiConfig
 
     public Boolean getTrustSelfSigned()
     {
-        return trustSelfSigned;
+        return trustSelfSigned == null ? false : trustSelfSigned;
     }
 
-    public String getId()
+    public String getKojiSiteId()
     {
         return id;
     }
 
     public Integer getTimeout()
     {
-        return timeout;
+        return timeout == null ? DEFAULT_TIMEOUT_SECONDS : timeout;
     }
 }

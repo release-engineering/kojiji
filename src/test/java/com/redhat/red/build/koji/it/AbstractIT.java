@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Red Hat, Inc. (jdcasey@commonjava.org)
+ * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 package com.redhat.red.build.koji.it;
 
+import com.redhat.red.build.koji.KojiBindery;
+import com.redhat.red.build.koji.KojiClient;
+import com.redhat.red.build.koji.config.KojiConfig;
+import com.redhat.red.build.koji.config.SimpleKojiConfig;
+import com.redhat.red.build.koji.config.SimpleKojiConfigBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -22,42 +27,46 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.commonjava.rwx.binding.error.BindException;
 import org.commonjava.util.jhttpc.HttpFactory;
-import org.commonjava.util.jhttpc.INTERNAL.util.SSLUtils;
 import org.commonjava.util.jhttpc.auth.MemoryPasswordManager;
 import org.commonjava.util.jhttpc.auth.PasswordManager;
 import org.commonjava.util.jhttpc.auth.PasswordType;
-import org.commonjava.util.jhttpc.model.SiteConfig;
 import org.commonjava.util.jhttpc.model.SiteConfigBuilder;
 import org.commonjava.util.jhttpc.util.UrlUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.security.KeyStore;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-public abstract class AbstractIT
+public class AbstractIT
 {
 
-    private static final String NON_SSL_HOST = "docker.containers.%s.ports.80/tcp.host";
+    private static final String NON_SSL_HOST = "docker.containers.koji-hub.ports.80/tcp.host";
 
-    private static final String NON_SSL_PORT = "docker.containers.%s.ports.80/tcp.port";
+    private static final String NON_SSL_PORT = "docker.containers.koji-hub.ports.80/tcp.port";
 
-    private static final String SSL_HOST = "docker.containers.%s.ports.443/tcp.host";
+    private static final String SSL_HOST = "docker.containers.koji-hub.ports.443/tcp.host";
 
-    private static final String SSL_PORT = "docker.containers.%s.ports.443/tcp.port";
+    private static final String SSL_PORT = "docker.containers.koji-hub.ports.443/tcp.port";
 
     private static final String NON_SSL_URL_FORMAT = "http://%s:%s";
 
@@ -69,80 +78,172 @@ public abstract class AbstractIT
 
     protected static final String SITE_CERT_PATH = SSL_CONFIG_BASE + "/serverca.crt";
 
+    private static final String KOJI_ID = "koji-test";
+
     @Rule
     public TestName name = new TestName();
+
+    @ClassRule
+    public static TemporaryFolder temp = new TemporaryFolder();
 
     protected HttpFactory factory;
 
     protected PasswordManager passwordManager;
 
-    private String kojiUser;
+    protected String kojiUser;
 
-    protected abstract String getContainerId();
+    protected File downloadDir;
 
-    protected SiteConfigBuilder getSiteConfigBuilder()
+    protected SimpleKojiConfigBuilder getKojiConfigBuilder()
             throws Exception
     {
-        return new SiteConfigBuilder( getContainerId(), getSSLBaseUrl() ).withServerCertPem( getServerCertsPem() );
+        String baseUrl = formatSSLUrl("kojihub");
+        SimpleKojiConfigBuilder builder = new SimpleKojiConfigBuilder( baseUrl ).withKojiSiteId( KOJI_ID )
+                                                                                .withKojiClientCertificatePassword(
+                                                                                        "mypassword" )
+                                                                                .withTimeout( 2 );
+
+        withNewClient( ( client ) -> {
+            builder.withClientKeyCertificateFile( getClientKeyCertPem( client ).getPath() );
+            builder.withServerCertificateFile( getServerCertsPem( client ).getPath() );
+        } );
+
+        return builder;
     }
 
     @Before
     public void setup()
-            throws Exception
     {
         System.out.println( "\n\n #### SETUP: " + name.getMethodName() + " #### \n\n" );
         passwordManager = new MemoryPasswordManager();
         factory = new HttpFactory( passwordManager );
         System.out.println( "\n\n #### START: " + name.getMethodName() + " #### \n\n" );
+
+        String buildDir = System.getProperty( "project.build.directory", "target" );
+
+        downloadDir = Paths.get( buildDir, "downloads", name.getMethodName() ).toFile();
+        downloadDir.mkdirs();
+    }
+
+    protected KojiClient newKojiClient()
+            throws Exception
+    {
+        try
+        {
+            System.out.println("SETTING UP KOJI CLIENT");
+            KojiConfig config = getKojiConfigBuilder().build();
+
+            PasswordManager passwords = new MemoryPasswordManager();
+            passwords.bind( config.getKojiClientCertificatePassword(), config.getKojiSiteId(), PasswordType.KEY );
+
+            HttpFactory httpFactory = new HttpFactory( passwords );
+            KojiBindery bindery = new KojiBindery();
+
+            System.out.println("DONE: SETTING UP KOJI CLIENT");
+            return new KojiClient( config, bindery, httpFactory );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @After
     public void teardown()
             throws Exception
     {
-        String buildDir = System.getProperty( "project.build.directory", "target" );
+        if ( downloadContainerConfigs() )
+        {
+            System.out.println( "Downloading httpd logs to: " + downloadDir );
 
-        File dir = new File( buildDir, "httpd-logs" );
-        dir = new File( dir, getContainerId() );
-        dir = new File( dir, name.getMethodName() );
-        dir.mkdirs();
+            List<String> paths =
+                    Arrays.asList( "clients/%s/serverca.crt", "clients/%s/clientca.crt", "clients/%s/client.crt",
+                                   "clients/%s/client.pem", "httpd/conf/httpd.conf", "httpd/conf.d/kojihub.conf",
+                                   "httpd/conf.d/test-accessories.conf", "logs/httpd/error_log", "logs/httpd/ssl_error_log",
+                                   "logs/httpd/access_log", "logs/httpd/ssl_access_log", "logs/httpd/ssl_request_log" );
 
-        System.out.println( "Downloading httpd logs to: " + dir );
+            withNewClient( ( client ) -> {
+                paths.forEach( ( path ) -> {
+                    if ( path.contains( "%s" ) )
+                    {
+                        path = String.format( path, getKojiUser() );
+                    }
 
-        List<String> paths = Arrays.asList( "clients/%s/serverca.crt", "client/%s/clientca.crt", "clients/%s/client.crt",
-                                            "clients/%s/client.pem", "httpd/conf/httpd.conf", "httpd/conf.d/kojihub.conf",
-                                            "logs/error_log", "logs/ssl_error_log",
-                                            "logs/access_log", "logs/ssl_access_log", "logs/ssl_request_log" );
+                    downloadFile( path, client );
+                } );
+            } );
+        }
 
+        factory.close();
+        System.out.println( "\n\n #### END: " + name.getMethodName() + "#### \n\n" );
+    }
+
+    private boolean downloadContainerConfigs()
+    {
+        return false;
+    }
+
+    protected File downloadFile( String path, CloseableHttpClient client )
+    {
+        String url = formatUrl( path );
+        System.out.println( "\n\n ##### START: " + name.getMethodName() + " :: " + url + " #####\n\n" );
+
+        File targetFile = new File( downloadDir, path );
+        targetFile.getParentFile().mkdirs();
+
+        CloseableHttpResponse response = null;
+        try
+        {
+            response = client.execute( new HttpGet( url ) );
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+            Assert.fail( String.format( "Failed to execute GET request: %s. Reason: %s", url, e.getMessage() ) );
+            return null;
+        }
+
+        FileOutputStream stream = null;
+        if ( response.getStatusLine().getStatusCode() == 200 )
+        {
+            try
+            {
+                stream = new FileOutputStream( targetFile );
+                IOUtils.copy( response.getEntity().getContent(), stream );
+
+                return targetFile;
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+                Assert.fail(
+                        String.format( "Failed to retrieve body content from: %s. Reason: %s", url, e.getMessage() ) );
+            }
+            finally
+            {
+                IOUtils.closeQuietly( stream );
+                System.out.println(
+                        "\n\n ##### END: " + name.getMethodName() + " :: " + url + " #####\n\n" );
+            }
+        }
+        else
+        {
+            System.out.println( "Cannot retrieve: " + path + ". Status was: " + response.getStatusLine() );
+            System.out.println( "\n\n ##### END: " + name.getMethodName() + " :: " + url + " #####\n\n" );
+        }
+
+        return null;
+    }
+
+    protected void withNewClient( Consumer<CloseableHttpClient> consumer )
+    {
         CloseableHttpClient client = null;
         FileOutputStream stream = null;
         try
         {
             client = factory.createClient();
-            for ( String path : paths )
-            {
-                File httpdFile = new File( dir, path );
-                httpdFile.getParentFile().mkdirs();
-
-                CloseableHttpResponse response = client.execute( new HttpGet( formatUrl( path ) ) );
-
-                if ( response.getStatusLine().getStatusCode() == 200 )
-                {
-                    try
-                    {
-                        stream = new FileOutputStream( httpdFile );
-                        IOUtils.copy( response.getEntity().getContent(), stream );
-                    }
-                    finally
-                    {
-                        IOUtils.closeQuietly( stream );
-                    }
-                }
-                else
-                {
-                    System.out.println( "Cannot retrieve: " + path + ". Status was: " + response.getStatusLine() );
-                }
-            }
+            consumer.accept( client );
         }
         catch ( Exception err )
         {
@@ -153,67 +254,36 @@ public abstract class AbstractIT
         {
             IOUtils.closeQuietly( client );
         }
-
-        factory.close();
-        System.out.println( "\n\n #### END: " + name.getMethodName() + "#### \n\n" );
     }
 
-    protected String getServerCertsPem()
-            throws Exception
+    protected File getServerCertsPem( CloseableHttpClient client )
     {
-        StringBuilder pem = new StringBuilder();
-
-        CloseableHttpClient client = null;
-        try
-        {
-            client = factory.createClient();
-            System.out.println( "\n\n ##### START: " + name.getMethodName() + " :: server.pem #####\n\n" );
-            CloseableHttpResponse response = client.execute( new HttpGet( String.format( SITE_CERT_PATH, getKojiUser() ) ) );
-            assertThat( response.getStatusLine().getStatusCode(), equalTo( 200 ) );
-            String result = IOUtils.toString( response.getEntity().getContent() );
-
-            System.out.println( result );
-            assertThat( result, notNullValue() );
-            System.out.println( "\n\n ##### END: " + name.getMethodName() + " :: server.pem #####\n\n" );
-
-            return result;
-        }
-        finally
-        {
-            IOUtils.closeQuietly( client );
-        }
+        System.out.println("Getting server cert(s) PEM");
+        return downloadFile( String.format( SITE_CERT_PATH, getKojiUser() ), client );
     }
 
-    protected String getClientKeyCertPem()
-            throws Exception
+    protected File getClientKeyCertPem( CloseableHttpClient client )
     {
-        CloseableHttpClient client = null;
-        try
-        {
-            client = factory.createClient();
-            System.out.println( "\n\n ##### START: " + name.getMethodName() + " :: client.pem #####\n\n" );
-            CloseableHttpResponse response = client.execute(
-                    new HttpGet( formatUrl( String.format( SSL_CONFIG_BASE, getKojiUser() ), "client.pem" ) ) );
-            assertThat( response.getStatusLine().getStatusCode(), equalTo( 200 ) );
-            String result = IOUtils.toString( response.getEntity().getContent() );
-
-            System.out.println( result );
-            assertThat( result, notNullValue() );
-
-            System.out.println( "\n\n ##### END: " + name.getMethodName() + " :: client.pem #####\n\n" );
-            return result;
-        }
-        finally
-        {
-            IOUtils.closeQuietly( client );
-        }
+        System.out.println("Getting client key/cert PEM");
+        return downloadFile( String.format( SSL_CONFIG_BASE, getKojiUser() ) + "/client.pem", client );
     }
 
     protected synchronized String formatUrl( String... path )
-            throws Exception
     {
         String baseUrl = getBaseUrl();
-        return UrlUtils.buildUrl( baseUrl, path );
+        try
+        {
+            return UrlUtils.buildUrl( baseUrl, path );
+        }
+        catch ( MalformedURLException e )
+        {
+            e.printStackTrace();
+            Assert.fail(
+                    String.format( "Failed to format URL from parts: [%s]. Reason: %s", StringUtils.join( path, ", " ),
+                                   e.getMessage() ) );
+        }
+
+        return null;
     }
 
     protected synchronized String formatSSLUrl( String... path )
@@ -225,13 +295,13 @@ public abstract class AbstractIT
 
     protected String getBaseUrl()
     {
-        String host = System.getProperty( String.format( NON_SSL_HOST, getContainerId() ) );
-        String port = System.getProperty( String.format( NON_SSL_PORT, getContainerId() ) );
+        String host = System.getProperty( NON_SSL_HOST );
+        String port = System.getProperty( NON_SSL_PORT );
 
         if ( StringUtils.isEmpty( host ) || StringUtils.isEmpty( port ) )
         {
-            Assert.fail( "Non-SSL host/port properties are missing for container: " + getContainerId()
-                                 + ". Did you forget to configure the docker-maven-plugin?" );
+            Assert.fail(
+                    "Non-SSL host/port properties are missing. Did you forget to configure the docker-maven-plugin?" );
         }
 
         return String.format( NON_SSL_URL_FORMAT, host, port );
@@ -239,13 +309,12 @@ public abstract class AbstractIT
 
     protected String getSSLBaseUrl()
     {
-        String host = System.getProperty( String.format( SSL_HOST, getContainerId() ) );
-        String port = System.getProperty( String.format( SSL_PORT, getContainerId() ) );
+        String host = System.getProperty( SSL_HOST );
+        String port = System.getProperty( SSL_PORT );
 
         if ( StringUtils.isEmpty( host ) || StringUtils.isEmpty( port ) )
         {
-            Assert.fail( "SSL host/port properties are missing for container: " + getContainerId()
-                                 + ". Did you forget to configure the docker-maven-plugin?" );
+            Assert.fail( "SSL host/port properties are missing. Did you forget to configure the docker-maven-plugin?" );
         }
 
         return String.format( SSL_URL_FORMAT, host, port );
