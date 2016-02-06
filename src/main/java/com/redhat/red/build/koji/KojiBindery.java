@@ -20,6 +20,7 @@ import com.redhat.red.build.koji.model.messages.ApiVersionRequest;
 import com.redhat.red.build.koji.model.messages.CheckPermissionRequest;
 import com.redhat.red.build.koji.model.messages.ConfirmationResponse;
 import com.redhat.red.build.koji.model.messages.CreateTagRequest;
+import com.redhat.red.build.koji.model.messages.GetPackageIdRequest;
 import com.redhat.red.build.koji.model.messages.IdResponse;
 import com.redhat.red.build.koji.model.messages.LoggedInUserRequest;
 import com.redhat.red.build.koji.model.messages.LoginRequest;
@@ -56,7 +57,7 @@ public class KojiBindery
     {
         Class<?>[] classes = { AllPermissionsRequest.class, AllPermissionsResponse.class, ApiVersionRequest.class,
                 ApiVersionResponse.class, CheckPermissionRequest.class, ConfirmationResponse.class,
-                CreateTagRequest.class, IdResponse.class, LoggedInUserRequest.class, LoginRequest.class,
+                CreateTagRequest.class, GetPackageIdRequest.class, IdResponse.class, LoggedInUserRequest.class, LoginRequest.class,
                 LoginResponse.class, LogoutRequest.class, LogoutResponse.class, TagRequest.class, TagResponse.class,
                 UserRequest.class, UserResponse.class };
 

@@ -5,6 +5,9 @@ import org.junit.Test;
 import javax.crypto.Cipher;
 import java.security.NoSuchAlgorithmException;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+
 /**
  * See https://gist.github.com/jehrhardt/5167854
  */
@@ -24,7 +27,7 @@ public class KeySizeTest
             e.printStackTrace();
         }
 
-        System.out.println( "The allowed key length for AES is: " + allowedKeyLength );
+        assertThat( "You can only test this project with unlimited strength ciphers.", allowedKeyLength >= 2147483647, equalTo( true ) );
     }
 
     @Test
@@ -41,6 +44,6 @@ public class KeySizeTest
             e.printStackTrace();
         }
 
-        System.out.println( "The allowed key length for RSA is: " + allowedKeyLength );
+        assertThat( "You can only test this project with unlimited strength ciphers.", allowedKeyLength >= 2147483647, equalTo( true ) );
     }
 }

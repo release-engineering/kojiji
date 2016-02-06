@@ -1,0 +1,1 @@
+[root@a9944bd29039 kojiadmin]# koji --debug-xmlrpc -c ./config call getPackageID org.foo-bar

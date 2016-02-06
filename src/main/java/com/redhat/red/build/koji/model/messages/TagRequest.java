@@ -28,7 +28,6 @@ import org.commonjava.rwx.binding.anno.Request;
 public class TagRequest
 {
     @DataIndex( 0 )
-    @Converter( IdOrNameValueBinder.class )
     private KojiIdOrName tagIdOrName;
 
     public TagRequest(){}
