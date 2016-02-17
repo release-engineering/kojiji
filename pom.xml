@@ -44,6 +44,7 @@
     <jhttpcVersion>1.1-SNAPSHOT</jhttpcVersion>
     <rwxVersion>0.2.2-SNAPSHOT</rwxVersion>
     <httpcVersion>4.4</httpcVersion>
+    <atlasVersion>0.15.2</atlasVersion>
 
     <dbImage>postgres:9.4</dbImage>
     <hubImage>docker.io/buildchimp/koji-dojo-hub</hubImage>
@@ -90,10 +91,19 @@
         <artifactId>httpclient</artifactId>
         <version>${httpcVersion}</version>
       </dependency>
+      <dependency>
+        <groupId>org.commonjava.maven.atlas</groupId>
+        <artifactId>atlas-identities</artifactId>
+        <version>${atlasVersion}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   
   <dependencies>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
@@ -149,11 +159,58 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.commonjava.maven.atlas</groupId>
+      <artifactId>atlas-identities</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.7.4.201502262128</version>
+          <!-- Broken for sonarqube! -->
+          <!--<version>0.7.5.201505241946</version>-->
+          <executions>
+            <execution>
+              <id>prepare</id>
+              <goals>
+                <goal>prepare-agent</goal>
+                <goal>prepare-agent-integration</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>merge</id>
+              <goals>
+                <goal>merge</goal>
+              </goals>
+              <phase>post-integration-test</phase>
+              <configuration>
+                <fileSets>
+                  <fileSet implementation="org.apache.maven.shared.model.fileset.FileSet">
+                    <directory>${project.build.directory}</directory>
+                    <includes>
+                      <include>jacoco*.exec</include>
+                    </includes>
+                  </fileSet>
+                </fileSets>
+                <destFile>${project.build.directory}/jacoco-merged.exec</destFile>
+              </configuration>
+            </execution>
+            <execution>
+              <id>report</id>
+              <goals>
+                <goal>report</goal>
+              </goals>
+              <configuration>
+                <dataFile>${project.build.directory}/jacoco-merged.exec</dataFile>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
         <plugin>
           <!-- See: https://github.com/wouterd/docker-maven-plugin -->
           <groupId>net.wouterdanes.docker</groupId>
@@ -257,6 +314,12 @@ docker.containers.koji-hub.ports.443/tcp.port=${docker.containers.koji-hub.ports
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
 
   <profiles>

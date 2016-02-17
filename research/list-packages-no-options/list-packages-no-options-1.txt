@@ -1,0 +1,103 @@
+POST /kojihub HTTP/1.1
+Host: 172.17.1.82
+Accept-Encoding: identity
+User-Agent: koji/1.7
+Content-Type: text/xml
+Content-Length: 107
+
+
+<?xml version='1.0'?>
+<methodCall>
+<methodName>getAPIVersion</methodName>
+<params>
+</params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 29 Jan 2016 17:25:13 GMT
+Server: Apache/2.2.15 (CentOS)
+Content-Length: 121
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><int>1</int></value>
+</param>
+</params>
+</methodResponse>
+
+POST /kojihub HTTP/1.1
+Host: 172.17.1.82
+Accept-Encoding: identity
+User-Agent: koji/1.7
+Content-Type: text/xml
+Content-Length: 392
+
+
+<?xml version='1.0'?>
+<methodCall>
+<methodName>listPackages</methodName>
+<params>
+<param>
+<value><struct>
+<member>
+<name>__starstar</name>
+<value><boolean>1</boolean></value>
+</member>
+<member>
+<name>with_dups</name>
+<value><boolean>1</boolean></value>
+</member>
+<member>
+<name>inherited</name>
+<value><boolean>1</boolean></value>
+</member>
+</struct></value>
+</param>
+</params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 29 Jan 2016 17:25:13 GMT
+Server: Apache/2.2.15 (CentOS)
+Content-Length: 529
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><array><data>
+<value><struct>
+<member>
+<name>package_id</name>
+<value><int>1</int></value>
+</member>
+<member>
+<name>package_name</name>
+<value><string>org.foo-bar</string></value>
+</member>
+</struct></value>
+<value><struct>
+<member>
+<name>package_id</name>
+<value><int>2</int></value>
+</member>
+<member>
+<name>package_name</name>
+<value><string>org.blat-broog</string></value>
+</member>
+</struct></value>
+</data></array></value>
+</param>
+</params>
+</methodResponse>
+
+Package
+-----------------------
+org.foo-bar
+org.blat-broog

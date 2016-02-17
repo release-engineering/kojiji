@@ -1,0 +1,31 @@
+POST /kojihub?session-id=5&session-key=1-RvZayGqtCLfkbJZs8eb&callnum=0 HTTP/1.1
+Host: 172.17.1.82:443
+Accept-Encoding: identity
+User-Agent: koji/1.7
+Content-Type: text/xml
+Content-Length: 107
+
+
+<?xml version='1.0'?>
+<methodCall>
+<methodName>getAPIVersion</methodName>
+<params>
+</params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 29 Jan 2016 17:30:22 GMT
+Server: Apache/2.2.15 (CentOS)
+Content-Length: 121
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><int>1</int></value>
+</param>
+</params>
+</methodResponse>
+

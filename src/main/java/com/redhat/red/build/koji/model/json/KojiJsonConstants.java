@@ -1,0 +1,68 @@
+package com.redhat.red.build.koji.model.json;
+
+/**
+ * Created by jdcasey on 2/16/16.
+ */
+public final class KojiJsonConstants
+{
+    public static final String ARCH = "arch";
+
+    public static final String TYPE = "type";
+
+    public static final String OS = "os";
+
+    public static final String BUILDROOT_ID = "buildroot_id";
+
+    public static final String FILENAME = "filename";
+
+    public static final String FILESIZE = "filesize";
+
+    public static final String CHECKSUM_TYPE = "checksum_type";
+
+    public static final String CHECKSUM = "checksum";
+
+    public static final String NAME = "name";
+
+    public static final String VERSION = "version";
+
+    public static final String RELEASE = "release";
+
+    public static final String SOURCE = "source";
+
+    public static final String START_TIME = "start_time";
+
+    public static final String END_TIME = "end_time";
+
+    public static final String ID = "id";
+
+    public static final String HOST = "host";
+
+    public static final String CONTENT_GENERATOR = "content_generator";
+
+    public static final String CONTAINER = "container";
+
+    public static final String TOOLS = "tools";
+
+    public static final String COMPONENTS = "components";
+
+    public static final String OUTPUT = "output";
+
+    public static final String EXTRA_INFO = "extra";
+
+    public static final String BUILD = "build";
+
+    public static final String BUILDROOTS = "buildroots";
+
+    public static final String METADATA_VERSION = "metadata_version";
+
+    public static final int DEFAULT_METADATA_VERSION = 0;
+
+    public static final String MD5_CHECKSUM_TYPE = "md5";
+
+    public static final String LOG_OUTPUT_TYPE = "log";
+
+    public static final String MAVEN_OUTPUT_TYPE = "maven";
+
+    private KojiJsonConstants(){}
+
+}

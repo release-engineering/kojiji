@@ -15,16 +15,8 @@
  */
 package com.redhat.red.build.koji.it;
 
-import com.redhat.red.build.koji.KojiBindery;
 import com.redhat.red.build.koji.KojiClient;
-import com.redhat.red.build.koji.config.KojiConfig;
-import com.redhat.red.build.koji.model.KojiSessionInfo;
-import org.commonjava.util.jhttpc.HttpFactory;
-import org.commonjava.util.jhttpc.auth.MemoryPasswordManager;
-import org.commonjava.util.jhttpc.auth.PasswordManager;
-import org.commonjava.util.jhttpc.auth.PasswordType;
-import org.junit.Before;
-import org.junit.Ignore;
+import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import org.junit.Test;
 
 /**

@@ -1,0 +1,42 @@
+POST /kojihub/ssllogin HTTP/1.1
+Host: 172.17.1.82:443
+Accept-Encoding: identity
+User-Agent: koji/1.7
+Content-Type: text/xml
+Content-Length: 140
+
+
+<?xml version='1.0'?>
+<methodCall>
+<methodName>sslLogin</methodName>
+<params>
+<param>
+<value><nil/></value></param>
+</params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 29 Jan 2016 17:30:10 GMT
+Server: Apache/2.2.15 (CentOS)
+Content-Length: 296
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><struct>
+<member>
+<name>session-id</name>
+<value><int>4</int></value>
+</member>
+<member>
+<name>session-key</name>
+<value><string>1-MzneXN0NW6ptS8EvMOf</string></value>
+</member>
+</struct></value>
+</param>
+</params>
+</methodResponse>
+

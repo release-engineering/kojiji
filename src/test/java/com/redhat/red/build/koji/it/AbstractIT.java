@@ -51,6 +51,8 @@ import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -94,6 +96,8 @@ public class AbstractIT
 
     protected File downloadDir;
 
+    protected Executor executor;
+
     protected SimpleKojiConfigBuilder getKojiConfigBuilder()
             throws Exception
     {
@@ -123,6 +127,8 @@ public class AbstractIT
 
         downloadDir = Paths.get( buildDir, "downloads", name.getMethodName() ).toFile();
         downloadDir.mkdirs();
+
+        executor = Executors.newCachedThreadPool();
     }
 
     protected KojiClient newKojiClient()
@@ -140,7 +146,7 @@ public class AbstractIT
             KojiBindery bindery = new KojiBindery();
 
             System.out.println("DONE: SETTING UP KOJI CLIENT");
-            return new KojiClient( config, bindery, httpFactory );
+            return new KojiClient( config, bindery, httpFactory, executor );
         }
         catch ( Exception e )
         {

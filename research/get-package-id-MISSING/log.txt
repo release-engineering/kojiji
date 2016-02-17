@@ -1,0 +1,43 @@
+[root@a9944bd29039 kojiadmin]# koji --debug-xmlrpc -c ./config call getPackageID org.foo-blat
+connect: (172.17.1.82, 443) [ssl]
+send: 'POST /kojihub/ssllogin HTTP/1.1\r\nHost: 172.17.1.82:443\r\nAccept-Encoding: identity\r\nUser-Agent: koji/1.7\r\nContent-Type: text/xml\r\nContent-Length: 140\r\n\r\n'
+send: "<?xml version='1.0'?>\n<methodCall>\n<methodName>sslLogin</methodName>\n<params>\n<param>\n<value><nil/></value></param>\n</params>\n</methodCall>\n"
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Fri, 29 Jan 2016 17:30:22 GMT
+header: Server: Apache/2.2.15 (CentOS)
+header: Content-Length: 296
+header: Connection: close
+header: Content-Type: text/xml
+body: "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><struct>\n<member>\n<name>session-id</name>\n<value><int>5</int></value>\n</member>\n<member>\n<name>session-key</name>\n<value><string>1-RvZayGqtCLfkbJZs8eb</string></value>\n</member>\n</struct></value>\n</param>\n</params>\n</methodResponse>\n"
+connect: (172.17.1.82, 443) [ssl]
+send: 'POST /kojihub?session-id=5&session-key=1-RvZayGqtCLfkbJZs8eb&callnum=0 HTTP/1.1\r\nHost: 172.17.1.82:443\r\nAccept-Encoding: identity\r\nUser-Agent: koji/1.7\r\nContent-Type: text/xml\r\nContent-Length: 107\r\n\r\n'
+send: "<?xml version='1.0'?>\n<methodCall>\n<methodName>getAPIVersion</methodName>\n<params>\n</params>\n</methodCall>\n"
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Fri, 29 Jan 2016 17:30:22 GMT
+header: Server: Apache/2.2.15 (CentOS)
+header: Content-Length: 121
+header: Connection: close
+header: Content-Type: text/xml
+body: "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><int>1</int></value>\n</param>\n</params>\n</methodResponse>\n"
+connect: (172.17.1.82, 443) [ssl]
+send: 'POST /kojihub?session-id=5&session-key=1-RvZayGqtCLfkbJZs8eb&callnum=1 HTTP/1.1\r\nHost: 172.17.1.82:443\r\nAccept-Encoding: identity\r\nUser-Agent: koji/1.7\r\nContent-Type: text/xml\r\nContent-Length: 168\r\n\r\n'
+send: "<?xml version='1.0'?>\n<methodCall>\n<methodName>getPackageID</methodName>\n<params>\n<param>\n<value><string>org.foo-blat</string></value>\n</param>\n</params>\n</methodCall>\n"
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Fri, 29 Jan 2016 17:30:22 GMT
+header: Server: Apache/2.2.15 (CentOS)
+header: Content-Length: 114
+header: Connection: close
+header: Content-Type: text/xml
+body: "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><nil/></value></param>\n</params>\n</methodResponse>\n"
+None
+connect: (172.17.1.82, 443) [ssl]
+send: 'POST /kojihub?session-id=5&session-key=1-RvZayGqtCLfkbJZs8eb&callnum=2 HTTP/1.1\r\nHost: 172.17.1.82:443\r\nAccept-Encoding: identity\r\nUser-Agent: koji/1.7\r\nContent-Type: text/xml\r\nContent-Length: 100\r\n\r\n'
+send: "<?xml version='1.0'?>\n<methodCall>\n<methodName>logout</methodName>\n<params>\n</params>\n</methodCall>\n"
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Fri, 29 Jan 2016 17:30:22 GMT
+header: Server: Apache/2.2.15 (CentOS)
+header: Content-Length: 114
+header: Connection: close
+header: Content-Type: text/xml
+body: "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><nil/></value></param>\n</params>\n</methodResponse>\n"
+[root@a9944bd29039 kojiadmin]# 

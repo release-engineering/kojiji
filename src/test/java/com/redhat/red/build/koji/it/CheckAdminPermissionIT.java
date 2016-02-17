@@ -16,7 +16,7 @@
 package com.redhat.red.build.koji.it;
 
 import com.redhat.red.build.koji.KojiClient;
-import com.redhat.red.build.koji.model.KojiSessionInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

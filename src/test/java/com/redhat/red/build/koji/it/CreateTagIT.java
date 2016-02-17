@@ -16,14 +16,12 @@
 package com.redhat.red.build.koji.it;
 
 import com.redhat.red.build.koji.KojiClient;
-import com.redhat.red.build.koji.model.KojiSessionInfo;
-import com.redhat.red.build.koji.model.KojiTagInfo;
-import com.redhat.red.build.koji.model.messages.CreateTagRequest;
+import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
+import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
 import org.junit.Test;
 
 import java.util.Collections;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 /**

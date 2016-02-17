@@ -1,0 +1,22 @@
+send: 'POST /kojihub HTTP/1.1\r\nHost: 172.17.1.82\r\nAccept-Encoding: identity\r\nUser-Agent: koji/1.7\r\nContent-Type: text/xml\r\nContent-Length: 107\r\n\r\n'
+send: "<?xml version='1.0'?>\n<methodCall>\n<methodName>getAPIVersion</methodName>\n<params>\n</params>\n</methodCall>\n"
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Fri, 29 Jan 2016 17:25:13 GMT
+header: Server: Apache/2.2.15 (CentOS)
+header: Content-Length: 121
+header: Connection: close
+header: Content-Type: text/xml
+body: "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><int>1</int></value>\n</param>\n</params>\n</methodResponse>\n"
+send: 'POST /kojihub HTTP/1.1\r\nHost: 172.17.1.82\r\nAccept-Encoding: identity\r\nUser-Agent: koji/1.7\r\nContent-Type: text/xml\r\nContent-Length: 392\r\n\r\n'
+send: "<?xml version='1.0'?>\n<methodCall>\n<methodName>listPackages</methodName>\n<params>\n<param>\n<value><struct>\n<member>\n<name>__starstar</name>\n<value><boolean>1</boolean></value>\n</member>\n<member>\n<name>with_dups</name>\n<value><boolean>1</boolean></value>\n</member>\n<member>\n<name>inherited</name>\n<value><boolean>1</boolean></value>\n</member>\n</struct></value>\n</param>\n</params>\n</methodCall>\n"
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Fri, 29 Jan 2016 17:25:13 GMT
+header: Server: Apache/2.2.15 (CentOS)
+header: Content-Length: 529
+header: Connection: close
+header: Content-Type: text/xml
+body: "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><array><data>\n<value><struct>\n<member>\n<name>package_id</name>\n<value><int>1</int></value>\n</member>\n<member>\n<name>package_name</name>\n<value><string>org.foo-bar</string></value>\n</member>\n</struct></value>\n<value><struct>\n<member>\n<name>package_id</name>\n<value><int>2</int></value>\n</member>\n<member>\n<name>package_name</name>\n<value><string>org.blat-broog</string></value>\n</member>\n</struct></value>\n</data></array></value>\n</param>\n</params>\n</methodResponse>\n"
+Package
+-----------------------
+org.foo-bar
+org.blat-broog

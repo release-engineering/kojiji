@@ -15,23 +15,24 @@
  */
 package com.redhat.red.build.koji;
 
-import com.redhat.red.build.koji.model.messages.AllPermissionsRequest;
-import com.redhat.red.build.koji.model.messages.ApiVersionRequest;
-import com.redhat.red.build.koji.model.messages.CheckPermissionRequest;
-import com.redhat.red.build.koji.model.messages.ConfirmationResponse;
-import com.redhat.red.build.koji.model.messages.CreateTagRequest;
-import com.redhat.red.build.koji.model.messages.IdResponse;
-import com.redhat.red.build.koji.model.messages.LoggedInUserRequest;
-import com.redhat.red.build.koji.model.messages.LoginRequest;
-import com.redhat.red.build.koji.model.messages.LoginResponse;
-import com.redhat.red.build.koji.model.messages.LogoutRequest;
-import com.redhat.red.build.koji.model.messages.LogoutResponse;
-import com.redhat.red.build.koji.model.messages.TagRequest;
-import com.redhat.red.build.koji.model.messages.TagResponse;
-import com.redhat.red.build.koji.model.messages.UserRequest;
-import com.redhat.red.build.koji.model.messages.UserResponse;
-import com.redhat.red.build.koji.model.messages.AllPermissionsResponse;
-import com.redhat.red.build.koji.model.messages.ApiVersionResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.CheckPermissionRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ConfirmationResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetPackageIdRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.LoggedInUserRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.LoginRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.LoginResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.LogoutRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.LogoutResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.TagRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.TagResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.UserRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.UserResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionResponse;
 import org.commonjava.rwx.binding.error.BindException;
 import org.commonjava.rwx.binding.internal.reflect.ReflectionMapper;
 import org.commonjava.rwx.binding.internal.xbr.XBRCompositionBindery;
@@ -56,7 +57,7 @@ public class KojiBindery
     {
         Class<?>[] classes = { AllPermissionsRequest.class, AllPermissionsResponse.class, ApiVersionRequest.class,
                 ApiVersionResponse.class, CheckPermissionRequest.class, ConfirmationResponse.class,
-                CreateTagRequest.class, IdResponse.class, LoggedInUserRequest.class, LoginRequest.class,
+                CreateTagRequest.class, GetPackageIdRequest.class, IdResponse.class, LoggedInUserRequest.class, LoginRequest.class,
                 LoginResponse.class, LogoutRequest.class, LogoutResponse.class, TagRequest.class, TagResponse.class,
                 UserRequest.class, UserResponse.class };
 

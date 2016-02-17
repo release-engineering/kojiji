@@ -15,7 +15,7 @@
  */
 package com.redhat.red.build.koji.model.util;
 
-import com.redhat.red.build.koji.model.KojiIdOrName;
+import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import org.commonjava.rwx.binding.mapping.Mapping;
 import org.commonjava.rwx.binding.spi.Binder;
 import org.commonjava.rwx.binding.spi.BindingContext;

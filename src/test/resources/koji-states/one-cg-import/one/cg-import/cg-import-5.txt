@@ -1,0 +1,60 @@
+POST /kojihub?
+REQ PARAMS:
+===========
+session-id=2
+filepath=cli-import%2F1454962236.020946.qsojyZnO%2F ......(cli-import/1454962236.020946.qsojyZnO/, a made-up name on the CLI side)
+fileverify=adler32
+callnum=2
+filename=bar-1.pom
+session-key=1-EAfXw1flF0GDRRL10fa
+offset=0
+overwrite=1
+===========
+
+Host: localhost:443
+Accept-Encoding: identity
+User-Agent: koji/1.7
+Content-Type: application/octet-stream
+Content-length: 165
+
+
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>foo</groupId>
+  <artifactId>bar</artifactId>
+  <version>1</version>
+  <packaging>pom</packaging>
+</project>
+HTTP/1.1 200 OK
+
+Date: Mon, 08 Feb 2016 20:10:36 GMT
+Server: Apache/2.2.15 (CentOS)
+Content-Length: 427
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><struct>
+<member>
+<name>fileverify</name>
+<value><string>adler32</string></value>
+</member>
+<member>
+<name>hexdigest</name>
+<value><string>070c3811</string></value>
+</member>
+<member>
+<name>offset</name>
+<value><int>0</int></value>
+</member>
+<member>
+<name>size</name>
+<value><int>165</int></value>
+</member>
+</struct></value>
+</param>
+</params>
+</methodResponse>
+
