@@ -10,6 +10,7 @@ function import {
     curl -i -X PUT --data-binary @${1} "http://${IP}/cgi-bin/content.py/import/${1}"
 }
 
+set -x
 for f in bar-1.pom build.log import.json; do
 	import $f
 done

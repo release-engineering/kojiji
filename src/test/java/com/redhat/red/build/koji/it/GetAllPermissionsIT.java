@@ -16,9 +16,8 @@
 package com.redhat.red.build.koji.it;
 
 import com.redhat.red.build.koji.KojiClient;
-import com.redhat.red.build.koji.model.KojiPermission;
-import com.redhat.red.build.koji.model.KojiSessionInfo;
-import com.redhat.red.build.koji.model.KojiUserInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiPermission;
+import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 

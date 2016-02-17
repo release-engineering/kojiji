@@ -44,6 +44,7 @@
     <jhttpcVersion>1.1-SNAPSHOT</jhttpcVersion>
     <rwxVersion>0.2.2-SNAPSHOT</rwxVersion>
     <httpcVersion>4.4</httpcVersion>
+    <atlasVersion>0.15.2</atlasVersion>
 
     <dbImage>postgres:9.4</dbImage>
     <hubImage>docker.io/buildchimp/koji-dojo-hub</hubImage>
@@ -90,10 +91,19 @@
         <artifactId>httpclient</artifactId>
         <version>${httpcVersion}</version>
       </dependency>
+      <dependency>
+        <groupId>org.commonjava.maven.atlas</groupId>
+        <artifactId>atlas-identities</artifactId>
+        <version>${atlasVersion}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   
   <dependencies>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
@@ -148,6 +158,10 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.commonjava.maven.atlas</groupId>
+      <artifactId>atlas-identities</artifactId>
     </dependency>
   </dependencies>
 

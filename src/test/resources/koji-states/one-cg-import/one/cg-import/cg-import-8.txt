@@ -1,0 +1,43 @@
+POST /kojihub?session-id=2&filepath=cli-import%2F1454962236.020946.qsojyZnO%2F&fileverify=adler32&callnum=5&filename=build.log&session-key=1-EAfXw1flF0GDRRL10fa&offset=0&overwrite=1 HTTP/1.1
+Host: localhost:443
+Accept-Encoding: identity
+User-Agent: koji/1.7
+Content-Type: application/octet-stream
+Content-length: 16
+
+
+Build complete.
+
+HTTP/1.1 200 OK
+
+Date: Mon, 08 Feb 2016 20:10:36 GMT
+Server: Apache/2.2.15 (CentOS)
+Content-Length: 426
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><struct>
+<member>
+<name>fileverify</name>
+<value><string>adler32</string></value>
+</member>
+<member>
+<name>hexdigest</name>
+<value><string>327805a2</string></value>
+</member>
+<member>
+<name>offset</name>
+<value><int>0</int></value>
+</member>
+<member>
+<name>size</name>
+<value><int>16</int></value>
+</member>
+</struct></value>
+</param>
+</params>
+</methodResponse>
+

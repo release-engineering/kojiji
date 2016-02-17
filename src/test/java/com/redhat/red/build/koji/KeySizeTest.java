@@ -3,6 +3,10 @@ package com.redhat.red.build.koji;
 import org.junit.Test;
 
 import javax.crypto.Cipher;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
