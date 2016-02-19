@@ -26,15 +26,15 @@ import org.commonjava.rwx.binding.anno.Response;
 public class IdResponse
 {
     @DataIndex( 0 )
-    private int id;
+    private Integer id;
 
     @IndexRefs( 0 )
-    public IdResponse( int id )
+    public IdResponse( Integer id )
     {
         this.id = id;
     }
 
-    public int getId()
+    public Integer getId()
     {
         return id;
     }

@@ -16,25 +16,24 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
 import org.commonjava.rwx.binding.anno.Response;
 
 /**
  * Created by jdcasey on 11/17/15.
  */
 @Response
-public class LogoutResponse
+public class StatusResponse
 {
     @DataIndex( 0 )
-    private String altUsername;
+    private String error;
 
-    public String getAltUsername()
+    public String getError()
     {
-        return altUsername;
+        return error;
     }
 
-    public void setAltUsername( String altUsername )
+    public void setError( String error )
     {
-        this.altUsername = altUsername;
+        this.error = error;
     }
 }

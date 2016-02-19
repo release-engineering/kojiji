@@ -98,20 +98,20 @@ public class BuildRoot
     {
         private BuildRoot target = new BuildRoot();
 
-        private ImportInfo.Builder parent;
+        private KojiImport.Builder parent;
 
         public Builder( int id )
         {
             target.id = id;
         }
 
-        public Builder( int id, ImportInfo.Builder parent )
+        public Builder( int id, KojiImport.Builder parent )
         {
             this.parent = parent;
             target.id = id;
         }
 
-        public ImportInfo.Builder parent()
+        public KojiImport.Builder parent()
         {
             return parent;
         }

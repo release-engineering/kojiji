@@ -116,7 +116,7 @@ public class BuildDescription
     public static final class Builder
             implements SectionBuilder<BuildDescription>, VerifiableBuilder<BuildDescription>
     {
-        private ImportInfo.Builder parent;
+        private KojiImport.Builder parent;
 
         private BuildDescription target = new BuildDescription();
 
@@ -133,7 +133,7 @@ public class BuildDescription
             target.release = release;
         }
 
-        public Builder( String name, String version, String release, ImportInfo.Builder parent )
+        public Builder( String name, String version, String release, KojiImport.Builder parent )
         {
             target.name = name;
             target.version = version;
@@ -141,7 +141,7 @@ public class BuildDescription
             this.parent = parent;
         }
 
-        public ImportInfo.Builder parent()
+        public KojiImport.Builder parent()
         {
             return parent;
         }

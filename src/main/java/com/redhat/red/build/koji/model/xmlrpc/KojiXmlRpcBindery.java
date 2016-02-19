@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.red.build.koji;
+package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionRequest;
@@ -26,7 +26,7 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.LoggedInUserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LogoutRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.LogoutResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.StatusResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.TagRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.TagResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserRequest;
@@ -43,10 +43,10 @@ import java.util.Map;
 /**
  * Created by jdcasey on 12/3/15.
  */
-public class KojiBindery
+public class KojiXmlRpcBindery
         extends XBRCompositionBindery
 {
-    public KojiBindery()
+    public KojiXmlRpcBindery()
             throws BindException
     {
         super( getRecipes() );
@@ -58,7 +58,7 @@ public class KojiBindery
         Class<?>[] classes = { AllPermissionsRequest.class, AllPermissionsResponse.class, ApiVersionRequest.class,
                 ApiVersionResponse.class, CheckPermissionRequest.class, ConfirmationResponse.class,
                 CreateTagRequest.class, GetPackageIdRequest.class, IdResponse.class, LoggedInUserRequest.class, LoginRequest.class,
-                LoginResponse.class, LogoutRequest.class, LogoutResponse.class, TagRequest.class, TagResponse.class,
+                LoginResponse.class, LogoutRequest.class, StatusResponse.class, TagRequest.class, TagResponse.class,
                 UserRequest.class, UserResponse.class };
 
         return new ReflectionMapper().loadRecipes( classes );
