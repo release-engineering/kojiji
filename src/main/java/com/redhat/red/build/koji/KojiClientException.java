@@ -75,6 +75,7 @@ public class KojiClientException
      * {@link String#format} or {@link MessageFormat#format}, flattening them to
      * strings is an acceptable way to provide this functionality without making
      * the use of {@link Serializable} viral.
+     * @return this object, with params replaced with toString() equivalents.
      */
     private Object writeReplace() {
         final Object[] newParams = new Object[params.length];
