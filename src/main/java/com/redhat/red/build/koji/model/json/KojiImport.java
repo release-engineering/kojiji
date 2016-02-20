@@ -2,7 +2,9 @@ package com.redhat.red.build.koji.model.json;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Created by jdcasey on 2/10/16.
  */
-public class ImportInfo
+public class KojiImport
 {
     @JsonProperty(METADATA_VERSION)
     private int metadataVersion;
@@ -25,7 +27,7 @@ public class ImportInfo
     @JsonProperty( OUTPUT )
     private Set<BuildOutput> outputs;
 
-    public ImportInfo( @JsonProperty( METADATA_VERSION ) int metadataVersion,
+    public KojiImport( @JsonProperty( METADATA_VERSION ) int metadataVersion,
                        @JsonProperty( BUILD ) BuildDescription build,
                        @JsonProperty( BUILDROOTS ) Set<BuildRoot> buildRoots,
                        @JsonProperty( OUTPUT ) Set<BuildOutput> outputs )
@@ -56,8 +58,15 @@ public class ImportInfo
         return outputs;
     }
 
+    @JsonIgnore
+    public KojiNVR getBuildNVR()
+    {
+        BuildDescription build = getBuild();
+        return new KojiNVR( build.getName(), build.getVersion(), build.getRelease() );
+    }
+
     public static final class Builder
-            implements SectionBuilder<ImportInfo>
+            implements SectionBuilder<KojiImport>
     {
         private int metadataVersion = DEFAULT_METADATA_VERSION;
 
@@ -71,7 +80,7 @@ public class ImportInfo
         {
         }
 
-        public ImportInfo build()
+        public KojiImport build()
                 throws VerificationException
         {
             Set<String> missing = new HashSet<>();
@@ -117,7 +126,7 @@ public class ImportInfo
                 Set<BuildOutput> buildOutputs =
                         outputBuilders.stream().map( ( builder ) -> builder.unsafeBuild() ).collect( Collectors.toSet() );
 
-                return new ImportInfo( metadataVersion, desc, buildRoots, buildOutputs );
+                return new KojiImport( metadataVersion, desc, buildRoots, buildOutputs );
             }
 
             throw new VerificationException( missing );
@@ -161,12 +170,12 @@ public class ImportInfo
         {
             return true;
         }
-        if ( !( o instanceof ImportInfo ) )
+        if ( !( o instanceof KojiImport ) )
         {
             return false;
         }
 
-        ImportInfo that = (ImportInfo) o;
+        KojiImport that = (KojiImport) o;
 
         if ( getMetadataVersion() != that.getMetadataVersion() )
         {

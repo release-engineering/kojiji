@@ -16,26 +16,36 @@
 package com.redhat.red.build.koji;
 
 import com.redhat.red.build.koji.config.KojiConfig;
+import com.redhat.red.build.koji.model.ImportFile;
+import com.redhat.red.build.koji.model.KojiImportResult;
+import com.redhat.red.build.koji.model.json.KojiImport;
+import com.redhat.red.build.koji.model.json.util.KojiObjectMapper;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
-import com.redhat.red.build.koji.model.json.ImportInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
 import com.redhat.red.build.koji.model.xmlrpc.KojiPermission;
 import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiUploaderResult;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserInfo;
-import com.redhat.red.build.koji.model.ImportFile;
+import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
 import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.CGImportRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CheckPermissionRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ConfirmationResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByIdOrNameRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByNVRObjRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetTagIdRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoggedInUserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LogoutRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.LogoutResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.StatusResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.TagRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.TagResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UploadResponse;
@@ -56,6 +66,8 @@ import org.commonjava.util.jhttpc.util.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,13 +77,34 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executor;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.ACCEPT_ENCODING_HEADER;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.ADLER_32_CHECKSUM;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.CALL_NUMBER_PARAM;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.EMBEDDED_ERROR_PARAM;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.IDENTITY_ENCODING_VALUE;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.METADATA_JSON_FILE;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.SESSION_ID_PARAM;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.SESSION_KEY_PARAM;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.SSL_LOGIN_PATH;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.UPLOAD_CHECKSUM_TYPE_PARAM;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.UPLOAD_DIR_PARAM;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.UPLOAD_FILENAME_PARAM;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.UPLOAD_OFFSET_PARAM;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.UPLOAD_OVERWRITE_PARAM;
+import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.apache.http.client.utils.HttpClientUtils.closeQuietly;
 
 /**
@@ -80,41 +113,19 @@ import static org.apache.http.client.utils.HttpClientUtils.closeQuietly;
 public class KojiClient
         implements Closeable
 {
-    private static final String SSL_LOGIN_PATH = "ssllogin";
-
-    private static final String ACCEPT_ENCODING_HEADER = "Accept-Encoding";
-
-    private static final String IDENTITY_ENCODING_VALUE = "identity";
-
-    private static final String SESSION_ID_PARAM = "session-id";
-
-    private static final String SESSION_KEY_PARAM = "session-key";
-
-    private static final String CALL_NUMBER_PARAM = "callnum";
-
-    private static final String UPLOAD_DIR_PARAM = "filepath";
-
-    private static final String UPLOAD_CHECKSUM_TYPE_PARAM = "fileverify";
-
-    private static final String ADLER_32_CHECKSUM = "adler32";
-
-    private static final String UPLOAD_FILENAME_PARAM = "filename";
-
-    private static final String UPLOAD_OFFSET_PARAM = "offset";
-
-    private static final String UPLOAD_OVERWRITE_PARAM = "overwrite";
-
-    private static final String EMBEDDED_ERROR_PARAM = "ERROR";
-
     private HC4SyncObjectClient xmlrpcClient;
 
     private HttpFactory httpFactory;
 
-    private Executor executor;
+    private ExecutorService executorService;
+
+    private ExecutorCompletionService<KojiUploaderResult> uploadService;
+
+    private KojiObjectMapper objectMapper;
 
     private KojiConfig config;
 
-    private KojiBindery bindery;
+    private KojiXmlRpcBindery bindery;
 
     private AtomicInteger callCount = new AtomicInteger( 0 );
 
@@ -171,12 +182,13 @@ public class KojiClient
         };
     }
 
-    public KojiClient( KojiConfig config, KojiBindery bindery, HttpFactory httpFactory, Executor executor )
+    public KojiClient( KojiConfig config, KojiXmlRpcBindery bindery, HttpFactory httpFactory,
+                       ExecutorService executorService )
     {
         this.config = config;
         this.bindery = bindery;
         this.httpFactory = httpFactory;
-        this.executor = executor;
+        this.executorService = executorService;
         setup();
     }
 
@@ -191,6 +203,9 @@ public class KojiClient
 
     public void setup()
     {
+        uploadService = new ExecutorCompletionService<KojiUploaderResult>( executorService );
+        objectMapper = new KojiObjectMapper();
+
         Logger logger = LoggerFactory.getLogger( getClass() );
         logger.debug( "SETUP: Starting KojiClient for: " + config.getKojiURL() );
         try
@@ -259,9 +274,14 @@ public class KojiClient
 
         try
         {
-            LoginResponse loginResponse = xmlrpcClient.call( new LoginRequest(), LoginResponse.class, ( url ) -> {
-                return new UrlBuildResult( UrlUtils.buildUrl( url, SSL_LOGIN_PATH ) );
-            }, ( request ) -> request.setHeader( ACCEPT_ENCODING_HEADER, IDENTITY_ENCODING_VALUE ) );
+            UrlBuilder urlBuilder = ( url ) -> new UrlBuildResult( UrlUtils.buildUrl( url, SSL_LOGIN_PATH ) );
+
+            RequestModifier requestModifier = ( request ) -> request.setHeader( ACCEPT_ENCODING_HEADER,
+                                                                                IDENTITY_ENCODING_VALUE );
+
+            LoginResponse loginResponse = xmlrpcClient.call( new LoginRequest(), LoginResponse.class,
+                                                             urlBuilder,
+                                                             requestModifier );
 
             return loginResponse == null ? null : loginResponse.getSessionInfo();
         }
@@ -336,9 +356,14 @@ public class KojiClient
         {
             try
             {
-                LogoutResponse response =
-                        xmlrpcClient.call( new LogoutRequest(), LogoutResponse.class, sessionUrlBuilder( session ),
+                StatusResponse response =
+                        xmlrpcClient.call( new LogoutRequest(), StatusResponse.class, sessionUrlBuilder( session ),
                                            STANDARD_REQUEST_MODIFIER );
+
+                if ( isNotEmpty( response.getError() ) )
+                {
+                    throw new KojiClientException( "Failed to logout from Koji: %s", response.getError() );
+                }
             }
             catch ( XmlRpcException e )
             {
@@ -450,10 +475,135 @@ public class KojiClient
         }
     }
 
-    public KojiBuildInfo importBuild( ImportInfo buildInfo, Supplier<Iterable<ImportFile>> outputSupplier )
+    public Integer getTagId( String tagName, KojiSessionInfo session )
+            throws KojiClientException
     {
-        // FIXME: Implement
-        return null;
+        checkConnection();
+
+        try
+        {
+            IdResponse response =
+                    xmlrpcClient.call( new GetTagIdRequest( tagName ), IdResponse.class, sessionUrlBuilder( session ),
+                                       STANDARD_REQUEST_MODIFIER );
+
+            return response.getId();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve tag: %s. Reason: %s", e, tagName, e.getMessage() );
+        }
+    }
+
+    public Integer getPackageId( String packageName, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            IdResponse response = xmlrpcClient.call( new GetTagIdRequest( packageName ), IdResponse.class,
+                                                     sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getId();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve package: %s. Reason: %s", e, packageName,
+                                           e.getMessage() );
+        }
+    }
+
+    public KojiImportResult importBuild( KojiImport buildInfo, Supplier<Iterable<ImportFile>> outputSupplier,
+                                         KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        String dirname = generateUploadDirname( session );
+        Map<String, KojiClientException> uploadErrors = uploadForImport( buildInfo, outputSupplier, dirname, session );
+
+        if ( !uploadErrors.isEmpty() )
+        {
+            return new KojiImportResult( buildInfo ).withUploadErrors( uploadErrors );
+        }
+
+        try
+        {
+            StatusResponse response = xmlrpcClient.call( new CGImportRequest( dirname ), StatusResponse.class,
+                                                         sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            if ( !isEmpty( response.getError() ) )
+            {
+                throw new KojiClientException( "Error response from Koji server: %s", response.getError() );
+            }
+
+            KojiBuildInfo build = getBuildInfo( buildInfo.getBuildNVR(), session );
+
+            return new KojiImportResult( buildInfo ).withBuildInfo( build );
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to execute content-generator import. Reason: %s", e,
+                                           e.getMessage() );
+        }
+    }
+
+    public KojiBuildInfo getBuildInfo( KojiNVR nvr, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            GetBuildResponse response = xmlrpcClient.call( new GetBuildByNVRObjRequest( nvr ), GetBuildResponse.class,
+                                                           sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getBuildInfo();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve build info for: %s. Reason: %s", e, nvr,
+                                           e.getMessage() );
+        }
+    }
+
+    public KojiBuildInfo getBuildInfo( String nvr, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            GetBuildResponse response = xmlrpcClient.call( new GetBuildByIdOrNameRequest( nvr ), GetBuildResponse.class,
+                                                           sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getBuildInfo();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve build info for: %s. Reason: %s", e, nvr,
+                                           e.getMessage() );
+        }
+    }
+
+    public KojiBuildInfo getBuildInfo( int buildId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            GetBuildResponse response =
+                    xmlrpcClient.call( new GetBuildByIdOrNameRequest( buildId ), GetBuildResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getBuildInfo();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve build info for: %s. Reason: %s", e, buildId,
+                                           e.getMessage() );
+        }
     }
 
     protected String generateUploadDirname( KojiSessionInfo session )
@@ -462,6 +612,90 @@ public class KojiClient
         KojiUserInfo userInfo = getLoggedInUserInfo( session );
         return String.format( "kojiji-upload/%s-%s/", new SimpleDateFormat( "yyyymmdd-hhMM" ).format( new Date() ),
                               userInfo.getKerberosPrincipal() );
+    }
+
+    protected Map<String, KojiClientException> uploadForImport( KojiImport buildInfo,
+                                                                Supplier<Iterable<ImportFile>> outputSupplier,
+                                                                String dirname, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try
+        {
+            objectMapper.writeValue( baos, buildInfo );
+        }
+        catch ( IOException e )
+        {
+            throw new KojiClientException( "Failed to serialize import info to JSON. Reason: %s", e, e.getMessage() );
+        }
+
+        AtomicInteger count = new AtomicInteger( 0 );
+        uploadService.submit(
+                newUploader( new ImportFile( METADATA_JSON_FILE, new ByteArrayInputStream( baos.toByteArray() ) ),
+                             dirname, session ) );
+
+        count.incrementAndGet();
+
+        outputSupplier.get().forEach( ( importFile ) -> {
+            uploadService.submit( newUploader( importFile, dirname, session ) );
+            count.incrementAndGet();
+        } );
+
+        Logger logger = LoggerFactory.getLogger( getClass() );
+        Map<String, KojiClientException> uploadErrors = new HashMap<>();
+        Set<UploadResponse> responses = new HashSet<>();
+        int total = count.get();
+        do
+        {
+            logger.debug( "Waiting for %d uploads.", count.get() );
+
+            try
+            {
+                Future<KojiUploaderResult> future = uploadService.take();
+                KojiUploaderResult result = future.get();
+                KojiClientException error = result.getError();
+                if ( error != null )
+                {
+                    uploadErrors.put( result.getImportFile().getFilePath(), error );
+                }
+                else
+                {
+                    responses.add( result.getResponse() );
+                }
+            }
+            catch ( InterruptedException e )
+            {
+                logger.debug( "Interrupted while uploading. Aborting upload." );
+                break;
+            }
+            catch ( ExecutionException e )
+            {
+                throw new KojiClientException( "Failed to execute %d uploads for: %s. Reason: %s", e, total, buildInfo,
+                                               e.getMessage() );
+            }
+        }
+        while ( count.decrementAndGet() > 0 );
+
+        return uploadErrors;
+    }
+
+    protected Callable<KojiUploaderResult> newUploader( ImportFile importFile, String dirname, KojiSessionInfo session )
+    {
+        return () -> {
+
+            KojiUploaderResult result = new KojiUploaderResult( importFile );
+
+            try
+            {
+                result.setResponse( upload( importFile.getStream(), importFile.getFilePath(), dirname, session ) );
+            }
+            catch ( KojiClientException e )
+            {
+                result.setError( e );
+            }
+
+            return result;
+        };
     }
 
     protected UploadResponse upload( InputStream stream, String filepath, String uploadDir, KojiSessionInfo session )

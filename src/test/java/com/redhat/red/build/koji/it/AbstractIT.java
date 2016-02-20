@@ -15,10 +15,9 @@
  */
 package com.redhat.red.build.koji.it;
 
-import com.redhat.red.build.koji.KojiBindery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
 import com.redhat.red.build.koji.KojiClient;
 import com.redhat.red.build.koji.config.KojiConfig;
-import com.redhat.red.build.koji.config.SimpleKojiConfig;
 import com.redhat.red.build.koji.config.SimpleKojiConfigBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -27,12 +26,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.commonjava.rwx.binding.error.BindException;
 import org.commonjava.util.jhttpc.HttpFactory;
 import org.commonjava.util.jhttpc.auth.MemoryPasswordManager;
 import org.commonjava.util.jhttpc.auth.PasswordManager;
 import org.commonjava.util.jhttpc.auth.PasswordType;
-import org.commonjava.util.jhttpc.model.SiteConfigBuilder;
 import org.commonjava.util.jhttpc.util.UrlUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -41,8 +38,6 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,11 +46,10 @@ import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -96,7 +90,7 @@ public class AbstractIT
 
     protected File downloadDir;
 
-    protected Executor executor;
+    protected ExecutorService executor;
 
     protected SimpleKojiConfigBuilder getKojiConfigBuilder()
             throws Exception
@@ -143,7 +137,7 @@ public class AbstractIT
             passwords.bind( config.getKojiClientCertificatePassword(), config.getKojiSiteId(), PasswordType.KEY );
 
             HttpFactory httpFactory = new HttpFactory( passwords );
-            KojiBindery bindery = new KojiBindery();
+            KojiXmlRpcBindery bindery = new KojiXmlRpcBindery();
 
             System.out.println("DONE: SETTING UP KOJI CLIENT");
             return new KojiClient( config, bindery, httpFactory, executor );

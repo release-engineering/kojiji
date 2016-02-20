@@ -18,7 +18,7 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 import org.commonjava.rwx.estream.model.Event;
 import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.commonjava.rwx.impl.stax.StaxParser;
-import com.redhat.red.build.koji.KojiBindery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -33,7 +33,7 @@ public class AbstractKojiMessageTest
 {
     protected static final String MESSAGES_BASE = "messages/";
 
-    protected static KojiBindery bindery;
+    protected static KojiXmlRpcBindery bindery;
 
     protected EventStreamParserImpl eventParser;
 
@@ -41,7 +41,7 @@ public class AbstractKojiMessageTest
     public static void setupClass()
             throws Exception
     {
-        bindery = new KojiBindery();
+        bindery = new KojiXmlRpcBindery();
     }
 
     @Before

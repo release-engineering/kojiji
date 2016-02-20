@@ -117,7 +117,7 @@ public class BuildOutput
     {
         private BuildOutput target = new BuildOutput();
 
-        private ImportInfo.Builder parent;
+        private KojiImport.Builder parent;
 
         public Builder( int buildrootId, String filename )
         {
@@ -126,7 +126,7 @@ public class BuildOutput
             target.arch = StandardArchitecture.noarch.name();
         }
 
-        public Builder( int buildrootId, String filename, ImportInfo.Builder parent )
+        public Builder( int buildrootId, String filename, KojiImport.Builder parent )
         {
             this.parent = parent;
             target.buildrootId = buildrootId;
@@ -134,7 +134,7 @@ public class BuildOutput
             target.arch = StandardArchitecture.noarch.name();
         }
 
-        public ImportInfo.Builder parent()
+        public KojiImport.Builder parent()
         {
             return parent;
         }

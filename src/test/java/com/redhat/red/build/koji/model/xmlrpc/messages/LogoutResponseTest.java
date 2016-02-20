@@ -37,7 +37,7 @@ public class LogoutResponseTest
             throws Exception
     {
         EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new LogoutResponse() );
+        bindery.render( eventParser, new StatusResponse() );
 
         List<Event<?>> objectEvents = eventParser.getEvents();
         eventParser.clearEvents();
@@ -52,12 +52,12 @@ public class LogoutResponseTest
             throws Exception
     {
         EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new LogoutResponse() );
+        bindery.render( eventParser, new StatusResponse() );
 
         List<Event<?>> objectEvents = eventParser.getEvents();
         EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
 
-        LogoutResponse parsed = bindery.parse( generator, LogoutResponse.class );
+        StatusResponse parsed = bindery.parse( generator, StatusResponse.class );
         assertNotNull( parsed );
     }
 }
