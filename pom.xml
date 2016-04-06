@@ -41,8 +41,8 @@
 
   <properties>
     <javaVersion>1.8</javaVersion>
-    <jhttpcVersion>1.1-SNAPSHOT</jhttpcVersion>
-    <rwxVersion>0.2.2-SNAPSHOT</rwxVersion>
+    <jhttpcVersion>1.1.2</jhttpcVersion>
+    <rwxVersion>0.3</rwxVersion>
     <httpcVersion>4.4</httpcVersion>
     <atlasVersion>0.15.2</atlasVersion>
 
@@ -60,7 +60,7 @@
       <dependency>
         <groupId>org.commonjava.boms</groupId>
         <artifactId>web-commons-bom</artifactId>
-        <version>18-SNAPSHOT</version>
+        <version>21</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
