@@ -42,7 +42,7 @@
   <properties>
     <javaVersion>1.8</javaVersion>
     <jhttpcVersion>1.1.2</jhttpcVersion>
-    <rwxVersion>0.3</rwxVersion>
+    <rwxVersion>0.4-SNAPSHOT</rwxVersion>
     <httpcVersion>4.4</httpcVersion>
     <atlasVersion>0.15.2</atlasVersion>
 

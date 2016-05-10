@@ -1,0 +1,35 @@
+<?xml version='1.0'?>
+<methodCall>
+  <methodName>listBuilds</methodName>
+  <params>
+    <param>
+      <value><struct>
+        <member>
+          <name>__starstar</name>
+          <value><boolean>1</boolean></value>
+        </member>
+        <member>
+          <name>type</name>
+          <value><string>maven</string></value>
+        </member>
+        <member>
+          <name>typeInfo</name>
+          <value><struct>
+            <member>
+              <name>group_id</name>
+              <value><string>commons-io</string></value>
+            </member>
+            <member>
+              <name>artifact_id</name>
+              <value><string>commons-io</string></value>
+            </member>
+            <member>
+              <name>version</name>
+              <value><string>2.4.0.redhat-1</string></value>
+            </member>
+          </struct></value>
+        </member>
+      </struct></value>
+    </param>
+  </params>
+</methodCall>

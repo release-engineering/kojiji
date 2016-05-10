@@ -25,6 +25,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
 import com.redhat.red.build.koji.model.xmlrpc.KojiPermission;
 import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUploaderResult;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
@@ -41,6 +42,10 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByNVRObjRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTagIdRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoggedInUserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginResponse;
@@ -55,6 +60,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.error.XmlRpcException;
 import org.commonjava.rwx.http.RequestModifier;
 import org.commonjava.rwx.http.UrlBuildResult;
@@ -78,6 +84,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -544,6 +551,105 @@ public class KojiClient
         catch ( XmlRpcException e )
         {
             throw new KojiClientException( "Failed to execute content-generator import. Reason: %s", e,
+                                           e.getMessage() );
+        }
+    }
+
+    public List<KojiTagInfo> listTags( KojiBuildInfo buildInfo, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            ListTagsResponse response =
+                    xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( buildInfo ) ), ListTagsResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getTags();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve list of tags for build: %s. Reason: %s", e, buildInfo,
+                                           e.getMessage() );
+        }
+    }
+
+    public List<KojiTagInfo> listTags( KojiNVR nvr, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            ListTagsResponse response =
+                    xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( nvr ) ), ListTagsResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getTags();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve list of tags for build: %s. Reason: %s", e, nvr,
+                                           e.getMessage() );
+        }
+    }
+
+    public List<KojiTagInfo> listTags( String nvr, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            ListTagsResponse response =
+                    xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( nvr ) ), ListTagsResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getTags();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve list of tags for build: %s. Reason: %s", e, nvr,
+                                           e.getMessage() );
+        }
+    }
+
+    public List<KojiTagInfo> listTags( int buildId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            ListTagsResponse response =
+                    xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( buildId ) ), ListTagsResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getTags();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve list of tags for build: %s. Reason: %s", e, buildId,
+                                           e.getMessage() );
+        }
+    }
+
+    public List<KojiBuildInfo> listBuilds( ProjectVersionRef gav, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            ListBuildsResponse response = xmlrpcClient.call( new ListBuildsRequest( gav ), ListBuildsResponse.class,
+                                                             sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getBuilds();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to retrieve list of builds for: %s. Reason: %s", e, gav,
                                            e.getMessage() );
         }
     }

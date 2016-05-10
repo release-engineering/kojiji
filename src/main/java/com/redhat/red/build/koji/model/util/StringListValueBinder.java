@@ -19,10 +19,9 @@ import org.apache.commons.lang.StringUtils;
 import org.commonjava.rwx.binding.mapping.Mapping;
 import org.commonjava.rwx.binding.spi.Binder;
 import org.commonjava.rwx.binding.spi.BindingContext;
-import org.commonjava.rwx.binding.spi.value.AbstractValueBinder;
+import org.commonjava.rwx.binding.spi.value.CustomValueBinder;
 import org.commonjava.rwx.error.XmlRpcException;
 import org.commonjava.rwx.spi.XmlRpcListener;
-import org.commonjava.rwx.util.LambdaHolder;
 import org.commonjava.rwx.vocab.ValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.apache.commons.lang.StringUtils.join;
 
@@ -40,7 +38,7 @@ import static org.apache.commons.lang.StringUtils.join;
  * Created by jdcasey on 1/8/16.
  */
 public class StringListValueBinder
-        extends AbstractValueBinder
+        extends CustomValueBinder
 {
     public StringListValueBinder( Binder parent, Class<?> type, BindingContext context )
     {
@@ -67,7 +65,14 @@ public class StringListValueBinder
     }
 
     @Override
-    public Binder value( Object value, ValueType type )
+    protected ValueType getResultType( Object v, ValueType t )
+            throws XmlRpcException
+    {
+        return ValueType.ARRAY;
+    }
+
+    @Override
+    public Object getResult( Object value, ValueType type )
             throws XmlRpcException
     {
         if ( value == null )
@@ -101,28 +106,6 @@ public class StringListValueBinder
         }
 
         logger.trace( "Got {} parts:\n  {}", parts.size(), StringUtils.join( parts, "\n  " ) );
-
-        Binder parent = getParent();
-//        AtomicInteger idx = new AtomicInteger( 0 );
-//        LambdaHolder<XmlRpcException> errorHolder = new LambdaHolder<>();
-//
-//        parent.startArray();
-//        parts.forEach( (part)->{
-//            try
-//            {
-//                int i = idx.getAndIncrement();
-//                parent.startArrayElement( i );
-//                parent.arrayElement( i, part, ValueType.STRING );
-//                parent.endArrayElement();
-//            }
-//            catch ( XmlRpcException e )
-//            {
-//                errorHolder.set( e );
-//            }
-//        });
-//        parent.endArray();
-        parent.value( parts, ValueType.ARRAY );
-
-        return parent;
+        return parts;
     }
 }
