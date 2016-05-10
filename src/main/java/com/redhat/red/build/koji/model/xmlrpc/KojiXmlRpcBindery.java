@@ -22,6 +22,8 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.ConfirmationResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetPackageIdRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoggedInUserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginResponse;
@@ -59,7 +61,7 @@ public class KojiXmlRpcBindery
                 ApiVersionResponse.class, CheckPermissionRequest.class, ConfirmationResponse.class,
                 CreateTagRequest.class, GetPackageIdRequest.class, IdResponse.class, LoggedInUserRequest.class, LoginRequest.class,
                 LoginResponse.class, LogoutRequest.class, StatusResponse.class, TagRequest.class, TagResponse.class,
-                UserRequest.class, UserResponse.class };
+                UserRequest.class, UserResponse.class, ListBuildsRequest.class, ListBuildsResponse.class };
 
         return new ReflectionMapper().loadRecipes( classes );
     }

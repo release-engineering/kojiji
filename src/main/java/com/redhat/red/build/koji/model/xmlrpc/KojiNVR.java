@@ -10,6 +10,15 @@ import org.commonjava.rwx.binding.anno.StructPart;
 @StructPart
 public class KojiNVR
 {
+    @DataKey( "packageID" )
+    private KojiIdOrName packageId;
+
+    @DataKey( "userID" )
+    private KojiIdOrName userId;
+
+    @DataKey( "tagID" )
+    private KojiIdOrName tagId;
+
     @DataKey( "name" )
     private String name;
 
@@ -40,5 +49,10 @@ public class KojiNVR
     public String getRelease()
     {
         return release;
+    }
+
+    public String renderString()
+    {
+        return String.format( "%s-%s-%s", getName(), getVersion().replace( '-', '_' ), getRelease() );
     }
 }

@@ -19,7 +19,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import org.commonjava.rwx.binding.mapping.Mapping;
 import org.commonjava.rwx.binding.spi.Binder;
 import org.commonjava.rwx.binding.spi.BindingContext;
-import org.commonjava.rwx.binding.spi.value.AbstractValueBinder;
+import org.commonjava.rwx.binding.spi.value.CustomValueBinder;
 import org.commonjava.rwx.error.XmlRpcException;
 import org.commonjava.rwx.spi.XmlRpcListener;
 import org.commonjava.rwx.vocab.ValueType;
@@ -32,7 +32,7 @@ import java.util.Map;
  * Created by jdcasey on 1/14/16.
  */
 public class IdOrNameValueBinder
-        extends AbstractValueBinder
+        extends CustomValueBinder
 {
     public IdOrNameValueBinder( Binder parent, Class<?> type, BindingContext context )
     {
@@ -71,7 +71,7 @@ public class IdOrNameValueBinder
     }
 
     @Override
-    public Binder value( Object value, ValueType type )
+    public Object getResult( Object value, ValueType type )
             throws XmlRpcException
     {
         if ( value == null )
@@ -82,8 +82,13 @@ public class IdOrNameValueBinder
         Logger logger = LoggerFactory.getLogger( getClass() );
         logger.debug( "Setting value: {} (type: {})", value, type );
         logger.debug( "Setting value on parent: {}", getParent() );
-        KojiIdOrName val = KojiIdOrName.getFor( value );
-        getParent().value( val, type );
-        return getParent();
+        return KojiIdOrName.getFor( value );
+    }
+
+    @Override
+    protected ValueType getResultType( Object v, ValueType t )
+            throws XmlRpcException
+    {
+        return t;
     }
 }

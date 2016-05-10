@@ -90,4 +90,9 @@ public class KojiBuildInfo
     {
         this.release = release;
     }
+
+    public String toString()
+    {
+        return String.format( "KojiBuildInfo[%s-%s-%s]", getName(), getVersion().replace( '-', '_' ), getRelease() );
+    }
 }

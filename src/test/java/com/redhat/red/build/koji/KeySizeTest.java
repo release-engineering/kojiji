@@ -1,6 +1,9 @@
 package com.redhat.red.build.koji;
 
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import javax.crypto.Cipher;
 import java.io.IOException;
@@ -17,6 +20,12 @@ import static org.junit.Assert.assertThat;
  */
 public class KeySizeTest
 {
+    @Before
+    public void testAssumptions()
+    {
+        Assume.assumeTrue( System.getProperty("java.runtime.name").contains("OpenJDK") );
+    }
+
     @Test
     public void aesKeySize()
     {
