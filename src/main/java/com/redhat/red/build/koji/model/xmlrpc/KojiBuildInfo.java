@@ -9,7 +9,7 @@ import org.commonjava.rwx.binding.anno.StructPart;
 @StructPart
 public class KojiBuildInfo
 {
-    @DataKey( "id" )
+    @DataKey( "build_id" )
     private int id;
 
     @DataKey( "package_id" )
@@ -40,6 +40,17 @@ public class KojiBuildInfo
       completion_time: time the build was completed (may be null)
       completion_ts: time the build was completed (epoch, may be null)
      */
+
+    public KojiBuildInfo(){}
+
+    public KojiBuildInfo( int id, int packageId, String name, String version, String release )
+    {
+        this.id = id;
+        this.packageId = packageId;
+        this.name = name;
+        this.version = version;
+        this.release = release;
+    }
 
     public int getId()
     {
@@ -89,6 +100,30 @@ public class KojiBuildInfo
     public void setRelease( String release )
     {
         this.release = release;
+    }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( !( o instanceof KojiBuildInfo ) )
+        {
+            return false;
+        }
+
+        KojiBuildInfo that = (KojiBuildInfo) o;
+
+        return getId() == that.getId();
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return getId();
     }
 
     public String toString()
