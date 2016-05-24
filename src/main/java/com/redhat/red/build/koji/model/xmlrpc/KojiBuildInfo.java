@@ -1,7 +1,15 @@
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.redhat.red.build.koji.model.util.TimestampValueBinder;
+import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
+import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
+import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.StructPart;
+
+import java.util.Date;
+
+import static com.redhat.red.build.koji.model.util.DateUtils.toUTC;
 
 /**
  * Created by jdcasey on 1/29/16.
@@ -24,24 +32,53 @@ public class KojiBuildInfo
     @DataKey( "release" )
     private String release;
 
+    @Converter( TimestampValueBinder.class )
+    @DataKey( "completion_time" )
+    private Date completionTime;
+
+    @Converter( TimestampValueBinder.class )
+    @DataKey( "creation_time" )
+    private Date creationTime;
+
+    @DataKey( "nvr" )
+    private String nvr;
+
+    @DataKey( "task_id" )
+    private Integer taskId;
+
+    @DataKey( "owner_id" )
+    private Integer ownerId;
+
+    @DataKey( "owner_name" )
+    private String ownerName;
+
+    @DataKey( "state" )
+    private Integer buildState;
+
+    @DataKey( "creation_event_id" )
+    private Integer creationEventId;
+
+    @DataKey( "maven_group_id" )
+    private String mavenGroupId;
+
+    @DataKey( "maven_artifact_id" )
+    private String mavenArtifactId;
+
+    @DataKey( "maven_version" )
+    private String mavenVersion;
+
     /*
-    TODO: Implement the following fields, once we know what the data types are (and care about them):
+      TODO: Implement the following fields, once we care about them:
       epoch
-      nvr
-      state
-      task_id: ID of the task that kicked off the build
-      owner_id: ID of the user who kicked off the build
-      owner_name: name of the user who kicked off the build
       volume_id: ID of the storage volume
       volume_name: name of the storage volume
-      creation_event_id: id of the create_event
-      creation_time: time the build was created (text)
       creation_ts: time the build was created (epoch)
-      completion_time: time the build was completed (may be null)
       completion_ts: time the build was completed (epoch, may be null)
      */
 
-    public KojiBuildInfo(){}
+    public KojiBuildInfo()
+    {
+    }
 
     public KojiBuildInfo( int id, int packageId, String name, String version, String release )
     {
@@ -100,6 +137,123 @@ public class KojiBuildInfo
     public void setRelease( String release )
     {
         this.release = release;
+    }
+
+    public Date getCompletionTime()
+    {
+        // make these sortable...never null
+        return completionTime == null ? new Date() : completionTime;
+    }
+
+    public void setCompletionTime( Date completionTime )
+    {
+        this.completionTime = toUTC( completionTime );
+    }
+
+    public Date getCreationTime()
+    {
+        // make these sortable...never null
+        return creationTime == null ? new Date() : creationTime;
+    }
+
+    public void setCreationTime( Date creationTime )
+    {
+        this.creationTime = toUTC( creationTime );
+    }
+
+    public String getNvr()
+    {
+        return nvr;
+    }
+
+    public void setNvr( String nvr )
+    {
+        this.nvr = nvr;
+    }
+
+    public Integer getTaskId()
+    {
+        return taskId;
+    }
+
+    public void setTaskId( Integer taskId )
+    {
+        this.taskId = taskId;
+    }
+
+    public Integer getOwnerId()
+    {
+        return ownerId;
+    }
+
+    public void setOwnerId( Integer ownerId )
+    {
+        this.ownerId = ownerId;
+    }
+
+    public String getOwnerName()
+    {
+        return ownerName;
+    }
+
+    public void setOwnerName( String ownerName )
+    {
+        this.ownerName = ownerName;
+    }
+
+    public Integer getBuildState()
+    {
+        return buildState;
+    }
+
+    public void setBuildState( Integer buildState )
+    {
+        this.buildState = buildState;
+    }
+
+    public Integer getCreationEventId()
+    {
+        return creationEventId;
+    }
+
+    public void setCreationEventId( Integer creationEventId )
+    {
+        this.creationEventId = creationEventId;
+    }
+
+    public String getMavenGroupId()
+    {
+        return mavenGroupId;
+    }
+
+    public void setMavenGroupId( String mavenGroupId )
+    {
+        this.mavenGroupId = mavenGroupId;
+    }
+
+    public String getMavenArtifactId()
+    {
+        return mavenArtifactId;
+    }
+
+    public void setMavenArtifactId( String mavenArtifactId )
+    {
+        this.mavenArtifactId = mavenArtifactId;
+    }
+
+    public String getMavenVersion()
+    {
+        return mavenVersion;
+    }
+
+    public void setMavenVersion( String mavenVersion )
+    {
+        this.mavenVersion = mavenVersion;
+    }
+
+    public ProjectVersionRef getGAV()
+    {
+        return new SimpleProjectVersionRef( getMavenGroupId(), getMavenArtifactId(), getMavenVersion() );
     }
 
     @Override
