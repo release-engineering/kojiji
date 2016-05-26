@@ -52,4 +52,13 @@ public class ListBuildsRequestTest
 
         assertThat( parsed.getQuery().getGav(), equalTo( gav ) );
     }
+
+    @Test
+    public void renderXML()
+            throws Exception
+    {
+        ProjectVersionRef gav = new SimpleProjectVersionRef( "commons-io", "commons-io", "2.4.0.redhat-1" );
+        String xml = bindery.renderString( new ListBuildsRequest( gav ) );
+        System.out.println( xml );
+    }
 }

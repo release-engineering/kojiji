@@ -13,7 +13,7 @@ import org.commonjava.rwx.binding.anno.Request;
 /**
  * Created by jdcasey on 1/29/16.
  */
-@Request( method="getBuild" )
+@Request( method="listBuilds" )
 public class ListBuildsRequest
 {
     @DataIndex( 0 )

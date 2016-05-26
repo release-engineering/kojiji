@@ -61,4 +61,18 @@ public class ListBuildsResponseTest
         assertThat( parsed.getBuilds().contains( one ), equalTo( true ) );
         assertThat( parsed.getBuilds().contains( two ), equalTo( true ) );
     }
+
+    @Test
+    public void parseNilResult()
+            throws Exception
+    {
+        List<Event<?>> capturedEvents = parseEvents( "listBuilds-byGAV-response.xml" );
+
+        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( capturedEvents );
+
+        ListBuildsResponse parsed = bindery.parse( generator, ListBuildsResponse.class );
+        assertNotNull( parsed );
+
+        assertThat( parsed.getBuilds() == null || parsed.getBuilds().isEmpty(), equalTo( true ) );
+    }
 }
