@@ -77,7 +77,7 @@ public class TimestampValueBinder
     {
         if ( value == null )
         {
-            return getParent();
+            return null;
         }
 
         Logger logger = LoggerFactory.getLogger( getClass() );

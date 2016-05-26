@@ -136,11 +136,8 @@ public class AbstractIT
             PasswordManager passwords = new MemoryPasswordManager();
             passwords.bind( config.getKojiClientCertificatePassword(), config.getKojiSiteId(), PasswordType.KEY );
 
-            HttpFactory httpFactory = new HttpFactory( passwords );
-            KojiXmlRpcBindery bindery = new KojiXmlRpcBindery();
-
             System.out.println("DONE: SETTING UP KOJI CLIENT");
-            return new KojiClient( config, bindery, httpFactory, executor );
+            return new KojiClient( config, passwords, executor );
         }
         catch ( Exception e )
         {

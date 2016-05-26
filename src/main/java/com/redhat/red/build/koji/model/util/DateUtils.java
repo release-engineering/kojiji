@@ -12,10 +12,15 @@ public final class DateUtils
 
     private DateUtils(){}
 
-    public static Date toUTC( Date completionTime )
+    public static Date toUTC( Date date )
     {
+        if ( date == null )
+        {
+            return null;
+        }
+
         Calendar cal = Calendar.getInstance();
-        cal.setTime( completionTime );
+        cal.setTime( date );
         cal.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
 
         return cal.getTime();

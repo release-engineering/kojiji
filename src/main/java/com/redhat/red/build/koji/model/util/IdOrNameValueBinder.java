@@ -76,7 +76,7 @@ public class IdOrNameValueBinder
     {
         if ( value == null )
         {
-            return getParent();
+            return null;
         }
 
         Logger logger = LoggerFactory.getLogger( getClass() );

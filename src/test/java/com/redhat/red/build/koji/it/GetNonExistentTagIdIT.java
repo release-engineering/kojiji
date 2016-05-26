@@ -49,6 +49,8 @@ public class GetNonExistentTagIdIT
             {
                 fail( e.getMessage() );
             }
+
+            return null;
         });
     }
 }
