@@ -26,15 +26,24 @@ import org.commonjava.rwx.vocab.ValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
+
+import static com.redhat.red.build.koji.model.util.DateUtils.toUTC;
 
 /**
  * Created by jdcasey on 1/14/16.
  */
-public class IdOrNameValueBinder
+public class TimestampValueBinder
         extends CustomValueBinder
 {
-    public IdOrNameValueBinder( Binder parent, Class<?> type, BindingContext context )
+    private static final String TS_FORMAT = "yyyy-MM-dd hh:mm:ss ZZZ";
+
+    public TimestampValueBinder( Binder parent, Class<?> type, BindingContext context )
     {
         super( parent, type, context );
     }
@@ -50,23 +59,15 @@ public class IdOrNameValueBinder
             listener.value( null, ValueType.NIL );
             return;
         }
-        else if ( value instanceof KojiIdOrName )
+        else if ( value instanceof Date )
         {
-            KojiIdOrName idorn = (KojiIdOrName) value;
-            Integer id = idorn.getId();
-            if ( id != null )
-            {
-                listener.value( id, ValueType.INT );
-            }
-            else
-            {
-                listener.value( idorn.getName(), ValueType.STRING );
-            }
+            Date d = (Date) value;
+            listener.value( Long.toString( toUTC( d ).getTime() ) + ".00000", ValueType.STRING );
         }
         else
         {
             throw new XmlRpcException( "Invalid value type: {} for converter: {} (expects: {} or a subclass)", value.getClass().getName(),
-                                       getClass().getName(), KojiIdOrName.class.getName() );
+                                       getClass().getName(), Date.class.getName() );
         }
     }
 
@@ -82,7 +83,21 @@ public class IdOrNameValueBinder
         Logger logger = LoggerFactory.getLogger( getClass() );
         logger.debug( "Setting value: {} (type: {})", value, type );
         logger.debug( "Setting value on parent: {}", getParent() );
-        return KojiIdOrName.getFor( value );
+
+        String[] parts = String.valueOf( value ).split( "\\." );
+        if ( parts.length != 2 )
+        {
+            throw new XmlRpcException( "Invalid timestamp: '%s'", value );
+        }
+
+        try
+        {
+            return new SimpleDateFormat( TS_FORMAT ).parse( parts[0] + " UTC" );
+        }
+        catch ( ParseException e )
+        {
+            throw new XmlRpcException( "Unparseable timestamp: %s", e, value );
+        }
     }
 
     @Override

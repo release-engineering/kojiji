@@ -61,6 +61,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
+import org.commonjava.rwx.binding.error.BindException;
 import org.commonjava.rwx.error.XmlRpcException;
 import org.commonjava.rwx.http.RequestModifier;
 import org.commonjava.rwx.http.UrlBuildResult;
@@ -68,6 +69,8 @@ import org.commonjava.rwx.http.UrlBuilder;
 import org.commonjava.rwx.http.httpclient4.HC4SyncObjectClient;
 import org.commonjava.util.jhttpc.HttpFactory;
 import org.commonjava.util.jhttpc.JHttpCException;
+import org.commonjava.util.jhttpc.auth.MemoryPasswordManager;
+import org.commonjava.util.jhttpc.auth.PasswordManager;
 import org.commonjava.util.jhttpc.util.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +84,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -189,12 +193,13 @@ public class KojiClient
         };
     }
 
-    public KojiClient( KojiConfig config, KojiXmlRpcBindery bindery, HttpFactory httpFactory,
+    public KojiClient( KojiConfig config, PasswordManager passwordManager,
                        ExecutorService executorService )
+            throws BindException
     {
         this.config = config;
-        this.bindery = bindery;
-        this.httpFactory = httpFactory;
+        this.bindery = new KojiXmlRpcBindery();
+        this.httpFactory = new HttpFactory( passwordManager );
         this.executorService = executorService;
         setup();
     }
@@ -298,19 +303,22 @@ public class KojiClient
         }
     }
 
-    public void withKojiSession( Consumer<KojiSessionInfo> commands )
+    public <T> T withKojiSession( KojiCustomCommand<T> command )
             throws KojiClientException
     {
         KojiSessionInfo session = null;
+        T result = null;
         try
         {
             session = login();
-            commands.accept( session );
+            result = command.execute( session );
         }
         finally
         {
             logout( session );
         }
+
+        return result;
     }
 
     public KojiUserInfo getLoggedInUserInfo( String username )
@@ -352,7 +360,6 @@ public class KojiClient
     }
 
     public void logout( KojiSessionInfo session )
-            throws KojiClientException
     {
         if ( session == null )
         {
@@ -369,12 +376,14 @@ public class KojiClient
 
                 if ( isNotEmpty( response.getError() ) )
                 {
-                    throw new KojiClientException( "Failed to logout from Koji: %s", response.getError() );
+                    Logger logger = LoggerFactory.getLogger( getClass() );
+                    logger.error( "Failed to logout from Koji: {}", response.getError() );
                 }
             }
             catch ( XmlRpcException e )
             {
-                throw new KojiClientException( "Failed to logout: %s", e, e.getMessage() );
+                Logger logger = LoggerFactory.getLogger( getClass() );
+                logger.error( String.format( "Failed to logout: %s", e.getMessage() ), e );
             }
         }
     }
@@ -566,7 +575,8 @@ public class KojiClient
                     xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( buildInfo ) ), ListTagsResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-            return response.getTags();
+            List<KojiTagInfo> tags = response.getTags();
+            return tags == null ? Collections.emptyList() : tags;
         }
         catch ( XmlRpcException e )
         {
@@ -586,7 +596,8 @@ public class KojiClient
                     xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( nvr ) ), ListTagsResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-            return response.getTags();
+            List<KojiTagInfo> tags = response.getTags();
+            return tags == null ? Collections.emptyList() : tags;
         }
         catch ( XmlRpcException e )
         {
@@ -606,7 +617,8 @@ public class KojiClient
                     xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( nvr ) ), ListTagsResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-            return response.getTags();
+            List<KojiTagInfo> tags = response.getTags();
+            return tags == null ? Collections.emptyList() : tags;
         }
         catch ( XmlRpcException e )
         {
@@ -626,7 +638,8 @@ public class KojiClient
                     xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( buildId ) ), ListTagsResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-            return response.getTags();
+            List<KojiTagInfo> tags = response.getTags();
+            return tags == null ? Collections.emptyList() : tags;
         }
         catch ( XmlRpcException e )
         {
@@ -645,7 +658,8 @@ public class KojiClient
             ListBuildsResponse response = xmlrpcClient.call( new ListBuildsRequest( gav ), ListBuildsResponse.class,
                                                              sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-            return response.getBuilds();
+            List<KojiBuildInfo> builds = response.getBuilds();
+            return builds == null ? Collections.emptyList() : builds;
         }
         catch ( XmlRpcException e )
         {

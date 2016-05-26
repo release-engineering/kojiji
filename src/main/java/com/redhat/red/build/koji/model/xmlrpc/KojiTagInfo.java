@@ -64,7 +64,7 @@ public class KojiTagInfo
 
     public KojiTagInfo(){}
 
-    public KojiTagInfo( int id, String name, String permission, int permissionId, List<String> arches, boolean locked,
+    public KojiTagInfo( int id, String name, String permission, Integer permissionId, List<String> arches, boolean locked,
                         boolean mavenSupport, boolean mavenIncludeAll )
     {
         this.id = id;
@@ -186,19 +186,13 @@ public class KojiTagInfo
 
         KojiTagInfo that = (KojiTagInfo) o;
 
-        if ( getId() != that.getId() )
-        {
-            return false;
-        }
-        return getName().equals( that.getName() );
+        return getId() == that.getId();
 
     }
 
     @Override
     public int hashCode()
     {
-        int result = getId();
-        result = 31 * result + getName().hashCode();
-        return result;
+        return Integer.valueOf( getId() ).hashCode();
     }
 }

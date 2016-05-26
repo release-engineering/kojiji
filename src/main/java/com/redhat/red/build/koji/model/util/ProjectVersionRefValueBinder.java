@@ -2,10 +2,10 @@ package com.redhat.red.build.koji.model.util;
 
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
-import org.commonjava.rwx.binding.spi.value.CustomStructBinder;
 import org.commonjava.rwx.binding.mapping.Mapping;
 import org.commonjava.rwx.binding.spi.Binder;
 import org.commonjava.rwx.binding.spi.BindingContext;
+import org.commonjava.rwx.binding.spi.value.CustomStructBinder;
 import org.commonjava.rwx.error.XmlRpcException;
 import org.commonjava.rwx.spi.XmlRpcListener;
 import org.commonjava.rwx.vocab.ValueType;
@@ -53,7 +53,7 @@ public class ProjectVersionRefValueBinder
             }
             case "version":
             {
-                version = String.valueOf( value );
+                version = String.valueOf( value ).replace( '_', '-' );
                 break;
             }
             default:
@@ -91,7 +91,7 @@ public class ProjectVersionRefValueBinder
             listener.structMember( "artifact_id", gav.getArtifactId(), ValueType.STRING );
             listener.value( gav.getArtifactId(), ValueType.STRING );
             listener.endStructMember();
-            listener.structMember( "version", gav.getVersionString(), ValueType.STRING );
+            listener.structMember( "version", gav.getVersionString().replace( '-', '_' ), ValueType.STRING );
             listener.value( gav.getVersionString(), ValueType.STRING );
             listener.endStructMember();
 
