@@ -1,0 +1,75 @@
+{
+  "metadata_version": 0,
+  "build": {
+    "name": "foo-bar",
+    "version": "1",
+    "release": "1",
+    "type": "maven",
+    "source": "https://github.com/release-engineering/kojiji.git",
+    "start_time": 1423148398,
+    "end_time": 1423148828,
+    "extra": {
+      "maven": {
+        "group_id": "foo",
+        "artifact_id": "bar",
+        "version": "1"
+      }
+    }
+  },
+  "buildroots": [
+    {
+      "id": 1,
+      "host": {
+        "os": "rhel-7",
+        "arch": "x86_64"
+      },
+      "content_generator": {
+        "name": "test-cg",
+        "version": "0.1"
+      },
+      "container": {
+        "type": "docker",
+        "arch": "x86_64"
+      },
+      "tools": [
+        {
+          "name": "docker",
+          "version": "1.5.0"
+        }
+      ],
+      "components": [],
+      "extra": {
+        "test-cg": {
+          "build_id": 12345
+        }
+      }
+    }
+  ],
+  "output": [
+    {
+      "buildroot_id": 1,
+      "filename": "bar-1.pom",
+      "filesize": 165,
+      "arch": "noarch",
+      "checksum_type": "md5",
+      "checksum": "cc8cad3c3444d93a7712afd0a08ac6a7",
+      "type": "maven",
+      "extra": {
+        "maven": {
+          "group_id": "foo",
+          "artifact_id": "bar",
+          "version": "1"
+        }
+      }
+    },
+    {
+      "buildroot_id": 1,
+      "filename": "build.log",
+      "filesize": 16,
+      "arch": "noarch",
+      "checksum_type": "md5",
+      "checksum": "a7e90f3e70507564a17e4cec7614ea24",
+      "type": "log"
+    }
+  ]
+}

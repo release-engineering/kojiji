@@ -53,4 +53,13 @@ public class ListTagsRequestTest
 
         assertThat( parsed.getQuery().getBuildId().getId(), equalTo( buildId ) );
     }
+
+    @Test
+    public void renderXML()
+            throws Exception
+    {
+        int buildId = 422953;
+        String xml = bindery.renderString( new ListTagsRequest( new KojiTagQuery( buildId ) ) );
+        System.out.println( xml );
+    }
 }

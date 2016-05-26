@@ -313,6 +313,20 @@ public class KojiClient
             session = login();
             result = command.execute( session );
         }
+        catch ( Exception e )
+        {
+            Logger logger = LoggerFactory.getLogger( getClass() );
+            logger.error( "Lambda failed", e );
+
+            if ( e instanceof KojiClientException )
+            {
+                throw e;
+            }
+            else
+            {
+                throw new KojiClientException( "Lambda command failed: %s", e, e.getMessage() );
+            }
+        }
         finally
         {
             logout( session );

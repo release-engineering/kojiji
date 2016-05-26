@@ -83,14 +83,21 @@ public class ProjectVersionRefValueBinder
         {
             ProjectVersionRef gav = (ProjectVersionRef) value;
 
-            listener.startStruct();
+            Logger logger = LoggerFactory.getLogger( getClass() );
+            logger.trace( "GENERATE: Start struct for GAV: {}", gav );
 
+            listener.startStruct();
+            listener.startStructMember( "group_id" );
             listener.structMember( "group_id", gav.getGroupId(), ValueType.STRING );
             listener.value( gav.getGroupId(), ValueType.STRING );
             listener.endStructMember();
+
+            listener.startStructMember( "artifact_id" );
             listener.structMember( "artifact_id", gav.getArtifactId(), ValueType.STRING );
             listener.value( gav.getArtifactId(), ValueType.STRING );
             listener.endStructMember();
+
+            listener.startStructMember( "version" );
             listener.structMember( "version", gav.getVersionString().replace( '-', '_' ), ValueType.STRING );
             listener.value( gav.getVersionString(), ValueType.STRING );
             listener.endStructMember();

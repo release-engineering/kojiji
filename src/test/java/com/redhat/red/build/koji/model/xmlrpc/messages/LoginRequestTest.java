@@ -60,4 +60,12 @@ public class LoginRequestTest
         LoginRequest parsed = bindery.parse( generator, LoginRequest.class );
         assertNotNull( parsed );
     }
+
+    @Test
+    public void renderXML()
+            throws Exception
+    {
+        String xml = bindery.renderString( new LoginRequest() );
+        System.out.println( xml );
+    }
 }
