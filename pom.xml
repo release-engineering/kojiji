@@ -48,7 +48,7 @@
     <httpcVersion>4.4</httpcVersion>
     <atlasVersion>0.15.2</atlasVersion>
 
-    <dbImage>postgres:9.4</dbImage>
+    <dbImage>docker.io/postgres:9.4</dbImage>
     <hubImage>docker.io/buildchimp/koji-dojo-hub</hubImage>
 
     <dbWaitFor>database system is ready to accept connections</dbWaitFor>
