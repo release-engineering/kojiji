@@ -232,6 +232,9 @@
           <groupId>net.wouterdanes.docker</groupId>
           <artifactId>docker-maven-plugin</artifactId>
           <version>5.0.0</version>
+          <configuration>
+            <serverId>registry.hub.docker.com</serverId>
+          </configuration>
           <executions>
             <execution>
               <id>start-IT-containers</id>
