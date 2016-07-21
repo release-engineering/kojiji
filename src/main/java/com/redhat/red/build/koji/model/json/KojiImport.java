@@ -26,6 +26,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * See: <a href="http://fedoraproject.org/wiki/Koji/ContentGeneratorMetadata">http://fedoraproject.org/wiki/Koji/ContentGeneratorMetadata</a>
+ *
  * Created by jdcasey on 2/10/16.
  */
 public class KojiImport
