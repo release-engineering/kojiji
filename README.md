@@ -58,7 +58,11 @@ Opening temp/list-tags-2.txt
 Closing temp/list-tags-2.txt (717 lines)
 ```
 
-3. Implement the Model Classes
+### 3. Redact Sensitive Information in Research Folder
+
+Your captured HTTP exchanges will contain server addresses and XML-RPC endpoint information. **Please take great care to redact this information, in order to avoid any sort of security problem with running systems.**
+
+### 4. Implement the Model Classes
 
 For each file in the output directory, implement the appropriate object-model classes in the `com.redhat.red.build.koji.model.xmlrpc.messages` package, using the RWX bindings, to model the XML request and response. Here's part of an example message exchange file containing some of the `list-tags` result from above:
 
@@ -121,18 +125,18 @@ Content-Type: text/xml
 
 For this example, the corresponding object-model classes are [com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsRequest](https://github.com/release-engineering/kojiji/blob/master/src/main/java/com/redhat/red/build/koji/model/xmlrpc/messages/ListTagsRequest.java) and [com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsResponse](https://github.com/release-engineering/kojiji/blob/master/src/main/java/com/redhat/red/build/koji/model/xmlrpc/messages/ListTagsResponse.java).
 
-### Factor Out Common Payload Sections
+### 5. Factor Out Common Payload Sections
 
 Many requests / responses will contain the same types of information. These should be factored out into common object-model classes that can be reused between message class types. These live in the `com.redhat.red.build.koji.model.xmlrpc` package. For instance, multiple Koji calls may return build information as part of the response. This information is captured by the class [com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo](https://github.com/release-engineering/kojiji/blob/master/src/main/java/com/redhat/red/build/koji/model/xmlrpc/KojiBuildInfo.java).
 
-### Write Unit Tests
+### 6. Write Unit Tests
 
 You already have sample XML for the request and response messages that Koji expects. From here, you can turn them into unit tests that verify round-trip serialization / deserialization to XML for your new model classes. By chopping up each message exchange into its constituent XML documents and saving them in `src/test/resources`, you can implement something like the following minimal set of unit tests:
 
 * [com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsRequestTest](https://github.com/release-engineering/kojiji/blob/master/src/test/java/com/redhat/red/build/koji/model/xmlrpc/messages/ListTagsRequestTest.java)
 * [com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsResponseTest](https://github.com/release-engineering/kojiji/blob/master/src/test/java/com/redhat/red/build/koji/model/xmlrpc/messages/ListTagsResponseTest.java)
 
-### TO BE DOCUMENTED: Integration Testing
+### 7. TO BE DOCUMENTED: Integration Testing
 
 Unit tests are fine for verifying compatibility with a message protocol from a given point in time, but what happens if that message protocol changes? The only way to be really certain of compatibility with a particular version of Koji is to run tests that talk to a live instance. We have some of these tests already, which use a suite of Docker containers at build time to provision a Koji environment for testing purposes. After the build completes, these instances are torn down and discarded (after logs and other files pertinent to the test results have been retrieved, of course). To support this, we're using a project called [koji-dojo](https://github.com/release-engineering/koji-dojo).
 
