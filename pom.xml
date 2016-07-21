@@ -40,6 +40,8 @@
   </scm>
 
   <properties>
+    <enforcer.skip>true</enforcer.skip>
+
     <javaVersion>1.8</javaVersion>
     <jhttpcVersion>1.2</jhttpcVersion>
     <rwxVersion>1.0</rwxVersion>
