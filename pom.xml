@@ -231,7 +231,7 @@
           <!-- See: https://github.com/wouterd/docker-maven-plugin -->
           <groupId>net.wouterdanes.docker</groupId>
           <artifactId>docker-maven-plugin</artifactId>
-          <version>5.0.0</version>
+          <version>5.0.1-SNAPSHOT</version>
           <configuration>
             <serverId>registry.hub.docker.com</serverId>
           </configuration>
