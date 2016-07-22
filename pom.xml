@@ -55,6 +55,9 @@
 
     <dockerProvider>local</dockerProvider>
     <dockerNetwork>bridge</dockerNetwork>
+
+    <koji-hub-http-port>${docker.containers.koji-hub.ports.80/tcp.port}</koji-hub-http-port>
+    <koji-hub-https-port>${docker.containers.koji-hub.ports.443/tcp.port}</koji-hub-https-port>
   </properties>
 
   <dependencyManagement>
@@ -307,8 +310,8 @@
                     <![CDATA[
 docker.containers.koji-hub.ports.80/tcp.host=${docker.containers.koji-hub.ports.80/tcp.host}
 docker.containers.koji-hub.ports.443/tcp.host=${docker.containers.koji-hub.ports.443/tcp.host}
-docker.containers.koji-hub.ports.80/tcp.port=${docker.containers.koji-hub.ports.80/tcp.port}
-docker.containers.koji-hub.ports.443/tcp.port=${docker.containers.koji-hub.ports.443/tcp.port}
+docker.containers.koji-hub.ports.80/tcp.port=${koji-hub-http-port}
+docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
 
 #javax.net.debug=ssl:handshake:verbose
 ]]>
@@ -354,6 +357,9 @@ docker.containers.koji-hub.ports.443/tcp.port=${docker.containers.koji-hub.ports
       <id>ci</id>
       <properties>
         <dockerNetwork>ci-network</dockerNetwork>
+
+        <koji-hub-http-port>80</koji-hub-http-port>
+        <koji-hub-https-port>443</koji-hub-https-port>
       </properties>
     </profile>
     <profile>
