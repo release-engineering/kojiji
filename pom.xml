@@ -54,6 +54,7 @@
     <hubWaitFor>Starting HTTPd</hubWaitFor>
 
     <dockerProvider>local</dockerProvider>
+    <dockerNetwork>bridge</dockerNetwork>
   </properties>
 
   <dependencyManagement>
@@ -255,6 +256,9 @@
                       <POSTGRES_USER>koji</POSTGRES_USER>
                       <POSTGRES_PASSWORD>mypassword</POSTGRES_PASSWORD>
                     </env>
+                    <hostConfig>
+                      <networkMode>${dockerNetwork}</networkMode>
+                    </hostConfig>
                     <waitForStartup>${dbWaitFor}</waitForStartup>
                   </container>
                   <container>
@@ -267,6 +271,9 @@
                         <containerAlias>koji-db</containerAlias>
                       </link>
                     </links>
+                    <hostConfig>
+                      <networkMode>${dockerNetwork}</networkMode>
+                    </hostConfig>
                   </container>
                 </containers>
               </configuration>
@@ -343,6 +350,12 @@ docker.containers.koji-hub.ports.443/tcp.port=${docker.containers.koji-hub.ports
   </build>
 
   <profiles>
+    <profile>
+      <id>ci</id>
+      <properties>
+        <dockerNetwork>ci-network</dockerNetwork>
+      </properties>
+    </profile>
     <profile>
       <id>local-its</id>
 
