@@ -58,6 +58,8 @@
 
     <koji-hub-http-port>${docker.containers.koji-hub.ports.80/tcp.port}</koji-hub-http-port>
     <koji-hub-https-port>${docker.containers.koji-hub.ports.443/tcp.port}</koji-hub-https-port>
+    <koji-hub-http-address>${docker.containers.koji-hub.ports.80/tcp.host}</koji-hub-http-address>
+    <koji-hub-https-address>${docker.containers.koji-hub.ports.443/tcp.host}</koji-hub-https-address>
   </properties>
 
   <dependencyManagement>
@@ -308,8 +310,8 @@
                   <!--suppress MavenModelInspection -->
                   <echo file="${project.build.directory}/docker.properties">
                     <![CDATA[
-docker.containers.koji-hub.ports.80/tcp.host=${docker.containers.koji-hub.ports.80/tcp.host}
-docker.containers.koji-hub.ports.443/tcp.host=${docker.containers.koji-hub.ports.443/tcp.host}
+docker.containers.koji-hub.ports.80/tcp.host=${koji-hub-http-address}
+docker.containers.koji-hub.ports.443/tcp.host=${koji-hub-https-address}
 docker.containers.koji-hub.ports.80/tcp.port=${koji-hub-http-port}
 docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
 
@@ -360,6 +362,8 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
 
         <koji-hub-http-port>80</koji-hub-http-port>
         <koji-hub-https-port>443</koji-hub-https-port>
+        <koji-hub-http-address>koji-hub</koji-hub-http-address>
+        <koji-hub-https-address>koji-hub</koji-hub-https-address>
       </properties>
     </profile>
     <profile>
