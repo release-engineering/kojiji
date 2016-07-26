@@ -40,19 +40,26 @@
   </scm>
 
   <properties>
+    <enforcer.skip>true</enforcer.skip>
     <javaVersion>1.8</javaVersion>
-    <jhttpcVersion>1.2</jhttpcVersion>
+    <jhttpcVersion>1.3-SNAPSHOT</jhttpcVersion>
     <rwxVersion>1.0</rwxVersion>
     <httpcVersion>4.4</httpcVersion>
     <atlasVersion>0.15.2</atlasVersion>
 
     <dbImage>postgres:9.4</dbImage>
-    <hubImage>docker.io/buildchimp/koji-dojo-hub</hubImage>
+    <hubImage>docker.io/buildchimp/koji-dojo-hub:dev</hubImage>
 
     <dbWaitFor>database system is ready to accept connections</dbWaitFor>
     <hubWaitFor>Starting HTTPd</hubWaitFor>
 
     <dockerProvider>local</dockerProvider>
+    <dockerNetwork>bridge</dockerNetwork>
+
+    <koji-hub-http-port>${docker.containers.koji-hub.ports.80/tcp.port}</koji-hub-http-port>
+    <koji-hub-https-port>${docker.containers.koji-hub.ports.443/tcp.port}</koji-hub-https-port>
+    <koji-hub-http-address>${docker.containers.koji-hub.ports.80/tcp.host}</koji-hub-http-address>
+    <koji-hub-https-address>${docker.containers.koji-hub.ports.443/tcp.host}</koji-hub-https-address>
   </properties>
 
   <dependencyManagement>
@@ -231,7 +238,10 @@
           <!-- See: https://github.com/wouterd/docker-maven-plugin -->
           <groupId>net.wouterdanes.docker</groupId>
           <artifactId>docker-maven-plugin</artifactId>
-          <version>4.1.0</version>
+          <version>5.0.1-SNAPSHOT</version>
+          <configuration>
+            <serverId>registry.hub.docker.com</serverId>
+          </configuration>
           <executions>
             <execution>
               <id>start-IT-containers</id>
@@ -246,16 +256,21 @@
                   <container>
                     <id>koji-db</id>
                     <image>${dbImage}</image>
+                    <hostname>koji-db</hostname>
                     <env>
                       <POSTGRES_DB>koji</POSTGRES_DB>
                       <POSTGRES_USER>koji</POSTGRES_USER>
                       <POSTGRES_PASSWORD>mypassword</POSTGRES_PASSWORD>
                     </env>
+                    <hostConfig>
+                      <networkMode>${dockerNetwork}</networkMode>
+                    </hostConfig>
                     <waitForStartup>${dbWaitFor}</waitForStartup>
                   </container>
                   <container>
                     <id>koji-hub</id>
                     <image>${hubImage}</image>
+                    <hostname>koji-hub</hostname>
                     <waitForStartup>${hubWaitFor}</waitForStartup>
                     <links>
                       <link>
@@ -263,6 +278,9 @@
                         <containerAlias>koji-db</containerAlias>
                       </link>
                     </links>
+                    <hostConfig>
+                      <networkMode>${dockerNetwork}</networkMode>
+                    </hostConfig>
                   </container>
                 </containers>
               </configuration>
@@ -294,10 +312,10 @@
                   <!--suppress MavenModelInspection -->
                   <echo file="${project.build.directory}/docker.properties">
                     <![CDATA[
-docker.containers.koji-hub.ports.80/tcp.host=${docker.containers.koji-hub.ports.80/tcp.host}
-docker.containers.koji-hub.ports.443/tcp.host=${docker.containers.koji-hub.ports.443/tcp.host}
-docker.containers.koji-hub.ports.80/tcp.port=${docker.containers.koji-hub.ports.80/tcp.port}
-docker.containers.koji-hub.ports.443/tcp.port=${docker.containers.koji-hub.ports.443/tcp.port}
+docker.containers.koji-hub.ports.80/tcp.host=${koji-hub-http-address}
+docker.containers.koji-hub.ports.443/tcp.host=${koji-hub-https-address}
+docker.containers.koji-hub.ports.80/tcp.port=${koji-hub-http-port}
+docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
 
 #javax.net.debug=ssl:handshake:verbose
 ]]>
@@ -339,6 +357,17 @@ docker.containers.koji-hub.ports.443/tcp.port=${docker.containers.koji-hub.ports
   </build>
 
   <profiles>
+    <profile>
+      <id>ci</id>
+      <properties>
+        <dockerNetwork>ci-network</dockerNetwork>
+
+        <koji-hub-http-port>80</koji-hub-http-port>
+        <koji-hub-https-port>443</koji-hub-https-port>
+        <koji-hub-http-address>${docker.containers.koji-hub.nets.ci-network}</koji-hub-http-address>
+        <koji-hub-https-address>${docker.containers.koji-hub.nets.ci-network}</koji-hub-https-address>
+      </properties>
+    </profile>
     <profile>
       <id>local-its</id>
 
