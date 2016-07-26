@@ -256,6 +256,7 @@
                   <container>
                     <id>koji-db</id>
                     <image>${dbImage}</image>
+                    <hostname>koji-db</hostname>
                     <env>
                       <POSTGRES_DB>koji</POSTGRES_DB>
                       <POSTGRES_USER>koji</POSTGRES_USER>
@@ -269,6 +270,7 @@
                   <container>
                     <id>koji-hub</id>
                     <image>${hubImage}</image>
+                    <hostname>koji-hub</hostname>
                     <waitForStartup>${hubWaitFor}</waitForStartup>
                     <links>
                       <link>
