@@ -55,7 +55,7 @@
 
     <dockerNetwork>default</dockerNetwork>
     <dockerNetworkMode>bridge</dockerNetworkMode>
-    <dockerStartTimeout>60000</dockerStartTimeout>
+    <dockerStartTimeout>180000</dockerStartTimeout>
 
     <koji-hub-http-port>80</koji-hub-http-port>
     <koji-hub-https-port>443</koji-hub-https-port>
