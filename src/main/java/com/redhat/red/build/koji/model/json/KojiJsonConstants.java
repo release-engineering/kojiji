@@ -78,6 +78,12 @@ public final class KojiJsonConstants
 
     public static final String MAVEN_OUTPUT_TYPE = "maven";
 
+    public static final String EPOCH = "epoch";
+
+    public static final String SIGMD5 = "sigmd5";
+
+    public static final String SIGNATURE = "signature";
+
     private KojiJsonConstants(){}
 
 }

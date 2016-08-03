@@ -23,12 +23,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.COMPONENTS;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.CONTAINER;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.CONTENT_GENERATOR;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTRA_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.HOST;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.ID;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.OUTPUT;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TOOLS;
 import static com.redhat.red.build.koji.model.json.util.Verifications.checkNull;
 
@@ -51,6 +54,9 @@ public class BuildRoot
 
     @JsonProperty( TOOLS )
     private Set<BuildTool> buildTools;
+
+    @JsonProperty( COMPONENTS )
+    private Set<BuildComponent> components;
 
     @JsonProperty( EXTRA_INFO )
     private Map<String, Object> extraInfo;
@@ -103,6 +109,10 @@ public class BuildRoot
         return extraInfo;
     }
 
+    public Set<BuildComponent> getComponents() {
+        return components;
+    }
+
     public void setExtraInfo( Map<String, Object> extraInfo )
     {
         this.extraInfo = extraInfo;
@@ -114,6 +124,8 @@ public class BuildRoot
         private BuildRoot target = new BuildRoot();
 
         private KojiImport.Builder parent;
+
+        private Set<BuildComponent.Builder<? extends BuildComponent>> componentBuilders = new HashSet<>();
 
         public Builder( int id )
         {
@@ -240,6 +252,18 @@ public class BuildRoot
             return this;
         }
 
+        public RPMBuildComponent.Builder withRPMComponent(String name){
+            RPMBuildComponent.Builder componentBuilder = new RPMBuildComponent.Builder(name, this);
+            componentBuilders.add(componentBuilder);
+            return componentBuilder;
+        }
+
+        public FileBuildComponent.Builder withFileComponent(String filename){
+            FileBuildComponent.Builder componentBuilder = new FileBuildComponent.Builder(filename, this);
+            componentBuilders.add(componentBuilder);
+            return componentBuilder;
+        }
+
         @Override
         public BuildRoot build()
                 throws VerificationException
@@ -257,6 +281,9 @@ public class BuildRoot
         @Override
         public BuildRoot unsafeBuild()
         {
+            target.components = componentBuilders.stream()
+                    .map(b -> (BuildComponent) b.unsafeBuild())
+                    .collect(Collectors.toSet());
             return target;
         }
 
@@ -270,6 +297,11 @@ public class BuildRoot
             if ( target.id < 1 )
             {
                 missingProperties.add( String.format( propertyFormat, ID ) );
+            }
+
+            for ( BuildComponent.Builder componentBuilder : componentBuilders )
+            {
+                componentBuilder.findMissingProperties(OUTPUT + "[" + componentBuilder.getIdentifier() + "].%s", missingProperties);
             }
         }
 
