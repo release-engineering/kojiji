@@ -369,7 +369,7 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
 
         <koji-hub-http-port>80</koji-hub-http-port>
         <koji-hub-https-port>443</koji-hub-https-port>
-        <koji-hub-address>${docker.container.koji-hub.nets.ci-network.ip}</koji-hub-address>
+        <koji-hub-address>${docker.container.koji-hub.net.ci-network.ip}</koji-hub-address>
       </properties>
 
       <build>
