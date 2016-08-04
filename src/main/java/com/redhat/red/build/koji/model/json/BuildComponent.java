@@ -26,7 +26,7 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE;
 
 /**
  *
- * @author Honza Brázdil <jbrazdil@redhat.com>
+ * @author Honza Brázdil &lt;jbrazdil@redhat.com&gt;
  */
 @JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = TYPE)
 @JsonSubTypes({
