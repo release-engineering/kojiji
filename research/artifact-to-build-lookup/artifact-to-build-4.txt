@@ -1,0 +1,109 @@
+<?xml version='1.0'?>
+<methodCall>
+    <methodName>listTags</methodName>
+    <params>
+        <param>
+            <value><struct>
+                <member>
+                    <name>__starstar</name>
+                    <value><boolean>1</boolean></value>
+                </member>
+                <member>
+                    <name>build</name>
+                    <value><int>492164</int></value>
+                </member>
+            </struct></value>
+        </param>
+    </params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 05 Aug 2016 16:01:12 GMT
+Server: Apache/2.2.15 (Red Hat)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Length: 1371
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+    <params>
+        <param>
+            <value><array><data>
+                <value><struct>
+                    <member>
+                        <name>maven_support</name>
+                        <value><boolean>1</boolean></value>
+                    </member>
+                    <member>
+                        <name>locked</name>
+                        <value><boolean>0</boolean></value>
+                    </member>
+                    <member>
+                        <name>name</name>
+                        <value><string>jb-cloud-enablement-override</string></value>
+                    </member>
+                    <member>
+                        <name>perm</name>
+                        <value><nil/></value>
+                    </member>
+                    <member>
+                        <name>id</name>
+                        <value><int>7806</int></value>
+                    </member>
+                    <member>
+                        <name>arches</name>
+                        <value><nil/></value>
+                    </member>
+                    <member>
+                        <name>maven_include_all</name>
+                        <value><boolean>1</boolean></value>
+                    </member>
+                    <member>
+                        <name>perm_id</name>
+                        <value><nil/></value>
+                    </member>
+                </struct></value>
+                <value><struct>
+                    <member>
+                        <name>maven_support</name>
+                        <value><boolean>1</boolean></value>
+                    </member>
+                    <member>
+                        <name>locked</name>
+                        <value><boolean>0</boolean></value>
+                    </member>
+                    <member>
+                        <name>name</name>
+                        <value><string>jb-bxms-6.3-candidate</string></value>
+                    </member>
+                    <member>
+                        <name>perm</name>
+                        <value><nil/></value>
+                    </member>
+                    <member>
+                        <name>id</name>
+                        <value><int>8829</int></value>
+                    </member>
+                    <member>
+                        <name>arches</name>
+                        <value><nil/></value>
+                    </member>
+                    <member>
+                        <name>maven_include_all</name>
+                        <value><boolean>1</boolean></value>
+                    </member>
+                    <member>
+                        <name>perm_id</name>
+                        <value><nil/></value>
+                    </member>
+                </struct></value>
+            </data></array></value>
+        </param>
+    </params>
+</methodResponse>
+
+Build: org.jbpm-jbpm-6.4.0.Final_redhat_3-1
+
+Tags: jb-cloud-enablement-override
+    jb-bxms-6.3-candidate

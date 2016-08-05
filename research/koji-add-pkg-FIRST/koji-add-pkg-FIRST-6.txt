@@ -43,7 +43,8 @@ Content-Length: 563
 				</member>
 				<member>
 					<name>force</name>
-					<value><nil/></value></member>
+					<value><nil/></value>
+</member>
 					<member>
 						<name>block</name>
 						<value><boolean>0</boolean></value>

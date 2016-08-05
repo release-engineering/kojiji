@@ -15,26 +15,33 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import com.redhat.red.build.koji.model.xmlrpc.KojiPackageQuery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveQuery;
+import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.binding.anno.DataIndex;
+import org.commonjava.rwx.binding.anno.IndexRefs;
 import org.commonjava.rwx.binding.anno.Request;
 
 /**
- * Created by jdcasey on 1/7/16.
+ * Created by jdcasey on 1/29/16.
  */
-@Request( method="listPackages" )
-public class ListPackagesRequest
+@Request( method="listArchives" )
+public class ListArchivesRequest
 {
-
     @DataIndex( 0 )
-    private KojiPackageQuery query;
+    private final KojiArchiveQuery query;
 
-    public ListPackagesRequest( KojiPackageQuery query )
+    @IndexRefs( 0 )
+    public ListArchivesRequest( KojiArchiveQuery query )
     {
         this.query = query;
     }
 
-    public KojiPackageQuery getQuery()
+    public ListArchivesRequest( ProjectVersionRef gav )
+    {
+        this.query = new KojiArchiveQuery( gav );
+    }
+
+    public KojiArchiveQuery getQuery()
     {
         return query;
     }

@@ -1,0 +1,28 @@
+<?xml version='1.0'?>
+<methodCall>
+<methodName>getTaskChildren</methodName>
+<params>
+<param>
+<value><int>11512915</int></value>
+</param>
+</params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 05 Aug 2016 16:55:06 GMT
+Server: Apache/2.2.15 (Red Hat)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Length: 138
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><array><data>
+</data></array></value>
+</param>
+</params>
+</methodResponse>
+

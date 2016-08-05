@@ -15,27 +15,26 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import com.redhat.red.build.koji.model.xmlrpc.KojiPackageQuery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiPackageInfo;
 import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.binding.anno.Response;
 
-/**
- * Created by jdcasey on 1/7/16.
- */
-@Request( method="listPackages" )
-public class ListPackagesRequest
+import java.util.List;
+
+@Response
+public class ListPackagesResponse
 {
 
     @DataIndex( 0 )
-    private KojiPackageQuery query;
+    private List<KojiPackageInfo> packages;
 
-    public ListPackagesRequest( KojiPackageQuery query )
+    public List<KojiPackageInfo> getPackages()
     {
-        this.query = query;
+        return packages;
     }
 
-    public KojiPackageQuery getQuery()
+    public void setPackages( List<KojiPackageInfo> packages )
     {
-        return query;
+        this.packages = packages;
     }
 }

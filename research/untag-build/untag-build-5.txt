@@ -1,0 +1,41 @@
+<?xml version='1.0'?>
+<methodCall>
+<methodName>untagBuild</methodName>
+<params>
+<param>
+<value><string>rcm-mw-3.0-maven-extensions</string></value>
+</param>
+<param>
+<value><string>commons-io-commons-io-2.4.0.redhat_1-2</string></value>
+</param>
+<param>
+<value><struct>
+<member>
+<name>__starstar</name>
+<value><boolean>1</boolean></value>
+</member>
+<member>
+<name>force</name>
+<value><nil/></value>
+</member>
+</struct></value>
+</param>
+</params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 05 Aug 2016 16:55:59 GMT
+Server: Apache/2.2.15 (Red Hat)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Length: 114
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><nil/></value></param>
+</params>
+</methodResponse>
+

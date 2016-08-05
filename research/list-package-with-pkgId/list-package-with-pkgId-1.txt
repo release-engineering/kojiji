@@ -103,7 +103,8 @@ Content-Type: text/xml
 </member>
 <member>
 <name>extra_arches</name>
-<value><nil/></value></member>
+<value><nil/></value>
+</member>
 <member>
 <name>package_id</name>
 <value><int>1</int></value>

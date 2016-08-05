@@ -54,7 +54,8 @@ Content-Type: text/xml
 				</member>
 				<member>
 					<name>krb_principal</name>
-					<value><nil/></value></member>
+					<value><nil/></value>
+</member>
 					<member>
 						<name>id</name>
 						<value><int>1</int></value>

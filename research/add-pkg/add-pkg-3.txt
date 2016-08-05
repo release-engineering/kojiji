@@ -1,0 +1,24 @@
+<?xml version='1.0'?>
+<methodCall>
+    <methodName>getAPIVersion</methodName>
+    <params>
+    </params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 05 Aug 2016 16:44:33 GMT
+Server: Apache/2.2.15 (Red Hat)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Length: 121
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+    <params>
+        <param>
+            <value><int>1</int></value>
+        </param>
+    </params>
+</methodResponse>
+

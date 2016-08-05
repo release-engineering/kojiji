@@ -15,27 +15,32 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import com.redhat.red.build.koji.model.xmlrpc.KojiPackageQuery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
+import org.commonjava.rwx.binding.anno.Contains;
 import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.binding.anno.IndexRefs;
+import org.commonjava.rwx.binding.anno.Response;
+
+import java.util.List;
 
 /**
- * Created by jdcasey on 1/7/16.
+ * Created by jdcasey on 1/29/16.
  */
-@Request( method="listPackages" )
-public class ListPackagesRequest
+@Response
+public class ListArchivesResponse
 {
-
     @DataIndex( 0 )
-    private KojiPackageQuery query;
+    @Contains( KojiArchiveInfo.class )
+    private List<KojiArchiveInfo> archives;
 
-    public ListPackagesRequest( KojiPackageQuery query )
+    @IndexRefs( 0 )
+    public ListArchivesResponse( List<KojiArchiveInfo> archives )
     {
-        this.query = query;
+        this.archives = archives;
     }
 
-    public KojiPackageQuery getQuery()
+    public List<KojiArchiveInfo> getArchives()
     {
-        return query;
+        return archives;
     }
 }

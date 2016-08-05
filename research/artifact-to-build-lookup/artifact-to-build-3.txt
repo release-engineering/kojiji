@@ -1,0 +1,121 @@
+<?xml version='1.0'?>
+<methodCall>
+    <methodName>getBuild</methodName>
+    <params>
+        <param>
+            <value><int>492164</int></value>
+        </param>
+    </params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 05 Aug 2016 16:01:11 GMT
+Server: Apache/2.2.15 (Red Hat)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Length: 2026
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+    <params>
+        <param>
+            <value><struct>
+                <member>
+                    <name>package_name</name>
+                    <value><string>org.jbpm-jbpm</string></value>
+                </member>
+                <member>
+                    <name>extra</name>
+                    <value><nil/></value>
+</member>
+                    <member>
+                        <name>creation_time</name>
+                        <value><string>2016-05-01 01:55:59.200742</string></value>
+                    </member>
+                    <member>
+                        <name>completion_time</name>
+                        <value><string>2016-05-01 01:55:59.336077</string></value>
+                    </member>
+                    <member>
+                        <name>package_id</name>
+                        <value><int>32903</int></value>
+                    </member>
+                    <member>
+                        <name>id</name>
+                        <value><int>492164</int></value>
+                    </member>
+                    <member>
+                        <name>epoch</name>
+                        <value><nil/></value>
+                    </member>
+                    <member>
+                        <name>source</name>
+                        <value><nil/></value>
+                    </member>
+                    <member>
+                        <name>state</name>
+                        <value><int>1</int></value>
+                    </member>
+                    <member>
+                        <name>version</name>
+                        <value><string>6.4.0.Final_redhat_3</string></value>
+                    </member>
+                    <member>
+                        <name>completion_ts</name>
+                        <value><double>1462067759.3360801</double></value>
+                    </member>
+                    <member>
+                        <name>owner_id</name>
+                        <value><int>1136</int></value>
+                    </member>
+                    <member>
+                        <name>owner_name</name>
+                        <value><string>rzhang</string></value>
+                    </member>
+                    <member>
+                        <name>nvr</name>
+                        <value><string>org.jbpm-jbpm-6.4.0.Final_redhat_3-1</string></value>
+                    </member>
+                    <member>
+                        <name>start_time</name>
+                        <value><string>2016-05-01 01:55:59.200742</string></value>
+                    </member>
+                    <member>
+                        <name>creation_event_id</name>
+                        <value><int>13137546</int></value>
+                    </member>
+                    <member>
+                        <name>start_ts</name>
+                        <value><double>1462067759.2007401</double></value>
+                    </member>
+                    <member>
+                        <name>volume_id</name>
+                        <value><int>0</int></value>
+                    </member>
+                    <member>
+                        <name>creation_ts</name>
+                        <value><double>1462067759.2007401</double></value>
+                    </member>
+                    <member>
+                        <name>name</name>
+                        <value><string>org.jbpm-jbpm</string></value>
+                    </member>
+                    <member>
+                        <name>task_id</name>
+                        <value><int>10953852</int></value>
+                    </member>
+                    <member>
+                        <name>volume_name</name>
+                        <value><string>DEFAULT</string></value>
+                    </member>
+                    <member>
+                        <name>release</name>
+                        <value><string>1</string></value>
+                    </member>
+                </struct>
+            </value>
+        </param>
+    </params>
+</methodResponse>
+

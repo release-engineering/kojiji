@@ -1,0 +1,23 @@
+<?xml version='1.0'?>
+<methodCall>
+<methodName>logout</methodName>
+<params>
+</params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 05 Aug 2016 16:56:00 GMT
+Server: Apache/2.2.15 (Red Hat)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Length: 114
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><nil/></value></param>
+</params>
+</methodResponse>
+

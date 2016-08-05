@@ -1,0 +1,59 @@
+<?xml version='1.0'?>
+<methodCall>
+    <methodName>multiCall</methodName>
+    <params>
+        <param>
+            <value><array><data>
+                <value><struct>
+                    <member>
+                        <name>params</name>
+                        <value><array><data>
+                            <value><string>rcm-mw-3.0-maven-extensions</string></value>
+                            <value><string>org.foo-bar</string></value>
+                            <value><string>someuser</string></value>
+                            <value><struct>
+                                <member>
+                                    <name>__starstar</name>
+                                    <value><boolean>1</boolean></value>
+                                </member>
+                                <member>
+                                    <name>force</name>
+                                    <value><nil/></value>
+                                </member>
+                                <member>
+                                    <name>block</name>
+                                    <value><boolean>0</boolean></value>
+                                </member>
+                            </struct></value>
+                        </data></array></value>
+                    </member>
+                    <member>
+                        <name>methodName</name>
+                        <value><string>packageListAdd</string></value>
+                    </member>
+                </struct></value>
+            </data></array></value>
+        </param>
+    </params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 05 Aug 2016 16:44:33 GMT
+Server: Apache/2.2.15 (Red Hat)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Length: 204
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+    <params>
+        <param>
+            <value><array><data>
+                <value><array><data>
+                    <value><nil/></value></data></array></value>
+                </data></array></value>
+            </param>
+        </params>
+    </methodResponse>
+
