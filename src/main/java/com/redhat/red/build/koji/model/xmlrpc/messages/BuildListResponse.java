@@ -27,14 +27,14 @@ import java.util.List;
  * Created by jdcasey on 1/29/16.
  */
 @Response
-public class ListBuildsResponse
+public class BuildListResponse
 {
     @DataIndex( 0 )
     @Contains( KojiBuildInfo.class )
     private List<KojiBuildInfo> builds;
 
     @IndexRefs( 0 )
-    public ListBuildsResponse( List<KojiBuildInfo> builds )
+    public BuildListResponse( List<KojiBuildInfo> builds )
     {
         this.builds = builds;
     }

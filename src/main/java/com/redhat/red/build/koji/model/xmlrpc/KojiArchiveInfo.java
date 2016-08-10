@@ -61,7 +61,7 @@ public class KojiArchiveInfo
     private Integer buildrootId;
 
     @DataKey( "size" )
-    private Long size;
+    private Integer size;
 
     public Integer getArchiveId()
     {
@@ -233,12 +233,12 @@ public class KojiArchiveInfo
         this.buildrootId = buildrootId;
     }
 
-    public Long getSize()
+    public Integer getSize()
     {
         return size;
     }
 
-    public void setSize( Long size )
+    public void setSize( Integer size )
     {
         this.size = size;
     }

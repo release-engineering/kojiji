@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<methodCall>
+	<methodName>untagBuild</methodName>
+	<params>
+		<param>
+			<value>
+				<string>test-tag</string>
+			</value>
+		</param>
+		<param>
+			<value>
+				<string>org.foo-bar-1.1-2</string>
+			</value>
+		</param>
+		<param>
+			<value>
+				<struct>
+					<member>
+						<name>__starstar</name>
+						<value>
+							<boolean>1</boolean>
+						</value>
+					</member>
+					<member>
+						<name>force</name>
+						<value>
+							<nil/>
+						</value>
+					</member>
+				</struct>
+			</value>
+		</param>
+	</params>
+</methodCall>

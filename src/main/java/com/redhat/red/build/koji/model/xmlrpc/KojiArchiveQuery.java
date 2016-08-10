@@ -29,19 +29,39 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
  */
 @StructPart
 public class KojiArchiveQuery
-    extends KojiQuery
+        extends KojiQuery
 {
     @DataKey( value = "type" )
     private String type = "maven";
 
-    @DataKey( value="typeInfo" )
+    @DataKey( value = "typeInfo" )
     @Converter( value = ProjectVersionRefValueBinder.class )
     private ProjectVersionRef gav;
 
-    @DataKey( value="filename" )
+    @DataKey( value = "filename" )
     private String filename;
 
-    public KojiArchiveQuery(){}
+    @DataKey( value = "buildID" )
+    private Integer buildId;
+
+    @DataKey( value = "buildrootID" )
+    private Integer buildrootId;
+
+    @DataKey( value = "componentBuildrootID" )
+    private Integer componentBuildrootId;
+
+    @DataKey( value = "hostID" )
+    private Integer hostId;
+
+    @DataKey( value = "size" )
+    private Long size;
+
+    @DataKey( value = "checksum" )
+    private String checksum;
+
+    public KojiArchiveQuery()
+    {
+    }
 
     public KojiArchiveQuery( ProjectVersionRef gav )
     {
@@ -57,7 +77,7 @@ public class KojiArchiveQuery
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append( ar.getArtifactId() ).append('-').append( ar.getVersionString() );
+        sb.append( ar.getArtifactId() ).append( '-' ).append( ar.getVersionString() );
         String classifier = ( ar ).getClassifier();
         if ( isNotEmpty( classifier ) )
         {
@@ -97,4 +117,119 @@ public class KojiArchiveQuery
     {
         this.filename = filename;
     }
+
+    public Integer getBuildId()
+    {
+        return buildId;
+    }
+
+    public void setBuildId( Integer buildId )
+    {
+        this.buildId = buildId;
+    }
+
+    public Integer getBuildrootId()
+    {
+        return buildrootId;
+    }
+
+    public void setBuildrootId( Integer buildrootId )
+    {
+        this.buildrootId = buildrootId;
+    }
+
+    public Integer getComponentBuildrootId()
+    {
+        return componentBuildrootId;
+    }
+
+    public void setComponentBuildrootId( Integer componentBuildrootId )
+    {
+        this.componentBuildrootId = componentBuildrootId;
+    }
+
+    public Integer getHostId()
+    {
+        return hostId;
+    }
+
+    public void setHostId( Integer hostId )
+    {
+        this.hostId = hostId;
+    }
+
+    public Long getSize()
+    {
+        return size;
+    }
+
+    public void setSize( Long size )
+    {
+        this.size = size;
+    }
+
+    public String getChecksum()
+    {
+        return checksum;
+    }
+
+    public void setChecksum( String checksum )
+    {
+        this.checksum = checksum;
+    }
+
+    public KojiArchiveQuery withFilename( String filename )
+    {
+        this.filename = filename;
+        return this;
+    }
+
+    public KojiArchiveQuery withType( String type )
+    {
+        this.type = type;
+        return this;
+    }
+
+    public KojiArchiveQuery withGAV( ProjectVersionRef gav )
+    {
+        this.gav = gav;
+        return this;
+    }
+
+    public KojiArchiveQuery withBuildId( Integer buildId )
+    {
+        this.buildId = buildId;
+        return this;
+    }
+
+    public KojiArchiveQuery withBuildrootId( Integer buildrootId )
+    {
+        this.buildrootId = buildrootId;
+        return this;
+    }
+
+    public KojiArchiveQuery withComponentBuildrootId( Integer componentBuildrootId )
+    {
+        this.componentBuildrootId = componentBuildrootId;
+        return this;
+    }
+
+    public KojiArchiveQuery withSize( Long size )
+    {
+        this.size = size;
+        return this;
+    }
+
+    public KojiArchiveQuery withChecksum( String checksum )
+    {
+        this.checksum = checksum;
+        return this;
+    }
+
+    public KojiArchiveQuery withHostId( Integer hostId )
+    {
+        this.hostId = hostId;
+        return this;
+    }
+
 }

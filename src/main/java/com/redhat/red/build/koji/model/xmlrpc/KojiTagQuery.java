@@ -29,7 +29,11 @@ public class KojiTagQuery
     @DataKey( "build" )
     private KojiIdOrName buildId;
 
-    @KeyRefs( "build" )
+    @DataKey( "package" )
+    private KojiIdOrName packageId;
+
+    public KojiTagQuery(){}
+
     public KojiTagQuery( KojiBuildInfo buildInfo )
     {
         this.buildId = new KojiIdOrName( buildInfo.getId() );
@@ -64,4 +68,50 @@ public class KojiTagQuery
     {
         this.buildId = buildId;
     }
+
+    public KojiTagQuery withBuildId(KojiIdOrName buildId) {
+      this.buildId = buildId;
+      return this;
+    }
+
+    public KojiTagQuery withBuildId(String nvr) {
+        this.buildId = new KojiIdOrName( nvr );
+        return this;
+    }
+
+    public KojiTagQuery withBuildId(int buildId) {
+        this.buildId = new KojiIdOrName( buildId );
+        return this;
+    }
+
+    public KojiTagQuery withBuildId(KojiNVR nvr) {
+        this.buildId = new KojiIdOrName( nvr.renderString() );
+        return this;
+    }
+
+    public KojiIdOrName getPackageId()
+    {
+        return packageId;
+    }
+
+    public void setPackageId( KojiIdOrName packageId )
+    {
+        this.packageId = packageId;
+    }
+
+    public KojiTagQuery withPackageId(KojiIdOrName packageId) {
+      this.packageId = packageId;
+      return this;
+    }
+
+    public KojiTagQuery withPackageId(String nvr) {
+        this.packageId = new KojiIdOrName( nvr );
+        return this;
+    }
+
+    public KojiTagQuery withPackageId(int packageId) {
+        this.packageId = new KojiIdOrName( packageId );
+        return this;
+    }
+
 }

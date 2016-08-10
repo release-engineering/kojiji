@@ -24,11 +24,17 @@ import org.commonjava.rwx.binding.anno.Request;
  */
 @Request( method="getBuild" )
 public class GetBuildByIdOrNameRequest
+    extends GetBuildRequest
 {
     @DataIndex( 0 )
     private KojiIdOrName buildIdOrName;
 
     public GetBuildByIdOrNameRequest(){}
+
+    public GetBuildByIdOrNameRequest( KojiIdOrName buildIdOrName )
+    {
+        this.buildIdOrName = buildIdOrName;
+    }
 
     public GetBuildByIdOrNameRequest( String buildName )
     {
