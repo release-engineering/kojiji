@@ -125,7 +125,7 @@ public class KojiArchiveInfo
 
     public ArtifactRef asArtifact()
     {
-        return new SimpleArtifactRef( groupId, artifactId, version, extension, getClassifier(), false );
+        return new SimpleArtifactRef( groupId, artifactId, version, extension, getClassifier() );
     }
 
     public void setClassifier( String classifier )
@@ -241,5 +241,28 @@ public class KojiArchiveInfo
     public void setSize( Integer size )
     {
         this.size = size;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "KojiArchiveInfo{" +
+                "archiveId=" + archiveId +
+                ", groupId='" + groupId + '\'' +
+                ", artifactId='" + artifactId + '\'' +
+                ", version='" + version + '\'' +
+                ", classifier='" + classifier + '\'' +
+                ", extension='" + extension + '\'' +
+                ", filename='" + filename + '\'' +
+                ", buildId=" + buildId +
+                ", typeName='" + typeName + '\'' +
+                ", typeId=" + typeId +
+                ", checksum='" + checksum + '\'' +
+                ", checksumType=" + checksumType +
+                ", typeDescription='" + typeDescription + '\'' +
+                ", metadataOnly=" + metadataOnly +
+                ", buildrootId=" + buildrootId +
+                ", size=" + size +
+                '}';
     }
 }

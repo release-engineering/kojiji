@@ -1,12 +1,17 @@
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * Created by jdcasey on 8/8/16.
  */
 public class KojiBuildArchiveCollection
+    implements Iterable<KojiArchiveInfo>
 {
     private KojiBuildInfo buildInfo;
 
@@ -25,6 +30,29 @@ public class KojiBuildArchiveCollection
 
     public List<KojiArchiveInfo> getArchives()
     {
-        return archives;
+        return archives == null ? Collections.emptyList() : archives;
+    }
+
+    @Override
+    public Iterator<KojiArchiveInfo> iterator()
+    {
+        return getArchives().iterator();
+    }
+
+    @Override
+    public void forEach( Consumer<? super KojiArchiveInfo> action )
+    {
+        getArchives().forEach( action );
+    }
+
+    @Override
+    public Spliterator<KojiArchiveInfo> spliterator()
+    {
+        return getArchives().spliterator();
+    }
+
+    public Stream<KojiArchiveInfo> stream()
+    {
+        return getArchives().stream();
     }
 }

@@ -23,5 +23,5 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 public interface KojiCustomCommand<T>
 {
     T execute( KojiSessionInfo session )
-        throws KojiClientException;
+            throws KojiClientException;
 }

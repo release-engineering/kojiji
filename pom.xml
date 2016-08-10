@@ -40,14 +40,12 @@
   </scm>
 
   <properties>
-    <docker.container.koji-hub.ip>docker-plugin-unset</docker.container.koji-hub.ip>
-
     <enforcer.skip>true</enforcer.skip>
     <javaVersion>1.8</javaVersion>
     <jhttpcVersion>1.3-SNAPSHOT</jhttpcVersion>
     <rwxVersion>1.0</rwxVersion>
     <httpcVersion>4.4</httpcVersion>
-    <atlasVersion>0.15.2</atlasVersion>
+    <atlasVersion>0.16.0</atlasVersion>
 
     <dbImage>postgres:9.4</dbImage>
     <hubImage>docker.io/buildchimp/koji-dojo-hub:dev</hubImage>
@@ -366,8 +364,6 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
     <profile>
       <id>ci</id>
       <properties>
-        <docker.container.koji-hub.net.ci-network.ip>docker-plugin-unset</docker.container.koji-hub.net.ci-network.ip>
-
         <dockerNetworkMode>custom</dockerNetworkMode>
         <dockerNetwork>ci-network</dockerNetwork>
 
