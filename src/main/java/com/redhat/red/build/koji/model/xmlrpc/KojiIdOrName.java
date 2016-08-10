@@ -68,4 +68,13 @@ public class KojiIdOrName
     {
         return id;
     }
+
+    @Override
+    public String toString()
+    {
+        return "KojiIdOrName{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }

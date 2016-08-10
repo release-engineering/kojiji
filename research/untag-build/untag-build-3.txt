@@ -1,0 +1,65 @@
+<?xml version='1.0'?>
+<methodCall>
+<methodName>getTag</methodName>
+<params>
+<param>
+<value><string>rcm-mw-3.0-maven-extensions</string></value>
+</param>
+</params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 05 Aug 2016 16:55:59 GMT
+Server: Apache/2.2.15 (Red Hat)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Length: 784
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><struct>
+<member>
+<name>maven_support</name>
+<value><boolean>1</boolean></value>
+</member>
+<member>
+<name>locked</name>
+<value><boolean>0</boolean></value>
+</member>
+<member>
+<name>name</name>
+<value><string>rcm-mw-3.0-maven-extensions</string></value>
+</member>
+<member>
+<name>extra</name>
+<value><struct>
+</struct></value>
+</member>
+<member>
+<name>perm</name>
+<value><nil/></value>
+</member>
+<member>
+<name>perm_id</name>
+<value><nil/></value>
+</member>
+<member>
+<name>arches</name>
+<value><nil/></value>
+</member>
+<member>
+<name>maven_include_all</name>
+<value><boolean>1</boolean></value>
+</member>
+<member>
+<name>id</name>
+<value><int>9101</int></value>
+</member>
+</struct></value>
+</param>
+</params>
+</methodResponse>
+

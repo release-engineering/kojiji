@@ -1,0 +1,56 @@
+POST /kojihost HTTP/1.1
+Host: kojihost.somedomain.com
+Accept-Encoding: identity
+User-Agent: koji/1.7
+Content-Type: text/xml
+Content-Length: 157
+
+
+<?xml version='1.0'?>
+<methodCall>
+    <methodName>getUser</methodName>
+    <params>
+        <param>
+            <value><string>someuser</string></value>
+        </param>
+    </params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 05 Aug 2016 16:44:32 GMT
+Server: Apache/2.2.15 (Red Hat)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Length: 501
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+    <params>
+        <param>
+            <value><struct>
+                <member>
+                    <name>status</name>
+                    <value><int>0</int></value>
+                </member>
+                <member>
+                    <name>usertype</name>
+                    <value><int>0</int></value>
+                </member>
+                <member>
+                    <name>krb_principal</name>
+                    <value><string>someuser@REDHAT.COM</string></value>
+                </member>
+                <member>
+                    <name>id</name>
+                    <value><int>101010</int></value>
+                </member>
+                <member>
+                    <name>name</name>
+                    <value><string>someuser</string></value>
+                </member>
+            </struct></value>
+        </param>
+    </params>
+</methodResponse>
+

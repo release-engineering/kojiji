@@ -24,6 +24,7 @@ import org.commonjava.rwx.binding.anno.Request;
  */
 @Request( method="getBuild" )
 public class GetBuildByNVRObjRequest
+    extends GetBuildRequest
 {
     @DataIndex( 0 )
     private KojiNVR nvr;

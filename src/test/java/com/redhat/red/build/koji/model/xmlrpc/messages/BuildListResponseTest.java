@@ -16,8 +16,6 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
-import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
 import org.commonjava.rwx.estream.model.Event;
 import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
 import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
@@ -34,7 +32,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by jdcasey on 5/11/16.
  */
-public class ListBuildsResponseTest
+public class BuildListResponseTest
     extends AbstractKojiMessageTest
 {
     @Test
@@ -46,7 +44,7 @@ public class ListBuildsResponseTest
         KojiBuildInfo one = new KojiBuildInfo(422953, 12630, "commons-io-commons-io", "2.4.0.redhat_1", "1");
         KojiBuildInfo two = new KojiBuildInfo(447248, 12630, "commons-io-commons-io", "2.4.0.redhat_1", "2");
 
-        bindery.render( eventParser, new ListBuildsResponse( Arrays.asList( one, two ) ) );
+        bindery.render( eventParser, new BuildListResponse( Arrays.asList( one, two ) ) );
 
         List<Event<?>> objectEvents = eventParser.getEvents();
         eventParser.clearEvents();
@@ -65,12 +63,12 @@ public class ListBuildsResponseTest
         KojiBuildInfo one = new KojiBuildInfo(422953, 12630, "commons-io-commons-io", "2.4.0.redhat_1", "1");
         KojiBuildInfo two = new KojiBuildInfo(447248, 12630, "commons-io-commons-io", "2.4.0.redhat_1", "2");
 
-        bindery.render( eventParser, new ListBuildsResponse( Arrays.asList( one, two ) ) );
+        bindery.render( eventParser, new BuildListResponse( Arrays.asList( one, two ) ) );
 
         List<Event<?>> objectEvents = eventParser.getEvents();
         EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
 
-        ListBuildsResponse parsed = bindery.parse( generator, ListBuildsResponse.class );
+        BuildListResponse parsed = bindery.parse( generator, BuildListResponse.class );
         assertNotNull( parsed );
 
         assertThat( parsed.getBuilds().contains( one ), equalTo( true ) );
@@ -85,7 +83,7 @@ public class ListBuildsResponseTest
 
         EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( capturedEvents );
 
-        ListBuildsResponse parsed = bindery.parse( generator, ListBuildsResponse.class );
+        BuildListResponse parsed = bindery.parse( generator, BuildListResponse.class );
         assertNotNull( parsed );
 
         assertThat( parsed.getBuilds() == null || parsed.getBuilds().isEmpty(), equalTo( true ) );

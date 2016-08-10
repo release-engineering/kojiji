@@ -1,0 +1,185 @@
+<?xml version="1.0" ?>
+<methodResponse>
+
+  <params>
+
+    <param>
+
+      <value>
+        <array>
+          <data>
+
+            <value>
+              <struct>
+
+                <member>
+
+                  <name>build_id</name>
+
+                  <value>
+                    <int>101010</int>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>version</name>
+
+                  <value>
+                    <string>1.1</string>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>type_name</name>
+
+                  <value>
+                    <string>pom</string>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>artifact_id</name>
+
+                  <value>
+                    <string>bar</string>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>type_id</name>
+
+                  <value>
+                    <int>3</int>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>checksum</name>
+
+                  <value>
+                    <string>f18c45047648e5d6d3ad71319488604e</string>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>extra</name>
+
+                  <value>
+                    <nil/>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>filename</name>
+
+                  <value>
+                    <string>bar-1.1.pom</string>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>type_description</name>
+
+                  <value>
+                    <string>Maven Project Object Management file</string>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>metadata_only</name>
+
+                  <value>
+                    <boolean>0</boolean>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>type_extensions</name>
+
+                  <value>
+                    <string>pom</string>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>checksum_type</name>
+
+                  <value>
+                    <int>0</int>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>group_id</name>
+
+                  <value>
+                    <string>org.foo</string>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>buildroot_id</name>
+
+                  <value>
+                    <nil/>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>id</name>
+
+                  <value>
+                    <int>12345678</int>
+                  </value>
+
+                </member>
+
+                <member>
+
+                  <name>size</name>
+
+                  <value>
+                    <int>1177</int>
+                  </value>
+
+                </member>
+
+              </struct>
+            </value>
+
+          </data>
+        </array>
+      </value>
+
+    </param>
+
+  </params>
+</methodResponse>

@@ -20,15 +20,25 @@ import com.redhat.red.build.koji.model.ImportFile;
 import com.redhat.red.build.koji.model.KojiImportResult;
 import com.redhat.red.build.koji.model.json.KojiImport;
 import com.redhat.red.build.koji.model.json.util.KojiObjectMapper;
+import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveQuery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiBuildArchiveCollection;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
+import com.redhat.red.build.koji.model.xmlrpc.KojiPackageInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiPackageQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiPermission;
 import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUploaderResult;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
+import com.redhat.red.build.koji.model.xmlrpc.messages.AckResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.AddPackageToTagRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionRequest;
@@ -39,20 +49,31 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.ConfirmationResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByIdOrNameRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByNVRObjRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTagIdRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.BuildListResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListPackagesRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListPackagesResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListTaggedRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoggedInUserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LogoutRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.RemovePackageFromTagRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.StatusResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.TagBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.TagRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.TagResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.UntagBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UploadResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserResponse;
@@ -69,7 +90,6 @@ import org.commonjava.rwx.http.UrlBuilder;
 import org.commonjava.rwx.http.httpclient4.HC4SyncObjectClient;
 import org.commonjava.util.jhttpc.HttpFactory;
 import org.commonjava.util.jhttpc.JHttpCException;
-import org.commonjava.util.jhttpc.auth.MemoryPasswordManager;
 import org.commonjava.util.jhttpc.auth.PasswordManager;
 import org.commonjava.util.jhttpc.util.UrlUtils;
 import org.slf4j.Logger;
@@ -84,6 +104,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -97,7 +118,6 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.ACCEPT_ENCODING_HEADER;
@@ -193,8 +213,7 @@ public class KojiClient
         };
     }
 
-    public KojiClient( KojiConfig config, PasswordManager passwordManager,
-                       ExecutorService executorService )
+    public KojiClient( KojiConfig config, PasswordManager passwordManager, ExecutorService executorService )
             throws BindException
     {
         this.config = config;
@@ -288,12 +307,11 @@ public class KojiClient
         {
             UrlBuilder urlBuilder = ( url ) -> new UrlBuildResult( UrlUtils.buildUrl( url, SSL_LOGIN_PATH ) );
 
-            RequestModifier requestModifier = ( request ) -> request.setHeader( ACCEPT_ENCODING_HEADER,
-                                                                                IDENTITY_ENCODING_VALUE );
+            RequestModifier requestModifier =
+                    ( request ) -> request.setHeader( ACCEPT_ENCODING_HEADER, IDENTITY_ENCODING_VALUE );
 
-            LoginResponse loginResponse = xmlrpcClient.call( new LoginRequest(), LoginResponse.class,
-                                                             urlBuilder,
-                                                             requestModifier );
+            LoginResponse loginResponse =
+                    xmlrpcClient.call( new LoginRequest(), LoginResponse.class, urlBuilder, requestModifier );
 
             return loginResponse == null ? null : loginResponse.getSessionInfo();
         }
@@ -316,7 +334,10 @@ public class KojiClient
         catch ( Exception e )
         {
             Logger logger = LoggerFactory.getLogger( getClass() );
-            logger.error( "Lambda failed", e );
+            if ( logger.isDebugEnabled() )
+            {
+                logger.error( "Koji withSession lambda failed", e );
+            }
 
             if ( e instanceof KojiClientException )
             {
@@ -324,7 +345,7 @@ public class KojiClient
             }
             else
             {
-                throw new KojiClientException( "Lambda command failed: %s", e, e.getMessage() );
+                throw new KojiClientException( "Koji withSession lambda command failed: %s", e, e.getMessage() );
             }
         }
         finally
@@ -335,42 +356,80 @@ public class KojiClient
         return result;
     }
 
-    public KojiUserInfo getLoggedInUserInfo( String username )
+    private interface KojiInternalCommand<T>
+    {
+        T execute()
+                throws KojiClientException, XmlRpcException;
+    }
+
+    private <T> T doXmlRpcAndThrow( KojiInternalCommand<T> cmd, String message, Object... params )
             throws KojiClientException
     {
         checkConnection();
 
         try
         {
+            return cmd.execute();
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "%s. Reason: %s", e, String.format( message, params ), e.getMessage() );
+        }
+    }
+
+    private <T> T doXmlRpcAndWarn( KojiInternalCommand<T> cmd, String message, Object... params )
+    {
+        try
+        {
+            checkConnection();
+
+            return cmd.execute();
+        }
+        catch ( XmlRpcException | KojiClientException e )
+        {
+            Logger logger = LoggerFactory.getLogger( getClass() );
+            String formatted = String.format( "%s. Reason: %s", String.format( message, params ), e.getMessage() );
+            if ( logger.isDebugEnabled() )
+            {
+                logger.warn( formatted, e );
+            }
+            else
+            {
+                logger.warn( formatted );
+            }
+        }
+
+        return null;
+    }
+
+    public KojiUserInfo getLoggedInUserInfo( String username )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
             UserResponse response =
                     xmlrpcClient.call( new UserRequest( username ), UserResponse.class, NO_OP_URL_BUILDER,
                                        STANDARD_REQUEST_MODIFIER );
 
             return response == null ? null : response.getUserInfo();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve current user info: %s", e, e.getMessage() );
-        }
+        }, "Failed to retrieve current user info." );
     }
 
     public KojiUserInfo getLoggedInUserInfo( KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             UserResponse response =
                     xmlrpcClient.call( new LoggedInUserRequest(), UserResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
 
-            return response == null ? null : response.getUserInfo();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve current user info: %s", e, e.getMessage() );
-        }
+            if ( response != null )
+            {
+                return response.getUserInfo();
+            }
+
+            return null;
+
+        }, "Failed to retrieve current user info." );
     }
 
     public void logout( KojiSessionInfo session )
@@ -415,150 +474,99 @@ public class KojiClient
     public Set<KojiPermission> getAllPermissions( KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             AllPermissionsResponse response =
                     xmlrpcClient.call( new AllPermissionsRequest(), AllPermissionsResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             return response.getPermissions();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve listing of koji permissions: %s", e, e.getMessage() );
-        }
+        }, "Failed to retrieve listing of koji permissions." );
     }
 
     public boolean hasPermission( String permission, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             ConfirmationResponse response =
                     xmlrpcClient.call( new CheckPermissionRequest( permission ), ConfirmationResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             return response.isSuccess();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to check whether logged-in user has permission: %s. Reason: %s", e,
-                                           permission, e.getMessage() );
-        }
+        }, "Failed to check whether logged-in user has permission: %s", permission );
     }
 
     public int createTag( CreateTagRequest request, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             IdResponse response = xmlrpcClient.call( request, IdResponse.class, sessionUrlBuilder( session ),
                                                      STANDARD_REQUEST_MODIFIER );
 
             return response.getId();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to create tag: %s. Reason: %s", e, request, e.getMessage() );
-        }
+        }, "Failed to create tag: %s", request );
     }
 
     public KojiTagInfo getTag( int tagId, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             TagResponse response =
                     xmlrpcClient.call( new TagRequest( tagId ), TagResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
 
             return response.getTagInfo();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve tag: %s. Reason: %s", e, tagId, e.getMessage() );
-        }
+        }, "Failed to retrieve tag: %s", tagId );
     }
 
     public KojiTagInfo getTag( String tagName, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             TagResponse response =
                     xmlrpcClient.call( new TagRequest( tagName ), TagResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
 
             return response.getTagInfo();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve tag: %s. Reason: %s", e, tagName, e.getMessage() );
-        }
+        }, "Failed to retrieve tag: %s", tagName );
     }
 
     public Integer getTagId( String tagName, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             IdResponse response =
                     xmlrpcClient.call( new GetTagIdRequest( tagName ), IdResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
 
             return response.getId();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve tag: %s. Reason: %s", e, tagName, e.getMessage() );
-        }
+        }, "Failed to retrieve tag: %s", tagName );
     }
 
     public Integer getPackageId( String packageName, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             IdResponse response = xmlrpcClient.call( new GetTagIdRequest( packageName ), IdResponse.class,
                                                      sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             return response.getId();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve package: %s. Reason: %s", e, packageName,
-                                           e.getMessage() );
-        }
+        }, "Failed to retrieve package: %s", packageName );
     }
 
     public KojiImportResult importBuild( KojiImport buildInfo, Supplier<Iterable<ImportFile>> outputSupplier,
                                          KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
+        return doXmlRpcAndThrow( () -> {
+            String dirname = generateUploadDirname( session );
+            Map<String, KojiClientException> uploadErrors =
+                    uploadForImport( buildInfo, outputSupplier, dirname, session );
 
-        String dirname = generateUploadDirname( session );
-        Map<String, KojiClientException> uploadErrors = uploadForImport( buildInfo, outputSupplier, dirname, session );
+            if ( !uploadErrors.isEmpty() )
+            {
+                return new KojiImportResult( buildInfo ).withUploadErrors( uploadErrors );
+            }
 
-        if ( !uploadErrors.isEmpty() )
-        {
-            return new KojiImportResult( buildInfo ).withUploadErrors( uploadErrors );
-        }
-
-        try
-        {
             StatusResponse response = xmlrpcClient.call( new CGImportRequest( dirname ), StatusResponse.class,
                                                          sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
@@ -570,174 +578,391 @@ public class KojiClient
             KojiBuildInfo build = getBuildInfo( buildInfo.getBuildNVR(), session );
 
             return new KojiImportResult( buildInfo ).withBuildInfo( build );
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to execute content-generator import. Reason: %s", e,
-                                           e.getMessage() );
-        }
+        }, "Failed to execute content-generator import" );
     }
 
     public List<KojiTagInfo> listTags( KojiBuildInfo buildInfo, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             ListTagsResponse response =
                     xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( buildInfo ) ), ListTagsResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             List<KojiTagInfo> tags = response.getTags();
             return tags == null ? Collections.emptyList() : tags;
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve list of tags for build: %s. Reason: %s", e, buildInfo,
-                                           e.getMessage() );
-        }
+        }, "Failed to retrieve list of tags for build: %s", buildInfo );
     }
 
     public List<KojiTagInfo> listTags( KojiNVR nvr, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             ListTagsResponse response =
                     xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( nvr ) ), ListTagsResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             List<KojiTagInfo> tags = response.getTags();
             return tags == null ? Collections.emptyList() : tags;
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve list of tags for build: %s. Reason: %s", e, nvr,
-                                           e.getMessage() );
-        }
+        }, "Failed to retrieve list of tags for build: %s", nvr );
     }
 
     public List<KojiTagInfo> listTags( String nvr, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             ListTagsResponse response =
                     xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( nvr ) ), ListTagsResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             List<KojiTagInfo> tags = response.getTags();
             return tags == null ? Collections.emptyList() : tags;
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve list of tags for build: %s. Reason: %s", e, nvr,
-                                           e.getMessage() );
-        }
+        }, "Failed to retrieve list of tags for build: %s", nvr );
     }
 
     public List<KojiTagInfo> listTags( int buildId, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             ListTagsResponse response =
                     xmlrpcClient.call( new ListTagsRequest( new KojiTagQuery( buildId ) ), ListTagsResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             List<KojiTagInfo> tags = response.getTags();
             return tags == null ? Collections.emptyList() : tags;
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve list of tags for build: %s. Reason: %s", e, buildId,
-                                           e.getMessage() );
-        }
+        }, "Failed to retrieve list of tags for build: %s", buildId );
     }
 
-    public List<KojiBuildInfo> listBuilds( ProjectVersionRef gav, KojiSessionInfo session )
+    public List<KojiArchiveInfo> listArchivesMatching( ProjectVersionRef gav, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
+        return doXmlRpcAndThrow( () -> {
+            ListArchivesResponse response =
+                    xmlrpcClient.call( new ListArchivesRequest( gav ), ListArchivesResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-        try
-        {
-            ListBuildsResponse response = xmlrpcClient.call( new ListBuildsRequest( gav ), ListBuildsResponse.class,
-                                                             sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+            List<KojiArchiveInfo> archives = response.getArchives();
+            return archives == null ? Collections.emptyList() : archives;
+        }, "Failed to retrieve list of archives for: %s", gav );
+    }
 
-            List<KojiBuildInfo> builds = response.getBuilds();
-            return builds == null ? Collections.emptyList() : builds;
-        }
-        catch ( XmlRpcException e )
+    public List<KojiBuildArchiveCollection> listArchivesForBuilds( ProjectVersionRef gav, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            BuildListResponse buildsResponse =
+                    xmlrpcClient.call( new ListBuildsRequest( new KojiBuildQuery( gav ) ), BuildListResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            if ( buildsResponse == null )
+            {
+                return Collections.emptyList();
+            }
+
+            List<KojiBuildArchiveCollection> builds = new ArrayList<>();
+            buildsResponse.getBuilds().forEach( ( build ) -> {
+                ListArchivesResponse archivesResponse = doXmlRpcAndWarn( () -> xmlrpcClient.call(
+                        new ListArchivesRequest( new KojiArchiveQuery().withBuildId( build.getId() ) ),
+                        ListArchivesResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER ),
+                                                                         "Failed to retrieve archives for build: '%s'",
+                                                                         build.getNvr() );
+
+                if ( archivesResponse != null )
+                {
+                    List<KojiArchiveInfo> archives = archivesResponse.getArchives();
+                    KojiBuildArchiveCollection collection = new KojiBuildArchiveCollection( build, archives );
+                    builds.add( collection );
+                }
+            } );
+
+            return builds;
+
+        }, "Failed to retrieve list of archives for: %s", gav );
+    }
+
+    public KojiBuildArchiveCollection listArchivesForBuild( KojiNVR nvr, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return listArchivesForBuild( new GetBuildByNVRObjRequest( nvr ), session );
+    }
+
+    public KojiBuildArchiveCollection listArchivesForBuild( KojiIdOrName build, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return listArchivesForBuild( new GetBuildByIdOrNameRequest( build ), session );
+    }
+
+    public KojiBuildArchiveCollection listArchivesForBuild( String nvr, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return listArchivesForBuild( new GetBuildByIdOrNameRequest( nvr ), session );
+    }
+
+    public KojiBuildArchiveCollection listArchivesForBuild( int buildId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return listArchivesForBuild( new GetBuildByIdOrNameRequest( buildId ), session );
+    }
+
+    public KojiBuildArchiveCollection listArchivesForBuild( GetBuildRequest request, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetBuildResponse buildResponse =
+                    xmlrpcClient.call( request, GetBuildResponse.class, sessionUrlBuilder( session ),
+                                       STANDARD_REQUEST_MODIFIER );
+
+            if ( buildResponse == null )
+            {
+                throw new KojiClientException( "No such build for request: %s", request );
+            }
+
+            KojiBuildInfo build = buildResponse.getBuildInfo();
+
+            ListArchivesResponse archivesResponse = doXmlRpcAndWarn( () -> xmlrpcClient.call(
+                    new ListArchivesRequest( new KojiArchiveQuery().withBuildId( build.getId() ) ),
+                    ListArchivesResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER ),
+                                                                     "Failed to retrieve archives for build: '%s'",
+                                                                     build.getNvr() );
+
+            if ( archivesResponse != null )
+            {
+                List<KojiArchiveInfo> archives = archivesResponse.getArchives();
+                return new KojiBuildArchiveCollection( build, archives );
+            }
+
+            return null;
+
+        }, "Failed to retrieve list of archives for: %s", request );
+    }
+
+    public List<KojiBuildInfo> listBuildsContaining( ProjectVersionRef gav, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        List<KojiArchiveInfo> archives = doXmlRpcAndThrow( () -> {
+            ListArchivesResponse response =
+                    xmlrpcClient.call( new ListArchivesRequest( gav ), ListArchivesResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? Collections.emptyList() : response.getArchives();
+        }, "Failed to retrieve list of archives for: %s", gav );
+
+        List<KojiBuildInfo> builds = new ArrayList<>();
+
+        if ( archives != null && !archives.isEmpty())
         {
-            throw new KojiClientException( "Failed to retrieve list of builds for: %s. Reason: %s", e, gav,
-                                           e.getMessage() );
+            archives.forEach( ( archive ) -> {
+                KojiBuildInfo build = doXmlRpcAndWarn( () -> {
+                    GetBuildResponse buildResponse =
+                            xmlrpcClient.call( new GetBuildByIdOrNameRequest( archive.getBuildId() ),
+                                               GetBuildResponse.class, sessionUrlBuilder( session ),
+                                               STANDARD_REQUEST_MODIFIER );
+
+                    return buildResponse == null ? null : buildResponse.getBuildInfo();
+                }, "Failed to retrieve build for: %s", archive.getBuildId() );
+
+                if ( build != null )
+                {
+                    builds.add( build );
+                }
+            } );
         }
+
+        return builds;
+    }
+
+    public List<KojiPackageInfo> listPackagesForTag( String tag, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            IdResponse r =
+                    xmlrpcClient.call( new GetTagIdRequest( tag ), IdResponse.class, sessionUrlBuilder( session ),
+                                       STANDARD_REQUEST_MODIFIER );
+
+            if ( r == null || r.getId() == null )
+            {
+                throw new KojiClientException( "No such tag: %s", tag );
+            }
+
+            ListPackagesResponse response =
+                    xmlrpcClient.call( new ListPackagesRequest( new KojiPackageQuery().withTagId( r.getId() ) ),
+                                       ListPackagesResponse.class, sessionUrlBuilder( session ),
+                                       STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? Collections.emptyList() : response.getPackages();
+        }, "Failed to retrieve package list for tag: %s", tag );
+    }
+
+    public boolean addPackageToTag( String tag, String pkg, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return addPackageToTag( tag, pkg, null, session );
+    }
+
+    public boolean addPackageToTag( String tag, String pkg, String ownerName, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            IdResponse r =
+                    xmlrpcClient.call( new GetTagIdRequest( tag ), IdResponse.class, sessionUrlBuilder( session ),
+                                       STANDARD_REQUEST_MODIFIER );
+
+            if ( r == null || r.getId() == null )
+            {
+                throw new KojiClientException( "No such tag: %s", tag );
+            }
+
+            ListPackagesResponse listPackagesResponse =
+                    xmlrpcClient.call( new ListPackagesRequest( new KojiPackageQuery().withTagId( r.getId() ) ),
+                                       ListPackagesResponse.class, sessionUrlBuilder( session ),
+                                       STANDARD_REQUEST_MODIFIER );
+
+            boolean add = true;
+            if ( listPackagesResponse != null )
+            {
+                List<KojiPackageInfo> packages = listPackagesResponse.getPackages();
+                if ( packages.parallelStream()
+                             .filter( ( info ) -> info.getPackageName().equals( pkg ) )
+                             .findFirst()
+                             .isPresent() )
+                {
+                    add = false;
+                }
+            }
+            else
+            {
+                Logger logger = LoggerFactory.getLogger( getClass() );
+                logger.debug( "List-packages for tag: {} returned null result!", tag );
+            }
+
+            if ( add )
+            {
+                String owner = ownerName;
+                if ( isEmpty( owner ) )
+                {
+                    UserResponse userResponse = xmlrpcClient.call( new LoggedInUserRequest(), UserResponse.class,
+                                                                   sessionUrlBuilder( session ),
+                                                                   STANDARD_REQUEST_MODIFIER );
+
+                    if ( userResponse != null )
+                    {
+                        KojiUserInfo userInfo = userResponse.getUserInfo();
+
+                    }
+                    else
+                    {
+                        Logger logger = LoggerFactory.getLogger( getClass() );
+                        logger.debug( "Cannot retrieve a logged-in user to assign as owner of package: {} in tag: {}",
+                                      pkg, tag );
+                        return false;
+                    }
+                }
+
+                xmlrpcClient.call( new AddPackageToTagRequest( r.getId(), pkg, owner ), AckResponse.class,
+                                   sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+                return true;
+            }
+
+            return false;
+
+        }, "Failed to retrieve package list for tag: %s", tag );
+    }
+
+    public void removePackageFromTag( String tag, String pkg, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        doXmlRpcAndThrow( () -> {
+            xmlrpcClient.call( new RemovePackageFromTagRequest( tag, pkg ), AckResponse.class,
+                               sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+            return null;
+        }, "Failed to remove package '%s' from tag '%s'", pkg, tag );
+    }
+
+    public Integer tagBuild( String tag, String buildNvr, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            IdResponse response = xmlrpcClient.call( new TagBuildRequest( tag, buildNvr ), IdResponse.class,
+                                                 sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getId();
+        }, "Failed to start tagging request for build: %s into tag: %s", buildNvr, tag  );
+    }
+
+    public KojiTaskInfo getTaskInfo( int taskId, KojiSessionInfo session )
+        throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            GetTaskResponse taskResponse = xmlrpcClient.call( new GetTaskRequest( taskId ), GetTaskResponse.class,
+                               sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return taskResponse == null ? null : taskResponse.getTaskInfo();
+        }, "Failed to load task info for: %s", taskId );
+    }
+
+    public boolean untagBuild( String tag, String buildNvr, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            BuildListResponse buildsResponse =
+                    xmlrpcClient.call( new ListTaggedRequest( tag ).withPrefix( buildNvr ), BuildListResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            if ( buildsResponse == null )
+            {
+                Logger logger = LoggerFactory.getLogger( getClass() );
+                logger.debug( "No builds response was returned!" );
+                return false;
+            }
+
+            List<KojiBuildInfo> builds = buildsResponse.getBuilds();
+            if ( builds == null || builds.isEmpty() )
+            {
+                Logger logger = LoggerFactory.getLogger( getClass() );
+                logger.debug( "Build: '{}' is not tagged in: '{}'", buildNvr, tag );
+                return false;
+            }
+
+            xmlrpcClient.call( new UntagBuildRequest( tag, buildNvr ), AckResponse.class, sessionUrlBuilder( session ),
+                               STANDARD_REQUEST_MODIFIER );
+
+            return true;
+        }, "Failed to untag build: %s from: %s", buildNvr, tag );
     }
 
     public KojiBuildInfo getBuildInfo( KojiNVR nvr, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             GetBuildResponse response = xmlrpcClient.call( new GetBuildByNVRObjRequest( nvr ), GetBuildResponse.class,
                                                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             return response.getBuildInfo();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve build info for: %s. Reason: %s", e, nvr,
-                                           e.getMessage() );
-        }
+        }, "Failed to retrieve build info for: %s", nvr );
     }
 
     public KojiBuildInfo getBuildInfo( String nvr, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             GetBuildResponse response = xmlrpcClient.call( new GetBuildByIdOrNameRequest( nvr ), GetBuildResponse.class,
                                                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             return response.getBuildInfo();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve build info for: %s. Reason: %s", e, nvr,
-                                           e.getMessage() );
-        }
+        }, "Failed to retrieve build info for: %s", nvr );
     }
 
     public KojiBuildInfo getBuildInfo( int buildId, KojiSessionInfo session )
             throws KojiClientException
     {
-        checkConnection();
-
-        try
-        {
+        return doXmlRpcAndThrow( () -> {
             GetBuildResponse response =
                     xmlrpcClient.call( new GetBuildByIdOrNameRequest( buildId ), GetBuildResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             return response.getBuildInfo();
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to retrieve build info for: %s. Reason: %s", e, buildId,
-                                           e.getMessage() );
-        }
+        }, "Failed to retrieve build info for: %s", buildId );
     }
 
     protected String generateUploadDirname( KojiSessionInfo session )

@@ -1,0 +1,70 @@
+<?xml version='1.0'?>
+<methodCall>
+<methodName>getHost</methodName>
+<params>
+<param>
+<value><int>140</int></value>
+</param>
+</params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 05 Aug 2016 16:55:11 GMT
+Server: Apache/2.2.15 (Red Hat)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Length: 1138
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><struct>
+<member>
+<name>comment</name>
+<value><string>ppc-030 and ppc-031 are having consistent, critical IO failures. Both are virt instances on the same hardware. A ticket has been opened to investigate the underlying cause.
+https:/.somedomain.com/rt/Ticket/Display.html?id=388508</string></value>
+</member>
+<member>
+<name>capacity</name>
+<value><double>10.0</double></value>
+</member>
+<member>
+<name>name</name>
+<value><string>ppc-031.build.eng.bos.redhat.com</string></value>
+</member>
+<member>
+<name>enabled</name>
+<value><boolean>1</boolean></value>
+</member>
+<member>
+<name>arches</name>
+<value><string>ppc ppc64</string></value>
+</member>
+<member>
+<name>task_load</name>
+<value><double>1.0</double></value>
+</member>
+<member>
+<name>ready</name>
+<value><boolean>1</boolean></value>
+</member>
+<member>
+<name>user_id</name>
+<value><int>2855</int></value>
+</member>
+<member>
+<name>id</name>
+<value><int>140</int></value>
+</member>
+<member>
+<name>description</name>
+<value><string></string></value>
+</member>
+</struct></value>
+</param>
+</params>
+</methodResponse>
+
+11512915 tagBuild (noarch): free -> open (ppc-031.build.eng.bos.redhat.com)

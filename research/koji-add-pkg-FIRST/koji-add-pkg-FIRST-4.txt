@@ -1,5 +1,5 @@
 ====
-    Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
+    Copyright (C) 2015 Red Hat, Inc. (someuser@redhat.com)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -63,10 +63,12 @@ Content-Type: text/xml
 				</member>
 				<member>
 					<name>perm</name>
-					<value><nil/></value></member>
+					<value><nil/></value>
+</member>
 					<member>
 						<name>perm_id</name>
-						<value><nil/></value></member>
+						<value><nil/></value>
+</member>
 						<member>
 							<name>arches</name>
 							<value><string>x86_64 i686</string></value>

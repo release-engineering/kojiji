@@ -1,0 +1,124 @@
+<?xml version='1.0'?>
+<methodCall>
+<methodName>getTaskInfo</methodName>
+<params>
+<param>
+<value><int>11512915</int></value>
+</param>
+<param>
+<value><struct>
+<member>
+<name>__starstar</name>
+<value><boolean>1</boolean></value>
+</member>
+<member>
+<name>request</name>
+<value><boolean>1</boolean></value>
+</member>
+</struct></value>
+</param>
+</params>
+</methodCall>
+
+HTTP/1.1 200 OK
+
+Date: Fri, 05 Aug 2016 16:55:06 GMT
+Server: Apache/2.2.15 (Red Hat)
+Strict-Transport-Security: max-age=63072000; includeSubDomains
+Content-Length: 1655
+Connection: close
+Content-Type: text/xml
+<?xml version='1.0'?>
+<methodResponse>
+<params>
+<param>
+<value><struct>
+<member>
+<name>weight</name>
+<value><double>1.0</double></value>
+</member>
+<member>
+<name>parent</name>
+<value><nil/></value>
+</member>
+<member>
+<name>channel_id</name>
+<value><int>1</int></value>
+</member>
+<member>
+<name>request</name>
+<value><array><data>
+<value><int>9101</int></value>
+<value><int>447248</int></value>
+<value><nil/></value><value><nil/></value></data></array></value>
+</member>
+<member>
+<name>start_time</name>
+<value><nil/></value>
+</member>
+<member>
+<name>start_ts</name>
+<value><nil/></value>
+</member>
+<member>
+<name>waiting</name>
+<value><nil/></value>
+</member>
+<member>
+<name>awaited</name>
+<value><nil/></value>
+</member>
+<member>
+<name>label</name>
+<value><nil/></value>
+</member>
+<member>
+<name>priority</name>
+<value><int>10</int></value>
+</member>
+<member>
+<name>completion_time</name>
+<value><nil/></value>
+</member>
+<member>
+<name>state</name>
+<value><int>0</int></value>
+</member>
+<member>
+<name>create_time</name>
+<value><string>2016-08-05 16:55:05.763255</string></value>
+</member>
+<member>
+<name>create_ts</name>
+<value><double>1470416105.7632501</double></value>
+</member>
+<member>
+<name>owner</name>
+<value><int>101010</int></value>
+</member>
+<member>
+<name>host_id</name>
+<value><nil/></value>
+</member>
+<member>
+<name>method</name>
+<value><string>tagBuild</string></value>
+</member>
+<member>
+<name>completion_ts</name>
+<value><nil/></value>
+</member>
+<member>
+<name>arch</name>
+<value><string>noarch</string></value>
+</member>
+<member>
+<name>id</name>
+<value><int>11512915</int></value>
+</member>
+</struct></value>
+</param>
+</params>
+</methodResponse>
+
+11512915 tagBuild (noarch): free

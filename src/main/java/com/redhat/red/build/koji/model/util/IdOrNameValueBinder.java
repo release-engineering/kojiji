@@ -44,6 +44,7 @@ public class IdOrNameValueBinder
             throws XmlRpcException
     {
         Logger logger = LoggerFactory.getLogger( getClass() );
+        logger.debug( "Serializing: {}", value );
         if ( value == null )
         {
             logger.debug( "Generating nil" );

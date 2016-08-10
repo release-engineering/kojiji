@@ -15,8 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import com.redhat.red.build.koji.model.util.StringListValueBinder;
+import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataIndex;
 import org.commonjava.rwx.binding.anno.Request;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by jdcasey on 1/11/16.
  */
-@Request( method="createTag" )
+@Request( method = "createTag" )
 public class CreateTagRequest
 {
     @DataIndex( 0 )
@@ -51,7 +51,9 @@ public class CreateTagRequest
     @DataIndex( 6 )
     private boolean mavenIncludeAll = true;
 
-    public CreateTagRequest(){}
+    public CreateTagRequest()
+    {
+    }
 
     public String getTagName()
     {
@@ -121,6 +123,48 @@ public class CreateTagRequest
     public void setParent( KojiIdOrName parent )
     {
         this.parent = parent;
+    }
+
+    public CreateTagRequest withTagName( String tagName )
+    {
+        this.tagName = tagName;
+        return this;
+    }
+
+    public CreateTagRequest withArches( List<String> arches )
+    {
+        this.arches = arches;
+        return this;
+    }
+
+    public CreateTagRequest withParent( KojiIdOrName parent )
+    {
+        this.parent = parent;
+        return this;
+    }
+
+    public CreateTagRequest withPermission( String permission )
+    {
+        this.permission = permission;
+        return this;
+    }
+
+    public CreateTagRequest withLocked( boolean locked )
+    {
+        this.locked = locked;
+        return this;
+    }
+
+    public CreateTagRequest withMavenSupport( boolean mavenSupport )
+    {
+        this.mavenSupport = mavenSupport;
+        return this;
+    }
+
+    public CreateTagRequest withMavenIncludeAll( boolean mavenIncludeAll )
+    {
+        this.mavenIncludeAll = mavenIncludeAll;
+        return this;
     }
 
     @Override

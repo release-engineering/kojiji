@@ -15,28 +15,46 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.redhat.red.build.koji.model.xmlrpc.messages.AckResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.AddPackageToTagRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.CGImportRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CheckPermissionRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ConfirmationResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByIdOrNameRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByNVRObjRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetPackageIdRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetTagIdRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.BuildListResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListPackagesRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListPackagesResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListTaggedRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoggedInUserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LoginResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.LogoutRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.RemovePackageFromTagRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.StatusResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.TagBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.TagRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.TagResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.UntagBuildRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.UploadResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionResponse;
 import org.commonjava.rwx.binding.error.BindException;
 import org.commonjava.rwx.binding.internal.reflect.ReflectionMapper;
 import org.commonjava.rwx.binding.internal.xbr.XBRCompositionBindery;
@@ -59,12 +77,50 @@ public class KojiXmlRpcBindery
     private static Map<Class<?>, Mapping<?>> getRecipes()
             throws BindException
     {
-        Class<?>[] classes = { AllPermissionsRequest.class, AllPermissionsResponse.class, ApiVersionRequest.class,
-                ApiVersionResponse.class, CheckPermissionRequest.class, ConfirmationResponse.class,
-                CreateTagRequest.class, GetPackageIdRequest.class, IdResponse.class, LoggedInUserRequest.class, LoginRequest.class,
-                LoginResponse.class, LogoutRequest.class, StatusResponse.class, TagRequest.class, TagResponse.class,
-                UserRequest.class, UserResponse.class, ListBuildsRequest.class, ListBuildsResponse.class,
-                ListTagsRequest.class, ListTagsResponse.class };
+        /* @formatter:off */
+        Class<?>[] classes = {
+                AckResponse.class,
+                AddPackageToTagRequest.class,
+                AllPermissionsRequest.class,
+                AllPermissionsResponse.class,
+                ApiVersionRequest.class,
+                ApiVersionResponse.class,
+                BuildListResponse.class,
+                CGImportRequest.class,
+                CheckPermissionRequest.class,
+                ConfirmationResponse.class,
+                CreateTagRequest.class,
+                GetBuildByIdOrNameRequest.class,
+                GetBuildByNVRObjRequest.class,
+                GetBuildResponse.class,
+                GetPackageIdRequest.class,
+                GetTagIdRequest.class,
+                GetTaskRequest.class,
+                GetTaskResponse.class,
+                IdResponse.class,
+                ListArchivesRequest.class,
+                ListArchivesResponse.class,
+                ListBuildsRequest.class,
+                ListPackagesRequest.class,
+                ListPackagesResponse.class,
+                ListTaggedRequest.class,
+                ListTagsRequest.class,
+                ListTagsResponse.class,
+                LoggedInUserRequest.class,
+                LoginRequest.class,
+                LoginResponse.class,
+                LogoutRequest.class,
+                RemovePackageFromTagRequest.class,
+                StatusResponse.class,
+                TagBuildRequest.class,
+                TagRequest.class,
+                TagResponse.class,
+                UploadResponse.class,
+                UntagBuildRequest.class,
+                UserRequest.class,
+                UserResponse.class
+        };
+        /* @formatter:on */
 
         return new ReflectionMapper().loadRecipes( classes );
     }
