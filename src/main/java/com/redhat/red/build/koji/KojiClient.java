@@ -289,7 +289,7 @@ public class KojiClient
                     xmlrpcClient.call( new ApiVersionRequest(), ApiVersionResponse.class, NO_OP_URL_BUILDER,
                                        STANDARD_REQUEST_MODIFIER );
 
-            return response.getApiVersion();
+            return response == null ? -1 : response.getApiVersion();
         }
         catch ( XmlRpcException e )
         {
@@ -424,7 +424,7 @@ public class KojiClient
 
             if ( response != null )
             {
-                return response.getUserInfo();
+                return response == null ? null : response.getUserInfo();
             }
 
             return null;
@@ -479,7 +479,7 @@ public class KojiClient
                     xmlrpcClient.call( new AllPermissionsRequest(), AllPermissionsResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-            return response.getPermissions();
+            return response == null ? null : response.getPermissions();
         }, "Failed to retrieve listing of koji permissions." );
     }
 
@@ -491,18 +491,18 @@ public class KojiClient
                     xmlrpcClient.call( new CheckPermissionRequest( permission ), ConfirmationResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-            return response.isSuccess();
+            return response == null ? false : response.isSuccess();
         }, "Failed to check whether logged-in user has permission: %s", permission );
     }
 
-    public int createTag( CreateTagRequest request, KojiSessionInfo session )
+    public Integer createTag( CreateTagRequest request, KojiSessionInfo session )
             throws KojiClientException
     {
         return doXmlRpcAndThrow( () -> {
             IdResponse response = xmlrpcClient.call( request, IdResponse.class, sessionUrlBuilder( session ),
                                                      STANDARD_REQUEST_MODIFIER );
 
-            return response.getId();
+            return response == null ? null : response.getId();
         }, "Failed to create tag: %s", request );
     }
 
@@ -514,7 +514,7 @@ public class KojiClient
                     xmlrpcClient.call( new TagRequest( tagId ), TagResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
 
-            return response.getTagInfo();
+            return response == null ? null : response.getTagInfo();
         }, "Failed to retrieve tag: %s", tagId );
     }
 
@@ -526,7 +526,7 @@ public class KojiClient
                     xmlrpcClient.call( new TagRequest( tagName ), TagResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
 
-            return response.getTagInfo();
+            return response == null ? null : response.getTagInfo();
         }, "Failed to retrieve tag: %s", tagName );
     }
 
@@ -538,7 +538,7 @@ public class KojiClient
                     xmlrpcClient.call( new GetTagIdRequest( tagName ), IdResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
 
-            return response.getId();
+            return response == null ? null : response.getId();
         }, "Failed to retrieve tag: %s", tagName );
     }
 
@@ -549,7 +549,7 @@ public class KojiClient
             IdResponse response = xmlrpcClient.call( new GetTagIdRequest( packageName ), IdResponse.class,
                                                      sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-            return response.getId();
+            return response == null ? null : response.getId();
         }, "Failed to retrieve package: %s", packageName );
     }
 
@@ -938,7 +938,7 @@ public class KojiClient
             GetBuildResponse response = xmlrpcClient.call( new GetBuildByNVRObjRequest( nvr ), GetBuildResponse.class,
                                                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-            return response.getBuildInfo();
+            return response == null ? null : response.getBuildInfo();
         }, "Failed to retrieve build info for: %s", nvr );
     }
 
@@ -949,7 +949,7 @@ public class KojiClient
             GetBuildResponse response = xmlrpcClient.call( new GetBuildByIdOrNameRequest( nvr ), GetBuildResponse.class,
                                                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-            return response.getBuildInfo();
+            return response == null ? null : response.getBuildInfo();
         }, "Failed to retrieve build info for: %s", nvr );
     }
 
@@ -961,7 +961,7 @@ public class KojiClient
                     xmlrpcClient.call( new GetBuildByIdOrNameRequest( buildId ), GetBuildResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-            return response.getBuildInfo();
+            return response == null ? null : response.getBuildInfo();
         }, "Failed to retrieve build info for: %s", buildId );
     }
 
