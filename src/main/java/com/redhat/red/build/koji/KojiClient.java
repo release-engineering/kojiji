@@ -989,8 +989,10 @@ public class KojiClient
         }
 
         AtomicInteger count = new AtomicInteger( 0 );
+
+        byte[] data = baos.toByteArray();
         uploadService.submit(
-                newUploader( new ImportFile( METADATA_JSON_FILE, new ByteArrayInputStream( baos.toByteArray() ) ),
+                newUploader( new ImportFile( METADATA_JSON_FILE, new ByteArrayInputStream( data ), data.length ),
                              dirname, session ) );
 
         count.incrementAndGet();
@@ -1046,7 +1048,7 @@ public class KojiClient
 
             try
             {
-                result.setResponse( upload( importFile.getStream(), importFile.getFilePath(), dirname, session ) );
+                result.setResponse( upload( importFile.getStream(), importFile.getFilePath(), importFile.getSize(), dirname, session ) );
             }
             catch ( KojiClientException e )
             {
@@ -1057,7 +1059,7 @@ public class KojiClient
         };
     }
 
-    protected UploadResponse upload( InputStream stream, String filepath, String uploadDir, KojiSessionInfo session )
+    protected UploadResponse upload( InputStream stream, String filepath, long size, String uploadDir, KojiSessionInfo session )
             throws KojiClientException
     {
         CloseableHttpClient client = null;
@@ -1085,7 +1087,7 @@ public class KojiClient
             } ).buildUrl( config.getKojiURL() ).throwError().get();
 
             HttpPost request = new HttpPost( url );
-            request.setEntity( new InputStreamEntity( stream ) );
+            request.setEntity( new InputStreamEntity( stream, size ) );
 
             CloseableHttpResponse response = client.execute( request );
 

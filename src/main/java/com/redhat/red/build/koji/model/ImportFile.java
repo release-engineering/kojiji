@@ -26,10 +26,13 @@ public class ImportFile
 
     private InputStream stream;
 
-    public ImportFile( String filePath, InputStream stream )
+    private long size;
+
+    public ImportFile( String filePath, InputStream stream, long size )
     {
         this.filePath = filePath;
         this.stream = stream;
+        this.size = size;
     }
 
     public String getFilePath()
@@ -40,6 +43,11 @@ public class ImportFile
     public InputStream getStream()
     {
         return stream;
+    }
+
+    public long getSize()
+    {
+        return size;
     }
 
     @Override
@@ -77,4 +85,5 @@ public class ImportFile
     {
         return "ImportFile[" + filePath + ']';
     }
+
 }
