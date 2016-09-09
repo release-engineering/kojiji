@@ -79,6 +79,7 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.UserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
@@ -1087,7 +1088,7 @@ public class KojiClient
             } ).buildUrl( config.getKojiURL() ).throwError().get();
 
             HttpPost request = new HttpPost( url );
-            request.setEntity( new InputStreamEntity( stream, size ) );
+            request.setEntity( new InputStreamEntity( stream, size, ContentType.APPLICATION_OCTET_STREAM ) );
 
             CloseableHttpResponse response = client.execute( request );
 
