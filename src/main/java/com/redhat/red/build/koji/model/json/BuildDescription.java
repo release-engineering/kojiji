@@ -205,6 +205,13 @@ public class BuildDescription
             return this;
         }
 
+        public Builder withExtraInfo( String key, Object object )
+        {
+            initExtraInfo().put(key, object);
+
+            return this;
+        }
+
         private Map<String, Object> initExtraInfo()
         {
             if ( target.extraInfo == null )
