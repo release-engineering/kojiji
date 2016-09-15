@@ -82,6 +82,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.commonjava.maven.atlas.ident.ref.ProjectRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.binding.error.BindException;
 import org.commonjava.rwx.error.XmlRpcException;
@@ -121,6 +122,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
+import static com.redhat.red.build.koji.model.util.KojiFormats.toKojiName;
 import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.ACCEPT_ENCODING_HEADER;
 import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.ADLER_32_CHECKSUM;
 import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.CALL_NUMBER_PARAM;
@@ -314,7 +316,15 @@ public class KojiClient
             LoginResponse loginResponse =
                     xmlrpcClient.call( new LoginRequest(), LoginResponse.class, urlBuilder, requestModifier );
 
-            return loginResponse == null ? null : loginResponse.getSessionInfo();
+            if ( loginResponse == null )
+            {
+                return null;
+            }
+
+            KojiSessionInfo session = loginResponse.getSessionInfo();
+            setLoggedInUser( session );
+
+            return session;
         }
         catch ( XmlRpcException e )
         {
@@ -554,14 +564,14 @@ public class KojiClient
         }, "Failed to retrieve package: %s", packageName );
     }
 
-    public KojiImportResult importBuild( KojiImport buildInfo, Supplier<Iterable<ImportFile>> outputSupplier,
+    public KojiImportResult importBuild( KojiImport buildInfo, Iterable<Supplier<ImportFile>> importedFileSuppliers,
                                          KojiSessionInfo session )
             throws KojiClientException
     {
         return doXmlRpcAndThrow( () -> {
             String dirname = generateUploadDirname( session );
             Map<String, KojiClientException> uploadErrors =
-                    uploadForImport( buildInfo, outputSupplier, dirname, session );
+                    uploadForImport( buildInfo, importedFileSuppliers, dirname, session );
 
             if ( !uploadErrors.isEmpty() )
             {
@@ -800,10 +810,24 @@ public class KojiClient
         return addPackageToTag( tag, pkg, null, session );
     }
 
+    public boolean addPackageToTag( String tag, ProjectRef ga, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return addPackageToTag( tag, toKojiName( ga ), null, session );
+    }
+
+    public boolean addPackageToTag( String tag, ProjectRef gav, String ownerName, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return addPackageToTag( tag, toKojiName( gav ), ownerName, session );
+    }
+
     public boolean addPackageToTag( String tag, String pkg, String ownerName, KojiSessionInfo session )
             throws KojiClientException
     {
         return doXmlRpcAndThrow( () -> {
+            setLoggedInUser( session );
+
             IdResponse r =
                     xmlrpcClient.call( new GetTagIdRequest( tag ), IdResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
@@ -814,7 +838,7 @@ public class KojiClient
             }
 
             ListPackagesResponse listPackagesResponse =
-                    xmlrpcClient.call( new ListPackagesRequest( new KojiPackageQuery().withTagId( r.getId() ) ),
+                    xmlrpcClient.call( new ListPackagesRequest( new KojiPackageQuery().withTagId( r.getId() ).withUserId( session.getUserInfo().getUserId() ) ),
                                        ListPackagesResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
 
@@ -841,22 +865,7 @@ public class KojiClient
                 String owner = ownerName;
                 if ( isEmpty( owner ) )
                 {
-                    UserResponse userResponse = xmlrpcClient.call( new LoggedInUserRequest(), UserResponse.class,
-                                                                   sessionUrlBuilder( session ),
-                                                                   STANDARD_REQUEST_MODIFIER );
-
-                    if ( userResponse != null )
-                    {
-                        KojiUserInfo userInfo = userResponse.getUserInfo();
-
-                    }
-                    else
-                    {
-                        Logger logger = LoggerFactory.getLogger( getClass() );
-                        logger.debug( "Cannot retrieve a logged-in user to assign as owner of package: {} in tag: {}",
-                                      pkg, tag );
-                        return false;
-                    }
+                    owner = session.getUserInfo().getUserName();
                 }
 
                 xmlrpcClient.call( new AddPackageToTagRequest( r.getId(), pkg, owner ), AckResponse.class,
@@ -868,6 +877,15 @@ public class KojiClient
             return false;
 
         }, "Failed to retrieve package list for tag: %s", tag );
+    }
+
+    private void setLoggedInUser( KojiSessionInfo session )
+            throws KojiClientException
+    {
+        if ( session.getUserInfo() == null )
+        {
+            session.setUserInfo( getLoggedInUserInfo( session ) );
+        }
     }
 
     public void removePackageFromTag( String tag, String pkg, KojiSessionInfo session )
@@ -969,13 +987,14 @@ public class KojiClient
     protected String generateUploadDirname( KojiSessionInfo session )
             throws KojiClientException
     {
-        KojiUserInfo userInfo = getLoggedInUserInfo( session );
+        setLoggedInUser( session );
+
         return String.format( "kojiji-upload/%s-%s/", new SimpleDateFormat( "yyyymmdd-hhMM" ).format( new Date() ),
-                              userInfo.getKerberosPrincipal() );
+                              session.getUserInfo().getUserName() );
     }
 
     protected Map<String, KojiClientException> uploadForImport( KojiImport buildInfo,
-                                                                Supplier<Iterable<ImportFile>> outputSupplier,
+                                                                Iterable<Supplier<ImportFile>> uploadedFileSuppliers,
                                                                 String dirname, KojiSessionInfo session )
             throws KojiClientException
     {
@@ -993,13 +1012,13 @@ public class KojiClient
 
         byte[] data = baos.toByteArray();
         uploadService.submit(
-                newUploader( new ImportFile( METADATA_JSON_FILE, new ByteArrayInputStream( data ), data.length ),
+                newUploader( ()->new ImportFile( METADATA_JSON_FILE, new ByteArrayInputStream( data ), data.length ),
                              dirname, session ) );
 
         count.incrementAndGet();
 
-        outputSupplier.get().forEach( ( importFile ) -> {
-            uploadService.submit( newUploader( importFile, dirname, session ) );
+        uploadedFileSuppliers.forEach( ( importFileSupplier ) -> {
+            uploadService.submit( newUploader( importFileSupplier, dirname, session ) );
             count.incrementAndGet();
         } );
 
@@ -1018,7 +1037,7 @@ public class KojiClient
                 KojiClientException error = result.getError();
                 if ( error != null )
                 {
-                    uploadErrors.put( result.getImportFile().getFilePath(), error );
+                    uploadErrors.put( result.getUploadFilePath(), error );
                 }
                 else
                 {
@@ -1041,10 +1060,11 @@ public class KojiClient
         return uploadErrors;
     }
 
-    protected Callable<KojiUploaderResult> newUploader( ImportFile importFile, String dirname, KojiSessionInfo session )
+    protected Callable<KojiUploaderResult> newUploader( Supplier<ImportFile> importFileSupplier, String dirname, KojiSessionInfo session )
     {
         return () -> {
 
+            ImportFile importFile = importFileSupplier.get();
             KojiUploaderResult result = new KojiUploaderResult( importFile );
 
             try

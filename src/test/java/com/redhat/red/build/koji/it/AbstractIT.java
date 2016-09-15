@@ -19,10 +19,12 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
 import com.redhat.red.build.koji.KojiClient;
 import com.redhat.red.build.koji.config.KojiConfig;
 import com.redhat.red.build.koji.config.SimpleKojiConfigBuilder;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -38,10 +40,13 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -69,6 +74,8 @@ public class AbstractIT
     private static final String SSL_URL_FORMAT = "https://%s:%s";
 
     private static final String CONTENT_MGMT_PATH = "/cgi-bin/content.py/";
+
+    private static final String TEST_SETUP_PATH = "/cgi-bin/setup.py";
 
     protected static final String SSL_CONFIG_BASE = "/clients/%s";
 
@@ -102,8 +109,32 @@ public class AbstractIT
                                                                                 .withTimeout( 2 );
 
         withNewClient( ( client ) -> {
-            builder.withClientKeyCertificateFile( getClientKeyCertPem( client ).getPath() );
-            builder.withServerCertificateFile( getServerCertsPem( client ).getPath() );
+            File clientKeyCertPem = getClientKeyCertPem( client );
+            Logger logger = LoggerFactory.getLogger( getClass() );
+            try
+            {
+                logger.info( "Client Key/Cert PEM contents:\n\n{}\n\n", FileUtils.readFileToString( clientKeyCertPem ) );
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+                Assert.fail( "failed to read contents of client PEM: " + e.getMessage() );
+            }
+
+            builder.withClientKeyCertificateFile( clientKeyCertPem.getPath() );
+
+            File serverCertsPem = getServerCertsPem( client );
+            try
+            {
+                logger.info( "Server PEM contents:\n\n{}\n\n", FileUtils.readFileToString( serverCertsPem ) );
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+                Assert.fail( "failed to read contents of server PEM: " + e.getMessage() );
+            }
+
+            builder.withServerCertificateFile( serverCertsPem.getPath() );
         } );
 
         return builder;
@@ -122,7 +153,7 @@ public class AbstractIT
         downloadDir = Paths.get( buildDir, "downloads", name.getMethodName() ).toFile();
         downloadDir.mkdirs();
 
-        executor = Executors.newCachedThreadPool();
+        executor = Executors.newFixedThreadPool( 1 );
     }
 
     protected KojiClient newKojiClient()
@@ -378,6 +409,57 @@ public class AbstractIT
         finally
         {
             IOUtils.closeQuietly( client );
+        }
+    }
+
+    protected void executeSetupScript( String scriptContent )
+            throws Exception
+    {
+        String url = formatUrl( TEST_SETUP_PATH );
+        HttpPost post = new HttpPost( url );
+        post.setEntity( new StringEntity( scriptContent ) );
+
+        CloseableHttpClient client = null;
+        try
+        {
+            client = factory.createClient();
+            CloseableHttpResponse response = client.execute( post );
+            int code = response.getStatusLine().getStatusCode();
+            if ( code != 200 && code != 201 )
+            {
+                String extra = "";
+                if ( response.getEntity() != null )
+                {
+                    String body = IOUtils.toString( response.getEntity().getContent() );
+                    extra = "\nBody:\n\n" + body;
+                }
+
+                Assert.fail(
+                        "Failed to execute setup script using: " + url + ". Response was: " + response.getStatusLine()
+                                + extra + "\n\nScript body:\n\n" + scriptContent + "\n\n" );
+            }
+        }
+        finally
+        {
+            IOUtils.closeQuietly( client );
+        }
+    }
+
+    protected byte[] readTestResourceBytes( String resource )
+            throws IOException
+    {
+        try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream( resource ))
+        {
+            return IOUtils.toByteArray( in );
+        }
+    }
+
+    protected String readTestResourceString( String resource )
+            throws IOException
+    {
+        try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream( resource ))
+        {
+            return IOUtils.toString( in );
         }
     }
 

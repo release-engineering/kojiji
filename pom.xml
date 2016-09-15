@@ -371,24 +371,9 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
         <koji-hub-https-port>443</koji-hub-https-port>
         <koji-hub-address>${docker.container.koji-hub.net.ci-network.ip}</koji-hub-address>
       </properties>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <artifactId>maven-failsafe-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
     <profile>
-      <id>local-its</id>
+      <id>run-its</id>
 
       <build>
         <plugins>

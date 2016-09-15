@@ -24,7 +24,9 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.UploadResponse;
  */
 public final class KojiUploaderResult
 {
-    private ImportFile importFile;
+    private String uploadFilePath;
+
+    private long uploadSize;
 
     private KojiClientException error;
 
@@ -32,12 +34,8 @@ public final class KojiUploaderResult
 
     public KojiUploaderResult( ImportFile importFile )
     {
-        this.importFile = importFile;
-    }
-
-    public ImportFile getImportFile()
-    {
-        return importFile;
+        this.uploadFilePath = importFile.getFilePath();
+        this.uploadSize = importFile.getSize();
     }
 
     public KojiClientException getError()
@@ -58,5 +56,15 @@ public final class KojiUploaderResult
     public void setResponse( UploadResponse response )
     {
         this.response = response;
+    }
+
+    public String getUploadFilePath()
+    {
+        return uploadFilePath;
+    }
+
+    public long getUploadSize()
+    {
+        return uploadSize;
     }
 }

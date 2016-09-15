@@ -36,6 +36,8 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.VERSION;
 import static com.redhat.red.build.koji.model.json.util.Verifications.checkNull;
 import static com.redhat.red.build.koji.model.json.util.Verifications.checkString;
+import static com.redhat.red.build.koji.model.util.KojiFormats.toKojiName;
+import static com.redhat.red.build.koji.model.util.KojiFormats.toKojiVersion;
 
 /**
  * Created by jdcasey on 2/10/16.
@@ -134,6 +136,25 @@ public class BuildDescription
         private KojiImport.Builder parent;
 
         private BuildDescription target = new BuildDescription();
+
+        public Builder( ProjectVersionRef gav )
+        {
+            target.name = toKojiName( gav );
+            target.version = toKojiVersion( gav.getVersionString() );
+            target.release = "1";
+            target.buildType = StandardOutputType.maven.name();
+            ExtraInfoHelper.addMavenInfo( gav, initExtraInfo() );
+        }
+
+        public Builder( ProjectVersionRef gav, KojiImport.Builder parent )
+        {
+            this.parent = parent;
+            target.name = toKojiName( gav );
+            target.version = toKojiVersion( gav.getVersionString() );
+            target.release = "1";
+            target.buildType = StandardOutputType.maven.name();
+            ExtraInfoHelper.addMavenInfo( gav, initExtraInfo() );
+        }
 
         public Builder( String name, String version )
         {

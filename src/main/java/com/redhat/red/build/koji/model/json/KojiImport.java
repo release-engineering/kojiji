@@ -16,10 +16,12 @@
 package com.redhat.red.build.koji.model.json;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.*;
+import static com.sun.imageio.plugins.jpeg.JPEG.version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
+import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -50,6 +52,16 @@ public class KojiImport
                        @JsonProperty( OUTPUT ) Set<BuildOutput> outputs )
     {
         this.metadataVersion = metadataVersion;
+        this.build = build;
+        this.buildRoots = buildRoots;
+        this.outputs = outputs;
+    }
+
+    public KojiImport( BuildDescription build,
+                       Set<BuildRoot> buildRoots,
+                       Set<BuildOutput> outputs )
+    {
+        this.metadataVersion = DEFAULT_METADATA_VERSION;
         this.build = build;
         this.buildRoots = buildRoots;
         this.outputs = outputs;
@@ -154,6 +166,13 @@ public class KojiImport
             this.metadataVersion = metadataVersion;
 
             return this;
+        }
+
+        public BuildDescription.Builder withNewBuildDescription( ProjectVersionRef gav )
+        {
+            this.descBuilder = new BuildDescription.Builder( gav, this );
+
+            return descBuilder;
         }
 
         public BuildDescription.Builder withNewBuildDescription( String name, String version, String release )
