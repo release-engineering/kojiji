@@ -27,6 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.ARTIFACT_ID;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.GROUP_ID;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.VERSION;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 /**
@@ -35,9 +38,9 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 public class MavenGAVDeserializer
         extends StdDeserializer<SimpleProjectVersionRef>
 {
-    public MavenGAVDeserializer( Class<? extends ProjectVersionRef> cls )
+    public MavenGAVDeserializer()
     {
-        super( cls );
+        super( SimpleProjectVersionRef.class );
     }
 
     @Override
@@ -56,17 +59,17 @@ public class MavenGAVDeserializer
                 String field = jp.getCurrentName();
                 switch ( field )
                 {
-                    case ( "group_id" ):
+                    case ( GROUP_ID ):
                     {
                         g = jp.getText();
                         break;
                     }
-                    case ( "artifact_id" ):
+                    case ( ARTIFACT_ID ):
                     {
                         a = jp.getText();
                         break;
                     }
-                    case ( "version" ):
+                    case ( VERSION ):
                     {
                         v = jp.getText();
                         break;

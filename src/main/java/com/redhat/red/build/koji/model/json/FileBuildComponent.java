@@ -20,6 +20,9 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import org.commonjava.rwx.binding.anno.DataKey;
+import org.commonjava.rwx.binding.anno.StructPart;
+
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.CHECKSUM;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.CHECKSUM_TYPE;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.CONTENT_GENERATOR;
@@ -29,19 +32,64 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.HOST;
 import static com.redhat.red.build.koji.model.json.util.Verifications.checkNull;
 
 @JsonTypeName("file")
+@StructPart
 public class FileBuildComponent extends BuildComponent {
 
     @JsonProperty(FILENAME)
+    @DataKey( FILENAME )
     private String filename;
 
     @JsonProperty(FILESIZE)
+    @DataKey( FILESIZE )
     private long filesize;
 
     @JsonProperty(CHECKSUM)
+    @DataKey( CHECKSUM )
     private String checksum;
 
     @JsonProperty(CHECKSUM_TYPE)
+    @DataKey( CHECKSUM_TYPE )
     private String checksumType;
+
+    public String getFilename()
+    {
+        return filename;
+    }
+
+    public void setFilename( String filename )
+    {
+        this.filename = filename;
+    }
+
+    public long getFilesize()
+    {
+        return filesize;
+    }
+
+    public void setFilesize( long filesize )
+    {
+        this.filesize = filesize;
+    }
+
+    public String getChecksum()
+    {
+        return checksum;
+    }
+
+    public void setChecksum( String checksum )
+    {
+        this.checksum = checksum;
+    }
+
+    public String getChecksumType()
+    {
+        return checksumType;
+    }
+
+    public void setChecksumType( String checksumType )
+    {
+        this.checksumType = checksumType;
+    }
 
     public static class Builder extends BuildComponent.Builder<FileBuildComponent> {
 

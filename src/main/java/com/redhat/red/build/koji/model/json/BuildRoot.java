@@ -17,6 +17,10 @@ package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.commonjava.rwx.binding.anno.Contains;
+import org.commonjava.rwx.binding.anno.DataKey;
+import org.commonjava.rwx.binding.anno.KeyRefs;
+import org.commonjava.rwx.binding.anno.StructPart;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,32 +42,43 @@ import static com.redhat.red.build.koji.model.json.util.Verifications.checkNull;
 /**
  * Created by jdcasey on 2/10/16.
  */
+@StructPart
 public class BuildRoot
 {
     @JsonProperty( ID )
+    @DataKey( ID )
     private int id;
 
     @JsonProperty( HOST )
+    @DataKey( HOST )
     private BuildHost buildHost;
 
     @JsonProperty( CONTENT_GENERATOR )
+    @DataKey( CONTENT_GENERATOR )
     private BuildTool contentGenerator;
 
     @JsonProperty( CONTAINER )
+    @DataKey( CONTAINER )
     private BuildContainer buildContainer;
 
     @JsonProperty( TOOLS )
+    @DataKey( TOOLS )
+    @Contains( BuildTool.class )
     private Set<BuildTool> buildTools;
 
     @JsonProperty( COMPONENTS )
+    @DataKey( COMPONENTS )
+    @Contains( BuildComponent.class )
     private Set<BuildComponent> components;
 
     @JsonProperty( EXTRA_INFO )
+    // FIXME: XML-RPC binding library doesn't handle free-form nesting of maps, so this is left out of xml-rpc inlining.
     private Map<String, Object> extraInfo;
 
     private BuildRoot(){}
 
     @JsonCreator
+    @KeyRefs( { ID, HOST, CONTENT_GENERATOR, CONTAINER } )
     public BuildRoot( @JsonProperty( ID ) int id, @JsonProperty( HOST ) BuildHost buildHost,
                       @JsonProperty( CONTENT_GENERATOR ) BuildTool contentGenerator,
                       @JsonProperty( CONTAINER ) BuildContainer buildContainer )

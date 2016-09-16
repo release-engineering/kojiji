@@ -1,20 +1,10 @@
-/**
- * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.redhat.red.build.koji.model.json;
+package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import com.redhat.red.build.koji.model.json.BuildContainer;
+import com.redhat.red.build.koji.model.json.KojiImport;
+import com.redhat.red.build.koji.model.json.StandardArchitecture;
+import com.redhat.red.build.koji.model.json.StandardBuildType;
+import com.redhat.red.build.koji.model.json.StandardChecksum;
 import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
@@ -27,42 +17,16 @@ import org.jdom.output.XMLOutputter;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 import static com.redhat.red.build.koji.testutil.TestResourceUtils.readTestResourceBytes;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.apache.commons.lang.StringUtils.join;
 
 /**
- * Created by jdcasey on 2/17/16.
+ * Created by jdcasey on 9/16/16.
  */
-public class KojiImportTest
-        extends AbstractJsonTest
+public class CGInlinedImportRequestTest
 {
-
-    @Test
-    public void jsonRoundTrip()
-            throws VerificationException, IOException
-    {
-        KojiImport info = new KojiImport( KojiJsonConstants.DEFAULT_METADATA_VERSION, newBuildDescription(),
-                                          Collections.singleton( newBuildRoot() ),
-                                          Arrays.asList( newBuildOutput( 1001, "foo-1.jar" ),
-                                                         newLogOutput( 1001, "build.log" ) )
-                                                .stream()
-                                                .collect( Collectors.toSet() ) );
-
-        String json = mapper.writeValueAsString( info );
-        System.out.println( json );
-
-        KojiImport out = mapper.readValue( json, KojiImport.class );
-
-        assertThat( out.getBuild(), equalTo( info.getBuild() ) );
-    }
-
     @Test
     public void xmlRpcRender()
             throws Exception
@@ -96,12 +60,14 @@ public class KojiImportTest
                                                  .parent()
                                                  .build();
 
-        JDomRenderer jdom = new JDomRenderer( new XMLOutputter( Format.getCompactFormat() ) );
-        EventStreamParserImpl eventParser = new EventStreamParserImpl( new TrackingXmlRpcListener( jdom ) );
+        CGInlinedImportRequest req = new CGInlinedImportRequest( importMetadata, "mydir" );
 
-        new KojiXmlRpcBindery().render( eventParser, importMetadata );
+        JDomRenderer jdom = new JDomRenderer( new XMLOutputter( Format.getPrettyFormat() ) );
+        TrackingXmlRpcListener tracker = new TrackingXmlRpcListener( jdom );
+        EventStreamParserImpl eventParser = new EventStreamParserImpl( tracker );
 
-        System.out.printf( "Event tree:\n\n%s\n\nXML:\n\n%s\n\n", eventParser.renderEventTree(), jdom.documentToString() );
+        new KojiXmlRpcBindery().render( eventParser, req );
+
+        System.out.printf( "Calls:\n\n  %s\n\nEvent tree:\n\n%s\n\nXML:\n\n%s\n\nJDom Calls & Changes:\n\n%s\n\n", join( tracker.getCalls(), "\n  "), eventParser.renderEventTree(), jdom.documentToString(), jdom.renderCallsAndChanges() );
     }
-
 }

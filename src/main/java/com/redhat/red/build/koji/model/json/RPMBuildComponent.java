@@ -20,6 +20,9 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import org.commonjava.rwx.binding.anno.DataKey;
+import org.commonjava.rwx.binding.anno.StructPart;
+
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.ARCH;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EPOCH;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NAME;
@@ -30,27 +33,35 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.VERSION;
 import static com.redhat.red.build.koji.model.json.util.Verifications.checkNull;
 
 @JsonTypeName("rpm")
+@StructPart
 public class RPMBuildComponent extends BuildComponent {
 
     @JsonProperty(NAME)
+    @DataKey( NAME )
     private String name;
 
     @JsonProperty(VERSION)
+    @DataKey( VERSION )
     private String version;
 
     @JsonProperty(RELEASE)
+    @DataKey( RELEASE )
     private String release;
 
     @JsonProperty(EPOCH)
+    @DataKey( EPOCH )
     private String epoch;
 
     @JsonProperty(ARCH)
+    @DataKey( ARCH )
     private String arch;
 
     @JsonProperty(SIGMD5)
+    @DataKey( SIGMD5 )
     private String sigmd5;
 
     @JsonProperty(SIGNATURE)
+    @DataKey( SIGNATURE )
     private String signature;
 
     public String getName() {
@@ -79,6 +90,41 @@ public class RPMBuildComponent extends BuildComponent {
 
     public String getSignature() {
         return signature;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public void setVersion( String version )
+    {
+        this.version = version;
+    }
+
+    public void setRelease( String release )
+    {
+        this.release = release;
+    }
+
+    public void setEpoch( String epoch )
+    {
+        this.epoch = epoch;
+    }
+
+    public void setArch( String arch )
+    {
+        this.arch = arch;
+    }
+
+    public void setSigmd5( String sigmd5 )
+    {
+        this.sigmd5 = sigmd5;
+    }
+
+    public void setSignature( String signature )
+    {
+        this.signature = signature;
     }
 
     public static class Builder extends BuildComponent.Builder<RPMBuildComponent> {

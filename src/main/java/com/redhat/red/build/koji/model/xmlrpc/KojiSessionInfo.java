@@ -31,6 +31,8 @@ public class KojiSessionInfo
     @DataKey( "session-key" )
     private String sessionKey;
 
+    private transient KojiUserInfo userInfo;
+
     @KeyRefs( {"session-id", "session-key"} )
     public KojiSessionInfo( int sessionId, String sessionKey )
     {
@@ -55,5 +57,15 @@ public class KojiSessionInfo
                 "sessionId=" + sessionId +
                 ", sessionKey='" + sessionKey + '\'' +
                 '}';
+    }
+
+    public void setUserInfo( KojiUserInfo userInfo )
+    {
+        this.userInfo = userInfo;
+    }
+
+    public KojiUserInfo getUserInfo()
+    {
+        return userInfo;
     }
 }

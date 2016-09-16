@@ -16,10 +16,17 @@
 package com.redhat.red.build.koji.model.json;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.*;
+import static com.sun.imageio.plugins.jpeg.JPEG.version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
+import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
+import org.commonjava.rwx.binding.anno.ArrayPart;
+import org.commonjava.rwx.binding.anno.Contains;
+import org.commonjava.rwx.binding.anno.DataKey;
+import org.commonjava.rwx.binding.anno.KeyRefs;
+import org.commonjava.rwx.binding.anno.StructPart;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,26 +37,44 @@ import java.util.stream.Collectors;
  *
  * Created by jdcasey on 2/10/16.
  */
+@StructPart
 public class KojiImport
 {
     @JsonProperty(METADATA_VERSION)
+    @DataKey( METADATA_VERSION )
     private int metadataVersion;
 
     @JsonProperty(BUILD)
+    @DataKey( BUILD )
     private BuildDescription build;
 
     @JsonProperty( BUILDROOTS )
+    @DataKey( BUILDROOTS )
+    @Contains( BuildRoot.class )
     private Set<BuildRoot> buildRoots;
 
     @JsonProperty( OUTPUT )
+    @DataKey( OUTPUT )
+    @Contains( BuildOutput.class )
     private Set<BuildOutput> outputs;
 
+    @KeyRefs( { METADATA_VERSION, BUILD, BUILDROOTS, OUTPUT } )
     public KojiImport( @JsonProperty( METADATA_VERSION ) int metadataVersion,
                        @JsonProperty( BUILD ) BuildDescription build,
                        @JsonProperty( BUILDROOTS ) Set<BuildRoot> buildRoots,
                        @JsonProperty( OUTPUT ) Set<BuildOutput> outputs )
     {
         this.metadataVersion = metadataVersion;
+        this.build = build;
+        this.buildRoots = buildRoots;
+        this.outputs = outputs;
+    }
+
+    public KojiImport( BuildDescription build,
+                       Set<BuildRoot> buildRoots,
+                       Set<BuildOutput> outputs )
+    {
+        this.metadataVersion = DEFAULT_METADATA_VERSION;
         this.build = build;
         this.buildRoots = buildRoots;
         this.outputs = outputs;
@@ -154,6 +179,13 @@ public class KojiImport
             this.metadataVersion = metadataVersion;
 
             return this;
+        }
+
+        public BuildDescription.Builder withNewBuildDescription( ProjectVersionRef gav )
+        {
+            this.descBuilder = new BuildDescription.Builder( gav, this );
+
+            return descBuilder;
         }
 
         public BuildDescription.Builder withNewBuildDescription( String name, String version, String release )

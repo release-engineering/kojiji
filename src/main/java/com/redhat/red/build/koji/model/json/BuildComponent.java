@@ -22,6 +22,10 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.redhat.red.build.koji.model.util.BuildComponentValueBinder;
+import org.commonjava.rwx.binding.anno.Converter;
+import org.commonjava.rwx.binding.anno.StructPart;
+
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE;
 
 /**
@@ -32,6 +36,8 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = FileBuildComponent.class, name = "file"),
     @JsonSubTypes.Type(value = RPMBuildComponent.class, name = "rpm")})
+@StructPart
+@Converter( BuildComponentValueBinder.class )
 public abstract class BuildComponent {
 
     public static abstract class Builder<T extends BuildComponent> implements SectionBuilder<T>, VerifiableBuilder<T> {

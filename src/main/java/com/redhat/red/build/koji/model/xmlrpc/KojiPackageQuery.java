@@ -26,25 +26,25 @@ public class KojiPackageQuery
         extends KojiQuery
 {
     @DataKey( "tagID" )
-    private int tagId;
+    private Integer tagId;
 
     @DataKey( "userID" )
-    private int userId;
+    private Integer userId;
 
     @DataKey( "pkgID" )
-    private int pkgId;
+    private Integer pkgId;
 
     @DataKey( "prefix" )
     private String prefix;
 
     @DataKey( "inherited" )
-    private boolean inherited;
+    private Boolean inherited;
 
-    @DataKey( "with_dupes" )
-    private boolean withDuplicates;
+//    @DataKey( "with_dupes" )
+//    private boolean withDuplicates;
 
     @DataKey( "event" )
-    private int eventId;
+    private Integer eventId;
 
     public int getTagId()
     {
@@ -126,21 +126,21 @@ public class KojiPackageQuery
         return this;
     }
 
-    public boolean isWithDuplicates()
-    {
-        return withDuplicates;
-    }
-
-    public void setWithDuplicates( boolean withDuplicates )
-    {
-        this.withDuplicates = withDuplicates;
-    }
-
-    public KojiPackageQuery withDuplicates( boolean withDuplicates )
-    {
-        this.withDuplicates = withDuplicates;
-        return this;
-    }
+//    public boolean isWithDuplicates()
+//    {
+//        return withDuplicates;
+//    }
+//
+//    public void setWithDuplicates( boolean withDuplicates )
+//    {
+//        this.withDuplicates = withDuplicates;
+//    }
+//
+//    public KojiPackageQuery withDuplicates( boolean withDuplicates )
+//    {
+//        this.withDuplicates = withDuplicates;
+//        return this;
+//    }
 
     public int getEventId()
     {

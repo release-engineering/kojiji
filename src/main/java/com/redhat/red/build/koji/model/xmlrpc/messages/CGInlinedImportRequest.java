@@ -15,37 +15,41 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import com.redhat.red.build.koji.model.json.KojiImport;
 import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants;
 import org.commonjava.rwx.binding.anno.DataIndex;
 import org.commonjava.rwx.binding.anno.IndexRefs;
 import org.commonjava.rwx.binding.anno.Request;
 
 /**
+ * Calls CGImport with the metadata inlined as a struct in param 0.
+ *
  * Created by jdcasey on 2/19/16.
  */
 @Request( method = "CGImport" )
-public class CGImportRequest
+public class CGInlinedImportRequest
 {
     @DataIndex( 0 )
-    private String metadataFilename = KojiXmlRpcConstants.METADATA_JSON_FILE;
+    private KojiImport importMetadata;
 
     @DataIndex( 1 )
     private String dirname;
 
-    @IndexRefs( 1 )
-    public CGImportRequest( String dirname )
+    @IndexRefs( { 0, 1 } )
+    public CGInlinedImportRequest( KojiImport importMetadata, String dirname )
     {
+        this.importMetadata = importMetadata;
         this.dirname = dirname;
     }
 
-    public String getMetadataFilename()
+    public KojiImport getImportMetadata()
     {
-        return metadataFilename;
+        return importMetadata;
     }
 
-    public void setMetadataFilename( String metadataFilename )
+    public void setImportMetadata( KojiImport importMetadata )
     {
-        this.metadataFilename = metadataFilename;
+        this.importMetadata = importMetadata;
     }
 
     public String getDirname()

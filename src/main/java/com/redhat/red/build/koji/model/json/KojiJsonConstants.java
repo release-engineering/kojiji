@@ -84,6 +84,20 @@ public final class KojiJsonConstants
 
     public static final String SIGNATURE = "signature";
 
+    public static final String URL = "url";
+
+    public static final String REVISION = "revision";
+
+    public static final String RPM = "rpm";
+
+    public static final String FILE = "file";
+
+    public static final String GROUP_ID = "group_id";
+
+    public static final String ARTIFACT_ID = "artifact_id";
+
+    public static final String MAVEN_INFO = "maven";
+
     private KojiJsonConstants(){}
 
 }

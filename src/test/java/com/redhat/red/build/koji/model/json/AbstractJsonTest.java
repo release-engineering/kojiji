@@ -15,17 +15,13 @@
  */
 package com.redhat.red.build.koji.model.json;
 
-import com.redhat.red.build.koji.model.json.util.ExtraInfoHelper;
 import com.redhat.red.build.koji.model.json.util.KojiObjectMapper;
-import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
 
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -38,17 +34,11 @@ public class AbstractJsonTest
 
     protected KojiObjectMapper mapper = new KojiObjectMapper();
 
-    protected Map<String, Object> newExtraInfo( ProjectVersionRef gav )
-    {
-        Map<String, Object> src = new HashMap<>();
-        ExtraInfoHelper.addMavenInfo( gav, src );
-
-        return src;
-    }
-
     protected BuildSource newBuildSource()
     {
-        return new BuildSource( "https://github.com/release-engineering/kojiji", "abcdefg" );
+        BuildSource src = new BuildSource( "https://github.com/release-engineering/kojiji" );
+        src.setRevision( "abcdefg" );
+        return src;
     }
 
     protected BuildDescription newBuildDescription()
@@ -71,7 +61,7 @@ public class AbstractJsonTest
                                                                           .withBuildSource( newBuildSource() )
                                                                           .build();
 
-        src.setExtraInfo( newExtraInfo( mainGav ) );
+        src.setExtraInfo( new BuildExtraInfo( mainGav ) );
         return src;
     }
 

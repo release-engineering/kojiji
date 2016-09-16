@@ -16,6 +16,7 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
+import org.apache.commons.lang.StringUtils;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
 import org.commonjava.rwx.estream.model.Event;
@@ -44,6 +45,7 @@ public class ListTagsRequestTest
         bindery.render( eventParser, new ListTagsRequest( new KojiTagQuery( 422953 ) ) );
 
         List<Event<?>> objectEvents = eventParser.getEvents();
+        System.out.printf( "Got Events:\nSTART\n  %s\nEND", StringUtils.join( objectEvents, "\n  ") );
         eventParser.clearEvents();
 
         List<Event<?>> capturedEvents = parseEvents( "listTags-byBuildId-request.xml" );

@@ -19,34 +19,37 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
+import com.redhat.red.build.koji.model.json.FileExtraInfo;
+import com.redhat.red.build.koji.model.json.KojiJsonConstants;
 
 import java.io.IOException;
-
-import static com.redhat.red.build.koji.model.json.KojiJsonConstants.ARTIFACT_ID;
-import static com.redhat.red.build.koji.model.json.KojiJsonConstants.GROUP_ID;
-import static com.redhat.red.build.koji.model.json.KojiJsonConstants.VERSION;
 
 /**
  * Created by jdcasey on 2/10/16.
  */
-public class MavenGAVSerializer<T extends ProjectVersionRef>
+public class FileExtraInfoSerializer<T extends FileExtraInfo>
         extends StdSerializer<T>
 {
 
-    protected MavenGAVSerializer( Class<T> cls )
+    protected FileExtraInfoSerializer( Class<T> cls )
     {
         super( cls );
     }
 
     @Override
-    public void serialize( ProjectVersionRef value, JsonGenerator jgen, SerializerProvider provider )
+    public void serialize( FileExtraInfo value, JsonGenerator jgen, SerializerProvider provider )
             throws IOException, JsonGenerationException
     {
-        jgen.writeStartObject();
-        jgen.writeStringField( GROUP_ID, value.getGroupId() );
-        jgen.writeStringField( ARTIFACT_ID, value.getArtifactId() );
-        jgen.writeStringField( VERSION, value.getVersionString() );
-        jgen.writeEndObject();
+        if ( value instanceof FileExtraInfo )
+        {
+            jgen.writeStartObject();
+            jgen.writeFieldName( KojiJsonConstants.MAVEN_INFO );
+            provider.defaultSerializeValue( ((FileExtraInfo) value).getMavenExtraInfo(), jgen );
+            jgen.writeEndObject();
+        }
+        else
+        {
+            throw new JsonGenerationException( "Unknown FileExtraInfo type: " + value.getClass().getName() );
+        }
     }
 }
