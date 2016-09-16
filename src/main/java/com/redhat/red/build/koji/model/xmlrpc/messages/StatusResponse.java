@@ -15,6 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import com.redhat.red.build.koji.model.util.AnythingToStringValueBinder;
+import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataIndex;
 import org.commonjava.rwx.binding.anno.Response;
 
@@ -25,6 +27,7 @@ import org.commonjava.rwx.binding.anno.Response;
 public class StatusResponse
 {
     @DataIndex( 0 )
+    @Converter( AnythingToStringValueBinder.class )
     private String error;
 
     public String getError()
