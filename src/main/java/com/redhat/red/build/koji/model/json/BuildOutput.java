@@ -17,16 +17,16 @@ package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.redhat.red.build.koji.model.json.util.ExtraInfoHelper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
+import org.commonjava.rwx.binding.anno.DataKey;
+import org.commonjava.rwx.binding.anno.KeyRefs;
+import org.commonjava.rwx.binding.anno.StructPart;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.ARCH;
@@ -43,39 +43,49 @@ import static com.redhat.red.build.koji.model.json.util.Verifications.checkStrin
 /**
  * Created by jdcasey on 2/15/16.
  */
+@StructPart
 public class BuildOutput
 {
     @JsonProperty(BUILDROOT_ID)
+    @DataKey( BUILDROOT_ID )
     private int buildrootId;
 
     @JsonProperty(FILENAME)
+    @DataKey( FILENAME )
     private String filename;
 
     @JsonProperty(FILESIZE)
-    private long fileSize;
+    @DataKey( FILESIZE )
+    private int fileSize;
 
     @JsonProperty(ARCH)
+    @DataKey( ARCH )
     private String arch;
 
     @JsonProperty(CHECKSUM_TYPE)
+    @DataKey( CHECKSUM_TYPE )
     private String checksumType;
 
     @JsonProperty(CHECKSUM)
+    @DataKey( CHECKSUM )
     private String checksum;
 
     @JsonProperty(TYPE)
+    @DataKey( TYPE )
     private String outputType;
 
     @JsonProperty(EXTRA_INFO)
-    private Map<String, Object> extraInfo;
+    @DataKey( EXTRA_INFO )
+    private FileExtraInfo extraInfo;
 
     private BuildOutput(){}
 
     @JsonCreator
+    @KeyRefs( { BUILDROOT_ID, FILENAME, FILESIZE, ARCH, CHECKSUM_TYPE, CHECKSUM, TYPE, EXTRA_INFO } )
     public BuildOutput( @JsonProperty( BUILDROOT_ID ) int buildrootId, @JsonProperty( FILENAME ) String filename,
-                        @JsonProperty( FILESIZE ) long fileSize, @JsonProperty( ARCH ) String arch,
+                        @JsonProperty( FILESIZE ) int fileSize, @JsonProperty( ARCH ) String arch,
                         @JsonProperty( CHECKSUM_TYPE ) String checksumType, @JsonProperty( CHECKSUM ) String checksum,
-                        @JsonProperty( TYPE ) String outputType, @JsonProperty(EXTRA_INFO) Map<String, Object> extraInfo )
+                        @JsonProperty( TYPE ) String outputType, @JsonProperty(EXTRA_INFO) FileExtraInfo extraInfo )
     {
         this.buildrootId = buildrootId;
         this.filename = filename;
@@ -97,7 +107,7 @@ public class BuildOutput
         return filename;
     }
 
-    public long getFileSize()
+    public int getFileSize()
     {
         return fileSize;
     }
@@ -122,7 +132,7 @@ public class BuildOutput
         return outputType;
     }
 
-    public Map<String, Object> getExtraInfo()
+    public FileExtraInfo getExtraInfo()
     {
         return extraInfo;
     }
@@ -162,7 +172,7 @@ public class BuildOutput
             return this;
         }
 
-        public Builder withFileSize( long size )
+        public Builder withFileSize( int size )
         {
             target.fileSize = size;
 
@@ -200,7 +210,8 @@ public class BuildOutput
         public Builder withFile( File file )
                 throws IOException
         {
-            target.fileSize = file.length();
+            target.filename = file.getName();
+            target.fileSize = (int) file.length();
             target.checksumType = MD5_CHECKSUM_TYPE;
             target.checksum = DigestUtils.md5Hex( FileUtils.readFileToByteArray( file ) );
 
@@ -210,19 +221,9 @@ public class BuildOutput
         public Builder withMavenInfoAndType( ProjectVersionRef gav )
         {
             target.outputType = StandardOutputType.maven.name();
-            ExtraInfoHelper.addMavenInfo( gav, initExtraInfo() );
+            target.extraInfo = new FileExtraInfo( new MavenExtraInfo( gav ) );
 
             return this;
-        }
-
-        private Map<String, Object> initExtraInfo()
-        {
-            if ( target.extraInfo == null )
-            {
-                target.extraInfo = new HashMap<>();
-            }
-
-            return target.extraInfo;
         }
 
         @Override
@@ -335,5 +336,20 @@ public class BuildOutput
         result = 31 * result + ( getOutputType() != null ? getOutputType().hashCode() : 0 );
         result = 31 * result + ( getExtraInfo() != null ? getExtraInfo().hashCode() : 0 );
         return result;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "BuildOutput{" +
+                "buildrootId=" + buildrootId +
+                ", filename='" + filename + '\'' +
+                ", fileSize=" + fileSize +
+                ", arch='" + arch + '\'' +
+                ", checksumType='" + checksumType + '\'' +
+                ", checksum='" + checksum + '\'' +
+                ", outputType='" + outputType + '\'' +
+                ", extraInfo=" + extraInfo +
+                '}';
     }
 }

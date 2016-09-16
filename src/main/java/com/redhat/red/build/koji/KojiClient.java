@@ -22,6 +22,7 @@ import com.redhat.red.build.koji.model.json.KojiImport;
 import com.redhat.red.build.koji.model.json.util.KojiObjectMapper;
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveQuery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveType;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildArchiveCollection;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
@@ -43,10 +44,13 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.CGImportRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.CGInlinedImportRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.CGUploadedImportRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CheckPermissionRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ConfirmationResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypesRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByIdOrNameRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByNVRObjRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildRequest;
@@ -564,31 +568,70 @@ public class KojiClient
         }, "Failed to retrieve package: %s", packageName );
     }
 
+    public Map<String, KojiArchiveType> getArchiveTypeMap( KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            GetArchiveTypesResponse response =
+                    xmlrpcClient.call( new GetArchiveTypesRequest(), GetArchiveTypesResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            if ( response == null )
+            {
+                return Collections.emptyMap();
+            }
+
+            Map<String, KojiArchiveType> types = new HashMap();
+            response.getArchiveTypes()
+                    .forEach( ( at ) -> at.getExtensions().forEach( ( ext ) -> types.put( ext, at ) ) );
+
+
+            return types;
+        }, "Failed to retrieve list of acceptable archive types" );
+    }
+
     public KojiImportResult importBuild( KojiImport buildInfo, Iterable<Supplier<ImportFile>> importedFileSuppliers,
                                          KojiSessionInfo session )
             throws KojiClientException
     {
         return doXmlRpcAndThrow( () -> {
-            String dirname = generateUploadDirname( session );
-            Map<String, KojiClientException> uploadErrors =
-                    uploadForImport( buildInfo, importedFileSuppliers, dirname, session );
-
-            if ( !uploadErrors.isEmpty() )
+            try
             {
-                return new KojiImportResult( buildInfo ).withUploadErrors( uploadErrors );
+                String dirname = generateUploadDirname( session );
+
+                Map<String, KojiClientException> uploadErrors =
+                        uploadForImport( null, importedFileSuppliers, dirname, session );
+
+                //            Map<String, KojiClientException> uploadErrors =
+                //                    uploadForImport( buildInfo, importedFileSuppliers, dirname, session );
+
+                if ( !uploadErrors.isEmpty() )
+                {
+                    return new KojiImportResult( buildInfo ).withUploadErrors( uploadErrors );
+                }
+
+                StatusResponse response =
+                        xmlrpcClient.call( new CGInlinedImportRequest( buildInfo, dirname ), StatusResponse.class,
+                                           sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+                //            StatusResponse response = xmlrpcClient.call( new CGUploadedImportRequest( dirname ), StatusResponse.class,
+                //                                                         sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+                if ( !isEmpty( response.getError() ) )
+                {
+                    throw new KojiClientException( "Error response from Koji server: %s", response.getError() );
+                }
+
+                KojiBuildInfo build = getBuildInfo( buildInfo.getBuildNVR(), session );
+
+                return new KojiImportResult( buildInfo ).withBuildInfo( build );
             }
-
-            StatusResponse response = xmlrpcClient.call( new CGImportRequest( dirname ), StatusResponse.class,
-                                                         sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
-
-            if ( !isEmpty( response.getError() ) )
+            catch ( RuntimeException e )
             {
-                throw new KojiClientException( "Error response from Koji server: %s", response.getError() );
+                Logger logger = LoggerFactory.getLogger( getClass() );
+                logger.error( "FAIL: " + e.getMessage(), e );
+                throw e;
             }
-
-            KojiBuildInfo build = getBuildInfo( buildInfo.getBuildNVR(), session );
-
-            return new KojiImportResult( buildInfo ).withBuildInfo( build );
         }, "Failed to execute content-generator import" );
     }
 
@@ -998,24 +1041,29 @@ public class KojiClient
                                                                 String dirname, KojiSessionInfo session )
             throws KojiClientException
     {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try
-        {
-            objectMapper.writeValue( baos, buildInfo );
-        }
-        catch ( IOException e )
-        {
-            throw new KojiClientException( "Failed to serialize import info to JSON. Reason: %s", e, e.getMessage() );
-        }
-
         AtomicInteger count = new AtomicInteger( 0 );
 
-        byte[] data = baos.toByteArray();
-        uploadService.submit(
-                newUploader( ()->new ImportFile( METADATA_JSON_FILE, new ByteArrayInputStream( data ), data.length ),
-                             dirname, session ) );
+        if ( buildInfo != null )
+        {
+            // there are two ways to call CGImport: with the metadata uploaded (here), and with it inlined in the request.
+            // if buildInfo is null, we're using the second approach.
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try
+            {
+                objectMapper.writeValue( baos, buildInfo );
+            }
+            catch ( IOException e )
+            {
+                throw new KojiClientException( "Failed to serialize import info to JSON. Reason: %s", e, e.getMessage() );
+            }
 
-        count.incrementAndGet();
+            byte[] data = baos.toByteArray();
+            uploadService.submit(
+                    newUploader( ()->new ImportFile( METADATA_JSON_FILE, new ByteArrayInputStream( data ), data.length ),
+                                 dirname, session ) );
+
+            count.incrementAndGet();
+        }
 
         uploadedFileSuppliers.forEach( ( importFileSupplier ) -> {
             uploadService.submit( newUploader( importFileSupplier, dirname, session ) );

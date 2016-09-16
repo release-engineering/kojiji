@@ -5,5 +5,5 @@ package com.redhat.red.build.koji.model.json;
  */
 public enum StandardChecksum
 {
-    MD5;
+    md5;
 }

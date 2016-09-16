@@ -19,19 +19,26 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.*;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.commonjava.rwx.binding.anno.DataKey;
+import org.commonjava.rwx.binding.anno.KeyRefs;
+import org.commonjava.rwx.binding.anno.StructPart;
 
 /**
  * Created by jdcasey on 2/15/16.
  */
+@StructPart
 public class BuildTool
 {
     @JsonProperty(NAME)
+    @DataKey( NAME )
     private String name;
 
     @JsonProperty(VERSION)
+    @DataKey( VERSION )
     private String version;
 
     @JsonCreator
+    @KeyRefs( {NAME, VERSION} )
     public BuildTool( @JsonProperty(NAME) String name, @JsonProperty(VERSION) String version )
     {
         this.name = name;

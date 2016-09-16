@@ -445,24 +445,6 @@ public class AbstractIT
         }
     }
 
-    protected byte[] readTestResourceBytes( String resource )
-            throws IOException
-    {
-        try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream( resource ))
-        {
-            return IOUtils.toByteArray( in );
-        }
-    }
-
-    protected String readTestResourceString( String resource )
-            throws IOException
-    {
-        try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream( resource ))
-        {
-            return IOUtils.toString( in );
-        }
-    }
-
     protected String getKojiUser()
     {
         return "kojiadmin";

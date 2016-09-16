@@ -17,13 +17,16 @@ package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.redhat.red.build.koji.model.json.util.ExtraInfoHelper;
+import com.redhat.red.build.koji.model.util.TimestampIntValueBinder;
+import com.redhat.red.build.koji.model.util.TimestampValueBinder;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
+import org.commonjava.rwx.binding.anno.Converter;
+import org.commonjava.rwx.binding.anno.DataKey;
+import org.commonjava.rwx.binding.anno.KeyRefs;
+import org.commonjava.rwx.binding.anno.StructPart;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.END_TIME;
@@ -42,35 +45,47 @@ import static com.redhat.red.build.koji.model.util.KojiFormats.toKojiVersion;
 /**
  * Created by jdcasey on 2/10/16.
  */
+@StructPart
 public class BuildDescription
 {
     @JsonProperty( NAME )
+    @DataKey( NAME )
     private String name;
 
     @JsonProperty( VERSION )
+    @DataKey( VERSION )
     private String version;
 
     @JsonProperty( RELEASE )
+    @DataKey( RELEASE )
     private String release = "1";
 
     @JsonProperty( START_TIME )
+    @DataKey( START_TIME )
+    @Converter( TimestampIntValueBinder.class )
     private Date startTime;
 
     @JsonProperty( END_TIME )
+    @DataKey( END_TIME )
+    @Converter( TimestampIntValueBinder.class )
     private Date endTime;
 
     @JsonProperty( TYPE )
+    @DataKey( TYPE )
     private String buildType;
 
     @JsonProperty( SOURCE )
+    @DataKey( SOURCE )
     private BuildSource source;
 
     @JsonProperty( EXTRA_INFO )
-    private Map<String, Object> extraInfo;
+    @DataKey( EXTRA_INFO )
+    private BuildExtraInfo extraInfo;
 
     private BuildDescription(){}
 
     @JsonCreator
+    @KeyRefs( { NAME, VERSION, RELEASE, START_TIME, END_TIME, TYPE, SOURCE } )
     public BuildDescription( @JsonProperty( NAME ) String name, @JsonProperty( VERSION ) String version,
                              @JsonProperty( RELEASE ) String release, @JsonProperty( START_TIME ) Date startTime,
                              @JsonProperty( END_TIME ) Date endTime, @JsonProperty( TYPE ) String buildType,
@@ -120,12 +135,12 @@ public class BuildDescription
         return source;
     }
 
-    public Map<String, Object> getExtraInfo()
+    public BuildExtraInfo getExtraInfo()
     {
         return extraInfo;
     }
 
-    public void setExtraInfo( Map<String, Object> extraInfo )
+    public void setExtraInfo( BuildExtraInfo extraInfo )
     {
         this.extraInfo = extraInfo;
     }
@@ -142,8 +157,7 @@ public class BuildDescription
             target.name = toKojiName( gav );
             target.version = toKojiVersion( gav.getVersionString() );
             target.release = "1";
-            target.buildType = StandardOutputType.maven.name();
-            ExtraInfoHelper.addMavenInfo( gav, initExtraInfo() );
+            withMavenInfoAndType( gav );
         }
 
         public Builder( ProjectVersionRef gav, KojiImport.Builder parent )
@@ -152,8 +166,7 @@ public class BuildDescription
             target.name = toKojiName( gav );
             target.version = toKojiVersion( gav.getVersionString() );
             target.release = "1";
-            target.buildType = StandardOutputType.maven.name();
-            ExtraInfoHelper.addMavenInfo( gav, initExtraInfo() );
+            withMavenInfoAndType( gav );
         }
 
         public Builder( String name, String version )
@@ -206,9 +219,17 @@ public class BuildDescription
             return this;
         }
 
+        public Builder withBuildSource( String url )
+        {
+            target.source = new BuildSource( url );
+            return this;
+        }
+
         public Builder withBuildSource( String url, String revision )
         {
-            target.source = new BuildSource( url, revision );
+            target.source = new BuildSource( url );
+            target.source.setRevision( revision );
+
             return this;
         }
 
@@ -221,28 +242,11 @@ public class BuildDescription
         public Builder withMavenInfoAndType( ProjectVersionRef gav )
         {
             target.buildType = StandardOutputType.maven.name();
-            ExtraInfoHelper.addMavenInfo( gav, initExtraInfo() );
+            target.extraInfo = new BuildExtraInfo(
+                    new MavenExtraInfo( gav.getGroupId(), gav.getArtifactId(), gav.getVersionString() ) );
 
             return this;
         }
-
-        public Builder withExtraInfo( String key, Object object )
-        {
-            initExtraInfo().put(key, object);
-
-            return this;
-        }
-
-        private Map<String, Object> initExtraInfo()
-        {
-            if ( target.extraInfo == null )
-            {
-                target.extraInfo = new HashMap<>();
-            }
-
-            return target.extraInfo;
-        }
-
         @Override
         public BuildDescription build()
                 throws VerificationException
@@ -272,7 +276,7 @@ public class BuildDescription
             checkString( target.buildType, missingProperties, prefix, TYPE );
             checkNull( target.startTime, missingProperties, prefix, START_TIME );
             checkNull( target.endTime, missingProperties, prefix, END_TIME );
-            checkNull( target.source, missingProperties, prefix, SOURCE );
+//            checkNull( target.source, missingProperties, prefix, SOURCE );
         }
     }
 

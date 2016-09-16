@@ -25,6 +25,7 @@ import com.redhat.red.build.koji.model.json.KojiImport;
 import com.redhat.red.build.koji.model.json.StandardArchitecture;
 import com.redhat.red.build.koji.model.json.StandardBuildType;
 import com.redhat.red.build.koji.model.json.StandardOutputType;
+import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveType;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static com.redhat.red.build.koji.testutil.TestResourceUtils.readTestResourceBytes;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -73,6 +75,10 @@ public class ImportSimpleBuildIT
         boolean packageAdded = client.addPackageToTag( name.getMethodName(), gav, session );
         assertThat( packageAdded, equalTo( true ) );
 
+        Map<String, KojiArchiveType> archiveTypes = client.getArchiveTypeMap( session );
+
+        KojiArchiveType pomType = archiveTypes.get( "pom" );
+
         Date start = new Date( System.currentTimeMillis() - 86400 );
         Date end = new Date( System.currentTimeMillis() - 43200 );
 
@@ -83,11 +89,14 @@ public class ImportSimpleBuildIT
         byte[] pomBytes = readTestResourceBytes( "import-data/" + pomPath );
 
         KojiImport importMetadata = importBuilder.withNewBuildDescription( gav )
+//        KojiImport importMetadata = importBuilder.withNewBuildDescription( "org.foo-bar", "1.1", "1" )
+//                                                 .withBuildType( StandardBuildType.maven )
                                                  .withStartTime( start )
                                                  .withEndTime( end )
-                                                 .withBuildSource( "http://builder.foo.com", "1.0" )
+                                                 .withBuildSource( "http://build.foo.com" )
                                                  .parent()
                                                  .withNewBuildRoot( brId )
+                                                 .withTool( "apache-maven", "3.2.1" )
                                                  .withContentGenerator( "test-cg", "1.0" )
                                                  .withContainer( new BuildContainer( StandardBuildType.maven.name(),
                                                                                      StandardArchitecture.noarch.name() ) )
@@ -95,8 +104,9 @@ public class ImportSimpleBuildIT
                                                  .parent()
                                                  .withNewOutput( 1, new File( pomPath ).getName() )
                                                  .withFileSize( pomBytes.length )
-                                                 .withChecksum( StandardChecksum.MD5.name(), DigestUtils.md5Hex( pomBytes ) )
-                                                 .withOutputType( StandardOutputType.maven )
+                                                 .withChecksum( StandardChecksum.md5.name(), DigestUtils.md5Hex( pomBytes ) )
+//                                                 .withOutputType( StandardOutputType.maven )
+                                                 .withMavenInfoAndType( gav )
                                                  .parent()
                                                  .build();
 
@@ -104,6 +114,8 @@ public class ImportSimpleBuildIT
                 ()->new ImportFile( new File(pomPath).getName(), new ByteArrayInputStream( pomBytes ), pomBytes.length )
         );
 
+        System.out.printf( "Starting CGImport using client: %s\n metadata: %s\n fileSuppliers: %s\n session: %s",
+                           client, importMetadata, fileSuppliers, session );
         KojiImportResult result = client.importBuild( importMetadata, fileSuppliers, session );
 
         Map<String, KojiClientException> uploadErrors = result.getUploadErrors();

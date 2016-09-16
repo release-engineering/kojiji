@@ -50,6 +50,12 @@ public class BuildSourceDeserializer
                     jp.getCurrentLocation() );
         }
 
-        return new BuildSource( parts[0], parts[1] );
+        BuildSource source = new BuildSource( parts[0] );
+        if ( parts.length > 1 )
+        {
+            source.setRevision( parts[1] );
+        }
+
+        return source;
     }
 }
