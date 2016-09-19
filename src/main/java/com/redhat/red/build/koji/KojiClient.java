@@ -590,7 +590,7 @@ public class KojiClient
         }, "Failed to retrieve list of acceptable archive types" );
     }
 
-    public KojiImportResult importBuild( KojiImport buildInfo, Iterable<Supplier<ImportFile>> importedFileSuppliers,
+    public KojiImportResult importBuild( KojiImport importInfo, Iterable<Supplier<ImportFile>> importedFileSuppliers,
                                          KojiSessionInfo session )
             throws KojiClientException
     {
@@ -603,28 +603,28 @@ public class KojiClient
                         uploadForImport( null, importedFileSuppliers, dirname, session );
 
                 //            Map<String, KojiClientException> uploadErrors =
-                //                    uploadForImport( buildInfo, importedFileSuppliers, dirname, session );
+                //                    uploadForImport( importInfo, importedFileSuppliers, dirname, session );
 
                 if ( !uploadErrors.isEmpty() )
                 {
-                    return new KojiImportResult( buildInfo ).withUploadErrors( uploadErrors );
+                    return new KojiImportResult( importInfo ).withUploadErrors( uploadErrors );
                 }
 
-                StatusResponse response =
-                        xmlrpcClient.call( new CGInlinedImportRequest( buildInfo, dirname ), StatusResponse.class,
+                GetBuildResponse response =
+                        xmlrpcClient.call( new CGInlinedImportRequest( importInfo, dirname ), GetBuildResponse.class,
                                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
                 //            StatusResponse response = xmlrpcClient.call( new CGUploadedImportRequest( dirname ), StatusResponse.class,
                 //                                                         sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-                if ( !isEmpty( response.getError() ) )
-                {
-                    throw new KojiClientException( "Error response from Koji server: %s", response.getError() );
-                }
+//                if ( !isEmpty( response.getError() ) )
+//                {
+//                    throw new KojiClientException( "Error response from Koji server: %s", response.getError() );
+//                }
 
-                KojiBuildInfo build = getBuildInfo( buildInfo.getBuildNVR(), session );
+//                KojiBuildInfo build = getBuildInfo( importInfo.getBuildNVR(), session );
 
-                return new KojiImportResult( buildInfo ).withBuildInfo( build );
+                return new KojiImportResult( importInfo ).withBuildInfo( response.getBuildInfo() );
             }
             catch ( RuntimeException e )
             {

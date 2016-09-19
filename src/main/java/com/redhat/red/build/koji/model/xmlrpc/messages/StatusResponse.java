@@ -27,7 +27,6 @@ import org.commonjava.rwx.binding.anno.Response;
 public class StatusResponse
 {
     @DataIndex( 0 )
-    @Converter( AnythingToStringValueBinder.class )
     private String error;
 
     public String getError()

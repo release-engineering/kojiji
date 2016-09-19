@@ -28,8 +28,11 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -41,7 +44,8 @@ import static com.redhat.red.build.koji.model.util.DateUtils.toUTC;
 public class TimestampValueBinder
         extends CustomValueBinder
 {
-    private static final String TS_FORMAT = "yyyy-MM-dd hh:mm:ss ZZZ";
+    private static final List<String> TS_FORMATS =
+            Collections.unmodifiableList( Arrays.asList( "yyyy-MM-dd hh:mm:ss ZZZ", "yyyy-MM-dd hh:mm:ss" ) );
 
     public TimestampValueBinder( Binder parent, Class<?> type, BindingContext context )
     {
@@ -85,19 +89,37 @@ public class TimestampValueBinder
         logger.debug( "Setting value on parent: {}", getParent() );
 
         String[] parts = String.valueOf( value ).split( "\\." );
-        if ( parts.length != 2 )
+
+        if ( parts.length < 1 )
         {
             throw new XmlRpcException( "Invalid timestamp: '%s'", value );
         }
 
-        try
+        String withUtc = parts[0] + " UTC";
+        String withoutUtc = parts[0];
+
+        for ( String tsFormat: TS_FORMATS )
         {
-            return new SimpleDateFormat( TS_FORMAT ).parse( parts[0] + " UTC" );
+            try
+            {
+                return new SimpleDateFormat( tsFormat ).parse( withUtc );
+            }
+            catch ( ParseException e )
+            {
+                logger.debug( "Failed to parse timestamp: {} using format: {}", withUtc, tsFormat );
+            }
+
+            try
+            {
+                return new SimpleDateFormat( tsFormat ).parse( withoutUtc );
+            }
+            catch ( ParseException e )
+            {
+                logger.debug( "Failed to parse timestamp: {} using format: {}", withoutUtc, tsFormat );
+            }
         }
-        catch ( ParseException e )
-        {
-            throw new XmlRpcException( "Unparseable timestamp: %s", e, value );
-        }
+
+        throw new XmlRpcException( "Cannot parse timestamp: %s using formats: {}", value, TS_FORMATS );
     }
 
     @Override
