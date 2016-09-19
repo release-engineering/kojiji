@@ -24,7 +24,7 @@ import org.commonjava.rwx.binding.anno.Request;
 /**
  * Created by jdcasey on 8/8/16.
  */
-@Request( method = "packageListAdd" )
+@Request( method = "untagBuild" )
 public class UntagBuildRequest
 {
     @DataIndex( 0 )
