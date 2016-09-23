@@ -17,20 +17,19 @@ package com.redhat.red.build.koji.it;
 
 import com.redhat.red.build.koji.KojiClient;
 import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
 import org.junit.Test;
 
 import java.util.Collections;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
  * Created by jdcasey on 1/14/16.
  */
-public class CreateAndRetrieveTagIT
-    extends AbstractIT
+public class CreateTagUsingWithSessionIT
+        extends AbstractIT
 {
 
     @Test
@@ -38,17 +37,14 @@ public class CreateAndRetrieveTagIT
             throws Exception
     {
         KojiClient client = newKojiClient();
-        KojiSessionInfo session = client.login();
+        Integer tagId = client.withKojiSession( ( session ) -> {
+            CreateTagRequest req = new CreateTagRequest();
+            req.setTagName( CreateTagUsingWithSessionIT.class.getSimpleName() );
+            req.setArches( Collections.singletonList( "x86_64" ) );
 
-        CreateTagRequest req = new CreateTagRequest();
-        req.setTagName( getClass().getSimpleName() );
-        req.setArches( Collections.singletonList( "x86_64" ) );
+            return client.createTag( req, session );
+        } );
 
-        int tagId = client.createTag( req, session );
-
-        KojiTagInfo result = client.getTag( tagId, session );
-
-        assertThat( result.getName(), equalTo( req.getTagName() ) );
-        assertThat( result.getArches(), equalTo( req.getArches() ) );
+        assertThat( tagId, notNullValue() );
     }
 }

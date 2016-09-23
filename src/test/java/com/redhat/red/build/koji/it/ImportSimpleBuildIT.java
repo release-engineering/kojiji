@@ -91,6 +91,7 @@ public class ImportSimpleBuildIT
         KojiImport importMetadata = importBuilder.withNewBuildDescription( gav )
 //        KojiImport importMetadata = importBuilder.withNewBuildDescription( "org.foo-bar", "1.1", "1" )
 //                                                 .withBuildType( StandardBuildType.maven )
+                                                 .withExternalBuildId( "foo-bar-1.1" )
                                                  .withStartTime( start )
                                                  .withEndTime( end )
                                                  .withBuildSource( "http://build.foo.com" )

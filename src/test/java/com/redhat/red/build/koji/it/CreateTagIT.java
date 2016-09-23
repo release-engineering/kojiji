@@ -39,7 +39,7 @@ public class CreateTagIT
         KojiSessionInfo session = client.login();
 
         CreateTagRequest req = new CreateTagRequest();
-        req.setTagName( "test-tag" );
+        req.setTagName( getClass().getSimpleName() );
         req.setArches( Collections.singletonList( "x86_64" ) );
 
         client.createTag( req, session );
