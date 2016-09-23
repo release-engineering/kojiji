@@ -241,12 +241,30 @@ public class BuildDescription
 
         public Builder withMavenInfoAndType( ProjectVersionRef gav )
         {
+            if ( target.extraInfo == null )
+            {
+                target.extraInfo = new BuildExtraInfo();
+            }
+
             target.buildType = StandardOutputType.maven.name();
-            target.extraInfo = new BuildExtraInfo(
+            target.extraInfo.setMavenExtraInfo(
                     new MavenExtraInfo( gav.getGroupId(), gav.getArtifactId(), gav.getVersionString() ) );
 
             return this;
         }
+
+        public Builder withExternalBuildId( String buildId )
+        {
+            if ( target.extraInfo == null )
+            {
+                target.extraInfo = new BuildExtraInfo();
+            }
+
+            target.extraInfo.setExternalBuildId( buildId );
+
+            return this;
+        }
+
         @Override
         public BuildDescription build()
                 throws VerificationException

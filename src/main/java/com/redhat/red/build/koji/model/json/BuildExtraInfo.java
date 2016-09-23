@@ -7,6 +7,7 @@ import org.commonjava.rwx.binding.anno.KeyRefs;
 import org.commonjava.rwx.binding.anno.SkipNull;
 import org.commonjava.rwx.binding.anno.StructPart;
 
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BUILD_ID;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
 
 /**
@@ -20,8 +21,13 @@ public class BuildExtraInfo
     @DataKey( MAVEN_INFO )
     private MavenExtraInfo mavenExtraInfo;
 
-    @KeyRefs( MAVEN_INFO )
-    public BuildExtraInfo( @JsonProperty( MAVEN_INFO ) MavenExtraInfo mavenExtraInfo )
+    @JsonProperty( EXTERNAL_BUILD_ID )
+    @DataKey( EXTERNAL_BUILD_ID )
+    private String externalBuildId;
+
+    public BuildExtraInfo(){}
+
+    public BuildExtraInfo( MavenExtraInfo mavenExtraInfo )
     {
         this.mavenExtraInfo = mavenExtraInfo;
     }
@@ -39,6 +45,16 @@ public class BuildExtraInfo
     public void setMavenExtraInfo( MavenExtraInfo mavenExtraInfo )
     {
         this.mavenExtraInfo = mavenExtraInfo;
+    }
+
+    public String getExternalBuildId()
+    {
+        return externalBuildId;
+    }
+
+    public void setExternalBuildId( String externalBuildId )
+    {
+        this.externalBuildId = externalBuildId;
     }
 
     @Override
