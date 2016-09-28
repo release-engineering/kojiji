@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import org.apache.commons.io.IOUtils;
 import org.commonjava.rwx.estream.model.Event;
 import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.commonjava.rwx.impl.stax.StaxParser;
@@ -49,6 +50,21 @@ public class AbstractKojiMessageTest
             throws Exception
     {
         eventParser = new EventStreamParserImpl();
+    }
+
+    protected String readResource( String resourceFile )
+            throws Exception
+    {
+        String resource = MESSAGES_BASE + resourceFile;
+        try(InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream( resource ))
+        {
+            if ( is == null )
+            {
+                Assert.fail( "Cannot find message XML file on classpath: " + resource );
+            }
+
+            return IOUtils.toString( is );
+        }
     }
 
     protected List<Event<?>> parseEvents( String resourceFile )

@@ -16,11 +16,13 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
+import org.apache.commons.io.IOUtils;
 import org.commonjava.rwx.estream.model.Event;
 import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
 import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
+import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -60,5 +62,32 @@ public class LoginResponseTest
 
         LoginResponse parsed = bindery.parse( generator, LoginResponse.class );
         assertNotNull( parsed );
+    }
+
+    @Test
+    public void shouldParse()
+            throws Exception
+    {
+        String responseAsString = readResource( "login-response.xml" );
+//        String responseAsString = "<?xml version='1.0'?>\n" +
+//                "<methodResponse>\n" +
+//                "<params>\n" +
+//                "<param>\n" +
+//                "<value><struct>\n" +
+//                "<member>\n" +
+//                "<name>session-id</name>\n" +
+//                "<value><int>15468078</int></value>\n" +
+//                "</member>\n" +
+//                "<member>\n" +
+//                "<name>session-key</name>\n" +
+//                "<value><string>3489-7wSOLpIaVL2CvWtCJuy</string></value>\n" +
+//                "</member>\n" +
+//                "</struct></value>\n" +
+//                "</param>\n" +
+//                "</params>\n" +
+//                "</methodResponse>";
+        LoginResponse response = bindery.parse( responseAsString, LoginResponse.class );
+
+        System.out.println( response );
     }
 }
