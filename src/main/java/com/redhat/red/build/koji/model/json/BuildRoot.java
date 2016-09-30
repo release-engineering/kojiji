@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.commonjava.rwx.binding.anno.Contains;
 import org.commonjava.rwx.binding.anno.DataKey;
+import org.commonjava.rwx.binding.anno.ImportMappings;
 import org.commonjava.rwx.binding.anno.KeyRefs;
 import org.commonjava.rwx.binding.anno.StructPart;
 
@@ -43,6 +44,7 @@ import static com.redhat.red.build.koji.model.json.util.Verifications.checkNull;
  * Created by jdcasey on 2/10/16.
  */
 @StructPart
+@ImportMappings( { FileBuildComponent.class, RPMBuildComponent.class } )
 public class BuildRoot
 {
     @JsonProperty( ID )
