@@ -18,7 +18,6 @@ package com.redhat.red.build.koji.model.json;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.util.TimestampIntValueBinder;
-import com.redhat.red.build.koji.model.util.TimestampValueBinder;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataKey;
@@ -35,7 +34,6 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NAME;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.RELEASE;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.SOURCE;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.START_TIME;
-import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.VERSION;
 import static com.redhat.red.build.koji.model.json.util.Verifications.checkNull;
 import static com.redhat.red.build.koji.model.json.util.Verifications.checkString;
@@ -70,10 +68,6 @@ public class BuildDescription
     @Converter( TimestampIntValueBinder.class )
     private Date endTime;
 
-    @JsonProperty( TYPE )
-    @DataKey( TYPE )
-    private String buildType;
-
     @JsonProperty( SOURCE )
     @DataKey( SOURCE )
     private BuildSource source;
@@ -85,10 +79,10 @@ public class BuildDescription
     private BuildDescription(){}
 
     @JsonCreator
-    @KeyRefs( { NAME, VERSION, RELEASE, START_TIME, END_TIME, TYPE, SOURCE } )
+    @KeyRefs( { NAME, VERSION, RELEASE, START_TIME, END_TIME, SOURCE } )
     public BuildDescription( @JsonProperty( NAME ) String name, @JsonProperty( VERSION ) String version,
                              @JsonProperty( RELEASE ) String release, @JsonProperty( START_TIME ) Date startTime,
-                             @JsonProperty( END_TIME ) Date endTime, @JsonProperty( TYPE ) String buildType,
+                             @JsonProperty( END_TIME ) Date endTime,
                              @JsonProperty( SOURCE ) BuildSource source )
     {
         this.name = name;
@@ -96,7 +90,6 @@ public class BuildDescription
         this.release = release;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.buildType = buildType;
         this.source = source;
     }
 
@@ -123,11 +116,6 @@ public class BuildDescription
     public Date getEndTime()
     {
         return endTime;
-    }
-
-    public String getBuildType()
-    {
-        return buildType;
     }
 
     public BuildSource getSource()
@@ -207,18 +195,6 @@ public class BuildDescription
             return this;
         }
 
-        public Builder withBuildType( StandardBuildType type )
-        {
-            target.buildType = type.name();
-            return this;
-        }
-
-        public Builder withBuildType( String type )
-        {
-            target.buildType = type;
-            return this;
-        }
-
         public Builder withBuildSource( String url )
         {
             target.source = new BuildSource( url );
@@ -246,9 +222,10 @@ public class BuildDescription
                 target.extraInfo = new BuildExtraInfo();
             }
 
-            target.buildType = StandardOutputType.maven.name();
-            target.extraInfo.setMavenExtraInfo(
-                    new MavenExtraInfo( gav.getGroupId(), gav.getArtifactId(), gav.getVersionString() ) );
+            MavenExtraInfo mavenExtraInfo = new MavenExtraInfo( gav.getGroupId(), gav.getArtifactId(), gav.getVersionString() );
+            target.extraInfo.setTypeInfo(
+                    new TypeInfo(mavenExtraInfo)
+            );
 
             return this;
         }
@@ -291,7 +268,6 @@ public class BuildDescription
             checkString( target.name, missingProperties, prefix, NAME );
             checkString( target.version, missingProperties, prefix, VERSION );
             checkString( target.release, missingProperties, prefix, RELEASE );
-            checkString( target.buildType, missingProperties, prefix, TYPE );
             checkNull( target.startTime, missingProperties, prefix, START_TIME );
             checkNull( target.endTime, missingProperties, prefix, END_TIME );
 //            checkNull( target.source, missingProperties, prefix, SOURCE );
@@ -332,10 +308,6 @@ public class BuildDescription
         {
             return false;
         }
-        if ( getBuildType() != null ? !getBuildType().equals( that.getBuildType() ) : that.getBuildType() != null )
-        {
-            return false;
-        }
         if ( source != null ? !source.equals( that.source ) : that.source != null )
         {
             return false;
@@ -352,7 +324,6 @@ public class BuildDescription
         result = 31 * result + ( getRelease() != null ? getRelease().hashCode() : 0 );
         result = 31 * result + ( getStartTime() != null ? getStartTime().hashCode() : 0 );
         result = 31 * result + ( getEndTime() != null ? getEndTime().hashCode() : 0 );
-        result = 31 * result + ( getBuildType() != null ? getBuildType().hashCode() : 0 );
         result = 31 * result + ( source != null ? source.hashCode() : 0 );
         result = 31 * result + ( getExtraInfo() != null ? getExtraInfo().hashCode() : 0 );
         return result;
@@ -367,7 +338,6 @@ public class BuildDescription
                 ", release='" + release + '\'' +
                 ", startTime=" + startTime == null ? "null" : startTime.getTime() +
                 ", endTime=" + endTime == null ? "null" : endTime.getTime() +
-                ", buildType='" + buildType + '\'' +
                 ", source=" + source +
                 ", extraInfo=" + extraInfo +
                 '}';

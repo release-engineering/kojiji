@@ -15,16 +15,18 @@
  */
 package com.redhat.red.build.koji.model.json;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.redhat.red.build.koji.model.util.BuildComponentValueBinder;
 import org.commonjava.rwx.binding.anno.Converter;
+import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.StructPart;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE;
 
@@ -39,6 +41,25 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE;
 @StructPart
 @Converter( BuildComponentValueBinder.class )
 public abstract class BuildComponent {
+
+    @JsonProperty(TYPE)
+    @DataKey( TYPE )
+    private String type;
+
+    public BuildComponent(String type)
+    {
+        this.type = type;
+    }
+
+    public String getType()
+    {
+        return type;
+    }
+
+    public void setType(String type)
+    {
+        this.type = type;
+    }
 
     public static abstract class Builder<T extends BuildComponent> implements SectionBuilder<T>, VerifiableBuilder<T> {
 

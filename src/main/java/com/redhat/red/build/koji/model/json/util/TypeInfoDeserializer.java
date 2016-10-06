@@ -21,7 +21,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.redhat.red.build.koji.model.json.BuildExtraInfo;
+import com.redhat.red.build.koji.model.json.MavenExtraInfo;
 import com.redhat.red.build.koji.model.json.TypeInfo;
 
 import java.io.IOException;
@@ -29,18 +29,20 @@ import java.io.IOException;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
 
 /**
- * Created by jdcasey on 2/10/16.
+ * Author: Michal Szynkiewicz, michal.l.szynkiewicz@gmail.com
+ * Date: 10/6/16
+ * Time: 10:31 AM
  */
-public class BuildExtraInfoDeserializer
-        extends StdDeserializer<BuildExtraInfo>
+public class TypeInfoDeserializer
+        extends StdDeserializer<TypeInfo>
 {
-    public BuildExtraInfoDeserializer()
+    public TypeInfoDeserializer()
     {
-        super( BuildExtraInfo.class );
+        super( TypeInfo.class );
     }
 
     @Override
-    public BuildExtraInfo deserialize( JsonParser jp, DeserializationContext ctxt )
+    public TypeInfo deserialize( JsonParser jp, DeserializationContext ctxt )
             throws IOException, JsonProcessingException
     {
         JsonToken token = null;
@@ -53,11 +55,11 @@ public class BuildExtraInfoDeserializer
                 {
                     case ( MAVEN_INFO ):
                     {
-                        JsonDeserializer<Object> typeInfoDeser =
-                                ctxt.findRootValueDeserializer( ctxt.constructType( TypeInfo.class ) );
+                        JsonDeserializer<Object> mvnDeser =
+                                ctxt.findRootValueDeserializer( ctxt.constructType( MavenExtraInfo.class ) );
 
-                        TypeInfo typeInfo = (TypeInfo) typeInfoDeser.deserialize( jp, ctxt );
-                        return new BuildExtraInfo( typeInfo );
+                        MavenExtraInfo mvnInfo = (MavenExtraInfo) mvnDeser.deserialize( jp, ctxt );
+                        return new TypeInfo( mvnInfo );
                     }
                     default:
                     {

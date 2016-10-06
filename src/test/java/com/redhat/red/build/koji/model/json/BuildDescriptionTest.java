@@ -47,7 +47,6 @@ public class BuildDescriptionTest
         assertThat( out.getRelease(), equalTo( src.getRelease() ) );
         assertThat( out.getStartTime(), equalTo( src.getStartTime() ) );
         assertThat( out.getEndTime(), equalTo( src.getEndTime() ) );
-        assertThat( out.getBuildType(), equalTo( src.getBuildType() ) );
         assertThat( out.getSource(), equalTo( src.getSource() ) );
         assertThat( out.getExtraInfo(), equalTo( src.getExtraInfo() ) );
     }

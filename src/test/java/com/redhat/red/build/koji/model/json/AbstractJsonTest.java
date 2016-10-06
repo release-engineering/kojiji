@@ -57,7 +57,6 @@ public class AbstractJsonTest
         cal.set( Calendar.MILLISECOND, 0 );
 
         BuildDescription src = builder.withEndTime( cal.getTime() )
-                                                                          .withBuildType( "maven" )
                                                                           .withBuildSource( newBuildSource() )
                                                                           .build();
 

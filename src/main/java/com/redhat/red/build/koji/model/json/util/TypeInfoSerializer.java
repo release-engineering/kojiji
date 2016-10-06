@@ -19,32 +19,33 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.redhat.red.build.koji.model.json.BuildExtraInfo;
 import com.redhat.red.build.koji.model.json.KojiJsonConstants;
+import com.redhat.red.build.koji.model.json.TypeInfo;
 
 import java.io.IOException;
 
 /**
- * Created by jdcasey on 2/10/16.
+ * Author: Michal Szynkiewicz, michal.l.szynkiewicz@gmail.com
+ * Date: 10/6/16
+ * Time: 10:31 AM
  */
-public class BuildExtraInfoSerializer<T extends BuildExtraInfo>
-        extends StdSerializer<T>
-{
+public class TypeInfoSerializer<T extends TypeInfo>
+        extends StdSerializer<T> {
 
-    protected BuildExtraInfoSerializer( Class<T> cls )
+    protected TypeInfoSerializer(Class<T> cls )
     {
         super( cls );
     }
 
     @Override
-    public void serialize( BuildExtraInfo value, JsonGenerator jgen, SerializerProvider provider )
+    public void serialize( TypeInfo value, JsonGenerator jgen, SerializerProvider provider )
             throws IOException, JsonGenerationException
     {
-        if ( value instanceof BuildExtraInfo )
+        if ( value instanceof TypeInfo )
         {
             jgen.writeStartObject();
-            jgen.writeFieldName( KojiJsonConstants.MAVEN_INFO );
-            provider.defaultSerializeValue( ((BuildExtraInfo) value).getTypeInfo(), jgen );
+            jgen.writeFieldName( KojiJsonConstants.TYPE_INFO );
+            provider.defaultSerializeValue( ((TypeInfo) value).getMavenExtraInfo(), jgen );
             jgen.writeEndObject();
         }
         else
