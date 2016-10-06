@@ -15,13 +15,13 @@
  */
 package com.redhat.red.build.koji.model.json;
 
-import java.util.Objects;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.StructPart;
+
+import java.util.Objects;
+import java.util.Set;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.ARCH;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EPOCH;
@@ -63,6 +63,10 @@ public class RPMBuildComponent extends BuildComponent {
     @JsonProperty(SIGNATURE)
     @DataKey( SIGNATURE )
     private String signature;
+
+    public RPMBuildComponent() {
+        super("rpm");
+    }
 
     public String getName() {
         return name;

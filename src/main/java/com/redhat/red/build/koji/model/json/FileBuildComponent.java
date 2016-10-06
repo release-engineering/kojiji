@@ -15,13 +15,13 @@
  */
 package com.redhat.red.build.koji.model.json;
 
-import java.util.Objects;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.StructPart;
+
+import java.util.Objects;
+import java.util.Set;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.CHECKSUM;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.CHECKSUM_TYPE;
@@ -50,6 +50,10 @@ public class FileBuildComponent extends BuildComponent {
     @JsonProperty(CHECKSUM_TYPE)
     @DataKey( CHECKSUM_TYPE )
     private String checksumType;
+
+    public FileBuildComponent() {
+        super("file");
+    }
 
     public String getFilename()
     {
