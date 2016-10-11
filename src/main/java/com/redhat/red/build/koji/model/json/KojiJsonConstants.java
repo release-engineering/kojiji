@@ -98,8 +98,6 @@ public final class KojiJsonConstants
 
     public static final String MAVEN_INFO = "maven";
 
-    public static final String TYPE_INFO = "typeinfo";
-
     public static final String EXTERNAL_BUILD_ID = "external_build_id";
 
     private KojiJsonConstants(){}

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.redhat.red.build.koji.model.json.BuildExtraInfo;
-import com.redhat.red.build.koji.model.json.TypeInfo;
+import com.redhat.red.build.koji.model.json.MavenExtraInfo;
 
 import java.io.IOException;
 
@@ -53,11 +53,11 @@ public class BuildExtraInfoDeserializer
                 {
                     case ( MAVEN_INFO ):
                     {
-                        JsonDeserializer<Object> typeInfoDeser =
-                                ctxt.findRootValueDeserializer( ctxt.constructType( TypeInfo.class ) );
+                        JsonDeserializer<Object> mvnDeser =
+                                ctxt.findRootValueDeserializer( ctxt.constructType( MavenExtraInfo.class ) );
 
-                        TypeInfo typeInfo = (TypeInfo) typeInfoDeser.deserialize( jp, ctxt );
-                        return new BuildExtraInfo( typeInfo );
+                        MavenExtraInfo mvnInfo = (MavenExtraInfo) mvnDeser.deserialize( jp, ctxt );
+                        return new BuildExtraInfo( mvnInfo );
                     }
                     default:
                     {

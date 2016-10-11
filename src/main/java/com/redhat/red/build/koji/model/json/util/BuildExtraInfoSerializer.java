@@ -44,7 +44,7 @@ public class BuildExtraInfoSerializer<T extends BuildExtraInfo>
         {
             jgen.writeStartObject();
             jgen.writeFieldName( KojiJsonConstants.MAVEN_INFO );
-            provider.defaultSerializeValue( ((BuildExtraInfo) value).getTypeInfo(), jgen );
+            provider.defaultSerializeValue( ((BuildExtraInfo) value).getMavenExtraInfo(), jgen );
             jgen.writeEndObject();
         }
         else
