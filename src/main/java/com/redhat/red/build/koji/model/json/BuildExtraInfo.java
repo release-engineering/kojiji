@@ -7,7 +7,7 @@ import org.commonjava.rwx.binding.anno.SkipNull;
 import org.commonjava.rwx.binding.anno.StructPart;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BUILD_ID;
-import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE_INFO;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
 
 /**
  * Created by jdcasey on 9/15/16.
@@ -16,9 +16,9 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE_INFO;
 @SkipNull
 public class BuildExtraInfo
 {
-    @JsonProperty( TYPE_INFO )
-    @DataKey( TYPE_INFO )
-    private TypeInfo typeInfo;
+    @JsonProperty( MAVEN_INFO )
+    @DataKey( MAVEN_INFO )
+    private MavenExtraInfo mavenExtraInfo;
 
     @JsonProperty( EXTERNAL_BUILD_ID )
     @DataKey( EXTERNAL_BUILD_ID )
@@ -26,16 +26,25 @@ public class BuildExtraInfo
 
     public BuildExtraInfo(){}
 
-    public BuildExtraInfo( TypeInfo typeInfo )
+    public BuildExtraInfo( MavenExtraInfo mavenExtraInfo )
     {
-        this.typeInfo = typeInfo;
+        this.mavenExtraInfo = mavenExtraInfo;
     }
 
     public BuildExtraInfo( ProjectVersionRef gav )
     {
-        this(new TypeInfo( new MavenExtraInfo( gav ) ));
+        this.mavenExtraInfo = new MavenExtraInfo( gav );
     }
 
+    public MavenExtraInfo getMavenExtraInfo()
+    {
+        return mavenExtraInfo;
+    }
+
+    public void setMavenExtraInfo( MavenExtraInfo mavenExtraInfo )
+    {
+        this.mavenExtraInfo = mavenExtraInfo;
+    }
 
     public String getExternalBuildId()
     {
@@ -45,16 +54,6 @@ public class BuildExtraInfo
     public void setExternalBuildId( String externalBuildId )
     {
         this.externalBuildId = externalBuildId;
-    }
-
-    public TypeInfo getTypeInfo()
-    {
-        return typeInfo;
-    }
-
-    public void setTypeInfo( TypeInfo typeInfo )
-    {
-        this.typeInfo = typeInfo;
     }
 
     @Override
@@ -71,23 +70,23 @@ public class BuildExtraInfo
 
         BuildExtraInfo that = (BuildExtraInfo) o;
 
-        return getTypeInfo() != null ?
-                getTypeInfo().equals( that.getTypeInfo() ) :
-                that.getTypeInfo() == null;
+        return getMavenExtraInfo() != null ?
+                getMavenExtraInfo().equals( that.getMavenExtraInfo() ) :
+                that.getMavenExtraInfo() == null;
 
     }
 
     @Override
     public int hashCode()
     {
-        return getTypeInfo() != null ? getTypeInfo().hashCode() : 0;
+        return getMavenExtraInfo() != null ? getMavenExtraInfo().hashCode() : 0;
     }
 
     @Override
     public String toString()
     {
         return "BuildMavenInfo{" +
-                "typeInfo=" + typeInfo +
+                "mavenExtraInfo=" + mavenExtraInfo +
                 '}';
     }
 }

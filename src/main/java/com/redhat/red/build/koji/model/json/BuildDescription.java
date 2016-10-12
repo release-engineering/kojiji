@@ -223,9 +223,7 @@ public class BuildDescription
             }
 
             MavenExtraInfo mavenExtraInfo = new MavenExtraInfo( gav.getGroupId(), gav.getArtifactId(), gav.getVersionString() );
-            target.extraInfo.setTypeInfo(
-                    new TypeInfo(mavenExtraInfo)
-            );
+            target.extraInfo.setMavenExtraInfo(mavenExtraInfo);
 
             return this;
         }
