@@ -24,7 +24,7 @@ import org.commonjava.rwx.binding.anno.StructPart;
 @StructPart
 public class KojiPackageInfo
 {
-    @DataKey( "owner" )
+    @DataKey( "owner_name" )
     private String owner;
 
     @DataKey( "owner_id" )

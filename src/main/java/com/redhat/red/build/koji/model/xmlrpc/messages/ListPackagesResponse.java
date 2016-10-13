@@ -15,7 +15,10 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import org.commonjava.rwx.binding.anno.Contains;
+
 import com.redhat.red.build.koji.model.xmlrpc.KojiPackageInfo;
+
 import org.commonjava.rwx.binding.anno.DataIndex;
 import org.commonjava.rwx.binding.anno.Response;
 
@@ -26,6 +29,7 @@ public class ListPackagesResponse
 {
 
     @DataIndex( 0 )
+    @Contains(KojiPackageInfo.class)
     private List<KojiPackageInfo> packages;
 
     public List<KojiPackageInfo> getPackages()
