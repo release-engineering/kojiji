@@ -27,6 +27,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiBuildArchiveCollection;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
+import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
 import com.redhat.red.build.koji.model.xmlrpc.KojiPackageInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiPackageQuery;
@@ -55,6 +56,8 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByIdOrNameRequest
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByNVRObjRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetMavenBuildRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetMavenBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTagIdRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskResponse;
@@ -996,35 +999,65 @@ public class KojiClient
     public KojiBuildInfo getBuildInfo( KojiNVR nvr, KojiSessionInfo session )
             throws KojiClientException
     {
-        return doXmlRpcAndThrow( () -> {
+        KojiBuildInfo buildInfo = doXmlRpcAndThrow( () -> {
             GetBuildResponse response = xmlrpcClient.call( new GetBuildByNVRObjRequest( nvr ), GetBuildResponse.class,
                                                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             return response == null ? null : response.getBuildInfo();
         }, "Failed to retrieve build info for: %s", nvr );
+
+        return withGAV(buildInfo, session);
     }
 
     public KojiBuildInfo getBuildInfo( String nvr, KojiSessionInfo session )
             throws KojiClientException
     {
-        return doXmlRpcAndThrow( () -> {
+        KojiBuildInfo buildInfo = doXmlRpcAndThrow( () -> {
             GetBuildResponse response = xmlrpcClient.call( new GetBuildByIdOrNameRequest( nvr ), GetBuildResponse.class,
                                                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             return response == null ? null : response.getBuildInfo();
         }, "Failed to retrieve build info for: %s", nvr );
+
+        return withGAV(buildInfo, session);
     }
 
     public KojiBuildInfo getBuildInfo( int buildId, KojiSessionInfo session )
             throws KojiClientException
     {
-        return doXmlRpcAndThrow( () -> {
+        KojiBuildInfo buildInfo = doXmlRpcAndThrow( () -> {
             GetBuildResponse response =
                     xmlrpcClient.call( new GetBuildByIdOrNameRequest( buildId ), GetBuildResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             return response == null ? null : response.getBuildInfo();
         }, "Failed to retrieve build info for: %s", buildId );
+
+        return withGAV(buildInfo, session);
+    }
+
+    private KojiBuildInfo withGAV( KojiBuildInfo buildInfo, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        if ( buildInfo.getGAV() == null ) {
+            KojiMavenBuildInfo mavenBuildInfo = getMavenBuildInfo(buildInfo.getId(), session);
+            buildInfo.setMavenGroupId( mavenBuildInfo.getGroupId() );
+            buildInfo.setMavenArtifactId( mavenBuildInfo.getArtifactId() );
+            buildInfo.setMavenVersion( mavenBuildInfo.getVersion() );
+        }
+        return buildInfo;
+    }
+
+    public KojiMavenBuildInfo getMavenBuildInfo(int buildId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetMavenBuildResponse response =
+                    xmlrpcClient.call( new GetMavenBuildRequest( buildId ), GetMavenBuildResponse.class,
+                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getMavenBuildInfo();
+        }, "Failed to retrieve maven build info for: %s", buildId );
     }
 
     protected String generateUploadDirname( KojiSessionInfo session )
