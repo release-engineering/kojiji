@@ -15,8 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import com.redhat.red.build.koji.model.util.ProjectVersionRefValueBinder;
 import com.redhat.red.build.koji.model.util.TimestampValueBinder;
+import org.commonjava.maven.atlas.ident.ref.ProjectRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataKey;
@@ -35,8 +35,7 @@ public class KojiBuildQuery
     private String type = "maven";
 
     @DataKey( value = "typeInfo" )
-    @Converter( value = ProjectVersionRefValueBinder.class )
-    private ProjectVersionRef gav;
+    private KojiMavenRef mavenRef;
 
     @DataKey( value = "packageID" )
     private Integer packageId;
@@ -76,9 +75,9 @@ public class KojiBuildQuery
     {
     }
 
-    public KojiBuildQuery( ProjectVersionRef gav )
+    public KojiBuildQuery( ProjectRef ga )
     {
-        this.gav = gav;
+        this.mavenRef = new KojiMavenRef( ga );
     }
 
     public String getType()
@@ -91,14 +90,14 @@ public class KojiBuildQuery
         this.type = type;
     }
 
-    public ProjectVersionRef getGav()
+    public KojiMavenRef getMavenRef()
     {
-        return gav;
+        return mavenRef;
     }
 
-    public void setGav( ProjectVersionRef gav )
+    public void setMavenRef( KojiMavenRef mavenRef )
     {
-        this.gav = gav;
+        this.mavenRef = mavenRef;
     }
 
     public Integer getPackageId()
@@ -207,9 +206,15 @@ public class KojiBuildQuery
         return this;
     }
 
-    public KojiBuildQuery withGAV( ProjectVersionRef gav )
+    public KojiBuildQuery withMavenRef( ProjectVersionRef gav )
     {
-        this.gav = gav;
+        this.mavenRef = new KojiMavenRef( gav );
+        return this;
+    }
+
+    public KojiBuildQuery withMavenRef( KojiMavenRef mavenRef )
+    {
+        this.mavenRef = mavenRef;
         return this;
     }
 

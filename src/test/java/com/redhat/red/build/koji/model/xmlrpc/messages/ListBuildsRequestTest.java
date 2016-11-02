@@ -65,7 +65,7 @@ public class ListBuildsRequestTest
         ListBuildsRequest parsed = bindery.parse( generator, ListBuildsRequest.class );
         assertNotNull( parsed );
 
-        assertThat( parsed.getQuery().getGav(), equalTo( gav ) );
+        assertThat( parsed.getQuery().getMavenRef(), equalTo( gav ) );
     }
 
     @Test

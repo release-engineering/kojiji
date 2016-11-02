@@ -15,10 +15,9 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import com.redhat.red.build.koji.model.util.ProjectVersionRefValueBinder;
 import org.commonjava.maven.atlas.ident.ref.ArtifactRef;
+import org.commonjava.maven.atlas.ident.ref.ProjectRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.StructPart;
 
@@ -35,8 +34,7 @@ public class KojiArchiveQuery
     private String type = "maven";
 
     @DataKey( value = "typeInfo" )
-    @Converter( value = ProjectVersionRefValueBinder.class )
-    private ProjectVersionRef gav;
+    private KojiMavenRef mavenRef;
 
     @DataKey( value = "filename" )
     private String filename;
@@ -63,29 +61,32 @@ public class KojiArchiveQuery
     {
     }
 
-    public KojiArchiveQuery( ProjectVersionRef gav )
+    public KojiArchiveQuery( ProjectRef ref )
     {
-        this.gav = gav;
-        ArtifactRef ar;
-        if ( gav instanceof ArtifactRef )
+        this.mavenRef = new KojiMavenRef( ref );
+        ArtifactRef ar = null;
+        if ( ref instanceof ArtifactRef )
         {
-            ar = (ArtifactRef) gav;
+            ar = (ArtifactRef) ref;
         }
-        else
+        else if ( ref instanceof ProjectVersionRef )
         {
-            ar = gav.asJarArtifact();
+            ar = ( (ProjectVersionRef) ref ).asJarArtifact();
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append( ar.getArtifactId() ).append( '-' ).append( ar.getVersionString() );
-        String classifier = ( ar ).getClassifier();
-        if ( isNotEmpty( classifier ) )
+        if ( ar != null )
         {
-            sb.append( '-' ).append( classifier );
-        }
-        sb.append( '.' ).append( ( ar ).getType() );
+            StringBuilder sb = new StringBuilder();
+            sb.append( ar.getArtifactId() ).append( '-' ).append( ar.getVersionString() );
+            String classifier = ( ar ).getClassifier();
+            if ( isNotEmpty( classifier ) )
+            {
+                sb.append( '-' ).append( classifier );
+            }
+            sb.append( '.' ).append( ( ar ).getType() );
 
-        filename = sb.toString();
+            filename = sb.toString();
+        }
     }
 
     public String getType()
@@ -98,14 +99,14 @@ public class KojiArchiveQuery
         this.type = type;
     }
 
-    public ProjectVersionRef getGav()
+    public KojiMavenRef getMavenRef()
     {
-        return gav;
+        return mavenRef;
     }
 
-    public void setGav( ProjectVersionRef gav )
+    public void setMavenRef( KojiMavenRef mavenRef )
     {
-        this.gav = gav;
+        this.mavenRef = mavenRef;
     }
 
     public String getFilename()
@@ -190,9 +191,15 @@ public class KojiArchiveQuery
         return this;
     }
 
-    public KojiArchiveQuery withGAV( ProjectVersionRef gav )
+    public KojiArchiveQuery withMavenRef( ProjectRef ref )
     {
-        this.gav = gav;
+        this.mavenRef = new KojiMavenRef( ref );
+        return this;
+    }
+
+    public KojiArchiveQuery withMavenRef( KojiMavenRef ref )
+    {
+        this.mavenRef = ref;
         return this;
     }
 
@@ -232,4 +239,9 @@ public class KojiArchiveQuery
         return this;
     }
 
+    public KojiArchiveQuery withMavenGroupId( String groupId )
+    {
+
+        return this;
+    }
 }

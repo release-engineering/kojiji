@@ -29,6 +29,11 @@ public class ListTagsRequest
     @DataIndex( 0 )
     private final KojiTagQuery query;
 
+    public ListTagsRequest()
+    {
+        this.query = null;
+    }
+
     @IndexRefs( 0 )
     public ListTagsRequest( KojiTagQuery query )
     {

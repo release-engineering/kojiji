@@ -28,6 +28,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
 import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
 import com.redhat.red.build.koji.model.xmlrpc.KojiPackageInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiPackageQuery;
@@ -46,7 +47,6 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CGInlinedImportRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.CGUploadedImportRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CheckPermissionRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ConfirmationResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
@@ -638,6 +638,19 @@ public class KojiClient
         }, "Failed to execute content-generator import" );
     }
 
+    public List<KojiTagInfo> listAllTags( KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            ListTagsResponse response =
+                    xmlrpcClient.call( new ListTagsRequest(), ListTagsResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            List<KojiTagInfo> tags = response.getTags();
+            return tags == null ? Collections.emptyList() : tags;
+        }, "Failed to retrieve list of all tags" );
+    }
+
     public List<KojiTagInfo> listTags( KojiBuildInfo buildInfo, KojiSessionInfo session )
             throws KojiClientException
     {
@@ -690,25 +703,55 @@ public class KojiClient
         }, "Failed to retrieve list of tags for build: %s", buildId );
     }
 
-    public List<KojiArchiveInfo> listArchivesMatching( ProjectVersionRef gav, KojiSessionInfo session )
+    public List<KojiArchiveInfo> listMavenArchivesMatching( String groupId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            ListArchivesResponse response = xmlrpcClient.call( new ListArchivesRequest(
+                                                                       new KojiArchiveQuery().withMavenRef(
+                                                                               new KojiMavenRef().withGroupId( groupId ) ) ),
+                                                               ListArchivesResponse.class, sessionUrlBuilder( session ),
+                                                               STANDARD_REQUEST_MODIFIER );
+
+            List<KojiArchiveInfo> archives = response.getArchives();
+            return archives == null ? Collections.emptyList() : archives;
+        }, "Failed to retrieve list of Maven archives matching groupId: %s", groupId );
+    }
+
+    public List<KojiArchiveInfo> listMavenArchivesMatching( String groupId, String artifactId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            ListArchivesResponse response = xmlrpcClient.call( new ListArchivesRequest(
+                                                                       new KojiArchiveQuery().withMavenRef(
+                                                                               new KojiMavenRef().withGroupId( groupId ).withArtifactId( artifactId ) ) ),
+                                                               ListArchivesResponse.class, sessionUrlBuilder( session ),
+                                                               STANDARD_REQUEST_MODIFIER );
+
+            List<KojiArchiveInfo> archives = response.getArchives();
+            return archives == null ? Collections.emptyList() : archives;
+        }, "Failed to retrieve list of Maven archives matching: %s:%s", groupId, artifactId );
+    }
+
+    public List<KojiArchiveInfo> listArchivesMatching( ProjectRef ga, KojiSessionInfo session )
             throws KojiClientException
     {
         return doXmlRpcAndThrow( () -> {
             ListArchivesResponse response =
-                    xmlrpcClient.call( new ListArchivesRequest( gav ), ListArchivesResponse.class,
+                    xmlrpcClient.call( new ListArchivesRequest( ga ), ListArchivesResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             List<KojiArchiveInfo> archives = response.getArchives();
             return archives == null ? Collections.emptyList() : archives;
-        }, "Failed to retrieve list of archives for: %s", gav );
+        }, "Failed to retrieve list of archives for: %s", ga );
     }
 
-    public List<KojiBuildArchiveCollection> listArchivesForBuilds( ProjectVersionRef gav, KojiSessionInfo session )
+    public List<KojiBuildArchiveCollection> listArchivesForBuilds( ProjectRef ga, KojiSessionInfo session )
             throws KojiClientException
     {
         return doXmlRpcAndThrow( () -> {
             BuildListResponse buildsResponse =
-                    xmlrpcClient.call( new ListBuildsRequest( new KojiBuildQuery( gav ) ), BuildListResponse.class,
+                    xmlrpcClient.call( new ListBuildsRequest( new KojiBuildQuery( ga ) ), BuildListResponse.class,
                                        sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             if ( buildsResponse == null )
@@ -734,7 +777,7 @@ public class KojiClient
 
             return builds;
 
-        }, "Failed to retrieve list of archives for: %s", gav );
+        }, "Failed to retrieve list of archives for: %s", ga );
     }
 
     public KojiBuildArchiveCollection listArchivesForBuild( KojiNVR nvr, KojiSessionInfo session )
@@ -964,6 +1007,39 @@ public class KojiClient
 
             return taskResponse == null ? null : taskResponse.getTaskInfo();
         }, "Failed to load task info for: %s", taskId );
+    }
+
+    public List<KojiBuildInfo> listTagged( KojiTagInfo tag, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return listTagged( tag.getName(), session );
+    }
+
+    public List<KojiBuildInfo> listTagged( String tagName, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()-> {
+            BuildListResponse buildsResponse =
+                    xmlrpcClient.call( new ListTaggedRequest( tagName ), BuildListResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            if ( buildsResponse == null )
+            {
+                Logger logger = LoggerFactory.getLogger( getClass() );
+                logger.debug( "No builds response was returned!" );
+                return Collections.emptyList();
+            }
+
+            List<KojiBuildInfo> builds = buildsResponse.getBuilds();
+            if ( builds == null || builds.isEmpty() )
+            {
+                Logger logger = LoggerFactory.getLogger( getClass() );
+                logger.debug( "No builds tagged in: '{}'", tagName );
+                return Collections.emptyList();
+            }
+
+            return builds;
+        }, "Failed to list builds tagged in: %s", tagName );
     }
 
     public boolean untagBuild( String tag, String buildNvr, KojiSessionInfo session )

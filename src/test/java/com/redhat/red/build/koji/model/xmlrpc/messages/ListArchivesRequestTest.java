@@ -67,7 +67,7 @@ public class ListArchivesRequestTest
         ListArchivesRequest parsed = bindery.parse( generator, ListArchivesRequest.class );
         assertNotNull( parsed );
 
-        assertThat( parsed.getQuery().getGav(), equalTo( gav ) );
+        assertThat( parsed.getQuery().getMavenRef().toGAV(), equalTo( gav ) );
     }
 
     @Test
