@@ -80,6 +80,11 @@ public class KojiBuildQuery
         this.mavenRef = new KojiMavenRef( ga );
     }
 
+    public KojiBuildQuery( KojiMavenRef gav )
+    {
+        this.mavenRef = gav;
+    }
+
     public String getType()
     {
         return type;

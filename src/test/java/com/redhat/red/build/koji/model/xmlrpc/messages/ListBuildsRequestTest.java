@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
 import org.commonjava.rwx.estream.model.Event;
@@ -56,7 +57,7 @@ public class ListBuildsRequestTest
             throws Exception
     {
         EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        ProjectVersionRef gav = new SimpleProjectVersionRef( "commons-io", "commons-io", "2.4.0.redhat-1" );
+        KojiMavenRef gav = new KojiMavenRef( "commons-io", "commons-io", "2.4.0.redhat-1" );
         bindery.render( eventParser, new ListBuildsRequest( gav ) );
 
         List<Event<?>> objectEvents = eventParser.getEvents();

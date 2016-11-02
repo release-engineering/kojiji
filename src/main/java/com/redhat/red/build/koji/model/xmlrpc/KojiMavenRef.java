@@ -120,4 +120,45 @@ public class KojiMavenRef
 
         return new SimpleProjectVersionRef( groupId, artifactId, version );
     }
+
+    @Override
+    public String toString()
+    {
+        return String.format( "%s:%s:%s", getGroupId(), getArtifactId(), getVersion() );
+    }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( !( o instanceof KojiMavenRef ) )
+        {
+            return false;
+        }
+
+        KojiMavenRef that = (KojiMavenRef) o;
+
+        if ( getGroupId() != null ? !getGroupId().equals( that.getGroupId() ) : that.getGroupId() != null )
+        {
+            return false;
+        }
+        if ( getArtifactId() != null ? !getArtifactId().equals( that.getArtifactId() ) : that.getArtifactId() != null )
+        {
+            return false;
+        }
+        return getVersion() != null ? getVersion().equals( that.getVersion() ) : that.getVersion() == null;
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = getGroupId() != null ? getGroupId().hashCode() : 0;
+        result = 31 * result + ( getArtifactId() != null ? getArtifactId().hashCode() : 0 );
+        result = 31 * result + ( getVersion() != null ? getVersion().hashCode() : 0 );
+        return result;
+    }
 }
