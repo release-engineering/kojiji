@@ -16,6 +16,7 @@
 package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.redhat.red.build.koji.model.util.TimestampValueBinder;
+import org.apache.commons.lang.StringUtils;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
 import org.commonjava.rwx.binding.anno.Converter;
@@ -268,6 +269,10 @@ public class KojiBuildInfo
 
     public ProjectVersionRef getGAV()
     {
+        if ( StringUtils.isEmpty(mavenGroupId) || StringUtils.isEmpty(mavenArtifactId) )
+        {
+            return null;
+        }
         return new SimpleProjectVersionRef( getMavenGroupId(), getMavenArtifactId(), getMavenVersion() );
     }
 
