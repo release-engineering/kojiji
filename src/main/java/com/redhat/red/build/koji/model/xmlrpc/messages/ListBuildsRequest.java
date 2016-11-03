@@ -15,13 +15,10 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import com.redhat.red.build.koji.model.util.ProjectVersionRefValueBinder;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
-import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
+import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.IndexRefs;
 import org.commonjava.rwx.binding.anno.Request;
 
@@ -41,6 +38,11 @@ public class ListBuildsRequest
     }
 
     public ListBuildsRequest( ProjectVersionRef gav )
+    {
+        this.query = new KojiBuildQuery( gav );
+    }
+
+    public ListBuildsRequest( KojiMavenRef gav )
     {
         this.query = new KojiBuildQuery( gav );
     }
