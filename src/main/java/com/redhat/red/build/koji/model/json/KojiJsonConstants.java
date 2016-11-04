@@ -100,6 +100,10 @@ public final class KojiJsonConstants
 
     public static final String EXTERNAL_BUILD_ID = "external_build_id";
 
+    public static final String EXTERNAL_BUILD_URL = "external_build_system";
+
+    public static final String BUILD_SYSTEM = "build_system";
+
     private KojiJsonConstants(){}
 
 }

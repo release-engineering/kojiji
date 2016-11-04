@@ -240,6 +240,30 @@ public class BuildDescription
             return this;
         }
 
+        public Builder withExternalBuildUrl( String url )
+        {
+            if ( target.extraInfo == null )
+            {
+                target.extraInfo = new BuildExtraInfo();
+            }
+
+            target.extraInfo.setExternalBuildUrl( url );
+
+            return this;
+        }
+
+        public Builder withBuildSystem( String buildSystem )
+        {
+            if ( target.extraInfo == null )
+            {
+                target.extraInfo = new BuildExtraInfo();
+            }
+
+            target.extraInfo.setBuildSystem( buildSystem );
+
+            return this;
+        }
+
         @Override
         public BuildDescription build()
                 throws VerificationException

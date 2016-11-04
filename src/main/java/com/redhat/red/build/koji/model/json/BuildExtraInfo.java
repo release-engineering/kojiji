@@ -21,7 +21,9 @@ import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.SkipNull;
 import org.commonjava.rwx.binding.anno.StructPart;
 
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.BUILD_SYSTEM;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BUILD_ID;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BUILD_URL;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
 
 /**
@@ -38,6 +40,14 @@ public class BuildExtraInfo
     @JsonProperty( EXTERNAL_BUILD_ID )
     @DataKey( EXTERNAL_BUILD_ID )
     private String externalBuildId;
+
+    @JsonProperty( BUILD_SYSTEM )
+    @DataKey( BUILD_SYSTEM )
+    private String buildSystem;
+
+    @JsonProperty( EXTERNAL_BUILD_URL )
+    @DataKey( EXTERNAL_BUILD_URL )
+    private String externalBuildUrl;
 
     public BuildExtraInfo(){}
 
@@ -69,6 +79,22 @@ public class BuildExtraInfo
     public void setExternalBuildId( String externalBuildId )
     {
         this.externalBuildId = externalBuildId;
+    }
+
+    public String getBuildSystem() {
+        return buildSystem;
+    }
+
+    public void setBuildSystem(String buildSystem) {
+        this.buildSystem = buildSystem;
+    }
+
+    public String getExternalBuildUrl() {
+        return externalBuildUrl;
+    }
+
+    public void setExternalBuildUrl(String externalBuildUrl) {
+        this.externalBuildUrl = externalBuildUrl;
     }
 
     @Override
