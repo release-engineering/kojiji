@@ -16,8 +16,6 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
-import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
 import org.commonjava.rwx.estream.model.Event;
 import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
 import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
@@ -76,7 +74,7 @@ public class ListArchivesResponseTest
         archive.setChecksum( CHECKSUM );
         archive.setChecksumType( CHECKSUM_TYPE );
         archive.setFilename( FNAME );
-        archive.setExtension( TYPE_EXT );
+        archive.setTypeExtensions( TYPE_EXT );
         archive.setMetadataOnly( false );
         archive.setSize( SIZE );
         archive.setTypeDescription( TYPE_DESC );
@@ -114,7 +112,7 @@ public class ListArchivesResponseTest
         assertThat( archive.getChecksum(), equalTo( CHECKSUM ) );
         assertThat( archive.getChecksumType(), equalTo( CHECKSUM_TYPE ) );
         assertThat( archive.getFilename(), equalTo( FNAME ) );
-        assertThat( archive.getExtension(), equalTo( TYPE_EXT ) );
+        assertThat( archive.getTypeExtensions(), equalTo( TYPE_EXT ) );
         assertThat( archive.getMetadataOnly(), equalTo( false ) );
         assertThat( archive.getSize(), equalTo( SIZE ) );
         assertThat( archive.getTypeDescription(), equalTo( TYPE_DESC ) );

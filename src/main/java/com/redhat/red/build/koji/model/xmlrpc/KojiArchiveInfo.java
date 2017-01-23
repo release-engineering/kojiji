@@ -45,8 +45,10 @@ public class KojiArchiveInfo
 
     private transient String classifier;
 
+    private transient String extension;
+
     @DataKey( "type_extensions" )
-    private String extension;
+    private String typeExtensions;
 
     @DataKey( "filename" )
     private String filename;
@@ -118,11 +120,29 @@ public class KojiArchiveInfo
         this.version = version;
     }
 
+    public synchronized String getExtension()
+    {
+        if ( extension == null )
+        {
+            String[] exts = typeExtensions.split("\\s+");
+            for ( String ext : exts )
+            {
+                if ( filename.endsWith( ext ) )
+                {
+                    extension = ext;
+                    break;
+                }
+            }
+        }
+
+        return extension;
+    }
+
     public synchronized String getClassifier()
     {
         if ( classifier == null && filename != null )
         {
-            String fnameRegex = String.format( "%s-%s-(.+).%s", artifactId, version, extension );
+            String fnameRegex = String.format( "%s-%s-(.+).%s", artifactId, version, getExtension() );
             Matcher matcher = Pattern.compile( fnameRegex ).matcher( filename );
             if ( matcher.matches() )
             {
@@ -140,7 +160,7 @@ public class KojiArchiveInfo
 
     public ArtifactRef asArtifact()
     {
-        return new SimpleArtifactRef( groupId, artifactId, version, extension, getClassifier() );
+        return new SimpleArtifactRef( groupId, artifactId, version, getExtension(), getClassifier() );
     }
 
     public void setClassifier( String classifier )
@@ -148,14 +168,14 @@ public class KojiArchiveInfo
         this.classifier = classifier;
     }
 
-    public String getExtension()
+    public String getTypeExtensions()
     {
-        return extension;
+        return typeExtensions;
     }
 
-    public void setExtension( String extension )
+    public void setTypeExtensions( String typeExtensions )
     {
-        this.extension = extension;
+        this.typeExtensions = typeExtensions;
     }
 
     public Integer getBuildId()
@@ -268,6 +288,7 @@ public class KojiArchiveInfo
                 ", version='" + version + '\'' +
                 ", classifier='" + classifier + '\'' +
                 ", extension='" + extension + '\'' +
+                ", typeExtensions='" + typeExtensions + '\'' +
                 ", filename='" + filename + '\'' +
                 ", buildId=" + buildId +
                 ", typeName='" + typeName + '\'' +
