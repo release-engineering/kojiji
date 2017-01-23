@@ -20,6 +20,7 @@ public class KojiArchiveInfoTest
         archiveInfo.setArtifactId( "foo" );
         archiveInfo.setVersion( "1.0" );
 
+        archiveInfo.setTypeName( "jar" );
         archiveInfo.setTypeExtensions( "jar war rar sar plugin" );
 
         archiveInfo.setFilename( "foo-1.0.jar" );

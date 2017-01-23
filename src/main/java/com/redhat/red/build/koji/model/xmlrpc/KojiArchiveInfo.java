@@ -45,8 +45,6 @@ public class KojiArchiveInfo
 
     private transient String classifier;
 
-    private transient String extension;
-
     @DataKey( "type_extensions" )
     private String typeExtensions;
 
@@ -57,7 +55,7 @@ public class KojiArchiveInfo
     private Integer buildId;
 
     @DataKey( "type_name" )
-    private String typeName;
+    private String extension;
 
     @DataKey( "type_id" )
     private Integer typeId;
@@ -120,24 +118,6 @@ public class KojiArchiveInfo
         this.version = version;
     }
 
-    public synchronized String getExtension()
-    {
-        if ( extension == null )
-        {
-            String[] exts = typeExtensions.split("\\s+");
-            for ( String ext : exts )
-            {
-                if ( filename.endsWith( ext ) )
-                {
-                    extension = ext;
-                    break;
-                }
-            }
-        }
-
-        return extension;
-    }
-
     public synchronized String getClassifier()
     {
         if ( classifier == null && filename != null )
@@ -188,14 +168,24 @@ public class KojiArchiveInfo
         this.buildId = buildId;
     }
 
+    public String getExtension()
+    {
+        return extension;
+    }
+
+    public void setExtension( String extension )
+    {
+        this.extension = extension;
+    }
+
     public String getTypeName()
     {
-        return typeName;
+        return extension;
     }
 
     public void setTypeName( String typeName )
     {
-        this.typeName = typeName;
+        this.extension = typeName;
     }
 
     public Integer getTypeId()
@@ -287,11 +277,10 @@ public class KojiArchiveInfo
                 ", artifactId='" + artifactId + '\'' +
                 ", version='" + version + '\'' +
                 ", classifier='" + classifier + '\'' +
-                ", extension='" + extension + '\'' +
                 ", typeExtensions='" + typeExtensions + '\'' +
                 ", filename='" + filename + '\'' +
                 ", buildId=" + buildId +
-                ", typeName='" + typeName + '\'' +
+                ", typeName (extension)='" + extension + '\'' +
                 ", typeId=" + typeId +
                 ", checksum='" + checksum + '\'' +
                 ", checksumType=" + checksumType +
