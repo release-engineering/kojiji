@@ -233,6 +233,7 @@ public class KojiClient
         setup();
     }
 
+    @Override
     public synchronized void close()
     {
         if ( xmlrpcClient != null )
@@ -761,16 +762,9 @@ public class KojiClient
 
             List<KojiBuildArchiveCollection> builds = new ArrayList<>();
             buildsResponse.getBuilds().forEach( ( build ) -> {
-                ListArchivesResponse archivesResponse = doXmlRpcAndWarn( () -> xmlrpcClient.call(
-                        new ListArchivesRequest( new KojiArchiveQuery().withBuildId( build.getId() ) ),
-                        ListArchivesResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER ),
-                                                                         "Failed to retrieve archives for build: '%s'",
-                                                                         build.getNvr() );
-
-                if ( archivesResponse != null )
+                KojiBuildArchiveCollection collection = listArchivesForBuild( build, session );
+                if ( collection != null )
                 {
-                    List<KojiArchiveInfo> archives = archivesResponse.getArchives();
-                    KojiBuildArchiveCollection collection = new KojiBuildArchiveCollection( build, archives );
                     builds.add( collection );
                 }
             } );
@@ -807,7 +801,7 @@ public class KojiClient
     public KojiBuildArchiveCollection listArchivesForBuild( GetBuildRequest request, KojiSessionInfo session )
             throws KojiClientException
     {
-        return doXmlRpcAndThrow( () -> {
+        KojiBuildInfo build = doXmlRpcAndThrow( () -> {
             GetBuildResponse buildResponse =
                     xmlrpcClient.call( request, GetBuildResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
@@ -817,23 +811,27 @@ public class KojiClient
                 throw new KojiClientException( "No such build for request: %s", request );
             }
 
-            KojiBuildInfo build = buildResponse.getBuildInfo();
+            return buildResponse.getBuildInfo();
+        }, "Failed to retrieve build for: %s", request );
 
-            ListArchivesResponse archivesResponse = doXmlRpcAndWarn( () -> xmlrpcClient.call(
-                    new ListArchivesRequest( new KojiArchiveQuery().withBuildId( build.getId() ) ),
-                    ListArchivesResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER ),
-                                                                     "Failed to retrieve archives for build: '%s'",
-                                                                     build.getNvr() );
+        return listArchivesForBuild( build, session );
+    }
 
-            if ( archivesResponse != null )
-            {
-                List<KojiArchiveInfo> archives = archivesResponse.getArchives();
-                return new KojiBuildArchiveCollection( build, archives );
-            }
+    public KojiBuildArchiveCollection listArchivesForBuild( final KojiBuildInfo build, final KojiSessionInfo session )
+    {
+        ListArchivesResponse archivesResponse = doXmlRpcAndWarn( () -> xmlrpcClient.call(
+                new ListArchivesRequest( new KojiArchiveQuery().withBuildId( build.getId() ) ),
+                ListArchivesResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER ),
+                                                                 "Failed to retrieve archives for build: '%s'",
+                                                                 build.getNvr() );
 
-            return null;
+        if ( archivesResponse != null )
+        {
+            List<KojiArchiveInfo> archives = archivesResponse.getArchives();
+            return new KojiBuildArchiveCollection( build, archives );
+        }
 
-        }, "Failed to retrieve list of archives for: %s", request );
+        return null;
     }
 
     public List<KojiBuildInfo> listBuildsContaining( ProjectVersionRef gav, KojiSessionInfo session )
