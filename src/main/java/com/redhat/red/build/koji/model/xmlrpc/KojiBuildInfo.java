@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.redhat.red.build.koji.model.util.KojiBuildStateValueBinder;
 import com.redhat.red.build.koji.model.util.TimestampValueBinder;
 import org.apache.commons.lang.StringUtils;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
@@ -68,8 +69,9 @@ public class KojiBuildInfo
     @DataKey( "owner_name" )
     private String ownerName;
 
+    @Converter( KojiBuildStateValueBinder.class )
     @DataKey( "state" )
-    private Integer buildState;
+    private KojiBuildState buildState;
 
     @DataKey( "creation_event_id" )
     private Integer creationEventId;
@@ -217,12 +219,12 @@ public class KojiBuildInfo
         this.ownerName = ownerName;
     }
 
-    public Integer getBuildState()
+    public KojiBuildState getBuildState()
     {
         return buildState;
     }
 
-    public void setBuildState( Integer buildState )
+    public void setBuildState( KojiBuildState buildState )
     {
         this.buildState = buildState;
     }
@@ -300,6 +302,7 @@ public class KojiBuildInfo
         return getId();
     }
 
+    @Override
     public String toString()
     {
         return String.format( "KojiBuildInfo[%s-%s-%s]", getName(), getVersion().replace( '-', '_' ), getRelease() );
