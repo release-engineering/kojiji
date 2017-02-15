@@ -169,7 +169,7 @@ public class KojiXmlRpcBindery
             Logger logger = LoggerFactory.getLogger( getClass() );
             try
             {
-                logger.info( "Rendering message from event tree:\n\n{}\n\n", estream.renderEventTree() );
+                logger.trace( "Rendering message from event tree:\n\n{}\n\n", estream.renderEventTree() );
             }
             catch ( Throwable t )
             {
