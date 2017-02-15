@@ -26,6 +26,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveType;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildArchiveCollection;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiBuildState;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
@@ -747,13 +748,14 @@ public class KojiClient
         }, "Failed to retrieve list of archives for: %s", ga );
     }
 
-    public List<KojiBuildArchiveCollection> listArchivesForBuilds( ProjectRef ga, KojiSessionInfo session )
+    public List<KojiBuildArchiveCollection> listArchivesForBuilds( ProjectRef ga, KojiBuildState state,
+                                                                   KojiSessionInfo session )
             throws KojiClientException
     {
         return doXmlRpcAndThrow( () -> {
             BuildListResponse buildsResponse =
-                    xmlrpcClient.call( new ListBuildsRequest( new KojiBuildQuery( ga ) ), BuildListResponse.class,
-                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+                    xmlrpcClient.call( new ListBuildsRequest( new KojiBuildQuery( ga ).withState( state ) ),
+                                       BuildListResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             if ( buildsResponse == null )
             {

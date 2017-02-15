@@ -154,7 +154,14 @@ public class KojiBuildQuery
 
     public void setState( KojiBuildState state )
     {
-        this.state = state;
+        if ( state == null || state.getValue() == null )
+        {
+            this.state = null;
+        }
+        else
+        {
+            this.state = state;
+        }
     }
 
     public Integer getVolumeId()
@@ -251,7 +258,7 @@ public class KojiBuildQuery
 
     public KojiBuildQuery withState( KojiBuildState state )
     {
-        this.state = state;
+        setState( state );
         return this;
     }
 
