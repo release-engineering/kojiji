@@ -16,6 +16,7 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiBuildState;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.binding.anno.DataIndex;
@@ -37,14 +38,14 @@ public class ListBuildsRequest
         this.query = query;
     }
 
-    public ListBuildsRequest( ProjectVersionRef gav )
+    public ListBuildsRequest( ProjectVersionRef gav, KojiBuildState state )
     {
-        this.query = new KojiBuildQuery( gav );
+        this.query = new KojiBuildQuery( gav ).withState( state );
     }
 
-    public ListBuildsRequest( KojiMavenRef gav )
+    public ListBuildsRequest( KojiMavenRef gav, KojiBuildState state )
     {
-        this.query = new KojiBuildQuery( gav );
+        this.query = new KojiBuildQuery( gav ).withState( state );
     }
 
     public KojiBuildQuery getQuery()

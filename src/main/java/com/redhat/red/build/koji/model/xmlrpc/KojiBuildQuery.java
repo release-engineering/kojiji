@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.redhat.red.build.koji.model.util.KojiBuildStateValueBinder;
 import com.redhat.red.build.koji.model.util.TimestampValueBinder;
 import org.commonjava.maven.atlas.ident.ref.ProjectRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
@@ -49,8 +50,9 @@ public class KojiBuildQuery
     @DataKey( value = "prefix" )
     private String prefix;
 
+    @Converter( KojiBuildStateValueBinder.class )
     @DataKey( value = "state" )
-    private Integer state;
+    private KojiBuildState state;
 
     @DataKey( value = "volumeID" )
     private Integer volumeId;
@@ -145,14 +147,21 @@ public class KojiBuildQuery
         this.prefix = prefix;
     }
 
-    public Integer getState()
+    public KojiBuildState getState()
     {
         return state;
     }
 
-    public void setState( Integer state )
+    public void setState( KojiBuildState state )
     {
-        this.state = state;
+        if ( state == null || state.getValue() == null )
+        {
+            this.state = null;
+        }
+        else
+        {
+            this.state = state;
+        }
     }
 
     public Integer getVolumeId()
@@ -247,9 +256,9 @@ public class KojiBuildQuery
         return this;
     }
 
-    public KojiBuildQuery withState( Integer state )
+    public KojiBuildQuery withState( KojiBuildState state )
     {
-        this.state = state;
+        setState( state );
         return this;
     }
 

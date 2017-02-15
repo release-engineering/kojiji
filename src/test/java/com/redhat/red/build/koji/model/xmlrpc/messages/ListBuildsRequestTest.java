@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import com.redhat.red.build.koji.model.xmlrpc.KojiBuildState;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
@@ -42,7 +43,8 @@ public class ListBuildsRequestTest
             throws Exception
     {
         EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new ListBuildsRequest( new SimpleProjectVersionRef( "commons-io", "commons-io", "2.4.0.redhat-1" ) ) );
+        bindery.render( eventParser, new ListBuildsRequest( new SimpleProjectVersionRef( "commons-io", "commons-io", "2.4.0.redhat-1" ),
+                                                            KojiBuildState.ALL ) );
 
         List<Event<?>> objectEvents = eventParser.getEvents();
         eventParser.clearEvents();
@@ -58,7 +60,7 @@ public class ListBuildsRequestTest
     {
         EventStreamParserImpl eventParser = new EventStreamParserImpl();
         KojiMavenRef gav = new KojiMavenRef( "commons-io", "commons-io", "2.4.0.redhat-1" );
-        bindery.render( eventParser, new ListBuildsRequest( gav ) );
+        bindery.render( eventParser, new ListBuildsRequest( gav, KojiBuildState.ALL ) );
 
         List<Event<?>> objectEvents = eventParser.getEvents();
         EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
@@ -74,7 +76,7 @@ public class ListBuildsRequestTest
             throws Exception
     {
         ProjectVersionRef gav = new SimpleProjectVersionRef( "commons-io", "commons-io", "2.4.0.redhat-1" );
-        String xml = bindery.renderString( new ListBuildsRequest( gav ) );
+        String xml = bindery.renderString( new ListBuildsRequest( gav, KojiBuildState.ALL ) );
         System.out.println( xml );
     }
 }
