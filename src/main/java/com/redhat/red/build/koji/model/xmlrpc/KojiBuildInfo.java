@@ -34,7 +34,7 @@ import static com.redhat.red.build.koji.model.util.DateUtils.toUTC;
 @StructPart
 public class KojiBuildInfo
 {
-    @DataKey( "id" )
+    @DataKey( "build_id" )
     private int id;
 
     @DataKey( "package_id" )
