@@ -25,6 +25,7 @@ import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.StructPart;
 
 import java.util.Date;
+import java.util.Map;
 
 import static com.redhat.red.build.koji.model.util.DateUtils.toUTC;
 
@@ -84,6 +85,9 @@ public class KojiBuildInfo
 
     @DataKey( "maven_version" )
     private String mavenVersion;
+
+    @DataKey( "extra" )
+    private Map<String, Object> extra;
 
     /*
       TODO: Implement the following fields, once we care about them:
@@ -306,5 +310,13 @@ public class KojiBuildInfo
     public String toString()
     {
         return String.format( "KojiBuildInfo[%s-%s-%s]", getName(), getVersion().replace( '-', '_' ), getRelease() );
+    }
+
+    public Map<String, Object> getExtra() {
+        return extra;
+    }
+
+    public void setExtra(Map<String, Object> extra) {
+        this.extra = extra;
     }
 }
