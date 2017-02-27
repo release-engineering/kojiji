@@ -1115,7 +1115,12 @@ public class KojiClient
     private KojiBuildInfo withGAV( KojiBuildInfo buildInfo, KojiSessionInfo session )
             throws KojiClientException
     {
-        if (true) return buildInfo;
+        if ( buildInfo.getMavenArtifactId() != null && buildInfo.getMavenGroupId() != null
+                && buildInfo.getMavenVersion() != null )
+        {
+            return buildInfo;
+        }
+        
         if ( buildInfo != null && buildInfo.getGAV() == null ) {
             KojiMavenBuildInfo mavenBuildInfo = getMavenBuildInfo(buildInfo.getId(), session);
             if ( mavenBuildInfo != null ) {
