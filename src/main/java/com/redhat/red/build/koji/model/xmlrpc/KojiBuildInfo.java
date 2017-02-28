@@ -312,10 +312,20 @@ public class KojiBuildInfo
         return String.format( "KojiBuildInfo[%s-%s-%s]", getName(), getVersion().replace( '-', '_' ), getRelease() );
     }
 
+    /**
+     * Returns extra metadata of the build, mapped as a XML-RPC struct.
+     * @return Map of XML-RPC types of extra data.
+     * @see <a href="https://ws.apache.org/xmlrpc/types.html">https://ws.apache.org/xmlrpc/types.html</a>
+     */
     public Map<String, Object> getExtra() {
         return extra;
     }
 
+    /**
+     * Sets the extra metadata for the build.
+     * @param extra The extra metadata, mapped to XML-RPC types.
+     * @see #getExtra()
+     */
     public void setExtra(Map<String, Object> extra) {
         this.extra = extra;
     }
