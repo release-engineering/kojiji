@@ -85,8 +85,10 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.UntagBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UploadResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -1249,6 +1251,7 @@ public class KojiClient
             throws KojiClientException
     {
         CloseableHttpClient client = null;
+        CloseableHttpResponse response = null;
         try
         {
             client = httpFactory.createClient( config.getKojiSiteConfig() );
@@ -1275,7 +1278,7 @@ public class KojiClient
             HttpPost request = new HttpPost( url );
             request.setEntity( new InputStreamEntity( stream, size, ContentType.APPLICATION_OCTET_STREAM ) );
 
-            CloseableHttpResponse response = client.execute( request );
+            response = client.execute( request );
 
             if ( response.getStatusLine().getStatusCode() == 200 )
             {
@@ -1295,6 +1298,8 @@ public class KojiClient
         finally
         {
             closeQuietly( client );
+            closeQuietly( response );
+
         }
     }
 
