@@ -30,6 +30,10 @@ import static org.mockito.Mockito.never;
 public class HttpClientUtilsTest
 {
 
+    /**
+     * The test mocks available CloseableHttpQuietlyClient, and verfiy InputStream / CloseableHttpResponse close()
+     * methods will never be met when closeQuietly( client ) called.
+     */
     @Test
     public void testCloseQuietlyClient() throws Exception
     {
@@ -49,6 +53,10 @@ public class HttpClientUtilsTest
         Mockito.verify( response, never() ).close();
     }
 
+    /**
+     * The test mocks available CloseableHttpResponse, and verfiy InputStream close() method will never be met when
+     * CloseableHttpResponse close() method called.
+     */
     @Test
     public void testResponseClose() throws Exception
     {
@@ -65,6 +73,10 @@ public class HttpClientUtilsTest
         Mockito.verify( response ).close();
     }
 
+    /**
+     * The test mocks available CloseableHttpResponse, and verfiy InputStream / CloseableHttpResponse close()
+     * methods will both be met when closeQuietly( response ) called.
+     */
     @Test
     public void testCloseQuietlyResponse() throws Exception
     {

@@ -1297,8 +1297,8 @@ public class KojiClient
         }
         finally
         {
-            closeQuietly( client );
             closeQuietly( response );
+            closeQuietly( client );
 
         }
     }
