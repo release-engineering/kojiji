@@ -26,7 +26,7 @@
   
   <groupId>com.redhat.red.build</groupId>
   <artifactId>kojiji</artifactId>
-  <version>1.4</version>
+  <version>1.4.1-SNAPSHOT</version>
 
   <name>Kojiji</name>
   <description>Koji Java Interface</description>

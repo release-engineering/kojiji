@@ -600,7 +600,7 @@ public class KojiClient
         return doXmlRpcAndThrow( () -> {
             try
             {
-                String dirname = generateUploadDirname( session );
+                String dirname = generateUploadDirname( session, importInfo );
 
                 Map<String, KojiClientException> uploadErrors =
                         uploadForImport( null, importedFileSuppliers, dirname, session );
@@ -1136,13 +1136,13 @@ public class KojiClient
         }, "Failed to retrieve maven build info for: %s", buildId );
     }
 
-    protected String generateUploadDirname( KojiSessionInfo session )
+    protected String generateUploadDirname( KojiSessionInfo session, KojiImport importInfo )
             throws KojiClientException
     {
         setLoggedInUser( session );
 
-        return String.format( "kojiji-upload/%s-%s/", new SimpleDateFormat( "yyyymmdd-hhMM" ).format( new Date() ),
-                              session.getUserInfo().getUserName() );
+        return String.format( "kojiji-upload/%s-%s-%s-%s/", new SimpleDateFormat( "yyyyMMdd-HHmmssSSS" ).format( new Date() ),
+                              importInfo.getBuildNVR().getName(), importInfo.getBuildNVR().getVersion(), session.getUserInfo().getUserName() );
     }
 
     protected Map<String, KojiClientException> uploadForImport( KojiImport buildInfo,
