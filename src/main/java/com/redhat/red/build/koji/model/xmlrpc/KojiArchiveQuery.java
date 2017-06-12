@@ -244,4 +244,20 @@ public class KojiArchiveQuery
 
         return this;
     }
+
+    @Override
+    public String toString()
+    {
+        return "KojiArchiveQuery{" +
+                "type=" + type +
+                ", mavenRef='" + mavenRef + '\'' +
+                ", filename='" + filename + '\'' +
+                ", buildId=" + buildId +
+                ", buildrootId=" + buildrootId +
+                ", componentBuildrootId=" + componentBuildrootId +
+                ", hostId=" + hostId +
+                ", size='" + size + '\'' +
+                ", checksum=" + checksum +
+                '}';
+    }
 }
