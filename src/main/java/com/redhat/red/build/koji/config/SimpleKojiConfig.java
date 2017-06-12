@@ -69,16 +69,25 @@ public class SimpleKojiConfig
         if ( kojiSiteConfig == null )
         {
             SiteConfigBuilder builder = new SiteConfigBuilder( getKojiSiteId(), getKojiURL() );
-            File keyCert = new File( getClientKeyCertificateFile() );
-            if ( keyCert.exists() )
+
+            if ( getClientKeyCertificateFile() != null )
             {
-                builder.withKeyCertPem( FileUtils.readFileToString( keyCert ) );
+                File keyCert = new File( getClientKeyCertificateFile() );
+
+                if ( keyCert.exists() )
+                {
+                    builder.withKeyCertPem( FileUtils.readFileToString( keyCert ) );
+                }
             }
 
-            File serverCert = new File( getServerCertificateFile() );
-            if ( serverCert.exists() )
+            if ( getServerCertificateFile() != null )
             {
-                builder.withServerCertPem( FileUtils.readFileToString( serverCert ) );
+                File serverCert = new File( getServerCertificateFile() );
+
+                if ( serverCert.exists() )
+                {
+                    builder.withServerCertPem( FileUtils.readFileToString( serverCert ) );
+                }
             }
 
             if ( getTrustSelfSigned() )
