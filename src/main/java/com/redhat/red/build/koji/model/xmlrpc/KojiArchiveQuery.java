@@ -31,7 +31,7 @@ public class KojiArchiveQuery
         extends KojiQuery
 {
     @DataKey( value = "type" )
-    private String type = "maven";
+    private String type;
 
     @DataKey( value = "typeInfo" )
     private KojiMavenRef mavenRef;
@@ -64,6 +64,7 @@ public class KojiArchiveQuery
     public KojiArchiveQuery( ProjectRef ref )
     {
         this.mavenRef = new KojiMavenRef( ref );
+        this.type = "maven";
         ArtifactRef ar = null;
         if ( ref instanceof ArtifactRef )
         {
@@ -107,6 +108,7 @@ public class KojiArchiveQuery
     public void setMavenRef( KojiMavenRef mavenRef )
     {
         this.mavenRef = mavenRef;
+        this.type = "maven";
     }
 
     public String getFilename()
@@ -194,12 +196,14 @@ public class KojiArchiveQuery
     public KojiArchiveQuery withMavenRef( ProjectRef ref )
     {
         this.mavenRef = new KojiMavenRef( ref );
+        this.type = "maven";
         return this;
     }
 
     public KojiArchiveQuery withMavenRef( KojiMavenRef ref )
     {
         this.mavenRef = ref;
+        this.type = "maven";
         return this;
     }
 
