@@ -51,6 +51,8 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.CGInlinedImportRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CheckPermissionRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ConfirmationResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypeRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypeResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypesRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByIdOrNameRequest;
@@ -85,10 +87,8 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.UntagBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UploadResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -588,13 +588,25 @@ public class KojiClient
                 return Collections.emptyMap();
             }
 
-            Map<String, KojiArchiveType> types = new HashMap();
+            Map<String, KojiArchiveType> types = new HashMap<>();
             response.getArchiveTypes()
                     .forEach( ( at ) -> at.getExtensions().forEach( ( ext ) -> types.put( ext, at ) ) );
 
 
             return types;
         }, "Failed to retrieve list of acceptable archive types" );
+    }
+
+    public KojiArchiveType getArchiveType( GetArchiveTypeRequest request, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetArchiveTypeResponse response =
+                    xmlrpcClient.call( request, GetArchiveTypeResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getArchiveType();
+        }, "Failed to retrieve archive type for request: %s", request );
     }
 
     public KojiImportResult importBuild( KojiImport importInfo, Iterable<Supplier<ImportFile>> importedFileSuppliers,

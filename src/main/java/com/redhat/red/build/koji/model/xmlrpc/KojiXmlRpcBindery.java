@@ -26,6 +26,8 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.CGUploadedImportRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CheckPermissionRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ConfirmationResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypeRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypeResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypesRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByIdOrNameRequest;
@@ -106,6 +108,8 @@ public class KojiXmlRpcBindery
                 CheckPermissionRequest.class,
                 ConfirmationResponse.class,
                 CreateTagRequest.class,
+                GetArchiveTypeRequest.class,
+                GetArchiveTypeResponse.class,
                 GetArchiveTypesRequest.class,
                 GetArchiveTypesResponse.class,
                 GetBuildByIdOrNameRequest.class,
