@@ -28,14 +28,29 @@ public class GetTaskRequest
     @DataIndex( 0 )
     private int taskId;
 
+    @DataIndex( 1 )
+    private boolean request;
+
     @IndexRefs( 0 )
     public GetTaskRequest( int taskId )
     {
         this.taskId = taskId;
     }
 
+    @IndexRefs( {0, 1} )
+    public GetTaskRequest( int taskId, boolean request )
+    {
+        this.taskId = taskId;
+        this.request = request;
+    }
+
     public int getTaskId()
     {
         return taskId;
+    }
+
+    public boolean getRequest()
+    {
+        return request;
     }
 }
