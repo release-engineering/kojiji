@@ -719,6 +719,19 @@ public class KojiClient
         }, "Failed to retrieve list of tags for build: %s", buildId );
     }
 
+    public List<KojiArchiveInfo> listArchives( KojiArchiveQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            ListArchivesResponse response = xmlrpcClient.call( new ListArchivesRequest( query ),
+                                                               ListArchivesResponse.class, sessionUrlBuilder( session ),
+                                                               STANDARD_REQUEST_MODIFIER );
+
+            List<KojiArchiveInfo> archives = response.getArchives();
+            return archives == null ? Collections.emptyList() : archives;
+        }, "Failed to retrieve list of artifacts matching archive query: %s", query );
+    }
+
     public List<KojiArchiveInfo> listMavenArchivesMatching( String groupId, KojiSessionInfo session )
             throws KojiClientException
     {
@@ -1143,7 +1156,7 @@ public class KojiClient
                 buildInfo.setMavenVersion(mavenBuildInfo.getVersion());
             }
         }
-        
+
         return buildInfo;
     }
 
