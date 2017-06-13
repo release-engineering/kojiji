@@ -33,7 +33,7 @@ public class KojiBuildQuery
         extends KojiQuery
 {
     @DataKey( value = "type" )
-    private String type = "maven";
+    private String type;
 
     @DataKey( value = "typeInfo" )
     private KojiMavenRef mavenRef;
@@ -80,11 +80,13 @@ public class KojiBuildQuery
     public KojiBuildQuery( ProjectRef ga )
     {
         this.mavenRef = new KojiMavenRef( ga );
+        this.type = "maven";
     }
 
     public KojiBuildQuery( KojiMavenRef gav )
     {
         this.mavenRef = gav;
+        this.type = "maven";
     }
 
     public String getType()
@@ -105,6 +107,7 @@ public class KojiBuildQuery
     public void setMavenRef( KojiMavenRef mavenRef )
     {
         this.mavenRef = mavenRef;
+        this.type = "maven";
     }
 
     public Integer getPackageId()
@@ -223,12 +226,14 @@ public class KojiBuildQuery
     public KojiBuildQuery withMavenRef( ProjectVersionRef gav )
     {
         this.mavenRef = new KojiMavenRef( gav );
+        this.type = "maven";
         return this;
     }
 
     public KojiBuildQuery withMavenRef( KojiMavenRef mavenRef )
     {
         this.mavenRef = mavenRef;
+        this.type = "maven";
         return this;
     }
 
