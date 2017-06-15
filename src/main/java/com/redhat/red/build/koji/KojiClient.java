@@ -28,6 +28,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildState;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildType;
+import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import com.redhat.red.build.koji.model.xmlrpc.KojiImageBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildInfo;
@@ -673,6 +674,19 @@ public class KojiClient
             List<KojiBuildType> types = response.getBuildTypes();
             return types == null ? Collections.emptyList() : types;
         }, "Failed to retrieve list of available build types" );
+    }
+
+    public List<KojiBuildType> listBuildTypes( KojiBuildTypeQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            ListBuildTypesResponse response =
+                    xmlrpcClient.call( new ListBuildTypesRequest( query ), ListBuildTypesResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            List<KojiBuildType> types = response.getBuildTypes();
+            return types == null ? Collections.emptyList() : types;
+        }, "Failed to retrieve list of available build types for build type query: %s", query );
     }
 
     public List<KojiBuildInfo> listBuilds( KojiBuildQuery query, KojiSessionInfo session )
