@@ -15,6 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.util.KojiBuildStateValueBinder;
 import com.redhat.red.build.koji.model.util.TimestampValueBinder;
 import org.apache.commons.lang.StringUtils;
@@ -72,6 +74,7 @@ public class KojiBuildInfo
 
     @Converter( KojiBuildStateValueBinder.class )
     @DataKey( "state" )
+    @JsonProperty("state")
     private KojiBuildState buildState;
 
     @DataKey( "creation_event_id" )
@@ -85,6 +88,9 @@ public class KojiBuildInfo
 
     @DataKey( "maven_version" )
     private String mavenVersion;
+
+    @DataKey( "platform" )
+    private String platform;
 
     @DataKey( "extra" )
     private Map<String, Object> extra;
@@ -273,6 +279,7 @@ public class KojiBuildInfo
         this.mavenVersion = mavenVersion;
     }
 
+    @JsonIgnore
     public ProjectVersionRef getGAV()
     {
         if ( StringUtils.isEmpty(mavenGroupId) || StringUtils.isEmpty(mavenArtifactId) )
@@ -280,6 +287,16 @@ public class KojiBuildInfo
             return null;
         }
         return new SimpleProjectVersionRef( getMavenGroupId(), getMavenArtifactId(), getMavenVersion() );
+    }
+
+    public String getPlatform()
+    {
+        return platform;
+    }
+
+    public void setPlatform( String platform )
+    {
+        this.platform = platform;
     }
 
     @Override

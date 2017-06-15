@@ -15,13 +15,18 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.redhat.red.build.koji.model.util.StringListValueBinder;
+
 import org.commonjava.maven.atlas.ident.ref.ArtifactRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleArtifactRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
+import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.StructPart;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +49,21 @@ public class KojiArchiveInfo
     private String version;
 
     private transient String classifier;
+
+    @DataKey( "relpath" )
+    @JsonProperty( "relpath")
+    private String relPath;
+
+    @DataKey( "platforms" )
+    @Converter( StringListValueBinder.class )
+    private List<String> platforms;
+
+    @DataKey( "flags" )
+    @Converter( StringListValueBinder.class )
+    private List<String> flags;
+
+    @DataKey ( "arch" )
+    private String arch;
 
     @DataKey( "type_extensions" )
     private String typeExtensions;
@@ -146,6 +166,46 @@ public class KojiArchiveInfo
     public void setClassifier( String classifier )
     {
         this.classifier = classifier;
+    }
+
+    public String getRelPath()
+    {
+        return relPath;
+    }
+
+    public void setRelPath( String relPath )
+    {
+        this.relPath = relPath;
+    }
+
+    public List<String> getPlatforms()
+    {
+        return platforms;
+    }
+
+    public void setPlatforms( List<String> platforms )
+    {
+        this.platforms = platforms;
+    }
+
+    public List<String> getFlags()
+    {
+        return flags;
+    }
+
+    public void setFlags( List<String> flags )
+    {
+        this.flags = flags;
+    }
+
+    public String getArch()
+    {
+        return arch;
+    }
+
+    public void setArch( String arch )
+    {
+        this.arch = arch;
     }
 
     public String getTypeExtensions()
@@ -277,6 +337,10 @@ public class KojiArchiveInfo
                 ", artifactId='" + artifactId + '\'' +
                 ", version='" + version + '\'' +
                 ", classifier='" + classifier + '\'' +
+                ", relPath='" + relPath + '\'' +
+                ", platforms=" + platforms +
+                ", flags=" + flags +
+                ", arch='" + arch + '\'' +
                 ", typeExtensions='" + typeExtensions + '\'' +
                 ", filename='" + filename + '\'' +
                 ", buildId=" + buildId +

@@ -27,7 +27,9 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiBuildArchiveCollection;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildState;
+import com.redhat.red.build.koji.model.xmlrpc.KojiBuildType;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
+import com.redhat.red.build.koji.model.xmlrpc.KojiImageBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
 import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
@@ -40,6 +42,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUploaderResult;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiWinBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
 import com.redhat.red.build.koji.model.xmlrpc.messages.AckResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.AddPackageToTagRequest;
@@ -59,8 +62,12 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByIdOrNameRequest
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByNVRObjRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetImageBuildRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetImageBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetMavenBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetMavenBuildResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetWinBuildRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetWinBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTagIdRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskResponse;
@@ -68,6 +75,8 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildTypesRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildTypesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.BuildListResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListPackagesRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListPackagesResponse;
@@ -296,7 +305,6 @@ public class KojiClient
     {
         checkConnection();
 
-        Logger logger = LoggerFactory.getLogger( getClass() );
         try
         {
             ApiVersionResponse response =
@@ -652,6 +660,33 @@ public class KojiClient
                 throw e;
             }
         }, "Failed to execute content-generator import" );
+    }
+
+    public List<KojiBuildType> listBuildTypes( KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            ListBuildTypesResponse response =
+                    xmlrpcClient.call( new ListBuildTypesRequest(), ListBuildTypesResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            List<KojiBuildType> types = response.getBuildTypes();
+            return types == null ? Collections.emptyList() : types;
+        }, "Failed to retrieve list of available build types" );
+    }
+
+    public List<KojiBuildInfo> listBuilds( KojiBuildQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            BuildListResponse response =
+                    xmlrpcClient.call( new ListBuildsRequest( query ),
+                                       BuildListResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            List<KojiBuildInfo> builds = response.getBuilds();
+            return builds == null ? Collections.emptyList() : builds;
+        }, "Failed to retrieve list of builds for build query: %s", query );
+
     }
 
     public List<KojiTagInfo> listAllTags( KojiSessionInfo session )
@@ -1171,7 +1206,7 @@ public class KojiClient
         return buildInfo;
     }
 
-    public KojiMavenBuildInfo getMavenBuildInfo(int buildId, KojiSessionInfo session )
+    public KojiMavenBuildInfo getMavenBuildInfo( int buildId, KojiSessionInfo session )
             throws KojiClientException
     {
         return doXmlRpcAndThrow( () -> {
@@ -1181,6 +1216,30 @@ public class KojiClient
 
             return response == null ? null : response.getMavenBuildInfo();
         }, "Failed to retrieve maven build info for: %s", buildId );
+    }
+
+    public KojiWinBuildInfo getWinBuildInfo( int buildId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetWinBuildResponse response =
+                    xmlrpcClient.call( new GetWinBuildRequest( buildId ), GetWinBuildResponse.class,
+                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getWinBuildInfo();
+        }, "Failed to retrieve win build info for: %s", buildId );
+    }
+
+    public KojiImageBuildInfo getImageBuildInfo( int buildId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetImageBuildResponse response =
+                    xmlrpcClient.call( new GetImageBuildRequest( buildId ), GetImageBuildResponse.class,
+                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getImageBuildInfo();
+        }, "Failed to retrieve image build info for: %s", buildId );
     }
 
     protected String generateUploadDirname( KojiSessionInfo session, KojiImport importInfo )

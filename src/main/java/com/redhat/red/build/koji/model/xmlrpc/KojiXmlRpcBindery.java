@@ -33,16 +33,22 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByIdOrNameRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByNVRObjRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetImageBuildRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetImageBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetMavenBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetMavenBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetPackageIdRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTagIdRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetWinBuildRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetWinBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildTypesRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildTypesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.BuildListResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListPackagesRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListPackagesResponse;
@@ -68,7 +74,6 @@ import org.commonjava.rwx.binding.internal.reflect.ReflectionMapper;
 import org.commonjava.rwx.binding.internal.xbr.XBRCompositionBindery;
 import org.commonjava.rwx.binding.mapping.Mapping;
 import org.commonjava.rwx.error.XmlRpcException;
-import org.commonjava.rwx.estream.model.Event;
 import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.commonjava.rwx.impl.jdom.JDomRenderer;
 import org.jdom.output.Format;
@@ -76,7 +81,6 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -115,16 +119,22 @@ public class KojiXmlRpcBindery
                 GetBuildByIdOrNameRequest.class,
                 GetBuildByNVRObjRequest.class,
                 GetBuildResponse.class,
+                GetImageBuildRequest.class,
+                GetImageBuildResponse.class,
                 GetMavenBuildRequest.class,
                 GetMavenBuildResponse.class,
                 GetPackageIdRequest.class,
                 GetTagIdRequest.class,
                 GetTaskRequest.class,
                 GetTaskResponse.class,
+                GetWinBuildRequest.class,
+                GetWinBuildResponse.class,
                 IdResponse.class,
                 ListArchivesRequest.class,
                 ListArchivesResponse.class,
                 ListBuildsRequest.class,
+                ListBuildTypesRequest.class,
+                ListBuildTypesResponse.class,
                 ListPackagesRequest.class,
                 ListPackagesResponse.class,
                 ListTaggedRequest.class,

@@ -297,4 +297,11 @@ public class KojiBuildQuery
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "KojiBuildQuery{type='" + type + "', mavenRef=" + mavenRef + ", packageId=" + packageId + ", userId="
+                + userId + ", taskId=" + taskId + ", prefix='" + prefix + "', state=" + state + ", volumeId=" + volumeId
+                + ", createdBefore=" + createdBefore + ", createdAfter=" + createdAfter + ", completedBefore="
+                + completedBefore + ", completedAfter=" + completedAfter + "}";
+    }
 }
