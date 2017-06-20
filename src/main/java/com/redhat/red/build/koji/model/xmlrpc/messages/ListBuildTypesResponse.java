@@ -30,6 +30,10 @@ public class ListBuildTypesResponse
     @Contains( KojiBuildType.class )
     private List<KojiBuildType> buildTypes;
 
+    public ListBuildTypesResponse()
+    {
+    }
+
     @IndexRefs( 0 )
     public ListBuildTypesResponse( List<KojiBuildType> buildTypes )
     {

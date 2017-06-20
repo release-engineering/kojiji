@@ -15,9 +15,6 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import java.util.List;
-
-import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.StructPart;
 
