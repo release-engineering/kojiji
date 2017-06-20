@@ -15,58 +15,58 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.binding.anno.DataKey;
+import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.StructPart;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.redhat.red.build.koji.model.util.KojiBuildTypeQueryValueBinder;
 
 @StructPart
+@Converter( KojiBuildTypeQueryValueBinder.class )
 public class KojiBuildTypeQuery
         extends KojiQuery
 {
-    @DataKey( "query" )
-    private Map<String, Object> query;
+    private String name;
+
+    private Integer id;
 
     public KojiBuildTypeQuery()
     {
-        query = new HashMap<>(2);
     }
 
     public String getName()
     {
-        return (String) query.get("name");
+        return name;
     }
 
     public void setName( String name )
     {
-        query.put("name", name);
+        this.name = name;
     }
 
     public KojiBuildTypeQuery withName( String name )
     {
-        query.put("name", name);
+        this.name = name;
         return this;
     }
 
-    public int getId()
+    public Integer getId()
     {
-        return (Integer) query.get("id");
+        return id;
     }
 
     public void setId( int id )
     {
-        query.put("id", id);
+        this.id = id;
     }
 
     public KojiBuildTypeQuery withId( int id )
     {
-        query.put("id", id);
+        this.id = id;
         return this;
     }
 
     @Override
     public String toString() {
-        return "KojiBuildTypeQuery{query='" + query + "}";
+        return "KojiBuildTypeQuery{name='" + name + "', id=" + id + "}";
     }
 }

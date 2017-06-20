@@ -15,7 +15,6 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.KeyRefs;
 import org.commonjava.rwx.binding.anno.StructPart;
@@ -63,7 +62,7 @@ public class KojiBuildType
         {
             return true;
         }
- 
+
         if ( !( o instanceof KojiBuildType ) )
         {
             return false;
