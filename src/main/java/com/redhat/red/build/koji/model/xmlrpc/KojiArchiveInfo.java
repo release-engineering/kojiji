@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.util.StringListValueBinder;
 
@@ -37,17 +38,21 @@ import java.util.regex.Pattern;
 public class KojiArchiveInfo
 {
     @DataKey( "id" )
+    @JsonProperty( "id" )
     private Integer archiveId;
 
     @DataKey( "group_id" )
+    @JsonProperty( "group_id" )
     private String groupId;
 
     @DataKey( "artifact_id" )
+    @JsonProperty( "artifact_id" )
     private String artifactId;
 
     @DataKey( "version" )
     private String version;
 
+    @JsonIgnore
     private transient String classifier;
 
     @DataKey( "relpath" )
@@ -66,33 +71,41 @@ public class KojiArchiveInfo
     private String arch;
 
     @DataKey( "type_extensions" )
+    @JsonProperty( "type_extensions" )
     private String typeExtensions;
 
     @DataKey( "filename" )
     private String filename;
 
     @DataKey( "build_id" )
+    @JsonProperty( "build_id" )
     private Integer buildId;
 
     @DataKey( "type_name" )
+    @JsonProperty( "type_name" )
     private String extension;
 
     @DataKey( "type_id" )
+    @JsonProperty( "type_id" )
     private Integer typeId;
 
     @DataKey( "checksum" )
     private String checksum;
 
     @DataKey( "checksum_type" )
+    @JsonProperty( "checksum_type" )
     private Integer checksumType;
 
     @DataKey( "type_description" )
+    @JsonProperty( "type_description" )
     private String typeDescription;
 
     @DataKey( "metadata_only" )
+    @JsonProperty( "metadata_only" )
     private Boolean metadataOnly;
 
     @DataKey( "buildroot_id" )
+    @JsonProperty( "buildroot_id" )
     private Integer buildrootId;
 
     @DataKey( "size" )
@@ -228,11 +241,13 @@ public class KojiArchiveInfo
         this.buildId = buildId;
     }
 
+    @JsonIgnore
     public String getExtension()
     {
         return extension;
     }
 
+    @JsonIgnore
     public void setExtension( String extension )
     {
         this.extension = extension;
