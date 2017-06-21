@@ -15,13 +15,19 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.redhat.red.build.koji.model.util.StringListValueBinder;
+
 import org.commonjava.maven.atlas.ident.ref.ArtifactRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleArtifactRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
+import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.StructPart;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,47 +38,74 @@ import java.util.regex.Pattern;
 public class KojiArchiveInfo
 {
     @DataKey( "id" )
+    @JsonProperty( "id" )
     private Integer archiveId;
 
     @DataKey( "group_id" )
+    @JsonProperty( "group_id" )
     private String groupId;
 
     @DataKey( "artifact_id" )
+    @JsonProperty( "artifact_id" )
     private String artifactId;
 
     @DataKey( "version" )
     private String version;
 
+    @JsonIgnore
     private transient String classifier;
 
+    @DataKey( "relpath" )
+    @JsonProperty( "relpath")
+    private String relPath;
+
+    @DataKey( "platforms" )
+    @Converter( StringListValueBinder.class )
+    private List<String> platforms;
+
+    @DataKey( "flags" )
+    @Converter( StringListValueBinder.class )
+    private List<String> flags;
+
+    @DataKey ( "arch" )
+    private String arch;
+
     @DataKey( "type_extensions" )
+    @JsonProperty( "type_extensions" )
     private String typeExtensions;
 
     @DataKey( "filename" )
     private String filename;
 
     @DataKey( "build_id" )
+    @JsonProperty( "build_id" )
     private Integer buildId;
 
     @DataKey( "type_name" )
+    @JsonProperty( "type_name" )
     private String extension;
 
     @DataKey( "type_id" )
+    @JsonProperty( "type_id" )
     private Integer typeId;
 
     @DataKey( "checksum" )
     private String checksum;
 
     @DataKey( "checksum_type" )
+    @JsonProperty( "checksum_type" )
     private Integer checksumType;
 
     @DataKey( "type_description" )
+    @JsonProperty( "type_description" )
     private String typeDescription;
 
     @DataKey( "metadata_only" )
+    @JsonProperty( "metadata_only" )
     private Boolean metadataOnly;
 
     @DataKey( "buildroot_id" )
+    @JsonProperty( "buildroot_id" )
     private Integer buildrootId;
 
     @DataKey( "size" )
@@ -148,6 +181,46 @@ public class KojiArchiveInfo
         this.classifier = classifier;
     }
 
+    public String getRelPath()
+    {
+        return relPath;
+    }
+
+    public void setRelPath( String relPath )
+    {
+        this.relPath = relPath;
+    }
+
+    public List<String> getPlatforms()
+    {
+        return platforms;
+    }
+
+    public void setPlatforms( List<String> platforms )
+    {
+        this.platforms = platforms;
+    }
+
+    public List<String> getFlags()
+    {
+        return flags;
+    }
+
+    public void setFlags( List<String> flags )
+    {
+        this.flags = flags;
+    }
+
+    public String getArch()
+    {
+        return arch;
+    }
+
+    public void setArch( String arch )
+    {
+        this.arch = arch;
+    }
+
     public String getTypeExtensions()
     {
         return typeExtensions;
@@ -168,11 +241,13 @@ public class KojiArchiveInfo
         this.buildId = buildId;
     }
 
+    @JsonIgnore
     public String getExtension()
     {
         return extension;
     }
 
+    @JsonIgnore
     public void setExtension( String extension )
     {
         this.extension = extension;
@@ -277,6 +352,10 @@ public class KojiArchiveInfo
                 ", artifactId='" + artifactId + '\'' +
                 ", version='" + version + '\'' +
                 ", classifier='" + classifier + '\'' +
+                ", relPath='" + relPath + '\'' +
+                ", platforms=" + platforms +
+                ", flags=" + flags +
+                ", arch='" + arch + '\'' +
                 ", typeExtensions='" + typeExtensions + '\'' +
                 ", filename='" + filename + '\'' +
                 ", buildId=" + buildId +

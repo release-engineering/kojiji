@@ -15,6 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.util.KojiBuildStateValueBinder;
 import com.redhat.red.build.koji.model.util.TimestampValueBinder;
 import org.apache.commons.lang.StringUtils;
@@ -36,12 +38,15 @@ import static com.redhat.red.build.koji.model.util.DateUtils.toUTC;
 public class KojiBuildInfo
 {
     @DataKey( "build_id" )
+    @JsonProperty( "build_id" )
     private int id;
 
     @DataKey( "package_id" )
+    @JsonProperty( "package_id" )
     private int packageId;
 
     @DataKey( "package_name" )
+    @JsonProperty( "package_name" )
     private String name;
 
     @DataKey( "version" )
@@ -52,39 +57,52 @@ public class KojiBuildInfo
 
     @Converter( TimestampValueBinder.class )
     @DataKey( "completion_time" )
+    @JsonProperty( "completion_time" )
     private Date completionTime;
 
     @Converter( TimestampValueBinder.class )
     @DataKey( "creation_time" )
+    @JsonProperty( "creation_time" )
     private Date creationTime;
 
     @DataKey( "nvr" )
     private String nvr;
 
     @DataKey( "task_id" )
+    @JsonProperty( "task_id" )
     private Integer taskId;
 
     @DataKey( "owner_id" )
+    @JsonProperty( "owner_id" )
     private Integer ownerId;
 
     @DataKey( "owner_name" )
+    @JsonProperty( "owner_name" )
     private String ownerName;
 
     @Converter( KojiBuildStateValueBinder.class )
     @DataKey( "state" )
+    @JsonProperty( "state" )
     private KojiBuildState buildState;
 
     @DataKey( "creation_event_id" )
+    @JsonProperty( "creation_event_id" )
     private Integer creationEventId;
 
     @DataKey( "maven_group_id" )
+    @JsonProperty( "maven_group_id" )
     private String mavenGroupId;
 
     @DataKey( "maven_artifact_id" )
+    @JsonProperty( "maven_artifact_id" )
     private String mavenArtifactId;
 
     @DataKey( "maven_version" )
+    @JsonProperty( "maven_version" )
     private String mavenVersion;
+
+    @DataKey( "platform" )
+    private String platform;
 
     @DataKey( "extra" )
     private Map<String, Object> extra;
@@ -273,6 +291,7 @@ public class KojiBuildInfo
         this.mavenVersion = mavenVersion;
     }
 
+    @JsonIgnore
     public ProjectVersionRef getGAV()
     {
         if ( StringUtils.isEmpty(mavenGroupId) || StringUtils.isEmpty(mavenArtifactId) )
@@ -280,6 +299,16 @@ public class KojiBuildInfo
             return null;
         }
         return new SimpleProjectVersionRef( getMavenGroupId(), getMavenArtifactId(), getMavenVersion() );
+    }
+
+    public String getPlatform()
+    {
+        return platform;
+    }
+
+    public void setPlatform( String platform )
+    {
+        this.platform = platform;
     }
 
     @Override
