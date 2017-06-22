@@ -23,6 +23,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiChecksumType;
 
 public class KojiArchiveInfoTest
         extends AbstractJsonTest
@@ -39,7 +40,7 @@ public class KojiArchiveInfoTest
         info.setTypeName( "txt" );
         info.setTypeId( 20 );
         info.setChecksum( "3b83ef96387f14655fc854ddc3c6bd57" );
-        info.setChecksumType( 0 );
+        info.setChecksumType( KojiChecksumType.md5 );
         info.setTypeDescription( "Text file" );
         info.setMetadataOnly( false );
         info.setSize( 11358 );

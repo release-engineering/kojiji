@@ -17,6 +17,7 @@ package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.redhat.red.build.koji.model.util.KojiChecksumTypeValueBinder;
 import com.redhat.red.build.koji.model.util.StringListValueBinder;
 
 import org.commonjava.maven.atlas.ident.ref.ArtifactRef;
@@ -92,9 +93,10 @@ public class KojiArchiveInfo
     @DataKey( "checksum" )
     private String checksum;
 
+    @Converter( KojiChecksumTypeValueBinder.class )
     @DataKey( "checksum_type" )
     @JsonProperty( "checksum_type" )
-    private Integer checksumType;
+    private KojiChecksumType checksumType;
 
     @DataKey( "type_description" )
     @JsonProperty( "type_description" )
@@ -313,12 +315,12 @@ public class KojiArchiveInfo
         this.metadataOnly = metadataOnly;
     }
 
-    public Integer getChecksumType()
+    public KojiChecksumType getChecksumType()
     {
         return checksumType;
     }
 
-    public void setChecksumType( Integer checksumType )
+    public void setChecksumType( KojiChecksumType checksumType )
     {
         this.checksumType = checksumType;
     }
