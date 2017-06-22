@@ -33,6 +33,8 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByIdOrNameRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByNVRObjRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildTypeRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildTypeResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetImageBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetImageBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetMavenBuildRequest;
@@ -119,6 +121,8 @@ public class KojiXmlRpcBindery
                 GetBuildByIdOrNameRequest.class,
                 GetBuildByNVRObjRequest.class,
                 GetBuildResponse.class,
+                GetBuildTypeRequest.class,
+                GetBuildTypeResponse.class,
                 GetImageBuildRequest.class,
                 GetImageBuildResponse.class,
                 GetMavenBuildRequest.class,

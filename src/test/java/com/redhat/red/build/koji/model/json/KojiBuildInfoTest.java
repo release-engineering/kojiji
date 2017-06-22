@@ -43,6 +43,6 @@ public class KojiBuildInfoTest
 
         KojiBuildInfo out = mapper.readValue( json, KojiBuildInfo.class );
 
-        assertThat( out.toString(), equalTo( info.toString() ) );
+        assertThat( json, equalTo( mapper.writeValueAsString( out ) ) );
     }
 }

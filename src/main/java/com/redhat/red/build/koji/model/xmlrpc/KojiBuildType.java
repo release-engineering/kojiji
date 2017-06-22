@@ -76,7 +76,6 @@ public class KojiBuildType
         }
 
         return getName() != null ? getName().equals( that.getName() ) : that.getName() == null;
-
     }
 
     @Override

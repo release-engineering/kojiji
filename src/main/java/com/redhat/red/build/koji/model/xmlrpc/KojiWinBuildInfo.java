@@ -80,4 +80,11 @@ public class KojiWinBuildInfo
     {
         return getBuildId();
     }
+
+    @Override
+    public String toString() {
+        return "KojiWinBuildInfo{buildId=" + buildId + ", platform=" + platform + "}";
+    }
+
+
 }
