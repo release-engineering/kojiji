@@ -16,6 +16,7 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiChecksumType;
 import org.commonjava.rwx.estream.model.Event;
 import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
 import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
@@ -45,7 +46,7 @@ public class ListArchivesResponseTest
     private static final String CHECKSUM="f18c45047648e5d6d3ad71319488604e";
     private static final String TYPE_DESC="Maven Project Object Management file";
     private static final String TYPE_EXT="pom";
-    private static final int CHECKSUM_TYPE=0;
+    private static final KojiChecksumType CHECKSUM_TYPE=KojiChecksumType.md5;
     private static final int ID=12345678;
     private static final int SIZE=1177;
 
