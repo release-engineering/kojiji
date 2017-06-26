@@ -326,7 +326,6 @@ public class KojiBuildInfo
         KojiBuildInfo that = (KojiBuildInfo) o;
 
         return getId() == that.getId();
-
     }
 
     @Override

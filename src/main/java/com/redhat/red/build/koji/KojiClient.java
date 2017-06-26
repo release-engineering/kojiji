@@ -28,6 +28,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildState;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildType;
+import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import com.redhat.red.build.koji.model.xmlrpc.KojiImageBuildInfo;
@@ -64,6 +65,8 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByNVRObjRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetImageBuildRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildTypeRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildTypeResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetImageBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetMavenBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetMavenBuildResponse;
@@ -1169,7 +1172,7 @@ public class KojiClient
             return response == null ? null : response.getBuildInfo();
         }, "Failed to retrieve build info for: %s", nvr );
 
-        return withGAV(buildInfo, session);
+        return withBuildTypeInfo( buildInfo, session );
     }
 
     public KojiBuildInfo getBuildInfo( String nvr, KojiSessionInfo session )
@@ -1182,7 +1185,7 @@ public class KojiClient
             return response == null ? null : response.getBuildInfo();
         }, "Failed to retrieve build info for: %s", nvr );
 
-        return withGAV(buildInfo, session);
+        return withBuildTypeInfo( buildInfo, session );
     }
 
     public KojiBuildInfo getBuildInfo( int buildId, KojiSessionInfo session )
@@ -1196,24 +1199,33 @@ public class KojiClient
             return response == null ? null : response.getBuildInfo();
         }, "Failed to retrieve build info for: %s", buildId );
 
-        return withGAV(buildInfo, session);
+        return withBuildTypeInfo( buildInfo, session );
     }
 
-    private KojiBuildInfo withGAV( KojiBuildInfo buildInfo, KojiSessionInfo session )
+    public KojiBuildTypeInfo getBuildTypeInfo(int buildId, KojiSessionInfo session)
             throws KojiClientException
     {
-        if ( buildInfo == null || ( buildInfo.getMavenArtifactId() != null && buildInfo.getMavenGroupId() != null
-                && buildInfo.getMavenVersion() != null ) )
-        {
-            return buildInfo;
-        }
+        KojiBuildTypeInfo buildTypeInfo = doXmlRpcAndThrow( () -> {
+            GetBuildTypeResponse response =
+                    xmlrpcClient.call( new GetBuildTypeRequest( buildId ), GetBuildTypeResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-        if ( buildInfo.getGAV() == null ) {
-            KojiMavenBuildInfo mavenBuildInfo = getMavenBuildInfo(buildInfo.getId(), session);
-            if ( mavenBuildInfo != null ) {
-                buildInfo.setMavenGroupId(mavenBuildInfo.getGroupId());
-                buildInfo.setMavenArtifactId(mavenBuildInfo.getArtifactId());
-                buildInfo.setMavenVersion(mavenBuildInfo.getVersion());
+            return response == null ? null : response.getBuildTypeInfo();
+        }, "Failed to retrieve build info for: %s", buildId );
+
+        return buildTypeInfo;
+    }
+
+    private KojiBuildInfo withBuildTypeInfo( KojiBuildInfo buildInfo, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        if ( buildInfo != null )
+        {
+            KojiBuildTypeInfo buildTypeInfo = getBuildTypeInfo(buildInfo.getId(), session);
+
+            if ( buildTypeInfo != null )
+            {
+                buildInfo = buildTypeInfo.addBuildTypeInfo(buildInfo);
             }
         }
 

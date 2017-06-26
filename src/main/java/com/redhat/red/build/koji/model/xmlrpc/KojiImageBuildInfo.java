@@ -66,4 +66,11 @@ public class KojiImageBuildInfo
     {
         return getBuildId();
     }
+
+    @Override
+    public String toString() {
+        return "KojiImageBuildInfo{buildId=" + buildId + "}";
+    }
+
+
 }
