@@ -126,6 +126,8 @@ public class KojiBuildTypeInfo
             buildInfo.setId( image.getBuildId() );
         }
 
+        buildInfo.setTypeName(name);
+
         return buildInfo;
     }
 

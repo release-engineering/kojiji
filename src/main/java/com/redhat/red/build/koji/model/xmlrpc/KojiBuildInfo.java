@@ -107,6 +107,9 @@ public class KojiBuildInfo
     @DataKey( "extra" )
     private Map<String, Object> extra;
 
+    @JsonIgnore
+    private String typeName;
+
     /*
       TODO: Implement the following fields, once we care about them:
       epoch
@@ -309,6 +312,16 @@ public class KojiBuildInfo
     public void setPlatform( String platform )
     {
         this.platform = platform;
+    }
+
+    public String getTypeName()
+    {
+        return typeName;
+    }
+
+    public void setTypeName( String typeName )
+    {
+        this.typeName = typeName;
     }
 
     @Override
