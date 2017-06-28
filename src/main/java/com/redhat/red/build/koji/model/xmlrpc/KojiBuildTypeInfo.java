@@ -180,7 +180,7 @@ public class KojiBuildTypeInfo
 
         KojiBuildTypeInfo that = (KojiBuildTypeInfo) o;
 
-        if ( getBuildInfo() != null && !getBuildInfo().equals( getBuildInfo() ) )
+        if ( getBuildInfo() != null && !getBuildInfo().equals( that.getBuildInfo() ) )
         {
             return false;
         }
