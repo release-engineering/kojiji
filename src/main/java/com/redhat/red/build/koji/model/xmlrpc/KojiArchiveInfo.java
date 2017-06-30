@@ -57,7 +57,7 @@ public class KojiArchiveInfo
     private transient String classifier;
 
     @DataKey( "relpath" )
-    @JsonProperty( "relpath")
+    @JsonProperty( "relpath" )
     private String relPath;
 
     @DataKey( "platforms" )
@@ -249,12 +249,12 @@ public class KojiArchiveInfo
         return extension;
     }
 
-    @JsonIgnore
     public void setExtension( String extension )
     {
         this.extension = extension;
     }
 
+    @JsonIgnore
     public String getTypeName()
     {
         return extension;
@@ -343,6 +343,29 @@ public class KojiArchiveInfo
     public void setSize( Integer size )
     {
         this.size = size;
+    }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( !( o instanceof KojiArchiveInfo ) )
+        {
+            return false;
+        }
+
+        KojiArchiveInfo that = (KojiArchiveInfo) o;
+
+        return getArchiveId() == that.getArchiveId();
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return getArchiveId();
     }
 
     @Override
