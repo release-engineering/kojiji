@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.util.StringListValueBinder;
 import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataKey;
@@ -31,6 +32,7 @@ public class KojiTagInfo
 {
 
     @DataKey( "_starstar" )
+    @JsonProperty( "_starstar" )
     private boolean useKojiKeywords = true;
 
     @DataKey( "id" )
@@ -42,10 +44,12 @@ public class KojiTagInfo
 
     @DataKey( "perm" )
     @SkipNull
+    @JsonProperty( "perm" )
     private String permission;
 
     @DataKey( "perm_id" )
     @SkipNull
+    @JsonProperty( "perm_id" )
     private Integer permissionId;
 
     @DataKey( "arches" )
@@ -57,9 +61,11 @@ public class KojiTagInfo
     private Boolean locked;
 
     @DataKey( "maven_support" )
+    @JsonProperty( "maven_support" )
     private boolean mavenSupport = true;
 
     @DataKey( "maven_include_all" )
+    @JsonProperty( "maven_include_all" )
     private boolean mavenIncludeAll = true;
 
     public KojiTagInfo(){}
@@ -97,7 +103,7 @@ public class KojiTagInfo
         return permission;
     }
 
-    public int getPermissionId()
+    public Integer getPermissionId()
     {
         return permissionId;
     }
@@ -137,7 +143,7 @@ public class KojiTagInfo
         this.permission = permission;
     }
 
-    public void setPermissionId( int permissionId )
+    public void setPermissionId( Integer permissionId )
     {
         this.permissionId = permissionId;
     }
