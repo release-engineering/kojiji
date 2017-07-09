@@ -15,6 +15,8 @@
  */
 package com.redhat.red.build.koji.model.util;
 
+import java.util.Map;
+
 import org.commonjava.rwx.binding.mapping.Mapping;
 import org.commonjava.rwx.binding.spi.Binder;
 import org.commonjava.rwx.binding.spi.BindingContext;
@@ -25,15 +27,12 @@ import org.commonjava.rwx.vocab.ValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
+import com.redhat.red.build.koji.model.xmlrpc.KojiUserType;
 
-import com.redhat.red.build.koji.model.xmlrpc.KojiChecksumType;
-
-public class KojiChecksumTypeValueBinder
+public class KojiUserTypeValueBinder
         extends CustomValueBinder
 {
-
-    public KojiChecksumTypeValueBinder( Binder parent, Class<?> type, BindingContext context )
+    public KojiUserTypeValueBinder( Binder parent, Class<?> type, BindingContext context )
     {
         super( parent, type, context );
     }
@@ -45,26 +44,26 @@ public class KojiChecksumTypeValueBinder
         Logger logger = LoggerFactory.getLogger( getClass() );
         if ( value == null )
         {
-            throw new XmlRpcException( "No checksum type selected. One is requested. The default checksum type is md5." );
+            throw new XmlRpcException( "No user type selected. One is requested. The default user type is NORMAL." );
         }
-        else if ( value instanceof KojiChecksumType )
+        else if ( value instanceof KojiUserType )
         {
-            KojiChecksumType checksumType = (KojiChecksumType) value;
-            Integer intChecksumType = checksumType.getValue();
-            if ( intChecksumType == null )
+            KojiUserType userType = (KojiUserType) value;
+            Integer intUserType = userType.getValue();
+            if ( intUserType == null )
             {
                 logger.debug( "Generating nil" );
                 listener.value( null, ValueType.NIL );
             }
             else
             {
-                listener.value( intChecksumType, ValueType.INT );
+                listener.value( intUserType, ValueType.INT );
             }
         }
         else
         {
             throw new XmlRpcException( "Invalid value type: {} for converter: {} (expects: {})", value.getClass().getName(),
-                                       getClass().getName(), KojiChecksumType.class.getName() );
+                                       getClass().getName(), KojiUserType.class.getName() );
         }
     }
 
@@ -73,11 +72,11 @@ public class KojiChecksumTypeValueBinder
     {
         if ( v == null || v instanceof Integer )
         {
-            return KojiChecksumType.fromInteger( ( Integer ) v );
+            return KojiUserType.fromInteger( ( Integer ) v );
         }
         else
         {
-            throw new XmlRpcException( "Cannot parse checksum type: converter: {} (expects: {} or null, but {} was given)",
+            throw new XmlRpcException( "Cannot parse user type: converter: {} (expects: {} or null, but {} was given)",
                                        getClass().getName(), Integer.class.getName(), v.getClass().getName() );
         }
     }

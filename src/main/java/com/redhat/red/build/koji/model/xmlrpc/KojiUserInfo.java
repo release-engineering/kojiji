@@ -15,9 +15,13 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import org.commonjava.rwx.binding.anno.Converter;
 import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.KeyRefs;
 import org.commonjava.rwx.binding.anno.StructPart;
+
+import com.redhat.red.build.koji.model.util.KojiUserStatusValueBinder;
+import com.redhat.red.build.koji.model.util.KojiUserTypeValueBinder;
 
 /**
  * Created by jdcasey on 12/3/15.
@@ -26,10 +30,12 @@ import org.commonjava.rwx.binding.anno.StructPart;
 public class KojiUserInfo
 {
     @DataKey( "status" )
-    private int status;
+    @Converter( KojiUserStatusValueBinder.class )
+    private KojiUserStatus status;
 
     @DataKey( "usertype" )
-    private int userType;
+    @Converter( KojiUserTypeValueBinder.class )
+    private KojiUserType userType;
 
     @DataKey( "id" )
     private int userId;
@@ -41,7 +47,7 @@ public class KojiUserInfo
     private String kerberosPrincipal;
 
     @KeyRefs( { "status", "usertype", "id", "name", "krb_principal" } )
-    public KojiUserInfo( int status, int userType, int userId, String userName, String kerberosPrincipal )
+    public KojiUserInfo( KojiUserStatus status, KojiUserType userType, int userId, String userName, String kerberosPrincipal )
     {
         this.status = status;
         this.userType = userType;
@@ -55,12 +61,12 @@ public class KojiUserInfo
         return kerberosPrincipal;
     }
 
-    public int getStatus()
+    public KojiUserStatus getStatus()
     {
         return status;
     }
 
-    public int getUserType()
+    public KojiUserType getUserType()
     {
         return userType;
     }

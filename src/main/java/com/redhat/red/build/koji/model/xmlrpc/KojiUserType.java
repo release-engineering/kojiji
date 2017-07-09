@@ -15,19 +15,17 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-public enum KojiChecksumType
+public enum KojiUserType
 {
-    md5    ( 0, "MD5"),
-    sha1   ( 1, "SHA-1" ),
-    sha256 ( 2, "SHA-256" );
+    NORMAL(0),
+    HOST(1),
+    GROUP(2);
 
     private Integer value;
-    private String algorithm;
 
-    private KojiChecksumType( int value, String algorithm )
+    private KojiUserType( Integer value )
     {
         this.value = value;
-        this.algorithm = algorithm;
     }
 
     public Integer getValue()
@@ -35,21 +33,17 @@ public enum KojiChecksumType
         return value;
     }
 
-    public String getAlgorithm()
+    public static KojiUserType fromInteger( Integer value )
     {
-        return algorithm;
-    }
-
-    public static KojiChecksumType fromInteger( Integer value )
-    {
-        for ( KojiChecksumType checksum : values() )
+        for ( KojiUserType type : values() )
         {
-            if ( value == checksum.getValue() )
+            if ( value == type.getValue() )
             {
-                return checksum;
+                return type;
             }
         }
 
-        throw new IllegalArgumentException( String.format( "Unknown KojiChecksumType value: %d", value ) );
+        throw new IllegalArgumentException( String.format( "Unknown KojiUserType value: %d", value ) );
     }
+
 }
