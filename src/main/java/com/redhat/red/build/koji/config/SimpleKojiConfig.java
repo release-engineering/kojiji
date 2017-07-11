@@ -49,8 +49,18 @@ public class SimpleKojiConfig
 
     private SiteConfig kojiSiteConfig;
 
+    private String krbCCache;
+
+    private String krbKeytab;
+
+    private String krbPassword;
+
+    private String krbPrincipal;
+
+    private String krbService;
+
     public SimpleKojiConfig( String id, String kojiURL, String clientKeyCertificateFile, String clientCertificatePassword,
-                             String serverCertificateFile, Integer timeout, Boolean trustSelfSigned )
+                             String serverCertificateFile, Integer timeout, Boolean trustSelfSigned, String krbService, String krbPrincipal, String krbPassword, String krbCCache, String krbKeytab )
     {
         this.clientKeyCertificateFile = clientKeyCertificateFile;
         this.clientCertificatePassword = clientCertificatePassword;
@@ -59,6 +69,11 @@ public class SimpleKojiConfig
         this.trustSelfSigned = trustSelfSigned;
         this.id = id;
         this.kojiURL = kojiURL;
+        this.krbService = krbService;
+        this.krbPrincipal = krbPrincipal;
+        this.krbPassword = krbPassword;
+        this.krbCCache = krbCCache;
+        this.krbKeytab = krbKeytab;
     }
 
     @Override
@@ -114,6 +129,7 @@ public class SimpleKojiConfig
         return clientKeyCertificateFile;
     }
 
+    @Override
     public String getKojiClientCertificatePassword()
     {
         return clientCertificatePassword;
@@ -129,6 +145,7 @@ public class SimpleKojiConfig
         return trustSelfSigned == null ? false : trustSelfSigned;
     }
 
+    @Override
     public String getKojiSiteId()
     {
         return id;
@@ -137,5 +154,35 @@ public class SimpleKojiConfig
     public Integer getTimeout()
     {
         return timeout == null ? DEFAULT_TIMEOUT_SECONDS : timeout;
+    }
+
+    @Override
+    public String getKrbCCache()
+    {
+        return krbCCache;
+    }
+
+    @Override
+    public String getKrbKeytab()
+    {
+        return krbKeytab;
+    }
+
+    @Override
+    public String getKrbPassword()
+    {
+        return krbPassword;
+    }
+
+    @Override
+    public String getKrbPrincipal()
+    {
+        return krbPrincipal;
+    }
+
+    @Override
+    public String getKrbService()
+    {
+        return krbService;
     }
 }

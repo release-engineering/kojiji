@@ -16,6 +16,8 @@
 package com.redhat.red.build.koji;
 
 import com.redhat.red.build.koji.config.KojiConfig;
+import com.redhat.red.build.koji.kerberos.KrbPriv;
+import com.redhat.red.build.koji.kerberos.KrbUtils;
 import com.redhat.red.build.koji.model.ImportFile;
 import com.redhat.red.build.koji.model.KojiImportResult;
 import com.redhat.red.build.koji.model.json.KojiImport;
@@ -32,6 +34,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import com.redhat.red.build.koji.model.xmlrpc.KojiImageBuildInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiKrbAddressInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
 import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
@@ -76,6 +79,9 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.GetTagIdRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.KrbLoginRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.KrbLoginResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.KrbLoginResponseInfo;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsRequest;
@@ -100,11 +106,19 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.UntagBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UploadResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserResponse;
+
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.client.KrbClient;
+import org.apache.kerby.kerberos.kerb.type.EncKrbPrivPart;
+import org.apache.kerby.kerberos.kerb.type.ap.ApRep;
+import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
+import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
+import org.apache.kerby.util.Base64;
 import org.commonjava.maven.atlas.ident.ref.ProjectRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.binding.error.BindException;
@@ -126,8 +140,10 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -262,7 +278,7 @@ public class KojiClient
 
     public void setup()
     {
-        uploadService = new ExecutorCompletionService<KojiUploaderResult>( executorService );
+        uploadService = new ExecutorCompletionService<>( executorService );
         objectMapper = new KojiObjectMapper();
 
         Logger logger = LoggerFactory.getLogger( getClass() );
@@ -325,10 +341,121 @@ public class KojiClient
         }
     }
 
+    public KojiSessionInfo krbLogin()
+            throws KojiClientException
+    {
+        checkConnection();
+
+        if ( config.getKrbService() == null )
+        {
+            throw new KojiClientException( "Must set krbService option before logging in" );
+        }
+
+        if ( config.getKrbPrincipal() == null && ( config.getKrbKeytab() == null && config.getKrbPassword() == null ) )
+        {
+            throw new KojiClientException( "Must set either krbPrincipal and krbKeytab or krbPassword options before logging in" );
+        }
+
+        String krb5ConfFilename = KrbUtils.getKrb5ConfFilename();
+
+        if ( krb5ConfFilename == null )
+        {
+            throw new KojiClientException( "Must create or point to a krb5 configuration file before logging in" );
+        }
+
+        Logger logger = LoggerFactory.getLogger( getClass() );
+
+        logger.debug( "Logging into Kerberos service {} using krb5 configuration file {}", config.getKrbService(), krb5ConfFilename );
+
+        try
+        {
+            KrbClient krbClient = KrbUtils.newClient( krb5ConfFilename );
+
+            TgtTicket tgt = KrbUtils.getTgt( krbClient, config.getKrbKeytab(), config.getKrbPrincipal(), config.getKrbPassword() );
+
+            String serverPrincipal = KrbUtils.makeServerPrincipal( config.getKrbService(), config.getKojiURL(), tgt.getRealm() );
+
+            TgtTicket sgt = KrbUtils.getSgt( krbClient, config.getKrbKeytab(), config.getKrbPassword(), tgt, serverPrincipal );
+
+            ApReq apReq = KrbUtils.makeReq( sgt );
+            byte[] asn1EncodedApReq = apReq.encode();
+            byte[] base64EncodedApReq = new Base64().encode( asn1EncodedApReq );
+            String encodedApReq = new String( base64EncodedApReq, "US-ASCII" );
+
+            KrbLoginResponse loginResponse = xmlrpcClient.call( new KrbLoginRequest( encodedApReq ), KrbLoginResponse.class, NO_OP_URL_BUILDER, STANDARD_REQUEST_MODIFIER );
+
+            if ( loginResponse == null )
+            {
+                throw new KojiClientException( "Failed to get loginResponse" );
+            }
+
+            KrbLoginResponseInfo info = loginResponse.getInfo();
+            String encodedResponse = info.getEncodedApResponse();
+            KojiKrbAddressInfo addressInfo = info.getAddressInfo();
+            String encodedEncryptedSessionInfo = info.getEncodedEncryptedSessionInfo();
+
+            byte[] decodedApRep = new Base64().decode( encodedResponse );
+            ApRep apRep = KrbUtils.readRep( decodedApRep, sgt.getSessionKey(), apReq );
+
+            byte[] decodedSessionInfoPriv = new Base64().decode( encodedEncryptedSessionInfo );
+            KrbPriv sessionInfoPriv = KrbUtils.readPriv( decodedSessionInfoPriv, sgt.getSessionKey(), InetAddress.getByName( addressInfo.getServerAddress() ), InetAddress.getByName( addressInfo.getClientAddress() ), krbClient.getKrbConfig().getAllowableClockSkew(), apRep );
+            EncKrbPrivPart encKrbPrivPart = sessionInfoPriv.getEncPart();
+            byte[] userData = encKrbPrivPart.getUserData();
+
+            if ( userData == null )
+            {
+                throw new KojiClientException( "Could not find session info in private message" );
+            }
+
+            String sessionInfoString = new String( userData, "US-ASCII" );
+            String[] sessionInfoParts = sessionInfoString.split(" ");
+
+            if ( sessionInfoParts.length != 2 )
+            {
+                throw new KojiClientException( "Failed to split session info string" );
+            }
+
+            KojiSessionInfo session = new KojiSessionInfo( Integer.parseInt(sessionInfoParts[0]), sessionInfoParts[1] );
+
+            setLoggedInUser( session );
+
+            return session;
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
+        }
+        catch ( KrbException e )
+        {
+            throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
+        }
+        catch ( UnknownHostException e )
+        {
+            throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
+        }
+        catch ( MalformedURLException e )
+        {
+            throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
+        }
+        catch ( UnsupportedEncodingException e )
+        {
+            throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
+        }
+        catch ( IOException e )
+        {
+            throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
+        }
+    }
+
     public KojiSessionInfo login()
             throws KojiClientException
     {
         checkConnection();
+
+        if ( config.getKrbService() != null )
+        {
+            return krbLogin();
+        }
 
         try
         {
@@ -342,7 +469,7 @@ public class KojiClient
 
             if ( loginResponse == null )
             {
-                return null;
+                throw new KojiClientException( "Failed to get loginResponse" );
             }
 
             KojiSessionInfo session = loginResponse.getSessionInfo();
@@ -456,14 +583,7 @@ public class KojiClient
             UserResponse response =
                     xmlrpcClient.call( new LoggedInUserRequest(), UserResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
-
-            if ( response != null )
-            {
                 return response == null ? null : response.getUserInfo();
-            }
-
-            return null;
-
         }, "Failed to retrieve current user info." );
     }
 
@@ -1235,7 +1355,7 @@ public class KojiClient
 
             if ( buildTypeInfo != null )
             {
-                buildInfo = buildTypeInfo.addBuildTypeInfo(buildInfo);
+                return buildTypeInfo.addBuildTypeInfo( buildInfo );
             }
         }
 
@@ -1431,7 +1551,6 @@ public class KojiClient
         {
             closeQuietly( response );
             closeQuietly( client );
-
         }
     }
 

@@ -23,7 +23,7 @@
     <artifactId>redhat-releng-tools</artifactId>
     <version>3</version>
   </parent>
-  
+
   <groupId>com.redhat.red.build</groupId>
   <artifactId>kojiji</artifactId>
   <version>1.7.2-SNAPSHOT</version>
@@ -47,6 +47,7 @@
     <httpcVersion>4.4</httpcVersion>
     <atlasVersion>0.16.0</atlasVersion>
     <mockitoVersion>2.7.20</mockitoVersion>
+    <kerbyVersion>1.0.0</kerbyVersion>
 
     <dbImage>postgres:9.4</dbImage>
     <hubImage>docker.io/buildchimp/koji-dojo-hub:dev</hubImage>
@@ -104,9 +105,14 @@
         <artifactId>mockito-core</artifactId>
         <version>${mockitoVersion}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.kerby</groupId>
+        <artifactId>kerb-client</artifactId>
+        <version>${kerbyVersion}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
-  
+
   <dependencies>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -172,7 +178,7 @@
       <artifactId>log4j-over-slf4j</artifactId>
       <scope>runtime</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
@@ -196,6 +202,11 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.kerby</groupId>
+      <artifactId>kerb-client</artifactId>
     </dependency>
   </dependencies>
 

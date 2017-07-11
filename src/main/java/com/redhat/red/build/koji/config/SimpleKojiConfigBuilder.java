@@ -38,7 +38,22 @@ public class SimpleKojiConfigBuilder
 
     private Integer timeout;
 
+    private String krbCCache;
+
+    private String krbKeytab;
+
+    private String krbPassword;
+
+    private String krbPrincipal;
+
+    private String krbService;
+
     private SiteConfig kojiSiteConfig;
+
+    public SimpleKojiConfigBuilder()
+    {
+
+    }
 
     public SimpleKojiConfigBuilder( String kojiURL )
     {
@@ -47,7 +62,7 @@ public class SimpleKojiConfigBuilder
 
     public SimpleKojiConfig build()
     {
-        return new SimpleKojiConfig( kojiSiteId, kojiURL, clientKeyCertificateFile, kojiClientCertificatePassword, serverCertificateFile, timeout, trustSelfSigned );
+        return new SimpleKojiConfig( kojiSiteId, kojiURL, clientKeyCertificateFile, kojiClientCertificatePassword, serverCertificateFile, timeout, trustSelfSigned, krbService, krbPrincipal, krbPassword, krbCCache, krbKeytab );
     }
 
     public String getClientKeyCertificateFile()
@@ -124,6 +139,61 @@ public class SimpleKojiConfigBuilder
     public SimpleKojiConfigBuilder withTimeout( Integer timeout )
     {
         this.timeout = timeout;
+        return this;
+    }
+
+    public String getKrbCCache()
+    {
+        return krbCCache;
+    }
+
+    public SimpleKojiConfigBuilder withKrbCCache( String krbCCache )
+    {
+        this.krbCCache = krbCCache;
+        return this;
+    }
+
+    public String getKrbKeytab()
+    {
+        return krbKeytab;
+    }
+
+    public SimpleKojiConfigBuilder withKrbKeytab( String krbKeytab )
+    {
+        this.krbKeytab = krbKeytab;
+        return this;
+    }
+
+    public String getKrbPassword()
+    {
+        return krbPassword;
+    }
+
+    public SimpleKojiConfigBuilder withKrbPassword( String krbPassword )
+    {
+        this.krbPassword = krbPassword;
+        return this;
+    }
+
+    public String getKrbPrincipal()
+    {
+        return krbPrincipal;
+    }
+
+    public SimpleKojiConfigBuilder withKrbPrincipal( String krbPrincipal )
+    {
+        this.krbPrincipal = krbPrincipal;
+        return this;
+    }
+
+    public String getKrbService()
+    {
+        return krbService;
+    }
+
+    public SimpleKojiConfigBuilder withKrbService( String krbService )
+    {
+        this.krbService = krbService;
         return this;
     }
 
