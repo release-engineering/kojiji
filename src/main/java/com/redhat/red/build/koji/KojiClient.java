@@ -144,6 +144,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
+import javax.security.auth.DestroyFailedException;
 
 import static com.redhat.red.build.koji.model.util.KojiFormats.toKojiName;
 import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.ACCEPT_ENCODING_HEADER;
@@ -473,6 +474,8 @@ public class KojiClient
             return;
         }
 
+        Logger logger = LoggerFactory.getLogger( getClass() );
+
         if ( xmlrpcClient != null )
         {
             try
@@ -483,15 +486,22 @@ public class KojiClient
 
                 if ( isNotEmpty( response.getError() ) )
                 {
-                    Logger logger = LoggerFactory.getLogger( getClass() );
                     logger.error( "Failed to logout from Koji: {}", response.getError() );
                 }
             }
             catch ( XmlRpcException e )
             {
-                Logger logger = LoggerFactory.getLogger( getClass() );
                 logger.error( String.format( "Failed to logout: %s", e.getMessage() ), e );
             }
+        }
+
+        try
+        {
+            session.destroy();
+        }
+        catch ( DestroyFailedException e )
+        {
+            logger.error( String.format( "Failed to destroy session: %s", e.getMessage() ), e );
         }
     }
 
