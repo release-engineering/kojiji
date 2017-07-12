@@ -358,8 +358,8 @@ public class BuildDescription
                 "name='" + name + '\'' +
                 ", version='" + version + '\'' +
                 ", release='" + release + '\'' +
-                ", startTime=" + startTime == null ? "null" : startTime.getTime() +
-                ", endTime=" + endTime == null ? "null" : endTime.getTime() +
+                ", startTime=" + ( startTime == null ? "null" : startTime.getTime() ) +
+                ", endTime=" + ( endTime == null ? "null" : endTime.getTime() ) +
                 ", source=" + source +
                 ", extraInfo=" + extraInfo +
                 '}';
