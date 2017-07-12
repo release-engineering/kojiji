@@ -15,6 +15,9 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import javax.security.auth.DestroyFailedException;
+import javax.security.auth.Destroyable;
+
 import org.commonjava.rwx.binding.anno.DataKey;
 import org.commonjava.rwx.binding.anno.KeyRefs;
 import org.commonjava.rwx.binding.anno.StructPart;
@@ -24,6 +27,7 @@ import org.commonjava.rwx.binding.anno.StructPart;
  */
 @StructPart
 public class KojiSessionInfo
+        implements Destroyable
 {
     @DataKey( "session-id" )
     private int sessionId;
@@ -32,6 +36,8 @@ public class KojiSessionInfo
     private String sessionKey;
 
     private transient KojiUserInfo userInfo;
+
+    private transient boolean destroyed = false;
 
     @KeyRefs( {"session-id", "session-key"} )
     public KojiSessionInfo( int sessionId, String sessionKey )
@@ -42,11 +48,21 @@ public class KojiSessionInfo
 
     public int getSessionId()
     {
+        if ( destroyed )
+        {
+             throw new IllegalStateException( "This session is no longer valid" );
+        }
+
         return sessionId;
     }
 
     public String getSessionKey()
     {
+        if ( destroyed )
+        {
+             throw new IllegalStateException( "This session is no longer valid" );
+        }
+
         return sessionKey;
     }
 
@@ -66,6 +82,29 @@ public class KojiSessionInfo
 
     public KojiUserInfo getUserInfo()
     {
+        if ( destroyed )
+        {
+            throw new IllegalStateException( "This session is no longer valid" );
+        }
+
         return userInfo;
+    }
+
+    @Override
+    public void destroy() throws DestroyFailedException
+    {
+        if ( !destroyed )
+        {
+            sessionId = 0;
+            sessionKey = null;
+            userInfo = null;
+            destroyed = true;
+        }
+    }
+
+    @Override
+    public boolean isDestroyed()
+    {
+        return destroyed;
     }
 }
