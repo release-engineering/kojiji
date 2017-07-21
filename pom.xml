@@ -54,12 +54,18 @@
     <dbWaitFor>database system is ready to accept connections</dbWaitFor>
     <hubWaitFor>Starting HTTPd</hubWaitFor>
 
+    <download.logs>false</download.logs>
+
     <dockerNetwork>default</dockerNetwork>
     <dockerNetworkMode>bridge</dockerNetworkMode>
     <dockerStartTimeout>180000</dockerStartTimeout>
 
     <koji-hub-http-port>80</koji-hub-http-port>
     <koji-hub-https-port>443</koji-hub-https-port>
+
+<!--     <docker.container.koji-hub.ip>127.0.0.1</docker.container.koji-hub.ip>
+    <docker.container.koji-hub.net.ci-network.ip>127.0.0.1</docker.container.koji-hub.net.ci-network.ip>
+ -->
     <koji-hub-address>${docker.container.koji-hub.ip}</koji-hub-address>
   </properties>
 
@@ -197,6 +203,19 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <version>3.1.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model-builder</artifactId>
+      <version>3.1.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -327,6 +346,9 @@
                   <!--suppress MavenModelInspection -->
                   <echo file="${project.build.directory}/docker.properties">
                     <![CDATA[
+download.logs=${download.logs}
+project.build.directory=${project.build.directory}
+
 docker.containers.koji-hub.ports.80/tcp.host=${koji-hub-address}
 docker.containers.koji-hub.ports.443/tcp.host=${koji-hub-address}
 docker.containers.koji-hub.ports.80/tcp.port=${koji-hub-http-port}
@@ -352,7 +374,8 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
               </goals>
               <configuration>
                 <includes>
-                  <include>**/*IT.java</include>
+                  <include>**/ImportBuildConnectionStressIT.java</include>
+                  <!-- <include>**/*IT.java</include> -->
                 </includes>
                 <forkCount>1C</forkCount>
                 <redirectTestOutputToFile>true</redirectTestOutputToFile>

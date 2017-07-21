@@ -45,12 +45,14 @@ public class SimpleKojiConfig
 
     private String kojiURL;
 
+    private Integer maxConnections;
+
     private Integer timeout;
 
     private SiteConfig kojiSiteConfig;
 
     public SimpleKojiConfig( String id, String kojiURL, String clientKeyCertificateFile, String clientCertificatePassword,
-                             String serverCertificateFile, Integer timeout, Boolean trustSelfSigned )
+                             String serverCertificateFile, Integer timeout, Boolean trustSelfSigned, Integer maxConnections )
     {
         this.clientKeyCertificateFile = clientKeyCertificateFile;
         this.clientCertificatePassword = clientCertificatePassword;
@@ -59,6 +61,7 @@ public class SimpleKojiConfig
         this.trustSelfSigned = trustSelfSigned;
         this.id = id;
         this.kojiURL = kojiURL;
+        this.maxConnections = maxConnections;
     }
 
     @Override
@@ -96,6 +99,7 @@ public class SimpleKojiConfig
             }
 
             builder.withRequestTimeoutSeconds( getTimeout() );
+            builder.withMaxConnections( getMaxConnections() );
 
             kojiSiteConfig = builder.build();
         }
@@ -137,5 +141,10 @@ public class SimpleKojiConfig
     public Integer getTimeout()
     {
         return timeout == null ? DEFAULT_TIMEOUT_SECONDS : timeout;
+    }
+
+    public Integer getMaxConnections()
+    {
+        return maxConnections == null ? SiteConfig.DEFAULT_MAX_CONNECTIONS : maxConnections;
     }
 }
