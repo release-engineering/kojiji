@@ -49,8 +49,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -65,48 +67,60 @@ public class ImportBuildConnectionStressIT
         extends AbstractIT
 {
 
-    private static final int MODULE_COUNT = 16;
+    private static final int MODULE_COUNT = 32;
 
     private static final int BUILD_COUNT = 16;
 
     private ExecutorService executor = Executors.newCachedThreadPool();
 
+    private ExecutorCompletionService<Exception> completions = new ExecutorCompletionService<Exception>( executor );
+
     @Test
     public void run()
             throws Exception
     {
-        CountDownLatch latch = new CountDownLatch( BUILD_COUNT );
+        KojiClient client = newKojiClient();
         for ( int i = 0; i < BUILD_COUNT; i++ )
         {
             final int idx = i;
-            executor.execute( () ->
+            completions.submit( () ->
                               {
                                   Thread.currentThread().setName( "Build-" + idx );
                                   try
                                   {
-                                      runImport();
+                                      runImport( client );
                                   }
                                   catch ( Exception e )
                                   {
-                                      fail( "Failed to import build." );
+                                      e.printStackTrace();
+                                      //fail( "Failed to import build." );
+                                      return e;
                                   }
-                                  finally
-                                  {
-                                      latch.countDown();
-                                  }
+
+                                  return null;
                               } );
         }
 
-        latch.await();
+        int errorCount = 0;
+        for(int i=0; i<BUILD_COUNT; i++)
+        {
+            Future<Exception> future = completions.take();
+            Exception error = future.get();
+            if ( error != null )
+            {
+                errorCount++;
+            }
+        }
+
+        assertThat( errorCount, equalTo( 0 ) );
     }
 
-    private void runImport()
+    private void runImport( final KojiClient client )
             throws Exception
     {
-        KojiClient client = newKojiClient();
         KojiSessionInfo session = client.login();
 
-        String tagName = getClass().getSimpleName();
+        String tagName = getClass().getSimpleName() + "-" + selectWords( "-", 3 );
 
         CreateTagRequest req = new CreateTagRequest();
         req.setTagName( tagName );

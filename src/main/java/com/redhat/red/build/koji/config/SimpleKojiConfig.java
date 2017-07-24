@@ -23,6 +23,8 @@ import org.commonjava.util.jhttpc.model.SiteTrustType;
 import java.io.File;
 import java.io.IOException;
 
+import static org.commonjava.util.jhttpc.model.SiteConfig.DEFAULT_CONNECTION_POOL_TIMEOUT_SECONDS;
+
 /**
  * Created by jdcasey on 1/12/16.
  */
@@ -49,15 +51,28 @@ public class SimpleKojiConfig
 
     private Integer timeout;
 
+    private Integer connectionPoolTimeout;
+
     private SiteConfig kojiSiteConfig;
 
+    @Deprecated
     public SimpleKojiConfig( String id, String kojiURL, String clientKeyCertificateFile, String clientCertificatePassword,
                              String serverCertificateFile, Integer timeout, Boolean trustSelfSigned, Integer maxConnections )
     {
+        this( id, kojiURL, clientKeyCertificateFile, clientCertificatePassword, serverCertificateFile, timeout, null,
+              trustSelfSigned, maxConnections );
+    }
+
+    public SimpleKojiConfig( String id, String kojiURL, String clientKeyCertificateFile,
+                             String clientCertificatePassword, String serverCertificateFile, Integer timeout,
+                             Integer connectionPoolTimeout, Boolean trustSelfSigned, Integer maxConnections )
+    {
+
         this.clientKeyCertificateFile = clientKeyCertificateFile;
         this.clientCertificatePassword = clientCertificatePassword;
         this.serverCertificateFile = serverCertificateFile;
         this.timeout = timeout;
+        this.connectionPoolTimeout = connectionPoolTimeout;
         this.trustSelfSigned = trustSelfSigned;
         this.id = id;
         this.kojiURL = kojiURL;
@@ -99,6 +114,7 @@ public class SimpleKojiConfig
             }
 
             builder.withRequestTimeoutSeconds( getTimeout() );
+            builder.withConnectionPoolTimeoutSeconds( getConnectionPoolTimeout() );
             builder.withMaxConnections( getMaxConnections() );
 
             kojiSiteConfig = builder.build();
@@ -141,6 +157,11 @@ public class SimpleKojiConfig
     public Integer getTimeout()
     {
         return timeout == null ? DEFAULT_TIMEOUT_SECONDS : timeout;
+    }
+
+    public Integer getConnectionPoolTimeout()
+    {
+        return timeout == null ? DEFAULT_CONNECTION_POOL_TIMEOUT_SECONDS : connectionPoolTimeout;
     }
 
     public Integer getMaxConnections()

@@ -18,6 +18,9 @@
     </encoder>
   </appender>
 
+  <!--<logger name="org.commonjava.util.jhttpc.INTERNAL.conn.CloseBlockingConnectionManager" level="TRACE"/>-->
+  <logger name="org.apache.http.wire" level="INFO"/>
+
   <root level="DEBUG">
     <appender-ref ref="STDOUT" />
   </root>  
