@@ -32,4 +32,11 @@ public class KojijiErrorInfo
     {
         return temporary;
     }
+
+    @Override
+    public String toString()
+    {
+        return "KojijiErrorInfo{" + "filepath='" + filepath + '\'' + ", error=" + error + ", temporary=" + temporary
+                + '}';
+    }
 }

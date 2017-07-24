@@ -17,6 +17,7 @@ package com.redhat.red.build.koji.it;
 
 import com.redhat.red.build.koji.KojiClient;
 import com.redhat.red.build.koji.KojiClientException;
+import com.redhat.red.build.koji.KojijiErrorInfo;
 import com.redhat.red.build.koji.model.ImportFile;
 import com.redhat.red.build.koji.model.KojiImportResult;
 import com.redhat.red.build.koji.model.json.BuildContainer;
@@ -150,7 +151,7 @@ public class ImportBuildConnectionStressIT
 
         KojiImportResult result = client.importBuild( importMetadata, fileSuppliers, session );
 
-        Map<String, KojiClientException> uploadErrors = result.getUploadErrors();
+        Map<String, KojijiErrorInfo> uploadErrors = result.getUploadErrors();
 
         if ( uploadErrors != null && !uploadErrors.isEmpty() )
         {
