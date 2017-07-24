@@ -38,7 +38,9 @@ public class SimpleKojiConfigBuilder
 
     private Integer timeout;
 
-    private SiteConfig kojiSiteConfig;
+    private Integer connectionPoolTimeout;
+
+    private Integer maxConnections;
 
     public SimpleKojiConfigBuilder( String kojiURL )
     {
@@ -47,7 +49,9 @@ public class SimpleKojiConfigBuilder
 
     public SimpleKojiConfig build()
     {
-        return new SimpleKojiConfig( kojiSiteId, kojiURL, clientKeyCertificateFile, kojiClientCertificatePassword, serverCertificateFile, timeout, trustSelfSigned );
+        return new SimpleKojiConfig( kojiSiteId, kojiURL, clientKeyCertificateFile, kojiClientCertificatePassword,
+                                     serverCertificateFile, timeout, connectionPoolTimeout, trustSelfSigned,
+                                     maxConnections );
     }
 
     public String getClientKeyCertificateFile()
@@ -127,14 +131,25 @@ public class SimpleKojiConfigBuilder
         return this;
     }
 
-    public SiteConfig getKojiSiteConfig()
+    public Integer getConnectionPoolTimeout()
     {
-        return kojiSiteConfig;
+        return connectionPoolTimeout;
     }
 
-    public SimpleKojiConfigBuilder withKojiSiteConfig( SiteConfig kojiSiteConfig )
+    public SimpleKojiConfigBuilder withConnectionPoolTimeout( Integer connectionPoolTimeout )
     {
-        this.kojiSiteConfig = kojiSiteConfig;
+        this.connectionPoolTimeout = connectionPoolTimeout;
+        return this;
+    }
+
+    public Integer getMaxConnections()
+    {
+        return maxConnections;
+    }
+
+    public SimpleKojiConfigBuilder withMaxConnections( Integer maxConnections )
+    {
+        this.maxConnections = maxConnections;
         return this;
     }
 }

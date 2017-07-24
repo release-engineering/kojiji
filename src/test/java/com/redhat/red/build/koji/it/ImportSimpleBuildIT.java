@@ -17,6 +17,7 @@ package com.redhat.red.build.koji.it;
 
 import com.redhat.red.build.koji.KojiClient;
 import com.redhat.red.build.koji.KojiClientException;
+import com.redhat.red.build.koji.KojijiErrorInfo;
 import com.redhat.red.build.koji.model.ImportFile;
 import com.redhat.red.build.koji.model.KojiImportResult;
 import com.redhat.red.build.koji.model.json.StandardChecksum;
@@ -60,19 +61,18 @@ public class ImportSimpleBuildIT
     public void run()
             throws Exception
     {
-        executeSetupScript( "koji grant-cg-access kojiadmin test-cg" );
-
         KojiClient client = newKojiClient();
         KojiSessionInfo session = client.login();
 
+        String tagName = getClass().getSimpleName();
         CreateTagRequest req = new CreateTagRequest();
-        req.setTagName( name.getMethodName() );
+        req.setTagName( tagName );
 
         client.createTag( req, session );
 
         ProjectVersionRef gav = new SimpleProjectVersionRef( "org.foo", "bar", "1.1" );
 
-        boolean packageAdded = client.addPackageToTag( name.getMethodName(), gav, session );
+        boolean packageAdded = client.addPackageToTag( tagName, gav, session );
         assertThat( packageAdded, equalTo( true ) );
 
         Map<String, KojiArchiveType> archiveTypes = client.getArchiveTypeMap( session );
@@ -119,7 +119,7 @@ public class ImportSimpleBuildIT
                            client, importMetadata, fileSuppliers, session );
         KojiImportResult result = client.importBuild( importMetadata, fileSuppliers, session );
 
-        Map<String, KojiClientException> uploadErrors = result.getUploadErrors();
+        Map<String, KojijiErrorInfo> uploadErrors = result.getUploadErrors();
 
         if ( uploadErrors != null && !uploadErrors.isEmpty() )
         {
@@ -132,7 +132,7 @@ public class ImportSimpleBuildIT
         KojiBuildInfo buildInfo = result.getBuildInfo();
         assertThat( buildInfo, notNullValue() );
 
-        Integer taskId = client.tagBuild( name.getMethodName(), buildInfo.getNvr(), session );
+        Integer taskId = client.tagBuild( tagName, buildInfo.getNvr(), session );
         assertThat( taskId, notNullValue() );
 
         KojiTaskInfo taskInfo = client.getTaskInfo( taskId, session );

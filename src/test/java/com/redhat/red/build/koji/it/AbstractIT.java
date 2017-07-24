@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.it;
 
+import com.redhat.red.build.koji.it.util.KojiTestUtil;
 import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
 import com.redhat.red.build.koji.KojiClient;
 import com.redhat.red.build.koji.config.KojiConfig;
@@ -57,6 +58,7 @@ import java.util.function.Consumer;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class AbstractIT
 {
@@ -118,7 +120,7 @@ public class AbstractIT
             catch ( IOException e )
             {
                 e.printStackTrace();
-                Assert.fail( "failed to read contents of client PEM: " + e.getMessage() );
+                fail( "failed to read contents of client PEM: " + e.getMessage() );
             }
 
             builder.withClientKeyCertificateFile( clientKeyCertPem.getPath() );
@@ -131,7 +133,7 @@ public class AbstractIT
             catch ( IOException e )
             {
                 e.printStackTrace();
-                Assert.fail( "failed to read contents of server PEM: " + e.getMessage() );
+                fail( "failed to read contents of server PEM: " + e.getMessage() );
             }
 
             builder.withServerCertificateFile( serverCertsPem.getPath() );
@@ -142,6 +144,7 @@ public class AbstractIT
 
     @Before
     public void setup()
+            throws Exception
     {
         System.out.println( "\n\n #### SETUP: " + name.getMethodName() + " #### \n\n" );
         passwordManager = new MemoryPasswordManager();
@@ -154,6 +157,17 @@ public class AbstractIT
         downloadDir.mkdirs();
 
         executor = Executors.newFixedThreadPool( 1 );
+
+        KojiTestUtil.enableCGAccess( factory, command->{
+            try
+            {
+                executeSetupScript( command );
+            }
+            catch ( Exception e )
+            {
+                fail( "Failed to execute: '" + command + "'." );
+            }
+        } );
     }
 
     protected KojiClient newKojiClient()
@@ -162,7 +176,7 @@ public class AbstractIT
         try
         {
             System.out.println("SETTING UP KOJI CLIENT");
-            KojiConfig config = getKojiConfigBuilder().build();
+            KojiConfig config = getKojiConfigBuilder().withMaxConnections( 2 ).build();
 
             PasswordManager passwords = new MemoryPasswordManager();
             passwords.bind( config.getKojiClientCertificatePassword(), config.getKojiSiteId(), PasswordType.KEY );
@@ -207,9 +221,9 @@ public class AbstractIT
         System.out.println( "\n\n #### END: " + name.getMethodName() + "#### \n\n" );
     }
 
-    private boolean downloadContainerConfigs()
+    protected boolean downloadContainerConfigs()
     {
-        return false;
+        return Boolean.parseBoolean( System.getProperty( "download.logs", "false" ) );
     }
 
     protected File downloadFile( String path, CloseableHttpClient client )
@@ -228,7 +242,7 @@ public class AbstractIT
         catch ( IOException e )
         {
             e.printStackTrace();
-            Assert.fail( String.format( "Failed to execute GET request: %s. Reason: %s", url, e.getMessage() ) );
+            fail( String.format( "Failed to execute GET request: %s. Reason: %s", url, e.getMessage() ) );
             return null;
         }
 
@@ -245,7 +259,7 @@ public class AbstractIT
             catch ( IOException e )
             {
                 e.printStackTrace();
-                Assert.fail(
+                fail(
                         String.format( "Failed to retrieve body content from: %s. Reason: %s", url, e.getMessage() ) );
             }
             finally
@@ -306,7 +320,7 @@ public class AbstractIT
         catch ( MalformedURLException e )
         {
             e.printStackTrace();
-            Assert.fail(
+            fail(
                     String.format( "Failed to format URL from parts: [%s]. Reason: %s", StringUtils.join( path, ", " ),
                                    e.getMessage() ) );
         }
@@ -328,7 +342,7 @@ public class AbstractIT
 
         if ( StringUtils.isEmpty( host ) || StringUtils.isEmpty( port ) )
         {
-            Assert.fail(
+            fail(
                     "Non-SSL host/port properties are missing. Did you forget to configure the docker-maven-plugin?" );
         }
 
@@ -342,7 +356,7 @@ public class AbstractIT
 
         if ( StringUtils.isEmpty( host ) || StringUtils.isEmpty( port ) )
         {
-            Assert.fail( "SSL host/port properties are missing. Did you forget to configure the docker-maven-plugin?" );
+            fail( "SSL host/port properties are missing. Did you forget to configure the docker-maven-plugin?" );
         }
 
         return String.format( SSL_URL_FORMAT, host, port );
@@ -401,7 +415,7 @@ public class AbstractIT
                     extra = "\nBody:\n\n" + body;
                 }
 
-                Assert.fail(
+                fail(
                         "Failed to put content to: " + path + ".\nURL: " + url + "\nStatus: " + response.getStatusLine()
                                 + extra );
             }
@@ -434,7 +448,7 @@ public class AbstractIT
                     extra = "\nBody:\n\n" + body;
                 }
 
-                Assert.fail(
+                fail(
                         "Failed to execute setup script using: " + url + ". Response was: " + response.getStatusLine()
                                 + extra + "\n\nScript body:\n\n" + scriptContent + "\n\n" );
             }

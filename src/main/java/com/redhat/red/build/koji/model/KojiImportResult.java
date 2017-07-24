@@ -15,7 +15,7 @@
  */
 package com.redhat.red.build.koji.model;
 
-import com.redhat.red.build.koji.KojiClientException;
+import com.redhat.red.build.koji.KojijiErrorInfo;
 import com.redhat.red.build.koji.model.json.KojiImport;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 
@@ -31,7 +31,7 @@ public class KojiImportResult
 
     private KojiImport importInfo;
 
-    private Map<String, KojiClientException> uploadErrors;
+    private Map<String, KojijiErrorInfo> uploadErrors;
 
     public KojiImportResult( KojiImport importInfo )
     {
@@ -54,12 +54,12 @@ public class KojiImportResult
         return importInfo;
     }
 
-    public Map<String, KojiClientException> getUploadErrors()
+    public Map<String, KojijiErrorInfo> getUploadErrors()
     {
         return uploadErrors;
     }
 
-    public KojiImportResult withUploadErrors( Map<String, KojiClientException> errors )
+    public KojiImportResult withUploadErrors( Map<String, KojijiErrorInfo> errors )
     {
         this.uploadErrors = errors;
         return this;

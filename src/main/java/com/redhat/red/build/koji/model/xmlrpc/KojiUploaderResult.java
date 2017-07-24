@@ -28,7 +28,9 @@ public final class KojiUploaderResult
 
     private long uploadSize;
 
-    private KojiClientException error;
+    private Exception error;
+
+    private boolean temporaryError;
 
     private UploadResponse response;
 
@@ -38,14 +40,20 @@ public final class KojiUploaderResult
         this.uploadSize = importFile.getSize();
     }
 
-    public KojiClientException getError()
+    public Exception getError()
     {
         return error;
     }
 
-    public void setError( KojiClientException error )
+    public boolean isTemporaryError()
+    {
+        return temporaryError;
+    }
+
+    public void setError( Exception error, boolean temporaryError )
     {
         this.error = error;
+        this.temporaryError = temporaryError;
     }
 
     public UploadResponse getResponse()
