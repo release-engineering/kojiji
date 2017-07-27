@@ -38,6 +38,10 @@ public class SimpleKojiConfigBuilder
 
     private Integer timeout;
 
+    private Integer connectionPoolTimeout;
+
+    private Integer maxConnections;
+
     private String krbCCache;
 
     private String krbKeytab;
@@ -62,7 +66,9 @@ public class SimpleKojiConfigBuilder
 
     public SimpleKojiConfig build()
     {
-        return new SimpleKojiConfig( kojiSiteId, kojiURL, clientKeyCertificateFile, kojiClientCertificatePassword, serverCertificateFile, timeout, trustSelfSigned, krbService, krbPrincipal, krbPassword, krbCCache, krbKeytab );
+        return new SimpleKojiConfig( kojiSiteId, kojiURL, clientKeyCertificateFile, kojiClientCertificatePassword,
+                                     serverCertificateFile, timeout, connectionPoolTimeout, trustSelfSigned,
+                                     maxConnections, krbService, krbPrincipal, krbPassword, krbCCache, krbKeytab );
     }
 
     public String getClientKeyCertificateFile()
@@ -139,6 +145,28 @@ public class SimpleKojiConfigBuilder
     public SimpleKojiConfigBuilder withTimeout( Integer timeout )
     {
         this.timeout = timeout;
+        return this;
+    }
+
+    public Integer getConnectionPoolTimeout()
+    {
+        return connectionPoolTimeout;
+    }
+
+    public SimpleKojiConfigBuilder withConnectionPoolTimeout( Integer connectionPoolTimeout )
+    {
+        this.connectionPoolTimeout = connectionPoolTimeout;
+        return this;
+    }
+
+    public Integer getMaxConnections()
+    {
+        return maxConnections;
+    }
+
+    public SimpleKojiConfigBuilder withMaxConnections( Integer maxConnections )
+    {
+        this.maxConnections = maxConnections;
         return this;
     }
 

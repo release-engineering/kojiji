@@ -109,6 +109,7 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.UserResponse;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -760,7 +761,7 @@ public class KojiClient
             {
                 String dirname = generateUploadDirname( session, importInfo );
 
-                Map<String, KojiClientException> uploadErrors =
+                Map<String, KojijiErrorInfo> uploadErrors =
                         uploadForImport( null, importedFileSuppliers, dirname, session );
 
                 //            Map<String, KojiClientException> uploadErrors =
@@ -1407,7 +1408,7 @@ public class KojiClient
                               importInfo.getBuildNVR().getName(), importInfo.getBuildNVR().getVersion(), session.getUserInfo().getUserName() );
     }
 
-    protected Map<String, KojiClientException> uploadForImport( KojiImport buildInfo,
+    protected Map<String, KojijiErrorInfo> uploadForImport( KojiImport buildInfo,
                                                                 Iterable<Supplier<ImportFile>> uploadedFileSuppliers,
                                                                 String dirname, KojiSessionInfo session )
             throws KojiClientException
@@ -1442,21 +1443,22 @@ public class KojiClient
         } );
 
         Logger logger = LoggerFactory.getLogger( getClass() );
-        Map<String, KojiClientException> uploadErrors = new HashMap<>();
+        Map<String, KojijiErrorInfo> uploadErrors = new HashMap<>();
         Set<UploadResponse> responses = new HashSet<>();
         int total = count.get();
         do
         {
-            logger.debug( "Waiting for %d uploads.", count.get() );
+            logger.debug( "Waiting for %s uploads.", count.get() );
 
             try
             {
                 Future<KojiUploaderResult> future = uploadService.take();
                 KojiUploaderResult result = future.get();
-                KojiClientException error = result.getError();
+                Exception error = result.getError();
                 if ( error != null )
                 {
-                    uploadErrors.put( result.getUploadFilePath(), error );
+                    uploadErrors.put(
+                            result.getUploadFilePath(), new KojijiErrorInfo( result.getUploadFilePath(), error, result.isTemporaryError() ) );
                 }
                 else
                 {
@@ -1488,11 +1490,17 @@ public class KojiClient
 
             try
             {
-                result.setResponse( upload( importFile.getStream(), importFile.getFilePath(), importFile.getSize(), dirname, session ) );
+                result.setResponse(
+                        upload( importFile.getStream(), importFile.getFilePath(), importFile.getSize(), dirname,
+                                session ) );
+            }
+            catch ( ConnectionPoolTimeoutException e )
+            {
+                result.setError( e, true );
             }
             catch ( KojiClientException e )
             {
-                result.setError( e );
+                result.setError( e, false );
             }
 
             return result;
@@ -1500,7 +1508,7 @@ public class KojiClient
     }
 
     protected UploadResponse upload( InputStream stream, String filepath, long size, String uploadDir, KojiSessionInfo session )
-            throws KojiClientException
+            throws KojiClientException, ConnectionPoolTimeoutException
     {
         CloseableHttpClient client = null;
         CloseableHttpResponse response = null;
@@ -1541,6 +1549,10 @@ public class KojiClient
                 throw new KojiClientException( "Failed to upload: %s to dir: %s. Server response: %s", filepath,
                                                uploadDir, response.getStatusLine() );
             }
+        }
+        catch ( ConnectionPoolTimeoutException e )
+        {
+            throw e;
         }
         catch ( IOException | JHttpCException | XmlRpcException e )
         {

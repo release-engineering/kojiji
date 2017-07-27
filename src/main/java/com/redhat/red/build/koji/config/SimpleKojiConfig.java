@@ -23,6 +23,8 @@ import org.commonjava.util.jhttpc.model.SiteTrustType;
 import java.io.File;
 import java.io.IOException;
 
+import static org.commonjava.util.jhttpc.model.SiteConfig.DEFAULT_CONNECTION_POOL_TIMEOUT_SECONDS;
+
 /**
  * Created by jdcasey on 1/12/16.
  */
@@ -45,9 +47,11 @@ public class SimpleKojiConfig
 
     private String kojiURL;
 
+    private Integer maxConnections;
+
     private Integer timeout;
 
-    private SiteConfig kojiSiteConfig;
+    private Integer connectionPoolTimeout;
 
     private String krbCCache;
 
@@ -59,16 +63,33 @@ public class SimpleKojiConfig
 
     private String krbService;
 
+    private SiteConfig kojiSiteConfig;
+
+    @Deprecated
     public SimpleKojiConfig( String id, String kojiURL, String clientKeyCertificateFile, String clientCertificatePassword,
-                             String serverCertificateFile, Integer timeout, Boolean trustSelfSigned, String krbService, String krbPrincipal, String krbPassword, String krbCCache, String krbKeytab )
+                             String serverCertificateFile, Integer timeout, Boolean trustSelfSigned, Integer maxConnections,
+                             String krbService, String krbPrincipal, String krbPassword, String krbCCache, String krbKeytab )
     {
+        this( id, kojiURL, clientKeyCertificateFile, clientCertificatePassword, serverCertificateFile, timeout, null,
+              trustSelfSigned, maxConnections, krbService, krbPrincipal, krbPassword, krbCCache, krbKeytab );
+    }
+
+    public SimpleKojiConfig( String id, String kojiURL, String clientKeyCertificateFile,
+                             String clientCertificatePassword, String serverCertificateFile, Integer timeout,
+                             Integer connectionPoolTimeout, Boolean trustSelfSigned, Integer maxConnections,
+                             String krbService, String krbPrincipal, String krbPassword, String krbCCache,
+                             String krbKeytab )
+    {
+
         this.clientKeyCertificateFile = clientKeyCertificateFile;
         this.clientCertificatePassword = clientCertificatePassword;
         this.serverCertificateFile = serverCertificateFile;
         this.timeout = timeout;
+        this.connectionPoolTimeout = connectionPoolTimeout;
         this.trustSelfSigned = trustSelfSigned;
         this.id = id;
         this.kojiURL = kojiURL;
+        this.maxConnections = maxConnections;
         this.krbService = krbService;
         this.krbPrincipal = krbPrincipal;
         this.krbPassword = krbPassword;
@@ -111,6 +132,8 @@ public class SimpleKojiConfig
             }
 
             builder.withRequestTimeoutSeconds( getTimeout() );
+            builder.withConnectionPoolTimeoutSeconds( getConnectionPoolTimeout() );
+            builder.withMaxConnections( getMaxConnections() );
 
             kojiSiteConfig = builder.build();
         }
@@ -154,6 +177,16 @@ public class SimpleKojiConfig
     public Integer getTimeout()
     {
         return timeout == null ? DEFAULT_TIMEOUT_SECONDS : timeout;
+    }
+
+    public Integer getConnectionPoolTimeout()
+    {
+        return timeout == null ? DEFAULT_CONNECTION_POOL_TIMEOUT_SECONDS : connectionPoolTimeout;
+    }
+
+    public Integer getMaxConnections()
+    {
+        return maxConnections == null ? SiteConfig.DEFAULT_MAX_CONNECTIONS : maxConnections;
     }
 
     @Override
