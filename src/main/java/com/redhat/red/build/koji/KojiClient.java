@@ -43,6 +43,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiTaskRequest;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUploaderResult;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiWinBuildInfo;
@@ -75,6 +76,8 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.GetWinBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetWinBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTagIdRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskRequestRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskRequestResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.KrbLoginRequest;
@@ -1140,6 +1143,17 @@ public class KojiClient
 
                 return taskResponse == null ? null : taskResponse.getTaskInfo();
             }, "Failed to load task info for: %s", taskId );
+    }
+
+    public KojiTaskRequest getTaskRequest( int taskId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+            return doXmlRpcAndThrow( ()->{
+                GetTaskRequestResponse taskRequestResponse = xmlrpcClient.call( new GetTaskRequestRequest( taskId ), GetTaskRequestResponse.class,
+                                   sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+                return taskRequestResponse == null ? null : taskRequestResponse.getTaskRequest();
+            }, "Failed to load task request for: %s", taskId );
     }
 
     public List<KojiBuildInfo> listTagged( KojiTagInfo tag, KojiSessionInfo session )
