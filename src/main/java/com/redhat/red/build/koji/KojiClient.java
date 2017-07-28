@@ -16,6 +16,7 @@
 package com.redhat.red.build.koji;
 
 import com.redhat.red.build.koji.config.KojiConfig;
+import com.redhat.red.build.koji.kerberos.KrbAuthenticator;
 import com.redhat.red.build.koji.model.ImportFile;
 import com.redhat.red.build.koji.model.KojiImportResult;
 import com.redhat.red.build.koji.model.json.KojiImport;
@@ -76,6 +77,8 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.GetTagIdRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.KrbLoginRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.KrbLoginResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsRequest;
@@ -100,6 +103,7 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.UntagBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UploadResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UserResponse;
+
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ConnectionPoolTimeoutException;
@@ -263,7 +267,7 @@ public class KojiClient
 
     public void setup()
     {
-        uploadService = new ExecutorCompletionService<KojiUploaderResult>( executorService );
+        uploadService = new ExecutorCompletionService<>( executorService );
         objectMapper = new KojiObjectMapper();
 
         Logger logger = LoggerFactory.getLogger( getClass() );
@@ -326,10 +330,45 @@ public class KojiClient
         }
     }
 
+    public KojiSessionInfo krbLogin()
+            throws KojiClientException
+    {
+        checkConnection();
+
+        try
+        {
+            KrbAuthenticator krbAuthenticator = new KrbAuthenticator( config );
+
+            String encodedApReq = krbAuthenticator.prepareRequest();
+
+            KrbLoginResponse loginResponse =
+                    xmlrpcClient.call( new KrbLoginRequest( encodedApReq ), KrbLoginResponse.class, NO_OP_URL_BUILDER, STANDARD_REQUEST_MODIFIER );
+
+            if ( loginResponse == null )
+            {
+                throw new KojiClientException( "Failed to get loginResponse" );
+            }
+
+            KojiSessionInfo session = krbAuthenticator.hanldleResponse( loginResponse );
+            setLoggedInUser( session );
+
+            return session;
+        }
+        catch ( XmlRpcException e )
+        {
+            throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
+        }
+    }
+
     public KojiSessionInfo login()
             throws KojiClientException
     {
         checkConnection();
+
+        if ( config.getKrbService() != null )
+        {
+            return krbLogin();
+        }
 
         try
         {
@@ -343,7 +382,7 @@ public class KojiClient
 
             if ( loginResponse == null )
             {
-                return null;
+                throw new KojiClientException( "Failed to get loginResponse" );
             }
 
             KojiSessionInfo session = loginResponse.getSessionInfo();
@@ -457,14 +496,7 @@ public class KojiClient
             UserResponse response =
                     xmlrpcClient.call( new LoggedInUserRequest(), UserResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
-
-            if ( response != null )
-            {
                 return response == null ? null : response.getUserInfo();
-            }
-
-            return null;
-
         }, "Failed to retrieve current user info." );
     }
 
@@ -1236,7 +1268,7 @@ public class KojiClient
 
             if ( buildTypeInfo != null )
             {
-                buildInfo = buildTypeInfo.addBuildTypeInfo(buildInfo);
+                return buildTypeInfo.addBuildTypeInfo( buildInfo );
             }
         }
 
@@ -1443,7 +1475,6 @@ public class KojiClient
         {
             closeQuietly( response );
             closeQuietly( client );
-
         }
     }
 

@@ -12,33 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-package com.redhat.red.build.koji.config;
+ */package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.util.jhttpc.model.SiteConfig;
+import org.commonjava.rwx.binding.anno.DataIndex;
+import org.commonjava.rwx.binding.anno.IndexRefs;
+import org.commonjava.rwx.binding.anno.Response;
 
-import java.io.IOException;
-
-/**
- * Created by jdcasey on 1/12/16.
- */
-public interface KojiConfig
+@Response
+public class KrbLoginResponse
 {
-    SiteConfig getKojiSiteConfig() throws IOException;
+    @DataIndex( 0 )
+    private KrbLoginResponseInfo info;
 
-    String getKojiURL();
+    @IndexRefs( 0 )
+    public KrbLoginResponse( KrbLoginResponseInfo info )
+    {
+        this.info = info;
+    }
 
-    String getKojiClientCertificatePassword();
-
-    String getKojiSiteId();
-
-    String getKrbCCache();
-
-    String getKrbKeytab();
-
-    String getKrbPassword();
-
-    String getKrbPrincipal();
-
-    String getKrbService();
+    public KrbLoginResponseInfo getInfo()
+    {
+        return info;
+    }
 }

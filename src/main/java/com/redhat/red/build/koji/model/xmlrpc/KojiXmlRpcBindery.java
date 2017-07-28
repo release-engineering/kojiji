@@ -46,6 +46,8 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetWinBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetWinBuildResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.KrbLoginRequest;
+import com.redhat.red.build.koji.model.xmlrpc.messages.KrbLoginResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsRequest;
@@ -134,6 +136,8 @@ public class KojiXmlRpcBindery
                 GetWinBuildRequest.class,
                 GetWinBuildResponse.class,
                 IdResponse.class,
+                KrbLoginRequest.class,
+                KrbLoginResponse.class,
                 ListArchivesRequest.class,
                 ListArchivesResponse.class,
                 ListBuildsRequest.class,
