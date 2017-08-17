@@ -16,8 +16,8 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 /**
  * Created by jdcasey on 1/29/16.
@@ -28,6 +28,15 @@ public class GetBuildByNVRObjRequest
 {
     @DataIndex( 0 )
     private KojiNVR nvr;
+
+    public GetBuildByNVRObjRequest()
+    {
+    }
+
+    public void setNvr( KojiNVR nvr )
+    {
+        this.nvr = nvr;
+    }
 
     public GetBuildByNVRObjRequest( KojiNVR nvr )
     {

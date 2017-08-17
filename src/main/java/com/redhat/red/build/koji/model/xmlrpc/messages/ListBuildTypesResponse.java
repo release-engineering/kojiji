@@ -16,10 +16,8 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildType;
-import org.commonjava.rwx.binding.anno.Contains;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 import java.util.List;
 
@@ -27,14 +25,12 @@ import java.util.List;
 public class ListBuildTypesResponse
 {
     @DataIndex( 0 )
-    @Contains( KojiBuildType.class )
     private List<KojiBuildType> buildTypes;
 
     public ListBuildTypesResponse()
     {
     }
 
-    @IndexRefs( 0 )
     public ListBuildTypesResponse( List<KojiBuildType> buildTypes )
     {
         this.buildTypes = buildTypes;

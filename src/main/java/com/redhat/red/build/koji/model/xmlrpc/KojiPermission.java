@@ -15,9 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 /**
  * Created by jdcasey on 1/6/16.
@@ -31,10 +30,23 @@ public class KojiPermission
     @DataKey( "id" )
     private int id;
 
-    @KeyRefs( {"id", "name"} )
     public KojiPermission( int id, String name )
     {
         this.name = name;
+        this.id = id;
+    }
+
+    public KojiPermission()
+    {
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public void setId( int id )
+    {
         this.id = id;
     }
 

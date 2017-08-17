@@ -18,9 +18,8 @@ package com.redhat.red.build.koji.model.xmlrpc;
 import javax.security.auth.DestroyFailedException;
 import javax.security.auth.Destroyable;
 
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 /**
  * Created by jdcasey on 12/3/15.
@@ -39,11 +38,29 @@ public class KojiSessionInfo
 
     private transient boolean destroyed = false;
 
-    @KeyRefs( {"session-id", "session-key"} )
     public KojiSessionInfo( int sessionId, String sessionKey )
     {
         this.sessionId = sessionId;
         this.sessionKey = sessionKey;
+    }
+
+    public KojiSessionInfo()
+    {
+    }
+
+    public void setSessionId( int sessionId )
+    {
+        this.sessionId = sessionId;
+    }
+
+    public void setSessionKey( String sessionKey )
+    {
+        this.sessionKey = sessionKey;
+    }
+
+    public void setDestroyed( boolean destroyed )
+    {
+        this.destroyed = destroyed;
     }
 
     public int getSessionId()

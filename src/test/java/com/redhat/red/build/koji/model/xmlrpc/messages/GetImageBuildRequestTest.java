@@ -16,59 +16,30 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 
 public class GetImageBuildRequestTest
-    extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
 
     @Test
-    public void verifyVsCapturedHttpRequest()
-            throws Exception
+    public void verifyVsCapturedHttpRequest() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new GetImageBuildRequest(564910) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "getImageBuild-request.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
+        verifyVsCapturedMessage( GetImageBuildRequest.class, "getImageBuild-request.xml" );
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new GetImageBuildRequest( new KojiIdOrName( 564910 ) ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        GetImageBuildRequest parsed = bindery.parse( generator, GetImageBuildRequest.class );
+        GetImageBuildRequest parsed =
+                        roundTrip( GetImageBuildRequest.class, new GetImageBuildRequest( new KojiIdOrName( 564910 ) ) );
         assertNotNull( parsed );
-
         assertThat( parsed.getBuildIdOrName().getId(), equalTo( 564910 ) );
     }
 
-    @Test
-    public void renderXML()
-            throws Exception
-    {
-        String xml = bindery.renderString( new GetImageBuildRequest( 564910 ) );
-        System.out.println( xml );
-    }
 }

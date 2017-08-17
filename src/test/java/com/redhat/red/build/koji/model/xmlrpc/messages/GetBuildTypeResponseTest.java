@@ -20,71 +20,44 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildInfo;
 
 public class GetBuildTypeResponseTest
-    extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
     @Test
-    public void verifyVsCapturedHttp()
-            throws Exception
+    public void verifyVsCapturedHttp() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
+        GetBuildTypeResponse parsed = parseCapturedMessage( GetBuildTypeResponse.class, "getBuildType-response.xml" );
+        GetBuildTypeResponse expected = getInstance();
 
-        KojiBuildTypeInfo info = new KojiBuildTypeInfo();
-        info.setName("maven");
-
-        KojiMavenBuildInfo mInfo = new KojiMavenBuildInfo();
-        mInfo.setGroupId( "org.jboss.ws.cxf" );
-        mInfo.setArtifactId( "jbossws-cxf" );
-        mInfo.setVersion( "5.1.5.Final-redhat-1" );
-
-        info.setBuildInfo( mInfo );
-
-        GetBuildTypeResponse response = new GetBuildTypeResponse( info );
-
-        bindery.render( eventParser, response );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "getBuildType-response.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
+        assertEquals( expected.getBuildTypeInfo(), parsed.getBuildTypeInfo() );
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
+        GetBuildTypeResponse inst = getInstance();
+        GetBuildTypeResponse parsed = roundTrip( GetBuildTypeResponse.class, inst );
 
+        assertThat( parsed.getBuildTypeInfo(), equalTo( inst.getBuildTypeInfo() ) );
+    }
+
+    private GetBuildTypeResponse getInstance()
+    {
         KojiBuildTypeInfo info = new KojiBuildTypeInfo();
         info.setName( "maven" );
 
         KojiMavenBuildInfo mInfo = new KojiMavenBuildInfo();
         mInfo.setGroupId( "org.jboss.ws.cxf" );
-        mInfo.setArtifactId(" jbossws-cxf" );
-        mInfo.setVersion(" 5.1.5.Final-redhat-1" );
+        mInfo.setArtifactId( "jbossws-cxf" );
+        mInfo.setVersion( "5.1.5.Final-redhat-1" );
+        mInfo.setBuildId( 506045 );
 
         info.setBuildInfo( mInfo );
-
-        bindery.render( eventParser, new GetBuildTypeResponse( info ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        GetBuildTypeResponse parsed = bindery.parse( generator, GetBuildTypeResponse.class );
-        assertNotNull( parsed );
-
-        assertThat( parsed.getBuildTypeInfo(), equalTo( info ) );
+        return new GetBuildTypeResponse( info );
     }
 }

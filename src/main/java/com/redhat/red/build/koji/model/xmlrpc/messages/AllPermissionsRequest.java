@@ -15,7 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.Request;
 
 /**
  * Created by jdcasey on 1/6/16.

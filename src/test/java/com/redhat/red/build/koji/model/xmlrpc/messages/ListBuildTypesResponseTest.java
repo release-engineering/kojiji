@@ -15,83 +15,54 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildType;
-import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class ListBuildTypesResponseTest
-    extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
     @Test
-    public void verifyVsCapturedHttp()
-            throws Exception
+    public void verifyVsCapturedHttp() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
+        ListBuildTypesResponse parsed =
+                        parseCapturedMessage( ListBuildTypesResponse.class, "listBuildTypes-response.xml" );
+        assertListBuildTypesResponse( parsed );
+    }
 
-        List<KojiBuildType> list = new ArrayList<>(4);
-        KojiBuildType one = new KojiBuildType(1, "rpm");
-        KojiBuildType two = new KojiBuildType(2, "maven");
-        KojiBuildType three = new KojiBuildType(3, "win");
-        KojiBuildType four = new KojiBuildType(4, "image");
-        list.add(one);
-        list.add(two);
-        list.add(three);
-        list.add(four);
+    private void assertListBuildTypesResponse( ListBuildTypesResponse parsed )
+    {
+        ListBuildTypesResponse expected = getInstance();
+        assertThat( parsed.getBuildTypes().size(), equalTo( 4 ) );
+        assertThat( parsed.getBuildTypes().containsAll( expected.getBuildTypes() ), equalTo( true ) );
+    }
+
+    private ListBuildTypesResponse getInstance()
+    {
+        List<KojiBuildType> list = new ArrayList<>( 4 );
+        KojiBuildType one = new KojiBuildType( 1, "rpm" );
+        KojiBuildType two = new KojiBuildType( 2, "maven" );
+        KojiBuildType three = new KojiBuildType( 3, "win" );
+        KojiBuildType four = new KojiBuildType( 4, "image" );
+        list.add( one );
+        list.add( two );
+        list.add( three );
+        list.add( four );
 
         ListBuildTypesResponse response = new ListBuildTypesResponse();
-        response.setBuildTypes(list);
-
-        bindery.render( eventParser, response );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "listBuildTypes-response.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
+        response.setBuildTypes( list );
+        return response;
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-
-        List<KojiBuildType> list = new ArrayList<>(4);
-        KojiBuildType one = new KojiBuildType(1, "rpm");
-        KojiBuildType two = new KojiBuildType(2, "maven");
-        KojiBuildType three = new KojiBuildType(3, "win");
-        KojiBuildType four = new KojiBuildType(4, "image");
-        list.add(one);
-        list.add(two);
-        list.add(three);
-        list.add(four);
-
-        bindery.render( eventParser, new ListBuildTypesResponse( list ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        ListBuildTypesResponse parsed = bindery.parse( generator, ListBuildTypesResponse.class );
-        assertNotNull( parsed );
-
-        assertThat( parsed.getBuildTypes().size(), equalTo( 4 ) );
-        assertThat( parsed.getBuildTypes().contains( one ), equalTo( true ) );
-        assertThat( parsed.getBuildTypes().contains( two ), equalTo( true ) );
-        assertThat( parsed.getBuildTypes().contains( three ), equalTo( true ) );
-        assertThat( parsed.getBuildTypes().contains( four ), equalTo( true ) );
+        ListBuildTypesResponse parsed = roundTrip( ListBuildTypesResponse.class, getInstance() );
+        assertListBuildTypesResponse( parsed );
     }
 }

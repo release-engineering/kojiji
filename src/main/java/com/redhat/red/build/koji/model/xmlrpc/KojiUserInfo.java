@@ -15,13 +15,11 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
-
-import com.redhat.red.build.koji.model.util.KojiUserStatusValueBinder;
-import com.redhat.red.build.koji.model.util.KojiUserTypeValueBinder;
+import com.redhat.red.build.koji.model.converter.KojiUserStatusConverter;
+import com.redhat.red.build.koji.model.converter.KojiUserTypeConverter;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 /**
  * Created by jdcasey on 12/3/15.
@@ -30,11 +28,11 @@ import com.redhat.red.build.koji.model.util.KojiUserTypeValueBinder;
 public class KojiUserInfo
 {
     @DataKey( "status" )
-    @Converter( KojiUserStatusValueBinder.class )
+    @Converter( KojiUserStatusConverter.class )
     private KojiUserStatus status;
 
     @DataKey( "usertype" )
-    @Converter( KojiUserTypeValueBinder.class )
+    @Converter( KojiUserTypeConverter.class )
     private KojiUserType userType;
 
     @DataKey( "id" )
@@ -46,13 +44,41 @@ public class KojiUserInfo
     @DataKey( "krb_principal" )
     private String kerberosPrincipal;
 
-    @KeyRefs( { "status", "usertype", "id", "name", "krb_principal" } )
     public KojiUserInfo( KojiUserStatus status, KojiUserType userType, int userId, String userName, String kerberosPrincipal )
     {
         this.status = status;
         this.userType = userType;
         this.userId = userId;
         this.userName = userName;
+        this.kerberosPrincipal = kerberosPrincipal;
+    }
+
+    public KojiUserInfo()
+    {
+    }
+
+    public void setStatus( KojiUserStatus status )
+    {
+        this.status = status;
+    }
+
+    public void setUserType( KojiUserType userType )
+    {
+        this.userType = userType;
+    }
+
+    public void setUserId( int userId )
+    {
+        this.userId = userId;
+    }
+
+    public void setUserName( String userName )
+    {
+        this.userName = userName;
+    }
+
+    public void setKerberosPrincipal( String kerberosPrincipal )
+    {
         this.kerberosPrincipal = kerberosPrincipal;
     }
 

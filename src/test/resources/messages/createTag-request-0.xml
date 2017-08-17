@@ -1,47 +1,41 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 <methodCall>
-		
-	<methodName>createTag</methodName>
-		
-	<params>
-				
-		<param>
-						
-			<value>
-				<string>test-tag</string>
-			</value>
-					
-		</param>
-				
-		<param>
-						
-			<value>
-				<struct>
-									
-					<member>
-											
-						<name>__starstar</name>
-											
-						<value>
-							<boolean>1</boolean>
-						</value>
-										
-					</member>
-									
-					<member>
-											
-						<name>arches</name>
-											
-						<value>
-							<string>x86_64 i686</string>
-						</value>
-										
-					</member>
-								
-				</struct>
-			</value>
-					
-		</param>
-			
-	</params>
+    <methodName>createTag</methodName>
+    <params>
+        <param>
+            <value>
+                <string>test-tag</string>
+            </value>
+        </param>
+        <param>
+            <value>
+                <nil></nil>
+            </value>
+        </param>
+        <param>
+            <value>
+                <string>x86_64 i686</string>
+            </value>
+        </param>
+        <param>
+            <value>
+                <nil></nil>
+            </value>
+        </param>
+        <param>
+            <value>
+                <boolean>0</boolean>
+            </value>
+        </param>
+        <param>
+            <value>
+                <boolean>1</boolean>
+            </value>
+        </param>
+        <param>
+            <value>
+                <boolean>1</boolean>
+            </value>
+        </param>
+    </params>
 </methodCall>

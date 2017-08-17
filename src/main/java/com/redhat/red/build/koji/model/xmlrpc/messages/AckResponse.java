@@ -15,9 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 /**
  * Created by jdcasey on 1/11/16.
@@ -25,4 +24,36 @@ import org.commonjava.rwx.binding.anno.Response;
 @Response
 public class AckResponse
 {
+    @DataIndex( 0 )
+    private Object value;
+
+    public Object getValue()
+    {
+        return value;
+    }
+
+    public void setValue( Object value )
+    {
+        this.value = value;
+    }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+            return true;
+        if ( o == null || getClass() != o.getClass() )
+            return false;
+
+        AckResponse response = (AckResponse) o;
+
+        return value != null ? value.equals( response.value ) : response.value == null;
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return value != null ? value.hashCode() : 0;
+    }
 }

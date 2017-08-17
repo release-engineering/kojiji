@@ -20,9 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,10 +77,9 @@ public class BuildOutput
     @DataKey( EXTRA_INFO )
     private FileExtraInfo extraInfo;
 
-    private BuildOutput(){}
+    public BuildOutput(){}
 
     @JsonCreator
-    @KeyRefs( { BUILDROOT_ID, FILENAME, FILESIZE, ARCH, CHECKSUM_TYPE, CHECKSUM, TYPE, EXTRA_INFO } )
     public BuildOutput( @JsonProperty( BUILDROOT_ID ) int buildrootId, @JsonProperty( FILENAME ) String filename,
                         @JsonProperty( FILESIZE ) int fileSize, @JsonProperty( ARCH ) String arch,
                         @JsonProperty( CHECKSUM_TYPE ) String checksumType, @JsonProperty( CHECKSUM ) String checksum,
@@ -94,6 +92,46 @@ public class BuildOutput
         this.checksumType = checksumType;
         this.checksum = checksum;
         this.outputType = outputType;
+        this.extraInfo = extraInfo;
+    }
+
+    public void setBuildrootId( int buildrootId )
+    {
+        this.buildrootId = buildrootId;
+    }
+
+    public void setFilename( String filename )
+    {
+        this.filename = filename;
+    }
+
+    public void setFileSize( int fileSize )
+    {
+        this.fileSize = fileSize;
+    }
+
+    public void setArch( String arch )
+    {
+        this.arch = arch;
+    }
+
+    public void setChecksumType( String checksumType )
+    {
+        this.checksumType = checksumType;
+    }
+
+    public void setChecksum( String checksum )
+    {
+        this.checksum = checksum;
+    }
+
+    public void setOutputType( String outputType )
+    {
+        this.outputType = outputType;
+    }
+
+    public void setExtraInfo( FileExtraInfo extraInfo )
+    {
         this.extraInfo = extraInfo;
     }
 

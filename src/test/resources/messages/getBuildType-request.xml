@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<methodCall><methodName>getBuildType</methodName><params><param><value><int>506045</int></value></param></params></methodCall>
+<methodCall>
+    <methodName>getBuildType</methodName>
+    <params>
+        <param>
+            <value>
+                <int>506045</int>
+            </value>
+        </param>
+    </params>
+</methodCall>

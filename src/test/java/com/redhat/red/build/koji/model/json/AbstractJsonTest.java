@@ -15,8 +15,11 @@
  */
 package com.redhat.red.build.koji.model.json;
 
+import com.redhat.red.build.koji.model.generated.Model_Registry;
 import com.redhat.red.build.koji.model.json.util.KojiObjectMapper;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
+import org.commonjava.rwx.core.Registry;
+import org.junit.BeforeClass;
 
 import java.util.Arrays;
 import java.util.Calendar;

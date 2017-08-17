@@ -16,11 +16,10 @@
 package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.redhat.red.build.koji.model.util.StringListValueBinder;
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.SkipNull;
-import org.commonjava.rwx.binding.anno.StructPart;
+import com.redhat.red.build.koji.model.converter.StringListConverter;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import java.util.List;
 
@@ -36,29 +35,25 @@ public class KojiTagInfo
     private boolean useKojiKeywords = true;
 
     @DataKey( "id" )
-    @SkipNull
-    private Integer id;
+    private int id;
 
     @DataKey( "name" )
     private String name;
 
     @DataKey( "perm" )
-    @SkipNull
     @JsonProperty( "perm" )
     private String permission;
 
     @DataKey( "perm_id" )
-    @SkipNull
     @JsonProperty( "perm_id" )
     private Integer permissionId;
 
     @DataKey( "arches" )
-    @Converter( StringListValueBinder.class )
+    @Converter( StringListConverter.class )
     private List<String> arches;
 
     @DataKey( "locked" )
-    @SkipNull
-    private Boolean locked;
+    private boolean locked;
 
     @DataKey( "maven_support" )
     @JsonProperty( "maven_support" )
@@ -86,6 +81,21 @@ public class KojiTagInfo
     public KojiTagInfo(String name)
     {
         this.name = name;
+    }
+
+    public void setId( int id )
+    {
+        this.id = id;
+    }
+
+    public boolean getLocked()
+    {
+        return locked;
+    }
+
+    public void setLocked( boolean locked )
+    {
+        this.locked = locked;
     }
 
     public int getId()
@@ -123,14 +133,19 @@ public class KojiTagInfo
         return mavenSupport;
     }
 
+    public boolean getMavenSupport()
+    {
+        return mavenSupport;
+    }
+
     public boolean isMavenIncludeAll()
     {
         return mavenIncludeAll;
     }
 
-    public void setId( int id )
+    public boolean getMavenIncludeAll()
     {
-        this.id = id;
+        return mavenIncludeAll;
     }
 
     public void setName( String name )
@@ -153,11 +168,6 @@ public class KojiTagInfo
         this.arches = arches;
     }
 
-    public void setLocked( boolean locked )
-    {
-        this.locked = locked;
-    }
-
     public void setMavenSupport( boolean mavenSupport )
     {
         this.mavenSupport = mavenSupport;
@@ -169,6 +179,11 @@ public class KojiTagInfo
     }
 
     public boolean isUseKojiKeywords()
+    {
+        return useKojiKeywords;
+    }
+
+    public boolean getUseKojiKeywords()
     {
         return useKojiKeywords;
     }

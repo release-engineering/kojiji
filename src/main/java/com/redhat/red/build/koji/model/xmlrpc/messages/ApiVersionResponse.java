@@ -15,10 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Request;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 /**
  * Created by jdcasey on 12/3/15.
@@ -29,8 +27,16 @@ public class ApiVersionResponse
     @DataIndex( 0 )
     private int apiVersion;
 
-    @IndexRefs( { 0 } )
+    public ApiVersionResponse()
+    {
+    }
+
     public ApiVersionResponse( int apiVersion )
+    {
+        this.apiVersion = apiVersion;
+    }
+
+    public void setApiVersion( int apiVersion )
     {
         this.apiVersion = apiVersion;
     }

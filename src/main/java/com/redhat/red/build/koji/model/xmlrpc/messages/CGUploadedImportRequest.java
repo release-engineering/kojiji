@@ -16,9 +16,8 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 /**
  * Calls CGImport with the metadata.json file uploaded previously (and a reference to the file is included here).
@@ -33,10 +32,13 @@ public class CGUploadedImportRequest
     @DataIndex( 1 )
     private String dirname;
 
-    @IndexRefs( 1 )
     public CGUploadedImportRequest( String dirname )
     {
         this.dirname = dirname;
+    }
+
+    public CGUploadedImportRequest()
+    {
     }
 
     public String getMetadataFilename()

@@ -16,9 +16,8 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 /**
  * Created by jdcasey on 11/17/15.
@@ -29,8 +28,16 @@ public class LoginResponse
     @DataIndex( 0 )
     private KojiSessionInfo sessionInfo;
 
-    @IndexRefs( {0} )
     public LoginResponse( KojiSessionInfo sessionInfo )
+    {
+        this.sessionInfo = sessionInfo;
+    }
+
+    public LoginResponse()
+    {
+    }
+
+    public void setSessionInfo( KojiSessionInfo sessionInfo )
     {
         this.sessionInfo = sessionInfo;
     }

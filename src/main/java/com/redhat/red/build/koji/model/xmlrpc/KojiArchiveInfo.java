@@ -17,16 +17,16 @@ package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.redhat.red.build.koji.model.util.KojiChecksumTypeValueBinder;
-import com.redhat.red.build.koji.model.util.StringListValueBinder;
+import com.redhat.red.build.koji.model.converter.KojiChecksumTypeConverter;
+import com.redhat.red.build.koji.model.converter.StringListConverter;
 
 import org.commonjava.maven.atlas.ident.ref.ArtifactRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleArtifactRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -61,11 +61,11 @@ public class KojiArchiveInfo
     private String relPath;
 
     @DataKey( "platforms" )
-    @Converter( StringListValueBinder.class )
+    @Converter( StringListConverter.class )
     private List<String> platforms;
 
     @DataKey( "flags" )
-    @Converter( StringListValueBinder.class )
+    @Converter( StringListConverter.class )
     private List<String> flags;
 
     @DataKey ( "arch" )
@@ -93,7 +93,7 @@ public class KojiArchiveInfo
     @DataKey( "checksum" )
     private String checksum;
 
-    @Converter( KojiChecksumTypeValueBinder.class )
+    @Converter( KojiChecksumTypeConverter.class )
     @DataKey( "checksum_type" )
     @JsonProperty( "checksum_type" )
     private KojiChecksumType checksumType;
@@ -112,6 +112,10 @@ public class KojiArchiveInfo
 
     @DataKey( "size" )
     private Integer size;
+
+    public KojiArchiveInfo()
+    {
+    }
 
     public Integer getArchiveId()
     {

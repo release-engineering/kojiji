@@ -15,11 +15,11 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import com.redhat.red.build.koji.model.util.StringListValueBinder;
+import com.redhat.red.build.koji.model.converter.StringListConverter;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class CreateTagRequest
     private KojiIdOrName parent;
 
     @DataIndex( 2 )
-    @Converter( StringListValueBinder.class )
+    @Converter( StringListConverter.class )
     private List<String> arches;
 
     @DataIndex( 3 )
@@ -90,6 +90,11 @@ public class CreateTagRequest
         return locked;
     }
 
+    public boolean getLocked()
+    {
+        return locked;
+    }
+
     public void setLocked( boolean locked )
     {
         this.locked = locked;
@@ -100,12 +105,22 @@ public class CreateTagRequest
         return mavenSupport;
     }
 
+    public boolean getMavenSupport()
+    {
+        return mavenSupport;
+    }
+
     public void setMavenSupport( boolean mavenSupport )
     {
         this.mavenSupport = mavenSupport;
     }
 
     public boolean isMavenIncludeAll()
+    {
+        return mavenIncludeAll;
+    }
+
+    public boolean getMavenIncludeAll()
     {
         return mavenIncludeAll;
     }

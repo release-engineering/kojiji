@@ -15,9 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 /**
  * Created by jdcasey on 1/11/16.
@@ -28,8 +27,16 @@ public class IdResponse
     @DataIndex( 0 )
     private Integer id;
 
-    @IndexRefs( 0 )
     public IdResponse( Integer id )
+    {
+        this.id = id;
+    }
+
+    public IdResponse()
+    {
+    }
+
+    public void setId( Integer id )
     {
         this.id = id;
     }

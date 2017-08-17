@@ -16,9 +16,8 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 /**
  * Created by jdcasey on 5/6/16.
@@ -27,15 +26,18 @@ import org.commonjava.rwx.binding.anno.Request;
 public class ListTagsRequest
 {
     @DataIndex( 0 )
-    private final KojiTagQuery query;
+    private KojiTagQuery query;
 
     public ListTagsRequest()
     {
-        this.query = null;
     }
 
-    @IndexRefs( 0 )
     public ListTagsRequest( KojiTagQuery query )
+    {
+        this.query = query;
+    }
+
+    public void setQuery( KojiTagQuery query )
     {
         this.query = query;
     }

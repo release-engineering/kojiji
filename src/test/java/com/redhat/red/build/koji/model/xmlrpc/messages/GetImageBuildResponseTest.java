@@ -16,56 +16,28 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiImageBuildInfo;
 
 public class GetImageBuildResponseTest
-    extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
     @Test
-    public void verifyVsCapturedHttp()
-            throws Exception
+    public void verifyVsCapturedHttp() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-
-        GetImageBuildResponse response = new GetImageBuildResponse(new KojiImageBuildInfo(564910));
-
-        bindery.render( eventParser, response );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "getImageBuild-response.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
+        verifyVsCapturedMessage( GetImageBuildResponse.class, "getImageBuild-response.xml" );
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-
         KojiImageBuildInfo info = new KojiImageBuildInfo();
-        info.setBuildId(564910);
+        info.setBuildId( 564910 );
 
-        bindery.render( eventParser, new GetImageBuildResponse( info ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        GetImageBuildResponse parsed = bindery.parse( generator, GetImageBuildResponse.class );
-        assertNotNull( parsed );
+        GetImageBuildResponse parsed = roundTrip( GetImageBuildResponse.class, new GetImageBuildResponse( info ) );
 
         assertThat( parsed.getImageBuildInfo(), equalTo( info ) );
     }

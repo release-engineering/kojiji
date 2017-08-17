@@ -15,9 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserInfo;
 
 /**
@@ -29,8 +28,16 @@ public class UserResponse
     @DataIndex( 0 )
     private KojiUserInfo userInfo;
 
-    @IndexRefs( { 0 } )
     public UserResponse( KojiUserInfo userInfo )
+    {
+        this.userInfo = userInfo;
+    }
+
+    public UserResponse()
+    {
+    }
+
+    public void setUserInfo( KojiUserInfo userInfo )
     {
         this.userInfo = userInfo;
     }

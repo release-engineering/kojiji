@@ -16,67 +16,37 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
-import org.apache.commons.lang.StringUtils;
-import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 /**
  * Created by jdcasey on 5/11/16.
  */
 public class ListTagsRequestTest
-    extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
-    @Test
-    public void verifyVsCapturedHttpRequest()
-            throws Exception
-    {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new ListTagsRequest( new KojiTagQuery( 422953 ) ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        System.out.printf( "Got Events:\nSTART\n  %s\nEND", StringUtils.join( objectEvents, "\n  ") );
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "listTags-byBuildId-request.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
-    }
+    private static int buildId = 422953;
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void verifyVsCapturedHttpRequest() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-
-        int buildId = 422953;
-        bindery.render( eventParser, new ListTagsRequest( new KojiTagQuery( buildId ) ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        ListTagsRequest parsed = bindery.parse( generator, ListTagsRequest.class );
-        assertNotNull( parsed );
-
+        ListTagsRequest parsed = parseCapturedMessage( ListTagsRequest.class, "listTags-byBuildId-request.xml" );
         assertThat( parsed.getQuery().getBuildId().getId(), equalTo( buildId ) );
     }
 
     @Test
-    public void renderXML()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        int buildId = 422953;
-        String xml = bindery.renderString( new ListTagsRequest( new KojiTagQuery( buildId ) ) );
+        ListTagsRequest parsed = roundTrip( ListTagsRequest.class, new ListTagsRequest( new KojiTagQuery( buildId ) ) );
+        assertThat( parsed.getQuery().getBuildId().getId(), equalTo( buildId ) );
+    }
+
+    @Test
+    public void renderXML() throws Exception
+    {
+        String xml = rwxMapper.render( new ListTagsRequest( new KojiTagQuery( buildId ) ) );
         System.out.println( xml );
     }
 }

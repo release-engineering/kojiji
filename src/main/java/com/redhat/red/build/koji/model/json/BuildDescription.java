@@ -17,12 +17,11 @@ package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.redhat.red.build.koji.model.util.TimestampIntValueBinder;
+import com.redhat.red.build.koji.model.converter.TimestampIntConverter;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -60,12 +59,12 @@ public class BuildDescription
 
     @JsonProperty( START_TIME )
     @DataKey( START_TIME )
-    @Converter( TimestampIntValueBinder.class )
+    @Converter( TimestampIntConverter.class )
     private Date startTime;
 
     @JsonProperty( END_TIME )
     @DataKey( END_TIME )
-    @Converter( TimestampIntValueBinder.class )
+    @Converter( TimestampIntConverter.class )
     private Date endTime;
 
     @JsonProperty( SOURCE )
@@ -76,10 +75,9 @@ public class BuildDescription
     @DataKey( EXTRA_INFO )
     private BuildExtraInfo extraInfo;
 
-    private BuildDescription(){}
+    public BuildDescription(){}
 
     @JsonCreator
-    @KeyRefs( { NAME, VERSION, RELEASE, START_TIME, END_TIME, SOURCE } )
     public BuildDescription( @JsonProperty( NAME ) String name, @JsonProperty( VERSION ) String version,
                              @JsonProperty( RELEASE ) String release, @JsonProperty( START_TIME ) Date startTime,
                              @JsonProperty( END_TIME ) Date endTime,
@@ -90,6 +88,36 @@ public class BuildDescription
         this.release = release;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.source = source;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public void setVersion( String version )
+    {
+        this.version = version;
+    }
+
+    public void setRelease( String release )
+    {
+        this.release = release;
+    }
+
+    public void setStartTime( Date startTime )
+    {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime( Date endTime )
+    {
+        this.endTime = endTime;
+    }
+
+    public void setSource( BuildSource source )
+    {
         this.source = source;
     }
 

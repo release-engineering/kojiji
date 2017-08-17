@@ -16,23 +16,25 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeQuery;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 @Request( method="listBTypes" )
 public class ListBuildTypesRequest
 {
     @DataIndex( 0 )
-    private final KojiBuildTypeQuery query;
+    private KojiBuildTypeQuery query;
 
     public ListBuildTypesRequest()
     {
-        this.query = null;
     }
 
-    @IndexRefs( 0 )
     public ListBuildTypesRequest( KojiBuildTypeQuery query )
+    {
+        this.query = query;
+    }
+
+    public void setQuery( KojiBuildTypeQuery query )
     {
         this.query = query;
     }

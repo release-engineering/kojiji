@@ -17,8 +17,8 @@ package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import java.util.Objects;
 import java.util.Set;
@@ -33,7 +33,6 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.VERSION;
 import static com.redhat.red.build.koji.model.json.util.Verifications.checkNull;
 
 @JsonTypeName("rpm")
-@StructPart
 public class RPMBuildComponent extends BuildComponent {
 
     @JsonProperty(NAME)

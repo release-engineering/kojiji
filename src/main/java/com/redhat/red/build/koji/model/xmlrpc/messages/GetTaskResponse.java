@@ -15,11 +15,9 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 /**
  * Created by jdcasey on 1/29/16.
@@ -30,8 +28,16 @@ public class GetTaskResponse
     @DataIndex( 0 )
     private KojiTaskInfo taskInfo;
 
-    @IndexRefs( 0 )
     public GetTaskResponse( KojiTaskInfo taskInfo )
+    {
+        this.taskInfo = taskInfo;
+    }
+
+    public GetTaskResponse()
+    {
+    }
+
+    public void setTaskInfo( KojiTaskInfo taskInfo )
     {
         this.taskInfo = taskInfo;
     }

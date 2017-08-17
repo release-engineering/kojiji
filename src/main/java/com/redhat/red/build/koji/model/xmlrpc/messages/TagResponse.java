@@ -16,9 +16,8 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 /**
  * Created by jdcasey on 1/6/16.
@@ -29,8 +28,16 @@ public class TagResponse
     @DataIndex( 0 )
     private KojiTagInfo tagInfo;
 
-    @IndexRefs( 0 )
     public TagResponse( KojiTagInfo tagInfo )
+    {
+        this.tagInfo = tagInfo;
+    }
+
+    public TagResponse()
+    {
+    }
+
+    public void setTagInfo( KojiTagInfo tagInfo )
     {
         this.tagInfo = tagInfo;
     }

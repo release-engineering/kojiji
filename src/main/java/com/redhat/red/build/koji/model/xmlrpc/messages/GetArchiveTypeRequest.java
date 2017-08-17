@@ -15,8 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 @Request( method="getArchiveType" )
 public class GetArchiveTypeRequest
@@ -44,12 +44,10 @@ public class GetArchiveTypeRequest
         this.filename = filename;
     }
 
-
     public String getTypeName()
     {
         return typeName;
     }
-
 
     public void setTypeName( String typeName )
     {

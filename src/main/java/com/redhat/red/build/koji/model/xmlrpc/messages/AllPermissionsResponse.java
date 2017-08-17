@@ -16,12 +16,10 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiPermission;
-import org.commonjava.rwx.binding.anno.Contains;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by jdcasey on 1/6/16.
@@ -30,16 +28,23 @@ import java.util.Set;
 public class AllPermissionsResponse
 {
     @DataIndex( 0 )
-    @Contains( KojiPermission.class )
-    private Set<KojiPermission> permissions;
+    private List<KojiPermission> permissions;
 
-    @IndexRefs( 0 )
-    public AllPermissionsResponse( Set<KojiPermission> permissions )
+    public AllPermissionsResponse()
+    {
+    }
+
+    public AllPermissionsResponse( List<KojiPermission> permissions )
     {
         this.permissions = permissions;
     }
 
-    public Set<KojiPermission> getPermissions()
+    public void setPermissions( List<KojiPermission> permissions )
+    {
+        this.permissions = permissions;
+    }
+
+    public List<KojiPermission> getPermissions()
     {
         return permissions;
     }

@@ -15,16 +15,11 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserStatus;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserType;
 
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -33,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by jdcasey on 12/3/15.
  */
 public class UserResponseTest
-        extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
     private static final String USER_NAME = "newcastle";
 
@@ -46,25 +41,30 @@ public class UserResponseTest
     private static final String KRB_PRINCIPAL = "me@MYCO.COM";
 
     @Test
-    public void verifyVsCapturedHttpRequest()
-            throws Exception
+    public void verifyVsCapturedHttpRequest() throws Exception
     {
-        bindery.render( eventParser, newResponse( true ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        List<Event<?>> xmlEvents = parseEvents( "user-krbPrincipal-response.xml" );
-        assertEquals( objectEvents, xmlEvents );
+        UserResponse parsed = parseCapturedMessage( UserResponse.class, "user-krbPrincipal-response.xml" );
+        assertUserResponse( parsed, true );
     }
 
     @Test
-    public void verifyVsCapturedHttpRequest_NilKerberosPrincipal()
-            throws Exception
+    public void verifyVsCapturedHttpRequest_NilKerberosPrincipal() throws Exception
     {
-        bindery.render( eventParser, newResponse( false ) );
+        UserResponse parsed = parseCapturedMessage( UserResponse.class, "user-noKrbPrincipal-response.xml" );
+        assertUserResponse( parsed, false );
+    }
 
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        List<Event<?>> xmlEvents = parseEvents( "user-krbPrincipal-response.xml" );
-        assertEquals( objectEvents, xmlEvents );
+    @Test
+    public void roundTrip() throws Exception
+    {
+        UserResponse parsed = roundTrip( UserResponse.class, newResponse( true ) );
+        assertNotNull( parsed );
+    }
+
+    private void assertUserResponse( UserResponse parsed, boolean enableKerb )
+    {
+        UserResponse expected = newResponse( enableKerb );
+        assertEquals( expected.getUserInfo().toString(), parsed.getUserInfo().toString() );
     }
 
     private UserResponse newResponse( boolean enableKerberosPrincipal )
@@ -73,17 +73,4 @@ public class UserResponseTest
                                                    enableKerberosPrincipal ? KRB_PRINCIPAL : null ) );
     }
 
-    @Test
-    public void roundTrip()
-            throws Exception
-    {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, newResponse( true ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        UserResponse parsed = bindery.parse( generator, UserResponse.class );
-        assertNotNull( parsed );
-    }
 }

@@ -15,9 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.binding.anno.ArrayPart;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
+import org.commonjava.rwx.anno.ArrayPart;
+import org.commonjava.rwx.anno.DataIndex;
 
 @ArrayPart
 public class KojiKrbAddressInfo
@@ -34,13 +33,16 @@ public class KojiKrbAddressInfo
     @DataIndex( 3 )
     private int clientPort;
 
-    @IndexRefs( { 0, 1, 2, 3 } )
     public KojiKrbAddressInfo( String serverAddress, int serverPort, String clientAddress, int clientPort )
     {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         this.clientAddress = clientAddress;
         this.clientPort = clientPort;
+    }
+
+    public KojiKrbAddressInfo()
+    {
     }
 
     public String getServerAddress()

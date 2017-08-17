@@ -20,31 +20,25 @@ import com.redhat.red.build.koji.model.json.KojiImport;
 import com.redhat.red.build.koji.model.json.StandardArchitecture;
 import com.redhat.red.build.koji.model.json.StandardBuildType;
 import com.redhat.red.build.koji.model.json.StandardChecksum;
-import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
-import org.commonjava.rwx.impl.TrackingXmlRpcListener;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
-import org.commonjava.rwx.impl.jdom.JDomRenderer;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.commonjava.rwx.api.RWXMapper;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.Date;
 
 import static com.redhat.red.build.koji.testutil.TestResourceUtils.readTestResourceBytes;
-import static org.apache.commons.lang.StringUtils.join;
 
 /**
  * Created by jdcasey on 9/16/16.
  */
 public class CGInlinedImportRequestTest
+                extends AbstractKojiMessageTest
 {
     @Test
-    public void xmlRpcRender()
-            throws Exception
+    public void xmlRpcRender() throws Exception
     {
         ProjectVersionRef gav = new SimpleProjectVersionRef( "org.foo", "bar", "1.1" );
 
@@ -70,19 +64,14 @@ public class CGInlinedImportRequestTest
                                                  .parent()
                                                  .withNewOutput( 1, new File( pomPath ).getName() )
                                                  .withFileSize( pomBytes.length )
-                                                 .withChecksum( StandardChecksum.md5.name(), DigestUtils.md5Hex( pomBytes ) )
+                                                 .withChecksum( StandardChecksum.md5.name(),
+                                                                DigestUtils.md5Hex( pomBytes ) )
                                                  .withOutputType( "pom" )
                                                  .parent()
                                                  .build();
 
         CGInlinedImportRequest req = new CGInlinedImportRequest( importMetadata, "mydir" );
 
-        JDomRenderer jdom = new JDomRenderer( new XMLOutputter( Format.getPrettyFormat() ) );
-        TrackingXmlRpcListener tracker = new TrackingXmlRpcListener( jdom );
-        EventStreamParserImpl eventParser = new EventStreamParserImpl( tracker );
-
-        new KojiXmlRpcBindery().render( eventParser, req );
-
-        System.out.printf( "Calls:\n\n  %s\n\nEvent tree:\n\n%s\n\nXML:\n\n%s\n\nJDom Calls & Changes:\n\n%s\n\n", join( tracker.getCalls(), "\n  "), eventParser.renderEventTree(), jdom.documentToString(), jdom.renderCallsAndChanges() );
+        System.out.println( new RWXMapper().render( req ) );
     }
 }

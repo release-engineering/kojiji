@@ -15,9 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 /**
  * Created by jdcasey on 1/29/16.
@@ -31,16 +30,33 @@ public class GetTaskRequest
     @DataIndex( 1 )
     private boolean request;
 
-    @IndexRefs( 0 )
+    public GetTaskRequest()
+    {
+    }
+
     public GetTaskRequest( int taskId )
     {
         this.taskId = taskId;
     }
 
-    @IndexRefs( {0, 1} )
     public GetTaskRequest( int taskId, boolean request )
     {
         this.taskId = taskId;
+        this.request = request;
+    }
+
+    public void setTaskId( int taskId )
+    {
+        this.taskId = taskId;
+    }
+
+    public boolean isRequest()
+    {
+        return request;
+    }
+
+    public void setRequest( boolean request )
+    {
         this.request = request;
     }
 

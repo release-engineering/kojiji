@@ -15,11 +15,10 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import com.redhat.red.build.koji.model.util.StringListValueBinder;
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import com.redhat.red.build.koji.model.converter.StringListConverter;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class KojiArchiveType
     private String description;
 
     @DataKey( "extensions" )
-    @Converter( StringListValueBinder.class )
+    @Converter( StringListConverter.class )
     private List<String> extensions;
 
     @DataKey( "id" )
@@ -42,13 +41,16 @@ public class KojiArchiveType
     @DataKey( "name" )
     private String name;
 
-    @KeyRefs( { "description", "extensions", "id", "name" } )
     public KojiArchiveType( String description, List<String> extensions, int id, String name )
     {
         this.description = description;
         this.extensions = extensions;
         this.id = id;
         this.name = name;
+    }
+
+    public KojiArchiveType()
+    {
     }
 
     public String getDescription()

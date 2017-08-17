@@ -15,14 +15,12 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import com.redhat.red.build.koji.model.util.TimestampValueBinder;
-import org.commonjava.rwx.binding.anno.Contains;
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.StructPart;
+import com.redhat.red.build.koji.model.converter.TimestampConverter;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by jdcasey on 8/8/16.
@@ -43,7 +41,7 @@ public class KojiTaskInfo
     private int channelId;
 
     @DataKey( "start_time" )
-    @Converter( TimestampValueBinder.class )
+    @Converter( TimestampConverter.class )
     private Date startTime;
 
     @DataKey( "label" )

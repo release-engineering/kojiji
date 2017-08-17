@@ -15,9 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeInfo;
 
@@ -27,8 +26,16 @@ public class GetBuildTypeResponse
     @DataIndex( 0 )
     private KojiBuildTypeInfo buildTypeInfo;
 
-    @IndexRefs( 0 )
     public GetBuildTypeResponse(KojiBuildTypeInfo buildTypeInfo)
+    {
+        this.buildTypeInfo = buildTypeInfo;
+    }
+
+    public GetBuildTypeResponse()
+    {
+    }
+
+    public void setBuildTypeInfo( KojiBuildTypeInfo buildTypeInfo )
     {
         this.buildTypeInfo = buildTypeInfo;
     }

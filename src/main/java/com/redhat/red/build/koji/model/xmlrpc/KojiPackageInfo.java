@@ -15,8 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 /**
  * Created by jdcasey on 8/5/16.
@@ -44,6 +44,10 @@ public class KojiPackageInfo
 
     @DataKey( "blocked" )
     private boolean blocked;
+
+    public KojiPackageInfo()
+    {
+    }
 
     public String getOwner()
     {
@@ -106,6 +110,11 @@ public class KojiPackageInfo
     }
 
     public boolean isBlocked()
+    {
+        return blocked;
+    }
+
+    public boolean getBlocked()
     {
         return blocked;
     }

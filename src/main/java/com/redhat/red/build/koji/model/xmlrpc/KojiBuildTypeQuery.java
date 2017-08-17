@@ -15,13 +15,12 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.StructPart;
-
-import com.redhat.red.build.koji.model.util.KojiBuildTypeQueryValueBinder;
+import com.redhat.red.build.koji.model.converter.KojiBuildTypeQueryConverter;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.StructPart;
 
 @StructPart
-@Converter( KojiBuildTypeQueryValueBinder.class )
+@Converter( KojiBuildTypeQueryConverter.class )
 public class KojiBuildTypeQuery
         extends KojiQuery
 {
@@ -31,6 +30,11 @@ public class KojiBuildTypeQuery
 
     public KojiBuildTypeQuery()
     {
+    }
+
+    public void setId( Integer id )
+    {
+        this.id = id;
     }
 
     public String getName()

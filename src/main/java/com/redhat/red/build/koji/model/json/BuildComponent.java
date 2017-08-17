@@ -20,10 +20,10 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.redhat.red.build.koji.model.util.BuildComponentValueBinder;
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.StructPart;
+import com.redhat.red.build.koji.model.converter.KojiBuildComponentConverter;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,17 +36,21 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE;
  */
 @JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = TYPE)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = FileBuildComponent.class, name = "file"),
-    @JsonSubTypes.Type(value = RPMBuildComponent.class, name = "rpm")})
-@StructPart
-@Converter( BuildComponentValueBinder.class )
+@JsonSubTypes.Type(value = FileBuildComponent.class, name = "file"),
+@JsonSubTypes.Type(value = RPMBuildComponent.class, name = "rpm")
+})
+@Converter( KojiBuildComponentConverter.class )
 public abstract class BuildComponent {
 
     @JsonProperty(TYPE)
     @DataKey( TYPE )
     private String type;
 
-    public BuildComponent(String type)
+    public BuildComponent()
+    {
+    }
+
+    public BuildComponent( String type)
     {
         this.type = type;
     }
