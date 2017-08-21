@@ -18,9 +18,8 @@ package com.redhat.red.build.koji.model.json;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.ARTIFACT_ID;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.GROUP_ID;
@@ -45,7 +44,6 @@ public class MavenExtraInfo
     private String version;
 
     @JsonCreator
-    @KeyRefs( { GROUP_ID, ARTIFACT_ID, VERSION } )
     public MavenExtraInfo( @JsonProperty( GROUP_ID ) String groupId, @JsonProperty( ARTIFACT_ID ) String artifactId,
                            @JsonProperty( VERSION ) String version )
     {
@@ -59,6 +57,10 @@ public class MavenExtraInfo
         this.groupId = gav.getGroupId();
         this.artifactId = gav.getArtifactId();
         this.version = gav.getVersionString();
+    }
+
+    public MavenExtraInfo()
+    {
     }
 
     public String getGroupId()

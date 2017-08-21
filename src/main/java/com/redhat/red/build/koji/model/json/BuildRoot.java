@@ -17,15 +17,14 @@ package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.commonjava.rwx.binding.anno.Contains;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.ImportMappings;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,7 +43,6 @@ import static com.redhat.red.build.koji.model.json.util.Verifications.checkNull;
  * Created by jdcasey on 2/10/16.
  */
 @StructPart
-@ImportMappings( { FileBuildComponent.class, RPMBuildComponent.class } )
 public class BuildRoot
 {
     @JsonProperty( ID )
@@ -65,22 +63,19 @@ public class BuildRoot
 
     @JsonProperty( TOOLS )
     @DataKey( TOOLS )
-    @Contains( BuildTool.class )
-    private Set<BuildTool> buildTools;
+    private List<BuildTool> buildTools;
 
     @JsonProperty( COMPONENTS )
     @DataKey( COMPONENTS )
-    @Contains( BuildComponent.class )
-    private Set<BuildComponent> components;
+    private List<BuildComponent> components;
 
     @JsonProperty( EXTRA_INFO )
     // FIXME: XML-RPC binding library doesn't handle free-form nesting of maps, so this is left out of xml-rpc inlining.
     private Map<String, Object> extraInfo;
 
-    private BuildRoot(){}
+    public BuildRoot(){}
 
     @JsonCreator
-    @KeyRefs( { ID, HOST, CONTENT_GENERATOR, CONTAINER } )
     public BuildRoot( @JsonProperty( ID ) int id, @JsonProperty( HOST ) BuildHost buildHost,
                       @JsonProperty( CONTENT_GENERATOR ) BuildTool contentGenerator,
                       @JsonProperty( CONTAINER ) BuildContainer buildContainer )
@@ -89,6 +84,36 @@ public class BuildRoot
         this.buildHost = buildHost;
         this.contentGenerator = contentGenerator;
         this.buildContainer = buildContainer;
+    }
+
+    public void setId( int id )
+    {
+        this.id = id;
+    }
+
+    public void setBuildHost( BuildHost buildHost )
+    {
+        this.buildHost = buildHost;
+    }
+
+    public void setContentGenerator( BuildTool contentGenerator )
+    {
+        this.contentGenerator = contentGenerator;
+    }
+
+    public void setBuildContainer( BuildContainer buildContainer )
+    {
+        this.buildContainer = buildContainer;
+    }
+
+    public void setBuildTools( List<BuildTool> buildTools )
+    {
+        this.buildTools = buildTools;
+    }
+
+    public void setComponents( List<BuildComponent> components )
+    {
+        this.components = components;
     }
 
     public int getId()
@@ -111,14 +136,9 @@ public class BuildRoot
         return buildContainer;
     }
 
-    public Set<BuildTool> getBuildTools()
+    public List<BuildTool> getBuildTools()
     {
         return buildTools;
-    }
-
-    public void setBuildTools( Set<BuildTool> buildTools )
-    {
-        this.buildTools = buildTools;
     }
 
     public Map<String, Object> getExtraInfo()
@@ -126,7 +146,7 @@ public class BuildRoot
         return extraInfo;
     }
 
-    public Set<BuildComponent> getComponents() {
+    public List<BuildComponent> getComponents() {
         return components;
     }
 
@@ -190,11 +210,11 @@ public class BuildRoot
             return this;
         }
 
-        private Set<BuildTool> initTools()
+        private List<BuildTool> initTools()
         {
             if ( target.buildTools == null )
             {
-                target.buildTools = new HashSet<>();
+                target.buildTools = new ArrayList<>();
             }
 
             return target.buildTools;
@@ -300,7 +320,7 @@ public class BuildRoot
         {
             target.components = componentBuilders.stream()
                     .map(b -> (BuildComponent) b.unsafeBuild())
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             return target;
         }
 

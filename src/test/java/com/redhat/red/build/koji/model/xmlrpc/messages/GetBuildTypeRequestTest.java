@@ -15,59 +15,38 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 
 public class GetBuildTypeRequestTest
-    extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
     @Test
-    public void verifyVsCapturedHttpRequest()
-            throws Exception
+    public void verifyVsCapturedHttpRequest() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new GetBuildTypeRequest( 506045 ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "getBuildType-request.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
+        verifyVsCapturedMessage( GetBuildTypeRequest.class, "getBuildType-request.xml" );
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new GetBuildTypeRequest( new KojiIdOrName( 506045 ) ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        GetBuildTypeRequest parsed = bindery.parse( generator, GetBuildTypeRequest.class );
+        GetBuildTypeRequest parsed =
+                        roundTrip( GetBuildTypeRequest.class, new GetBuildTypeRequest( new KojiIdOrName( 506045 ) ) );
         assertNotNull( parsed );
 
         assertThat( parsed.getBuildIdOrName().getId(), equalTo( 506045 ) );
     }
 
     @Test
-    public void renderXML()
-            throws Exception
+    public void renderXML() throws Exception
     {
-        String xml = bindery.renderString( new GetBuildTypeRequest( 506045 ) );
+        String xml = rwxMapper.render( new GetBuildTypeRequest( 506045 ) );
         System.out.println( xml );
     }
 }

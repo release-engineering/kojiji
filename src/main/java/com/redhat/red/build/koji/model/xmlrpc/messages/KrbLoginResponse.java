@@ -14,9 +14,8 @@
  * limitations under the License.
  */package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 @Response
 public class KrbLoginResponse
@@ -24,8 +23,16 @@ public class KrbLoginResponse
     @DataIndex( 0 )
     private KrbLoginResponseInfo info;
 
-    @IndexRefs( 0 )
     public KrbLoginResponse( KrbLoginResponseInfo info )
+    {
+        this.info = info;
+    }
+
+    public KrbLoginResponse()
+    {
+    }
+
+    public void setInfo( KrbLoginResponseInfo info )
     {
         this.info = info;
     }

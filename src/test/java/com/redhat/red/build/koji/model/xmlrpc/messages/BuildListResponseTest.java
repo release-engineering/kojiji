@@ -16,16 +16,16 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
@@ -33,59 +33,48 @@ import static org.junit.Assert.assertThat;
  * Created by jdcasey on 5/11/16.
  */
 public class BuildListResponseTest
-    extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
     @Test
-    public void verifyVsCapturedHttp()
-            throws Exception
+    public void verifyVsCapturedHttp() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
+        BuildListResponse parsed = parseCapturedMessage( BuildListResponse.class, "listBuilds-byGAV-response.xml" );
+        assertThat( parsed.getBuilds() != null, equalTo( true ) );
+        assertThat( parsed.getBuilds().size(), equalTo( 2 ) );
 
-        KojiBuildInfo one = new KojiBuildInfo(422953, 12630, "commons-io-commons-io", "2.4.0.redhat_1", "1");
-        KojiBuildInfo two = new KojiBuildInfo(447248, 12630, "commons-io-commons-io", "2.4.0.redhat_1", "2");
+        KojiBuildInfo build_0 = parsed.getBuilds().get( 0 );
+        KojiBuildInfo build_1 = parsed.getBuilds().get( 1 );
 
-        bindery.render( eventParser, new BuildListResponse( Arrays.asList( one, two ) ) );
+        assertEquals( build_0.getName(), "commons-io-commons-io" );
+        assertEquals( build_0.getId(), 422953 );
+        assertEquals( build_0.getPackageId(), 12630 );
+        assertEquals( build_0.getCreationTime(),
+                      new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ).parse( "2015-02-24 16:03:34" ) );
 
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "listBuilds-byGAV-response.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
+        assertThat( build_1, notNullValue() );
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
+        BuildListResponse inst = getInstance();
+        List<KojiBuildInfo> builds = inst.getBuilds();
+        BuildListResponse parsed = roundTrip( BuildListResponse.class, inst );
 
-        KojiBuildInfo one = new KojiBuildInfo(422953, 12630, "commons-io-commons-io", "2.4.0.redhat_1", "1");
-        KojiBuildInfo two = new KojiBuildInfo(447248, 12630, "commons-io-commons-io", "2.4.0.redhat_1", "2");
+        assertThat( parsed.getBuilds().containsAll( builds ), equalTo( true ) );
+    }
 
-        bindery.render( eventParser, new BuildListResponse( Arrays.asList( one, two ) ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        BuildListResponse parsed = bindery.parse( generator, BuildListResponse.class );
-        assertNotNull( parsed );
-
-        assertThat( parsed.getBuilds().contains( one ), equalTo( true ) );
-        assertThat( parsed.getBuilds().contains( two ), equalTo( true ) );
+    private BuildListResponse getInstance()
+    {
+        KojiBuildInfo one = new KojiBuildInfo( 422953, 12630, "commons-io-commons-io", "2.4.0.redhat_1", "1" );
+        KojiBuildInfo two = new KojiBuildInfo( 447248, 12630, "commons-io-commons-io", "2.4.0.redhat_1", "2" );
+        return new BuildListResponse( Arrays.asList( one, two ) );
     }
 
     @Test
-    public void parseNilResult()
-            throws Exception
+    public void parseNilResult() throws Exception
     {
-        List<Event<?>> capturedEvents = parseEvents( "listBuilds-byGAV-response.xml" );
-
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( capturedEvents );
-
-        BuildListResponse parsed = bindery.parse( generator, BuildListResponse.class );
-        assertNotNull( parsed );
-
+        BuildListResponse parsed = parseCapturedMessage( BuildListResponse.class, "listBuilds-byGAV-responseNIL.xml" );
         assertThat( parsed.getBuilds() == null || parsed.getBuilds().isEmpty(), equalTo( true ) );
     }
 }

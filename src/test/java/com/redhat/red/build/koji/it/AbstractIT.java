@@ -16,10 +16,10 @@
 package com.redhat.red.build.koji.it;
 
 import com.redhat.red.build.koji.it.util.KojiTestUtil;
-import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
 import com.redhat.red.build.koji.KojiClient;
 import com.redhat.red.build.koji.config.KojiConfig;
 import com.redhat.red.build.koji.config.SimpleKojiConfigBuilder;
+import com.redhat.red.build.koji.model.generated.Model_Registry;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -29,14 +29,15 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.commonjava.rwx.core.Registry;
 import org.commonjava.util.jhttpc.HttpFactory;
 import org.commonjava.util.jhttpc.auth.MemoryPasswordManager;
 import org.commonjava.util.jhttpc.auth.PasswordManager;
 import org.commonjava.util.jhttpc.auth.PasswordType;
 import org.commonjava.util.jhttpc.util.UrlUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
@@ -47,7 +48,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -90,6 +90,11 @@ public class AbstractIT
 
     @ClassRule
     public static TemporaryFolder temp = new TemporaryFolder();
+
+    @BeforeClass
+    public void registerRWX() {
+        Registry.setInstance( new Model_Registry() ); // Register RWX Parser/Renderers
+    }
 
     protected HttpFactory factory;
 

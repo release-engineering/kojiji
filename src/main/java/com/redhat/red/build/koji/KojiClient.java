@@ -19,90 +19,11 @@ import com.redhat.red.build.koji.config.KojiConfig;
 import com.redhat.red.build.koji.kerberos.KrbAuthenticator;
 import com.redhat.red.build.koji.model.ImportFile;
 import com.redhat.red.build.koji.model.KojiImportResult;
+import com.redhat.red.build.koji.model.generated.Model_Registry;
 import com.redhat.red.build.koji.model.json.KojiImport;
 import com.redhat.red.build.koji.model.json.util.KojiObjectMapper;
-import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveQuery;
-import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveType;
-import com.redhat.red.build.koji.model.xmlrpc.KojiBuildArchiveCollection;
-import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
-import com.redhat.red.build.koji.model.xmlrpc.KojiBuildState;
-import com.redhat.red.build.koji.model.xmlrpc.KojiBuildType;
-import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeQuery;
-import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
-import com.redhat.red.build.koji.model.xmlrpc.KojiImageBuildInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
-import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
-import com.redhat.red.build.koji.model.xmlrpc.KojiPackageInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiPackageQuery;
-import com.redhat.red.build.koji.model.xmlrpc.KojiPermission;
-import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
-import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiUploaderResult;
-import com.redhat.red.build.koji.model.xmlrpc.KojiUserInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiWinBuildInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcBindery;
-import com.redhat.red.build.koji.model.xmlrpc.messages.AckResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.AddPackageToTagRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.AllPermissionsResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ApiVersionResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.CGInlinedImportRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.CheckPermissionRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ConfirmationResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypeRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypeResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypesRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveTypesResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByIdOrNameRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildByNVRObjRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetImageBuildRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildTypeRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildTypeResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetImageBuildResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetMavenBuildRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetMavenBuildResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetWinBuildRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetWinBuildResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetTagIdRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.IdResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.KrbLoginRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.KrbLoginResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListArchivesResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildsRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildTypesRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListBuildTypesResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.BuildListResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListPackagesRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListPackagesResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListTaggedRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.ListTagsResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.LoggedInUserRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.LoginRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.LoginResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.LogoutRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.RemovePackageFromTagRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.StatusResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.TagBuildRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.TagRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.TagResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.UntagBuildRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.UploadResponse;
-import com.redhat.red.build.koji.model.xmlrpc.messages.UserRequest;
-import com.redhat.red.build.koji.model.xmlrpc.messages.UserResponse;
+import com.redhat.red.build.koji.model.xmlrpc.*;
+import com.redhat.red.build.koji.model.xmlrpc.messages.*;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -112,12 +33,13 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.commonjava.maven.atlas.ident.ref.ProjectRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.rwx.binding.error.BindException;
+import org.commonjava.rwx.api.RWXMapper;
+import org.commonjava.rwx.core.Registry;
 import org.commonjava.rwx.error.XmlRpcException;
-import org.commonjava.rwx.http.RequestModifier;
-import org.commonjava.rwx.http.UrlBuildResult;
-import org.commonjava.rwx.http.UrlBuilder;
-import org.commonjava.rwx.http.httpclient4.HC4SyncObjectClient;
+import com.redhat.red.build.koji.http.RequestModifier;
+import com.redhat.red.build.koji.http.UrlBuildResult;
+import com.redhat.red.build.koji.http.UrlBuilder;
+import com.redhat.red.build.koji.http.httpclient4.HC4SyncObjectClient;
 import org.commonjava.util.jhttpc.HttpFactory;
 import org.commonjava.util.jhttpc.JHttpCException;
 import org.commonjava.util.jhttpc.auth.PasswordManager;
@@ -152,20 +74,8 @@ import java.util.function.Supplier;
 import javax.security.auth.DestroyFailedException;
 
 import static com.redhat.red.build.koji.model.util.KojiFormats.toKojiName;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.ACCEPT_ENCODING_HEADER;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.ADLER_32_CHECKSUM;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.CALL_NUMBER_PARAM;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.EMBEDDED_ERROR_PARAM;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.IDENTITY_ENCODING_VALUE;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.METADATA_JSON_FILE;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.SESSION_ID_PARAM;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.SESSION_KEY_PARAM;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.SSL_LOGIN_PATH;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.UPLOAD_CHECKSUM_TYPE_PARAM;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.UPLOAD_DIR_PARAM;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.UPLOAD_FILENAME_PARAM;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.UPLOAD_OFFSET_PARAM;
-import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.UPLOAD_OVERWRITE_PARAM;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.*;
+
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.apache.http.client.utils.HttpClientUtils.closeQuietly;
@@ -176,6 +86,8 @@ import static org.apache.http.client.utils.HttpClientUtils.closeQuietly;
 public class KojiClient
         implements Closeable
 {
+    static Logger logger = LoggerFactory.getLogger( KojiClient.class );
+
     private HC4SyncObjectClient xmlrpcClient;
 
     private HttpFactory httpFactory;
@@ -188,13 +100,10 @@ public class KojiClient
 
     private KojiConfig config;
 
-    private KojiXmlRpcBindery bindery;
-
     private AtomicInteger callCount = new AtomicInteger( 0 );
 
     private static final RequestModifier STANDARD_REQUEST_MODIFIER = ( request ) -> {
         request.setHeader( ACCEPT_ENCODING_HEADER, IDENTITY_ENCODING_VALUE );
-        Logger logger = LoggerFactory.getLogger( KojiClient.class );
         logger.debug( "\n\n\n\nTarget URI: {}\n\n\n\n", request.getURI() );
     };
 
@@ -239,17 +148,14 @@ public class KojiClient
 
             String result = UrlUtils.buildUrl( url, params );
 
-            Logger logger = LoggerFactory.getLogger( KojiClient.class );
             logger.debug( "\n\n\n\nBuild URL: {}\n\n\n\n", result );
             return new UrlBuildResult( result );
         };
     }
 
     public KojiClient( KojiConfig config, PasswordManager passwordManager, ExecutorService executorService )
-            throws BindException
     {
         this.config = config;
-        this.bindery = new KojiXmlRpcBindery();
         this.httpFactory = new HttpFactory( passwordManager );
         this.executorService = executorService;
         setup();
@@ -267,14 +173,15 @@ public class KojiClient
 
     public void setup()
     {
+        Registry.setInstance( new Model_Registry() ); // Register RWX Parser/Renderers
+
         uploadService = new ExecutorCompletionService<>( executorService );
         objectMapper = new KojiObjectMapper();
 
-        Logger logger = LoggerFactory.getLogger( getClass() );
         logger.debug( "SETUP: Starting KojiClient for: " + config.getKojiURL() );
         try
         {
-            xmlrpcClient = new HC4SyncObjectClient( httpFactory, bindery, config.getKojiSiteConfig() );
+            xmlrpcClient = new HC4SyncObjectClient( httpFactory, config.getKojiSiteConfig() );
         }
         catch ( IOException e )
         {
@@ -408,7 +315,6 @@ public class KojiClient
         }
         catch ( Exception e )
         {
-            Logger logger = LoggerFactory.getLogger( getClass() );
             if ( logger.isDebugEnabled() )
             {
                 logger.error( "Koji withSession lambda failed", e );
@@ -462,7 +368,6 @@ public class KojiClient
         }
         catch ( XmlRpcException | KojiClientException e )
         {
-            Logger logger = LoggerFactory.getLogger( getClass() );
             String formatted = String.format( "%s. Reason: %s", String.format( message, params ), e.getMessage() );
             if ( logger.isDebugEnabled() )
             {
@@ -507,8 +412,6 @@ public class KojiClient
             return;
         }
 
-        Logger logger = LoggerFactory.getLogger( getClass() );
-
         if ( xmlrpcClient != null )
         {
             try
@@ -548,7 +451,7 @@ public class KojiClient
         }
     }
 
-    public Set<KojiPermission> getAllPermissions( KojiSessionInfo session )
+    public List<KojiPermission> getAllPermissions( KojiSessionInfo session )
             throws KojiClientException
     {
         return doXmlRpcAndThrow( () -> {
@@ -676,9 +579,6 @@ public class KojiClient
                 Map<String, KojijiErrorInfo> uploadErrors =
                         uploadForImport( null, importedFileSuppliers, dirname, session );
 
-                //            Map<String, KojiClientException> uploadErrors =
-                //                    uploadForImport( importInfo, importedFileSuppliers, dirname, session );
-
                 if ( !uploadErrors.isEmpty() )
                 {
                     return new KojiImportResult( importInfo ).withUploadErrors( uploadErrors );
@@ -688,21 +588,10 @@ public class KojiClient
                         xmlrpcClient.call( new CGInlinedImportRequest( importInfo, dirname ), GetBuildResponse.class,
                                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
-                //            StatusResponse response = xmlrpcClient.call( new CGUploadedImportRequest( dirname ), StatusResponse.class,
-                //                                                         sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
-
-//                if ( !isEmpty( response.getError() ) )
-//                {
-//                    throw new KojiClientException( "Error response from Koji server: %s", response.getError() );
-//                }
-
-//                KojiBuildInfo build = getBuildInfo( importInfo.getBuildNVR(), session );
-
                 return new KojiImportResult( importInfo ).withBuildInfo( response.getBuildInfo() );
             }
             catch ( RuntimeException e )
             {
-                Logger logger = LoggerFactory.getLogger( getClass() );
                 logger.error( "FAIL: " + e.getMessage(), e );
                 throw e;
             }
@@ -1067,7 +956,6 @@ public class KojiClient
             }
             else
             {
-                Logger logger = LoggerFactory.getLogger( getClass() );
                 logger.debug( "List-packages for tag: {} returned null result!", tag );
             }
 
@@ -1158,7 +1046,6 @@ public class KojiClient
 
             if ( buildsResponse == null )
             {
-                Logger logger = LoggerFactory.getLogger( getClass() );
                 logger.debug( "No builds response was returned!" );
                 return Collections.emptyList();
             }
@@ -1166,7 +1053,6 @@ public class KojiClient
             List<KojiBuildInfo> builds = buildsResponse.getBuilds();
             if ( builds == null || builds.isEmpty() )
             {
-                Logger logger = LoggerFactory.getLogger( getClass() );
                 logger.debug( "No builds tagged in: '{}'", tagName );
                 return Collections.emptyList();
             }
@@ -1185,7 +1071,6 @@ public class KojiClient
 
             if ( buildsResponse == null )
             {
-                Logger logger = LoggerFactory.getLogger( getClass() );
                 logger.debug( "No builds response was returned!" );
                 return false;
             }
@@ -1193,7 +1078,6 @@ public class KojiClient
             List<KojiBuildInfo> builds = buildsResponse.getBuilds();
             if ( builds == null || builds.isEmpty() )
             {
-                Logger logger = LoggerFactory.getLogger( getClass() );
                 logger.debug( "Build: '{}' is not tagged in: '{}'", buildNvr, tag );
                 return false;
             }
@@ -1354,7 +1238,6 @@ public class KojiClient
             count.incrementAndGet();
         } );
 
-        Logger logger = LoggerFactory.getLogger( getClass() );
         Map<String, KojijiErrorInfo> uploadErrors = new HashMap<>();
         Set<UploadResponse> responses = new HashSet<>();
         int total = count.get();
@@ -1454,7 +1337,7 @@ public class KojiClient
 
             if ( response.getStatusLine().getStatusCode() == 200 )
             {
-                return bindery.parse( response.getEntity().getContent(), UploadResponse.class );
+                return new RWXMapper().parse( response.getEntity().getContent(), UploadResponse.class );
             }
             else
             {
@@ -1488,8 +1371,6 @@ public class KojiClient
         catch ( UnsupportedEncodingException e )
         {
             String msg = String.format( "Failed to encode %s parameter: %s. Reason: %s", param, value, e.getMessage() );
-
-            Logger logger = LoggerFactory.getLogger( getClass() );
             logger.error( msg, e );
 
             throw new MalformedURLException( msg );

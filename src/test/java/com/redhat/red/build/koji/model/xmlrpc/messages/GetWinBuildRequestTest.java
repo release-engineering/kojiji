@@ -16,59 +16,28 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 
 public class GetWinBuildRequestTest
-    extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
 
     @Test
-    public void verifyVsCapturedHttpRequest()
-            throws Exception
+    public void verifyVsCapturedHttpRequest() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new GetWinBuildRequest( 560936 ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "getWinBuild-request.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
+        verifyVsCapturedMessage( GetWinBuildRequest.class, "getWinBuild-request.xml" );
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new GetWinBuildRequest( new KojiIdOrName(560936) ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        GetWinBuildRequest parsed = bindery.parse( generator, GetWinBuildRequest.class );
-        assertNotNull( parsed );
-
+        GetWinBuildRequest parsed =
+                        roundTrip( GetWinBuildRequest.class, new GetWinBuildRequest( new KojiIdOrName( 560936 ) ) );
         assertThat( parsed.getBuildIdOrName().getId(), equalTo( 560936 ) );
     }
 
-    @Test
-    public void renderXML()
-            throws Exception
-    {
-        String xml = bindery.renderString( new GetWinBuildRequest( 560936 ) );
-        System.out.println( xml );
-    }
 }

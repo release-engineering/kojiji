@@ -17,9 +17,8 @@ package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.SkipNull;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.BUILD_SYSTEM;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BUILD_ID;
@@ -30,7 +29,6 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
  * Created by jdcasey on 9/15/16.
  */
 @StructPart
-@SkipNull
 public class BuildExtraInfo
 {
     @JsonProperty( MAVEN_INFO )

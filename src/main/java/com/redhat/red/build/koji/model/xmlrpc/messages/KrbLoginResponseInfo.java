@@ -1,8 +1,7 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.ArrayPart;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
+import org.commonjava.rwx.anno.ArrayPart;
+import org.commonjava.rwx.anno.DataIndex;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiKrbAddressInfo;
 
@@ -18,11 +17,29 @@ public class KrbLoginResponseInfo
     @DataIndex( 2 )
     KojiKrbAddressInfo addressInfo;
 
-    @IndexRefs( { 0, 1, 2 } )
     public KrbLoginResponseInfo( String encodedApResponse, String encodedEncryptedSessionInfo, KojiKrbAddressInfo addressInfo )
     {
         this.encodedApResponse = encodedApResponse;
         this.encodedEncryptedSessionInfo = encodedEncryptedSessionInfo;
+        this.addressInfo = addressInfo;
+    }
+
+    public KrbLoginResponseInfo()
+    {
+    }
+
+    public void setEncodedApResponse( String encodedApResponse )
+    {
+        this.encodedApResponse = encodedApResponse;
+    }
+
+    public void setEncodedEncryptedSessionInfo( String encodedEncryptedSessionInfo )
+    {
+        this.encodedEncryptedSessionInfo = encodedEncryptedSessionInfo;
+    }
+
+    public void setAddressInfo( KojiKrbAddressInfo addressInfo )
+    {
         this.addressInfo = addressInfo;
     }
 

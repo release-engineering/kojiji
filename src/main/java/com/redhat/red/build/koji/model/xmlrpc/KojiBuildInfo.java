@@ -17,14 +17,14 @@ package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.redhat.red.build.koji.model.util.KojiBuildStateValueBinder;
-import com.redhat.red.build.koji.model.util.TimestampValueBinder;
+import com.redhat.red.build.koji.model.converter.KojiBuildStateConverter;
+import com.redhat.red.build.koji.model.converter.TimestampConverter;
 import org.apache.commons.lang.StringUtils;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import java.util.Date;
 import java.util.Map;
@@ -55,12 +55,12 @@ public class KojiBuildInfo
     @DataKey( "release" )
     private String release;
 
-    @Converter( TimestampValueBinder.class )
+    @Converter( TimestampConverter.class )
     @DataKey( "completion_time" )
     @JsonProperty( "completion_time" )
     private Date completionTime;
 
-    @Converter( TimestampValueBinder.class )
+    @Converter( TimestampConverter.class )
     @DataKey( "creation_time" )
     @JsonProperty( "creation_time" )
     private Date creationTime;
@@ -80,7 +80,7 @@ public class KojiBuildInfo
     @JsonProperty( "owner_name" )
     private String ownerName;
 
-    @Converter( KojiBuildStateValueBinder.class )
+    @Converter( KojiBuildStateConverter.class )
     @DataKey( "state" )
     @JsonProperty( "state" )
     private KojiBuildState buildState;

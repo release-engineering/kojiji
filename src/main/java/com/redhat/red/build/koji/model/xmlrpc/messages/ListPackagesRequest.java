@@ -16,8 +16,8 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiPackageQuery;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 /**
  * Created by jdcasey on 1/7/16.
@@ -29,6 +29,10 @@ public class ListPackagesRequest
     @DataIndex( 0 )
     private KojiPackageQuery query;
 
+    public ListPackagesRequest()
+    {
+    }
+
     public ListPackagesRequest( KojiPackageQuery query )
     {
         this.query = query;
@@ -37,5 +41,10 @@ public class ListPackagesRequest
     public KojiPackageQuery getQuery()
     {
         return query;
+    }
+
+    public void setQuery( KojiPackageQuery query )
+    {
+        this.query = query;
     }
 }

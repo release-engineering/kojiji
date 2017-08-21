@@ -16,9 +16,8 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildInfo;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 @Response
 public class GetMavenBuildResponse
@@ -26,8 +25,16 @@ public class GetMavenBuildResponse
     @DataIndex( 0 )
     private KojiMavenBuildInfo mavenBuildInfo;
 
-    @IndexRefs( 0 )
     public GetMavenBuildResponse( KojiMavenBuildInfo mavenBuildInfo )
+    {
+        this.mavenBuildInfo = mavenBuildInfo;
+    }
+
+    public GetMavenBuildResponse()
+    {
+    }
+
+    public void setMavenBuildInfo( KojiMavenBuildInfo mavenBuildInfo )
     {
         this.mavenBuildInfo = mavenBuildInfo;
     }

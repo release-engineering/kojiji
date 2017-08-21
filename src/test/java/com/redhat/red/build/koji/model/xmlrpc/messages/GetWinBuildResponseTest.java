@@ -16,57 +16,29 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiWinBuildInfo;
 
 public class GetWinBuildResponseTest
-    extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
     @Test
-    public void verifyVsCapturedHttp()
-            throws Exception
+    public void verifyVsCapturedHttp() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-
-        GetWinBuildResponse response = new GetWinBuildResponse(new KojiWinBuildInfo(560936, "w2k8-x64"));
-
-        bindery.render( eventParser, response );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "getWinBuild-response.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
+        verifyVsCapturedMessage( GetWinBuildResponse.class, "getWinBuild-response.xml" );
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-
         KojiWinBuildInfo info = new KojiWinBuildInfo();
-        info.setBuildId(560936);
-        info.setPlatform("w2k8-x64");
+        info.setBuildId( 560936 );
+        info.setPlatform( "w2k8-x64" );
 
-        bindery.render( eventParser, new GetWinBuildResponse( info ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        GetWinBuildResponse parsed = bindery.parse( generator, GetWinBuildResponse.class );
-        assertNotNull( parsed );
+        GetWinBuildResponse parsed = roundTrip( GetWinBuildResponse.class, new GetWinBuildResponse( info ) );
 
         assertThat( parsed.getWinBuildInfo(), equalTo( info ) );
     }

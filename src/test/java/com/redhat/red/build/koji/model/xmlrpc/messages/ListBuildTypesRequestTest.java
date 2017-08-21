@@ -16,59 +16,32 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeQuery;
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class ListBuildTypesRequestTest
-    extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
 
     @Test
-    public void verifyVsCapturedHttpRequest()
-            throws Exception
+    public void verifyVsCapturedHttpRequest() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new ListBuildTypesRequest( new KojiBuildTypeQuery()) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "listBuildTypes-request.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
+        verifyVsCapturedMessage( ListBuildTypesRequest.class, "listBuildTypes-request.xml" );
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-
-        bindery.render( eventParser, new ListBuildTypesRequest() );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        ListBuildTypesRequest parsed = bindery.parse( generator, ListBuildTypesRequest.class );
-        assertNotNull( parsed );
-
+        ListBuildTypesRequest parsed = roundTrip( ListBuildTypesRequest.class, new ListBuildTypesRequest() );
         assertThat( parsed.getQuery(), equalTo( null ) );
     }
 
     @Test
-    public void renderXML()
-            throws Exception
+    public void renderXML() throws Exception
     {
-        String xml = bindery.renderString( new ListBuildTypesRequest() );
+        String xml = rwxMapper.render( new ListBuildTypesRequest() );
         System.out.println( xml );
     }
 }

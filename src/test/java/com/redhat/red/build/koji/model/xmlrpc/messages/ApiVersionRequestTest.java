@@ -15,44 +15,26 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static junit.framework.TestCase.assertEquals;
 
 /**
  * Created by jdcasey on 12/3/15.
  */
 public class ApiVersionRequestTest
-        extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
 
     @Test
-    public void verifyVsCapturedHttpRequest()
-            throws Exception
+    public void verifyVsCapturedHttpRequest() throws Exception
     {
-        bindery.render( eventParser, new ApiVersionRequest() );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-
-        List<Event<?>> xmlEvents = parseEvents( "getApiVersion-request.xml" );
-        assertEquals( objectEvents, xmlEvents );
+        verifyVsCapturedMessage( ApiVersionRequest.class, "getApiVersion-request.xml" );
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        bindery.render( eventParser, new ApiVersionRequest() );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        ApiVersionRequest parsed = bindery.parse( generator, ApiVersionRequest.class );
-        assertNotNull( parsed );
+        roundTrip( ApiVersionRequest.class );
     }
 }

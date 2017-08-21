@@ -16,58 +16,59 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiPermission;
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by jdcasey on 12/3/15.
  */
 public class AllPermissionsResponseTest
-        extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
 
+    private static final String filename = "getAllPerms-response.xml";
+
     @Test
-    public void verifyVsCapturedHttpRequest()
-            throws Exception
+    public void verifyVsCapturedHttpRequest() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, newResponse() );
+        AllPermissionsResponse response = parseCapturedMessage( AllPermissionsResponse.class, filename );
+        AllPermissionsResponse expected = newResponse();
 
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
+        assertAllPermissionsResponse( expected, response );
+    }
 
-        List<Event<?>> capturedEvents = parseEvents( "getAllPerms-response.xml" );
+    @Test
+    public void roundTrip() throws Exception
+    {
+        AllPermissionsResponse response = newResponse();
+        AllPermissionsResponse rounded = roundTrip( AllPermissionsResponse.class, response );
+        assertAllPermissionsResponse( rounded, response );
+    }
 
-        assertEquals( objectEvents, capturedEvents );
+    private void assertAllPermissionsResponse( AllPermissionsResponse expected, AllPermissionsResponse response )
+    {
+        assertEquals( expected.getPermissions().size(), response.getPermissions().size() );
+
+        List<KojiPermission> permissions_expected = expected.getPermissions();
+        List<KojiPermission> permissions_response = response.getPermissions();
+
+        assertEquals( permissions_expected.get( 0 ).getId(), permissions_response.get( 0 ).getId() );
+        assertEquals( permissions_expected.get( 0 ).getName(), permissions_response.get( 0 ).getName() );
+        assertEquals( permissions_expected.get( 1 ).getId(), permissions_response.get( 1 ).getId() );
+        assertEquals( permissions_expected.get( 1 ).getName(), permissions_response.get( 1 ).getName() );
+        assertEquals( permissions_expected.get( 2 ).getId(), permissions_response.get( 2 ).getId() );
+        assertEquals( permissions_expected.get( 2 ).getName(), permissions_response.get( 2 ).getName() );
     }
 
     private AllPermissionsResponse newResponse()
     {
-        return new AllPermissionsResponse( new HashSet<>(
-                Arrays.asList( new KojiPermission( 1, "admin" ), new KojiPermission( 2, "build" ),
-                               new KojiPermission( 3, "repo" ) ) ) );
+        return new AllPermissionsResponse(
+                        Arrays.asList( new KojiPermission( 1, "admin" ), new KojiPermission( 2, "build" ),
+                                       new KojiPermission( 3, "repo" ) ) );
     }
 
-    @Test
-    public void roundTrip()
-            throws Exception
-    {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, newResponse() );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        AllPermissionsRequest parsed = bindery.parse( generator, AllPermissionsRequest.class );
-        assertNotNull( parsed );
-    }
 }

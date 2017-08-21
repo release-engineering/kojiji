@@ -21,6 +21,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -36,7 +37,7 @@ public class GetAllPermissionsIT
     {
         KojiClient client = newKojiClient();
         KojiSessionInfo session = client.login();
-        Set<KojiPermission> permissions = client.getAllPermissions( session );
+        List<KojiPermission> permissions = client.getAllPermissions( session );
         System.out.println( StringUtils.join( permissions, "\n" ) );
     }
 }

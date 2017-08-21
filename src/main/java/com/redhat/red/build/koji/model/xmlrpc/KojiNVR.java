@@ -15,9 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 /**
  * Created by jdcasey on 1/29/16.
@@ -43,11 +42,59 @@ public class KojiNVR
     @DataKey( "release" )
     private String release;
 
-    @KeyRefs( {"name", "version", "release"} )
     public KojiNVR( String name, String version, String release )
     {
         this.name = name;
         this.version = version;
+        this.release = release;
+    }
+
+    public KojiNVR()
+    {
+    }
+
+    public KojiIdOrName getPackageId()
+    {
+        return packageId;
+    }
+
+    public void setPackageId( KojiIdOrName packageId )
+    {
+        this.packageId = packageId;
+    }
+
+    public KojiIdOrName getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId( KojiIdOrName userId )
+    {
+        this.userId = userId;
+    }
+
+    public KojiIdOrName getTagId()
+    {
+        return tagId;
+    }
+
+    public void setTagId( KojiIdOrName tagId )
+    {
+        this.tagId = tagId;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public void setVersion( String version )
+    {
+        this.version = version;
+    }
+
+    public void setRelease( String release )
+    {
         this.release = release;
     }
 

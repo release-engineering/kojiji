@@ -16,9 +16,8 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiImageBuildInfo;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 @Response
 public class GetImageBuildResponse
@@ -26,8 +25,16 @@ public class GetImageBuildResponse
     @DataIndex( 0 )
     private KojiImageBuildInfo imageBuildInfo;
 
-    @IndexRefs( 0 )
     public GetImageBuildResponse( KojiImageBuildInfo imageBuildInfo )
+    {
+        this.imageBuildInfo = imageBuildInfo;
+    }
+
+    public GetImageBuildResponse()
+    {
+    }
+
+    public void setImageBuildInfo( KojiImageBuildInfo imageBuildInfo )
     {
         this.imageBuildInfo = imageBuildInfo;
     }

@@ -33,6 +33,7 @@ public enum KojiBuildState
 
     /**
      * Gets the integer value used by koji for this state.
+     * @return value
      */
     public Integer getValue()
     {
@@ -41,6 +42,8 @@ public enum KojiBuildState
 
     /**
      * Gets the state by the given integer value.
+     * @param value enum key
+     * @return KojiBuildState object
      */
     public static KojiBuildState fromInteger( Integer value )
     {

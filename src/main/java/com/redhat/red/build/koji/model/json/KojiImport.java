@@ -22,13 +22,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.rwx.binding.anno.ArrayPart;
-import org.commonjava.rwx.binding.anno.Contains;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,19 +48,16 @@ public class KojiImport
 
     @JsonProperty( BUILDROOTS )
     @DataKey( BUILDROOTS )
-    @Contains( BuildRoot.class )
-    private Set<BuildRoot> buildRoots;
+    private List<BuildRoot> buildRoots;
 
     @JsonProperty( OUTPUT )
     @DataKey( OUTPUT )
-    @Contains( BuildOutput.class )
-    private Set<BuildOutput> outputs;
+    private List<BuildOutput> outputs;
 
-    @KeyRefs( { METADATA_VERSION, BUILD, BUILDROOTS, OUTPUT } )
     public KojiImport( @JsonProperty( METADATA_VERSION ) int metadataVersion,
                        @JsonProperty( BUILD ) BuildDescription build,
-                       @JsonProperty( BUILDROOTS ) Set<BuildRoot> buildRoots,
-                       @JsonProperty( OUTPUT ) Set<BuildOutput> outputs )
+                       @JsonProperty( BUILDROOTS ) List<BuildRoot> buildRoots,
+                       @JsonProperty( OUTPUT ) List<BuildOutput> outputs )
     {
         this.metadataVersion = metadataVersion;
         this.build = build;
@@ -71,12 +66,36 @@ public class KojiImport
     }
 
     public KojiImport( BuildDescription build,
-                       Set<BuildRoot> buildRoots,
-                       Set<BuildOutput> outputs )
+                       List<BuildRoot> buildRoots,
+                       List<BuildOutput> outputs )
     {
         this.metadataVersion = DEFAULT_METADATA_VERSION;
         this.build = build;
         this.buildRoots = buildRoots;
+        this.outputs = outputs;
+    }
+
+    public KojiImport()
+    {
+    }
+
+    public void setMetadataVersion( int metadataVersion )
+    {
+        this.metadataVersion = metadataVersion;
+    }
+
+    public void setBuild( BuildDescription build )
+    {
+        this.build = build;
+    }
+
+    public void setBuildRoots( List<BuildRoot> buildRoots )
+    {
+        this.buildRoots = buildRoots;
+    }
+
+    public void setOutputs( List<BuildOutput> outputs )
+    {
         this.outputs = outputs;
     }
 
@@ -90,12 +109,12 @@ public class KojiImport
         return build;
     }
 
-    public Set<BuildRoot> getBuildRoots()
+    public List<BuildRoot> getBuildRoots()
     {
         return buildRoots;
     }
 
-    public Set<BuildOutput> getOutputs()
+    public List<BuildOutput> getOutputs()
     {
         return outputs;
     }
@@ -162,11 +181,11 @@ public class KojiImport
             if ( missing.isEmpty() )
             {
                 BuildDescription desc = descBuilder.build();
-                Set<BuildRoot> buildRoots =
-                        rootBuilders.stream().map( ( builder ) -> builder.unsafeBuild() ).collect( Collectors.toSet() );
+                List<BuildRoot> buildRoots =
+                        rootBuilders.stream().map( ( builder ) -> builder.unsafeBuild() ).collect( Collectors.toList() );
 
-                Set<BuildOutput> buildOutputs =
-                        outputBuilders.stream().map( ( builder ) -> builder.unsafeBuild() ).collect( Collectors.toSet() );
+                List<BuildOutput> buildOutputs =
+                        outputBuilders.stream().map( ( builder ) -> builder.unsafeBuild() ).collect( Collectors.toList() );
 
                 return new KojiImport( metadataVersion, desc, buildRoots, buildOutputs );
             }

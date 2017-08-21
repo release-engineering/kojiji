@@ -19,9 +19,8 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildState;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 /**
  * Created by jdcasey on 1/29/16.
@@ -30,9 +29,12 @@ import org.commonjava.rwx.binding.anno.Request;
 public class ListBuildsRequest
 {
     @DataIndex( 0 )
-    private final KojiBuildQuery query;
+    private KojiBuildQuery query;
 
-    @IndexRefs( 0 )
+    public ListBuildsRequest()
+    {
+    }
+
     public ListBuildsRequest( KojiBuildQuery query )
     {
         this.query = query;
@@ -46,6 +48,11 @@ public class ListBuildsRequest
     public ListBuildsRequest( KojiMavenRef gav, KojiBuildState state )
     {
         this.query = new KojiBuildQuery( gav ).withState( state );
+    }
+
+    public void setQuery( KojiBuildQuery query )
+    {
+        this.query = query;
     }
 
     public KojiBuildQuery getQuery()

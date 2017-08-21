@@ -15,13 +15,13 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import com.redhat.red.build.koji.model.util.KojiBuildStateValueBinder;
-import com.redhat.red.build.koji.model.util.TimestampValueBinder;
+import com.redhat.red.build.koji.model.converter.KojiBuildStateConverter;
+import com.redhat.red.build.koji.model.converter.TimestampConverter;
 import org.commonjava.maven.atlas.ident.ref.ProjectRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import java.util.Date;
 
@@ -50,26 +50,26 @@ public class KojiBuildQuery
     @DataKey( value = "prefix" )
     private String prefix;
 
-    @Converter( KojiBuildStateValueBinder.class )
+    @Converter( KojiBuildStateConverter.class )
     @DataKey( value = "state" )
     private KojiBuildState state;
 
     @DataKey( value = "volumeID" )
     private Integer volumeId;
 
-    @Converter( TimestampValueBinder.class )
+    @Converter( TimestampConverter.class )
     @DataKey( value = "createdBefore" )
     private Date createdBefore;
 
-    @Converter( TimestampValueBinder.class )
+    @Converter( TimestampConverter.class )
     @DataKey( value = "createdAfter" )
     private Date createdAfter;
 
-    @Converter( TimestampValueBinder.class )
+    @Converter( TimestampConverter.class )
     @DataKey( value = "completedBefore" )
     private Date completedBefore;
 
-    @Converter( TimestampValueBinder.class )
+    @Converter( TimestampConverter.class )
     @DataKey( value = "completedAfter" )
     private Date completedAfter;
 

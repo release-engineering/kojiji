@@ -15,8 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 /**
  * Created by jdcasey on 5/6/16.
@@ -27,7 +27,7 @@ public class KojiQuery
     @DataKey( "__starstar" )
     private boolean enabled = true;
 
-    public boolean isEnabled()
+    public boolean getEnabled()
     {
         return enabled;
     }

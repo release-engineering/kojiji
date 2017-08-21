@@ -15,9 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 /**
  * Created by jdcasey on 1/11/16.
@@ -28,8 +27,16 @@ public class CheckPermissionRequest
     @DataIndex( 0 )
     private String role;
 
-    @IndexRefs( 0 )
     public CheckPermissionRequest( String role )
+    {
+        this.role = role;
+    }
+
+    public CheckPermissionRequest()
+    {
+    }
+
+    public void setRole( String role )
     {
         this.role = role;
     }

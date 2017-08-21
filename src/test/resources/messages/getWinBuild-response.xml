@@ -1,2 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<methodResponse><params><param><value><struct><member><name>build_id</name><value><int>560936</int></value></member><member><name>platform</name><value><string>w2k8-x64</string></value></member></struct></value></param></params></methodResponse>
+<methodResponse>
+    <params>
+        <param>
+            <value>
+                <struct>
+                    <member>
+                        <name>build_id</name>
+                        <value>
+                            <int>560936</int>
+                        </value>
+                    </member>
+                    <member>
+                        <name>platform</name>
+                        <value>
+                            <string>w2k8-x64</string>
+                        </value>
+                    </member>
+                </struct>
+            </value>
+        </param>
+    </params>
+</methodResponse>

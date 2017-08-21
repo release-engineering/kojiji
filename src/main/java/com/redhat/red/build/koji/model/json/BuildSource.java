@@ -15,11 +15,10 @@
  */
 package com.redhat.red.build.koji.model.json;
 
-import com.redhat.red.build.koji.model.util.BuildSourceValueBinder;
-import org.commonjava.rwx.binding.anno.Converter;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import com.redhat.red.build.koji.model.converter.KojiBuildSourceConverter;
+import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.REVISION;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.URL;
@@ -28,7 +27,7 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.URL;
  * Created by jdcasey on 2/10/16.
  */
 @StructPart
-@Converter( BuildSourceValueBinder.class )
+@Converter( KojiBuildSourceConverter.class )
 public class BuildSource
 {
     @DataKey( URL )
@@ -37,10 +36,13 @@ public class BuildSource
     @DataKey( REVISION )
     private String revision;
 
-    @KeyRefs( { URL } )
     public BuildSource( String url )
     {
         this.url = url;
+    }
+
+    public BuildSource()
+    {
     }
 
     public String getUrl()

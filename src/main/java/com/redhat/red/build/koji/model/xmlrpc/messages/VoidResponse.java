@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
+ * Copyright (C) 2010 Red Hat, Inc. (jdcasey@commonjava.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.red.build.koji.model.util;
+package com.redhat.red.build.koji.model.xmlrpc.messages;
+
+import org.commonjava.rwx.anno.Response;
 
 /**
- * Created by jdcasey on 1/8/16.
+ * Placeholder to allow void method calls, while still allowing for the possibility that the response
+ * will be a fault, instead of nothing at all.
  */
-public class ValueHolder<T>
+@Response
+public class VoidResponse
 {
-    private T value;
-
-    public T getValue()
-    {
-        return value;
-    }
-
-    public void setValue( T value )
-    {
-        this.value = value;
-    }
 }

@@ -15,9 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 @StructPart
 public class KojiBuildType
@@ -28,11 +27,14 @@ public class KojiBuildType
     @DataKey( "name" )
     private String name;
 
-    @KeyRefs( { "id", "name" } )
     public KojiBuildType( int id, String name )
     {
         this.id = id;
         this.name = name;
+    }
+
+    public KojiBuildType()
+    {
     }
 
     public int getId()

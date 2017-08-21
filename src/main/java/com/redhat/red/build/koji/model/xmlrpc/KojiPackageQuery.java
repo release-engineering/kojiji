@@ -15,8 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 /**
  * Created by jdcasey on 8/5/16.
@@ -45,6 +45,40 @@ public class KojiPackageQuery
 
     @DataKey( "event" )
     private Integer eventId;
+
+    public KojiPackageQuery()
+    {
+    }
+
+    public void setTagId( Integer tagId )
+    {
+        this.tagId = tagId;
+    }
+
+    public void setUserId( Integer userId )
+    {
+        this.userId = userId;
+    }
+
+    public void setPkgId( Integer pkgId )
+    {
+        this.pkgId = pkgId;
+    }
+
+    public Boolean getInherited()
+    {
+        return inherited;
+    }
+
+    public void setInherited( Boolean inherited )
+    {
+        this.inherited = inherited;
+    }
+
+    public void setEventId( Integer eventId )
+    {
+        this.eventId = eventId;
+    }
 
     public int getTagId()
     {

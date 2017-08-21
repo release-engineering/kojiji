@@ -15,13 +15,13 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import com.redhat.red.build.koji.model.util.IdOrNameValueBinder;
-import org.commonjava.rwx.binding.anno.Converter;
+import com.redhat.red.build.koji.model.converter.KojiIdOrNameConverter;
+import org.commonjava.rwx.anno.Converter;
 
 /**
  * Created by jdcasey on 1/15/16.
  */
-@Converter( IdOrNameValueBinder.class )
+@Converter( KojiIdOrNameConverter.class )
 public class KojiIdOrName
 {
     private String name;
@@ -47,6 +47,20 @@ public class KojiIdOrName
         }
 
         return result;
+    }
+
+    public KojiIdOrName()
+    {
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public void setId( Integer id )
+    {
+        this.id = id;
     }
 
     public KojiIdOrName( String name )

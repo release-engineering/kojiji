@@ -15,57 +15,34 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by jdcasey on 12/3/15.
  */
 public class LoginRequestTest
-        extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
 
     @Test
-    public void verifyVsCapturedHttpRequest()
-            throws Exception
+    public void verifyVsCapturedHttpRequest() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new LoginRequest() );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "login-request.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
+        verifyVsCapturedMessage( LoginRequest.class, "login-request.xml" );
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new LoginRequest() );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        LoginRequest parsed = bindery.parse( generator, LoginRequest.class );
+        LoginRequest parsed = roundTrip( LoginRequest.class, new LoginRequest() );
         assertNotNull( parsed );
     }
 
     @Test
-    public void renderXML()
-            throws Exception
+    public void renderXML() throws Exception
     {
-        String xml = bindery.renderString( new LoginRequest() );
+        String xml = rwxMapper.render( new LoginRequest() );
         System.out.println( xml );
     }
 }

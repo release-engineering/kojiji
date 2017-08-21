@@ -15,9 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 /**
  * Created by jdcasey on 1/29/16.
@@ -28,8 +27,16 @@ public class GetPackageIdRequest
     @DataIndex( 0 )
     private String name;
 
-    @IndexRefs( 0 )
     public GetPackageIdRequest( String name )
+    {
+        this.name = name;
+    }
+
+    public GetPackageIdRequest()
+    {
+    }
+
+    public void setName( String name )
     {
         this.name = name;
     }

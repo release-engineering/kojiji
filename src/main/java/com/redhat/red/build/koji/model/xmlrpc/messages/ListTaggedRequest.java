@@ -16,8 +16,8 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Request;
 
 /**
  * Created by jdcasey on 8/8/16.
@@ -81,6 +81,11 @@ public class ListTaggedRequest
         return inherit;
     }
 
+    public boolean getInherit()
+    {
+        return inherit;
+    }
+
     public void setInherit( boolean inherit )
     {
         this.inherit = inherit;
@@ -97,6 +102,11 @@ public class ListTaggedRequest
     }
 
     public boolean isLatest()
+    {
+        return latest;
+    }
+
+    public boolean getLatest()
     {
         return latest;
     }

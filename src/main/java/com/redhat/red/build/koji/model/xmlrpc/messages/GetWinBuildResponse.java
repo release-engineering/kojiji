@@ -16,9 +16,8 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiWinBuildInfo;
-import org.commonjava.rwx.binding.anno.DataIndex;
-import org.commonjava.rwx.binding.anno.IndexRefs;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
 @Response
 public class GetWinBuildResponse
@@ -26,8 +25,16 @@ public class GetWinBuildResponse
     @DataIndex( 0 )
     private KojiWinBuildInfo winBuildInfo;
 
-    @IndexRefs( 0 )
     public GetWinBuildResponse( KojiWinBuildInfo winBuildInfo )
+    {
+        this.winBuildInfo = winBuildInfo;
+    }
+
+    public GetWinBuildResponse()
+    {
+    }
+
+    public void setWinBuildInfo( KojiWinBuildInfo winBuildInfo )
     {
         this.winBuildInfo = winBuildInfo;
     }

@@ -17,9 +17,8 @@ package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.KeyRefs;
-import org.commonjava.rwx.binding.anno.StructPart;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.StructPart;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.ARCH;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.OS;
@@ -39,10 +38,23 @@ public class BuildHost
     private String arch;
 
     @JsonCreator
-    @KeyRefs( { OS, ARCH } )
     public BuildHost( @JsonProperty( OS ) String os, @JsonProperty( ARCH ) String arch )
     {
         this.os = os;
+        this.arch = arch;
+    }
+
+    public BuildHost()
+    {
+    }
+
+    public void setOs( String os )
+    {
+        this.os = os;
+    }
+
+    public void setArch( String arch )
+    {
         this.arch = arch;
     }
 

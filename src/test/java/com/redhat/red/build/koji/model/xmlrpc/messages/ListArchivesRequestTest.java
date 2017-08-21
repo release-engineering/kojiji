@@ -15,67 +15,49 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
-import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
+import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveQuery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
-import org.commonjava.rwx.estream.model.Event;
-import org.commonjava.rwx.impl.estream.EventStreamGeneratorImpl;
-import org.commonjava.rwx.impl.estream.EventStreamParserImpl;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 /**
  * Created by jdcasey on 8/9/16.
  */
 public class ListArchivesRequestTest
-        extends AbstractKojiMessageTest
+                extends AbstractKojiMessageTest
 {
     @Test
-    public void verifyVsCapturedHttpRequest()
-            throws Exception
+    public void verifyVsCapturedHttpRequest() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-        bindery.render( eventParser, new ListArchivesRequest( new SimpleProjectVersionRef( "org.foo", "bar", "1.1" ) ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        eventParser.clearEvents();
-
-        List<Event<?>> capturedEvents = parseEvents( "listArchives-request-0.xml" );
-
-        assertEquals( objectEvents, capturedEvents );
+        ListArchivesRequest parsed = parseCapturedMessage( ListArchivesRequest.class, "listArchives-request-0.xml" );
+        assertListArchivesRequest( parsed );
     }
 
     @Test
-    public void roundTrip()
-            throws Exception
+    public void roundTrip() throws Exception
     {
-        EventStreamParserImpl eventParser = new EventStreamParserImpl();
-
-        int buildId = 422953;
-        ProjectVersionRef gav = new SimpleProjectVersionRef( "org.foo", "bar", "1.1" );
-        bindery.render( eventParser, new ListArchivesRequest( gav ) );
-
-        List<Event<?>> objectEvents = eventParser.getEvents();
-        EventStreamGeneratorImpl generator = new EventStreamGeneratorImpl( objectEvents );
-
-        ListArchivesRequest parsed = bindery.parse( generator, ListArchivesRequest.class );
-        assertNotNull( parsed );
-
-        assertThat( parsed.getQuery().getMavenRef().toGAV(), equalTo( gav ) );
+        ListArchivesRequest parsed = roundTrip( ListArchivesRequest.class, new ListArchivesRequest( pvr ) );
+        assertListArchivesRequest( parsed );
+        assertEquals( parsed.getQuery().getFilename(), "bar-1.1.jar" );
     }
 
-    @Test
-    public void renderXML()
-            throws Exception
+    private void assertListArchivesRequest( ListArchivesRequest parsed )
     {
-        int buildId = 422953;
-        String xml = bindery.renderString( new ListArchivesRequest( new SimpleProjectVersionRef( "org.foo", "bar", "1.1" ) ) );
-        System.out.println( xml );
+        KojiArchiveQuery query = parsed.getQuery();
+        assertEquals( query.getType(), "maven" );
+        assertEquals( query.getMavenRef(), new KojiMavenRef( "org.foo", "bar", "1.1" ) );
+    }
+
+    private static SimpleProjectVersionRef pvr = new SimpleProjectVersionRef( "org.foo", "bar", "1.1" );
+
+    public ListArchivesRequest getRequest()
+    {
+        KojiArchiveQuery query = new KojiArchiveQuery( pvr );
+
+        ListArchivesRequest request = new ListArchivesRequest();
+        request.setQuery( query );
+        return request;
     }
 }

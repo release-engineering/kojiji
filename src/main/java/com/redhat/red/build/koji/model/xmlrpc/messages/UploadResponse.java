@@ -15,8 +15,8 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.binding.anno.DataKey;
-import org.commonjava.rwx.binding.anno.Response;
+import org.commonjava.rwx.anno.DataKey;
+import org.commonjava.rwx.anno.Response;
 
 /**
  * Created by jdcasey on 2/8/16.
@@ -35,6 +35,10 @@ public class UploadResponse
 
     @DataKey( "size" )
     private long size;
+
+    public UploadResponse()
+    {
+    }
 
     public String getChecksumProtocol()
     {
