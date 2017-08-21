@@ -60,7 +60,7 @@
 
         <dockerNetwork>default</dockerNetwork>
         <dockerNetworkMode>bridge</dockerNetworkMode>
-        <dockerStartTimeout>180000</dockerStartTimeout>
+        <dockerStartTimeout>240000</dockerStartTimeout>
 
         <koji-hub-http-port>80</koji-hub-http-port>
         <koji-hub-https-port>443</koji-hub-https-port>
@@ -299,8 +299,8 @@
                                         <link>koji-db:koji-db</link>
                                     </links>
                                     <ports>
-                                        <port>koji-hub-http:80</port>
-                                        <port>koji-hub-https:443</port>
+                                        <port>${koji-hub-http-port}:80</port>
+                                        <port>${koji-hub-https-port}:443</port>
                                     </ports>
                                     <log>
                                         <file>${project.build.directory}/koji-hub.log</file>
