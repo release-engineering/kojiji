@@ -92,7 +92,7 @@ public class AbstractIT
     public static TemporaryFolder temp = new TemporaryFolder();
 
     @BeforeClass
-    public void registerRWX() {
+    public static void registerRWX() {
         Registry.setInstance( new Model_Registry() ); // Register RWX Parser/Renderers
     }
 
