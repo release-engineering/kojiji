@@ -25,7 +25,6 @@ import org.commonjava.rwx.anno.Request;
 import org.commonjava.rwx.api.RWXMapper;
 import org.commonjava.rwx.error.XmlRpcException;
 import com.redhat.red.build.koji.http.RequestModifier;
-import com.redhat.red.build.koji.http.SyncObjectClient;
 import com.redhat.red.build.koji.http.UrlBuildResult;
 import com.redhat.red.build.koji.http.UrlBuilder;
 import com.redhat.red.build.koji.http.error.XmlRpcTransportException;
@@ -42,7 +41,6 @@ import java.net.MalformedURLException;
 import java.util.Arrays;
 
 public class HC4SyncObjectClient
-                implements SyncObjectClient
 {
     private final HttpFactory httpFactory;
 
@@ -57,13 +55,11 @@ public class HC4SyncObjectClient
         this.extraPath = extraPath;
     }
 
-    @Override
     public <T> T call( final Object request, final Class<T> responseType ) throws XmlRpcException
     {
         return call( request, responseType, null, null );
     }
 
-    @Override
     public <T> T call( final Object request, final Class<T> responseType, final UrlBuilder urlBuilder,
                        final RequestModifier requestModifier ) throws XmlRpcException
     {
@@ -165,7 +161,6 @@ public class HC4SyncObjectClient
         return null;
     }
 
-    @Override
     public void close()
     {
         IOUtils.closeQuietly( httpFactory );

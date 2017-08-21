@@ -35,7 +35,7 @@ public class KojiImportTest
             throws VerificationException, IOException
     {
         KojiImport info = new KojiImport( KojiJsonConstants.DEFAULT_METADATA_VERSION, newBuildDescription(),
-                                          Arrays.asList( new BuildRoot[] { newBuildRoot() } ),
+                                          Arrays.asList( newBuildRoot() ),
                                           Arrays.asList( newBuildOutput( 1001, "foo-1.jar" ),
                                                          newLogOutput( 1001, "build.log" ) )
                                                 .stream()
