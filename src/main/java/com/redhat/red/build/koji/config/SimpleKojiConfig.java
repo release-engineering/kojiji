@@ -181,7 +181,7 @@ public class SimpleKojiConfig
 
     public Integer getConnectionPoolTimeout()
     {
-        return timeout == null ? DEFAULT_CONNECTION_POOL_TIMEOUT_SECONDS : connectionPoolTimeout;
+        return connectionPoolTimeout == null ? DEFAULT_CONNECTION_POOL_TIMEOUT_SECONDS : connectionPoolTimeout;
     }
 
     public Integer getMaxConnections()
