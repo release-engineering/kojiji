@@ -171,10 +171,13 @@ public class KojiClient
         }
     }
 
-    public void setup()
+    static
     {
         Registry.setInstance( new Model_Registry() ); // Register RWX Parser/Renderers
+    }
 
+    public void setup()
+    {
         uploadService = new ExecutorCompletionService<>( executorService );
         objectMapper = new KojiObjectMapper();
 
@@ -937,12 +940,13 @@ public class KojiClient
                 throw new KojiClientException( "No such tag: %s", tag );
             }
 
+            boolean add = true;
+
             ListPackagesResponse listPackagesResponse =
                     xmlrpcClient.call( new ListPackagesRequest( new KojiPackageQuery().withTagId( r.getId() ).withUserId( session.getUserInfo().getUserId() ) ),
                                        ListPackagesResponse.class, sessionUrlBuilder( session ),
                                        STANDARD_REQUEST_MODIFIER );
 
-            boolean add = true;
             if ( listPackagesResponse != null )
             {
                 List<KojiPackageInfo> packages = listPackagesResponse.getPackages();

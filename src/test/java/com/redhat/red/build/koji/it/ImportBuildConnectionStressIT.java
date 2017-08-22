@@ -37,6 +37,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -76,6 +77,8 @@ public class ImportBuildConnectionStressIT
 
     private ExecutorCompletionService<Exception> completions = new ExecutorCompletionService<Exception>( executor );
 
+    /* Ignore this for the same reason as ImportSimpleBuildIT */
+    @Ignore
     @Test
     public void run()
             throws Exception
