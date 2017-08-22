@@ -20,6 +20,7 @@
 
   <!--<logger name="org.commonjava.util.jhttpc.INTERNAL.conn.CloseBlockingConnectionManager" level="TRACE"/>-->
   <logger name="org.apache.http.wire" level="INFO"/>
+  <logger name="com.redhat.red.build.koji.http.httpclient4" level="TRACE"/>
 
   <root level="DEBUG">
     <appender-ref ref="STDOUT" />

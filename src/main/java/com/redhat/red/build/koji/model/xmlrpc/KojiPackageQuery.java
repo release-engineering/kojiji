@@ -80,7 +80,7 @@ public class KojiPackageQuery
         this.eventId = eventId;
     }
 
-    public int getTagId()
+    public Integer getTagId()
     {
         return tagId;
     }
@@ -96,7 +96,7 @@ public class KojiPackageQuery
         return this;
     }
 
-    public int getUserId()
+    public Integer getUserId()
     {
         return userId;
     }
@@ -112,7 +112,7 @@ public class KojiPackageQuery
         return this;
     }
 
-    public int getPkgId()
+    public Integer getPkgId()
     {
         return pkgId;
     }
@@ -176,7 +176,7 @@ public class KojiPackageQuery
 //        return this;
 //    }
 
-    public int getEventId()
+    public Integer getEventId()
     {
         return eventId;
     }

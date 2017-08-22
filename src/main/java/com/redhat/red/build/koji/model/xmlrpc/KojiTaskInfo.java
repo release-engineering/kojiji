@@ -51,12 +51,14 @@ public class KojiTaskInfo
     private int priority;
 
     @DataKey( "completion_time" )
+    @Converter( TimestampConverter.class )
     private Date completionTime;
 
     @DataKey( "state" )
     private int state;
 
     @DataKey( "create_time" )
+    @Converter( TimestampConverter.class )
     private Date createTime;
 
     @DataKey( "owner_id" )
