@@ -128,11 +128,13 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1402,8 +1404,12 @@ public class KojiClient
 
             try
             {
+                File f = new File( importFile.getFilePath() );
+                String fname = f.getName();
+                String fullDir = f.getParent() == null ? dirname : Paths.get( dirname, f.getParent() ).toString();
+
                 result.setResponse(
-                        upload( importFile.getStream(), importFile.getFilePath(), importFile.getSize(), dirname,
+                        upload( importFile.getStream(), fname, importFile.getSize(), fullDir,
                                 session ) );
             }
             catch ( ConnectionPoolTimeoutException e )
