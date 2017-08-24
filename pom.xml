@@ -60,7 +60,7 @@
 
         <dockerNetwork>default</dockerNetwork>
         <dockerNetworkMode>bridge</dockerNetworkMode>
-        <dockerStartTimeout>240000</dockerStartTimeout>
+        <dockerStartTimeout>300000</dockerStartTimeout>
 
         <koji-hub-http-port>80</koji-hub-http-port>
         <koji-hub-https-port>443</koji-hub-https-port>
@@ -370,10 +370,10 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
                                     <include>**/*IT.java</include>
                                     <!-- <include>**/ImportBuildConnectionStressIT.java</include> -->
                                 </includes>
-                                <forkCount>1C</forkCount>
+                                <forkCount>4</forkCount>
+                                <forkedProcessTimeoutInSeconds>500</forkedProcessTimeoutInSeconds>
                                 <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                                <systemPropertiesFile>${project.build.directory}/docker.properties
-                                </systemPropertiesFile>
+                                <systemPropertiesFile>${project.build.directory}/docker.properties</systemPropertiesFile>
                             </configuration>
                         </execution>
                     </executions>
