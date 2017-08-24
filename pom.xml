@@ -56,17 +56,11 @@
         <dbWaitFor>database system is ready to accept connections</dbWaitFor>
         <hubWaitFor>Starting HTTPd</hubWaitFor>
 
-<<<<<<< HEAD
         <download.logs>false</download.logs>
-=======
-    <dockerNetwork>default</dockerNetwork>
-    <dockerNetworkMode>bridge</dockerNetworkMode>
-    <dockerStartTimeout>300000</dockerStartTimeout>
->>>>>>> 7cbe08b... Add integration tests for imports that have relPaths, and re-enable all ITs in the build.
 
         <dockerNetwork>default</dockerNetwork>
         <dockerNetworkMode>bridge</dockerNetworkMode>
-        <dockerStartTimeout>240000</dockerStartTimeout>
+        <dockerStartTimeout>300000</dockerStartTimeout>
 
         <koji-hub-http-port>80</koji-hub-http-port>
         <koji-hub-https-port>443</koji-hub-https-port>
