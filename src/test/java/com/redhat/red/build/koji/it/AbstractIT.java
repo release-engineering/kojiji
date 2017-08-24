@@ -153,7 +153,7 @@ public class AbstractIT
 
         String buildDir = System.getProperty( "project.build.directory", "target" );
 
-        downloadDir = Paths.get( buildDir, "downloads", name.getMethodName() ).toFile();
+        downloadDir = Paths.get( buildDir, "downloads", getClass().getSimpleName() + "." + name.getMethodName() ).toFile();
         downloadDir.mkdirs();
 
         executor = Executors.newFixedThreadPool( 1 );
