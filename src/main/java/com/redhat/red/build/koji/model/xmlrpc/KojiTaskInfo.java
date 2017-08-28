@@ -21,6 +21,7 @@ import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jdcasey on 8/8/16.
@@ -72,6 +73,9 @@ public class KojiTaskInfo
 
     @DataKey( "arch" )
     private String arch;
+
+    @DataKey( "request" )
+    private List<Object> request;
 
     public int getTaskId()
     {
@@ -211,5 +215,15 @@ public class KojiTaskInfo
     public void setArch( String arch )
     {
         this.arch = arch;
+    }
+
+    public List<Object> getRequest()
+    {
+        return request;
+    }
+
+    public void setRequest( List<Object> request )
+    {
+        this.request = request;
     }
 }
