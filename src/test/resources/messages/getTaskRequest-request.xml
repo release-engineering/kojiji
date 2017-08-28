@@ -1,0 +1,11 @@
+<?xml version='1.0'?>
+<methodCall>
+    <methodName>getTaskRequest</methodName>
+    <params>
+        <param>
+            <value>
+                <int>11762694</int>
+            </value>
+        </param>
+    </params>
+</methodCall>
