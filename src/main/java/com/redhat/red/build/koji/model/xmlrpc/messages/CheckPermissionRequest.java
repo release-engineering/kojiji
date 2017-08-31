@@ -18,10 +18,12 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.HAS_PERM;
+
 /**
  * Created by jdcasey on 1/11/16.
  */
-@Request( method="hasPerm" )
+@Request( method = HAS_PERM )
 public class CheckPermissionRequest
 {
     @DataIndex( 0 )

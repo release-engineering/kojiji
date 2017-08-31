@@ -20,10 +20,12 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.UNTAG_BUILD;
+
 /**
  * Created by jdcasey on 8/8/16.
  */
-@Request( method = "untagBuild" )
+@Request( method = UNTAG_BUILD )
 public class UntagBuildRequest
 {
     @DataIndex( 0 )

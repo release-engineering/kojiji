@@ -20,7 +20,9 @@ import org.commonjava.rwx.anno.Request;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 
-@Request( method="getBuildType" )
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_BUILD_TYPE;
+
+@Request( method = GET_BUILD_TYPE )
 public class GetBuildTypeRequest
 {
     @DataIndex( 0 )

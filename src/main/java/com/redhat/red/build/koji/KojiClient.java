@@ -78,6 +78,8 @@ import javax.security.auth.DestroyFailedException;
 import static com.redhat.red.build.koji.model.util.KojiFormats.toKojiName;
 import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.*;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_BUILD;
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_TAGS;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.apache.http.client.utils.HttpClientUtils.closeQuietly;
@@ -708,6 +710,57 @@ public class KojiClient
         }, "Failed to retrieve list of tags for build: %s", buildId );
     }
 
+    /**
+     * Get tags giving a list of build Ids. This uses multicall and is much faster than calling listTags(id) one by one.
+     * @return A Map where the build Id is the key and tags as value ( a list ).
+     */
+    public Map<Integer, List<KojiTagInfo>> listTags( List<Integer> buildIds, KojiSessionInfo session )
+                    throws KojiClientException
+    {
+        MultiCallRequest multiCallRequest = new MultiCallRequest();
+        List<KojiMultiCallObj> multiCallObjs = new ArrayList<>();
+        multiCallRequest.setMultiCallObjs( multiCallObjs );
+
+        buildIds.forEach(( buildId ) -> {
+            KojiMultiCallObj callObj = new KojiMultiCallObj();
+            callObj.setMethodName( LIST_TAGS );
+            List<Object> params = new ArrayList<>();
+            params.add( buildId );
+            callObj.setParams( params );
+            multiCallObjs.add( callObj );
+        });
+
+        List<KojiMultiCallValueObj> multiCallValueObjs = doXmlRpcAndWarn( () -> {
+            MultiCallResponse response =
+                            xmlrpcClient.call( multiCallRequest,
+                                               MultiCallResponse.class, sessionUrlBuilder( session ),
+                                               STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getValueObjs();
+        }, "Failed to retrieve tags multicall info for: %s", buildIds );
+
+        Map<Integer, List<KojiTagInfo>> ret = new HashMap<>(  );
+
+        Registry registry = Registry.getInstance();
+        for ( int i = 0; i < buildIds.size(); i++ )
+        {
+            KojiMultiCallValueObj valueObj = multiCallValueObjs.get( i );
+            Object data = valueObj.getData();
+            if ( data != null )
+            {
+                List<KojiTagInfo> kojiTagInfoList = new ArrayList<>();
+                for ( Object o : (List) data )
+                {
+                    KojiTagInfo kojiTagInfo = registry.parseAs( o, KojiTagInfo.class );
+                    kojiTagInfoList.add( kojiTagInfo );
+                }
+                ret.put( buildIds.get( i ), kojiTagInfoList );
+            }
+        }
+
+        return ret;
+    }
+
     public List<KojiArchiveInfo> listArchives( KojiArchiveQuery query, KojiSessionInfo session )
             throws KojiClientException
     {
@@ -852,38 +905,54 @@ public class KojiClient
         return null;
     }
 
+    /**
+     * Get list of KojiBuildInfo objects that contains specified GAV. It first get archives list, and retrieve
+     * build ids. Then use the ids to issue a multicall request to retrieve all build info objects.
+     */
     public List<KojiBuildInfo> listBuildsContaining( ProjectVersionRef gav, KojiSessionInfo session )
-            throws KojiClientException
+                    throws KojiClientException
     {
         List<KojiArchiveInfo> archives = doXmlRpcAndThrow( () -> {
             ListArchivesResponse response =
-                    xmlrpcClient.call( new ListArchivesRequest( gav ), ListArchivesResponse.class,
-                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+                            xmlrpcClient.call( new ListArchivesRequest( gav ), ListArchivesResponse.class,
+                                               sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             return response == null ? Collections.emptyList() : response.getArchives();
         }, "Failed to retrieve list of archives for: %s", gav );
 
-        List<KojiBuildInfo> builds = new ArrayList<>();
+        MultiCallRequest multiCallRequest = new MultiCallRequest();
+        List<KojiMultiCallObj> multiCallObjs = new ArrayList<>();
+        multiCallRequest.setMultiCallObjs( multiCallObjs );
 
-        if ( archives != null && !archives.isEmpty())
-        {
-            archives.forEach( ( archive ) -> {
-                KojiBuildInfo build = doXmlRpcAndWarn( () -> {
-                    GetBuildResponse buildResponse =
-                            xmlrpcClient.call( new GetBuildByIdOrNameRequest( archive.getBuildId() ),
-                                               GetBuildResponse.class, sessionUrlBuilder( session ),
+        archives.forEach(( archive ) -> {
+            KojiMultiCallObj callObj = new KojiMultiCallObj();
+            callObj.setMethodName( GET_BUILD );
+            List<Object> params = new ArrayList<>();
+            params.add( archive.getBuildId() );
+            callObj.setParams( params );
+            multiCallObjs.add( callObj );
+        });
+
+        List<KojiMultiCallValueObj> multiCallValueObjs = doXmlRpcAndWarn( () -> {
+            MultiCallResponse response =
+                            xmlrpcClient.call( multiCallRequest,
+                                               MultiCallResponse.class, sessionUrlBuilder( session ),
                                                STANDARD_REQUEST_MODIFIER );
 
-                    return buildResponse == null ? null : buildResponse.getBuildInfo();
-                }, "Failed to retrieve build for: %s", archive.getBuildId() );
+            return response == null ? null : response.getValueObjs();
+        }, "Failed to retrieve build multicall info for: %s", gav );
 
-                if ( build != null )
-                {
-                    builds.add( build );
-                }
-            } );
-        }
+        List<KojiBuildInfo> builds = new ArrayList<>();
 
+        Registry registry = Registry.getInstance();
+        multiCallValueObjs.forEach( (valueObj) -> {
+            Object data = valueObj.getData();
+            if (data != null)
+            {
+                KojiBuildInfo kojiBuildInfo = registry.parseAs( data, KojiBuildInfo.class );
+                builds.add( kojiBuildInfo );
+            }
+        } );
         return builds;
     }
 

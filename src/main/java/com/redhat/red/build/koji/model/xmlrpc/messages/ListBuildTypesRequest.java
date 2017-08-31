@@ -19,7 +19,9 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeQuery;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
-@Request( method="listBTypes" )
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_BTYPES;
+
+@Request( method = LIST_BTYPES )
 public class ListBuildTypesRequest
 {
     @DataIndex( 0 )

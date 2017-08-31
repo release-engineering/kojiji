@@ -19,7 +19,9 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
-@Request( method="getImageBuild" )
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_IMAGE_BUILD;
+
+@Request( method = GET_IMAGE_BUILD )
 public class GetImageBuildRequest
 {
     @DataIndex( 0 )

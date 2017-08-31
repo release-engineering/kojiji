@@ -19,12 +19,14 @@ import com.redhat.red.build.koji.model.json.KojiImport;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.CG_IMPORT;
+
 /**
  * Calls CGImport with the metadata inlined as a struct in param 0.
  *
  * Created by jdcasey on 2/19/16.
  */
-@Request( method = "CGImport" )
+@Request( method = CG_IMPORT )
 public class CGInlinedImportRequest
 {
     @DataIndex( 0 )

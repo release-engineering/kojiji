@@ -18,7 +18,9 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
-@Request( method="getArchiveType" )
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_ARCHIVE_TYPE;
+
+@Request( method = GET_ARCHIVE_TYPE )
 public class GetArchiveTypeRequest
 {
     @DataIndex( 0 )

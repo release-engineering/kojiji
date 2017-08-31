@@ -17,10 +17,12 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_ALL_PERMS;
+
 /**
  * Created by jdcasey on 1/6/16.
  */
-@Request( method="getAllPerms" )
+@Request( method = GET_ALL_PERMS )
 public class AllPermissionsRequest
 {
 }

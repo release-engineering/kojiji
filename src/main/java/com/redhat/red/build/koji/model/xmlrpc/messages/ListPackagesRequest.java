@@ -19,10 +19,12 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiPackageQuery;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_PACKAGES;
+
 /**
  * Created by jdcasey on 1/7/16.
  */
-@Request( method="listPackages" )
+@Request( method = LIST_PACKAGES )
 public class ListPackagesRequest
 {
 
