@@ -17,10 +17,12 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_ARCHIVE_TYPES;
+
 /**
  * Created by jdcasey on 9/16/16.
  */
-@Request( method="getArchiveTypes" )
+@Request( method = GET_ARCHIVE_TYPES )
 public class GetArchiveTypesRequest
 {
 }

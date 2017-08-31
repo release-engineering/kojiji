@@ -19,10 +19,12 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_TAGS;
+
 /**
  * Created by jdcasey on 5/6/16.
  */
-@Request( method = "listTags" )
+@Request( method = LIST_TAGS )
 public class ListTagsRequest
 {
     @DataIndex( 0 )

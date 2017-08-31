@@ -18,10 +18,12 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_USER;
+
 /**
  * Created by jdcasey on 12/3/15.
  */
-@Request( method = "getUser")
+@Request( method = GET_USER )
 public class UserRequest
 {
     @DataIndex( 0 )

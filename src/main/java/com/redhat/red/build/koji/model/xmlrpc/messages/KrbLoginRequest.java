@@ -3,7 +3,9 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
-@Request( method="krbLogin" )
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.KRB_LOGIN;
+
+@Request( method = KRB_LOGIN )
 public class KrbLoginRequest
 {
     @DataIndex( 0 )

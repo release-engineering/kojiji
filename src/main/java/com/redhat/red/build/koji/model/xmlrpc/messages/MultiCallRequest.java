@@ -6,10 +6,12 @@ import org.commonjava.rwx.anno.Request;
 
 import java.util.List;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.MULTI_CALL;
+
 /**
  * Created by ruhan on 8/2/17.
  */
-@Request( method = "multiCall" )
+@Request( method = MULTI_CALL )
 public class MultiCallRequest
 {
     @DataIndex( 0 )

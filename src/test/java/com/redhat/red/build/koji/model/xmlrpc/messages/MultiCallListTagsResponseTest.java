@@ -17,7 +17,6 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiMultiCallValueObj;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
-import org.commonjava.rwx.core.Parser;
 import org.commonjava.rwx.core.Registry;
 import org.junit.Test;
 
@@ -64,12 +63,12 @@ public class MultiCallListTagsResponseTest
 
     private List<String> getTags( List<Object> data )
     {
-        Parser kojiTagInfoParser = Registry.getInstance().getParser( KojiTagInfo.class );
+        Registry registry = Registry.getInstance();
 
         List<KojiTagInfo> kojiTagInfoList = new ArrayList<>();
         for ( Object o : (List) data )
         {
-            KojiTagInfo kojiTagInfo = (KojiTagInfo) kojiTagInfoParser.parse( o );
+            KojiTagInfo kojiTagInfo = registry.parseAs( o, KojiTagInfo.class );
             kojiTagInfoList.add( kojiTagInfo );
         }
 

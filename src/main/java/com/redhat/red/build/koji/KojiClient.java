@@ -34,7 +34,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.commonjava.maven.atlas.ident.ref.ProjectRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.api.RWXMapper;
-import org.commonjava.rwx.core.Parser;
 import org.commonjava.rwx.core.Registry;
 import org.commonjava.rwx.error.XmlRpcException;
 import com.redhat.red.build.koji.http.RequestModifier;
@@ -79,6 +78,8 @@ import javax.security.auth.DestroyFailedException;
 import static com.redhat.red.build.koji.model.util.KojiFormats.toKojiName;
 import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.*;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_BUILD;
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_TAGS;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.apache.http.client.utils.HttpClientUtils.closeQuietly;
@@ -722,7 +723,7 @@ public class KojiClient
 
         buildIds.forEach(( buildId ) -> {
             KojiMultiCallObj callObj = new KojiMultiCallObj();
-            callObj.setMethodName( "listTags" );
+            callObj.setMethodName( LIST_TAGS );
             List<Object> params = new ArrayList<>();
             params.add( buildId );
             callObj.setParams( params );
@@ -740,8 +741,7 @@ public class KojiClient
 
         Map<Integer, List<KojiTagInfo>> ret = new HashMap<>(  );
 
-        Parser kojiTagInfoParser = Registry.getInstance().getParser( KojiTagInfo.class );
-
+        Registry registry = Registry.getInstance();
         for ( int i = 0; i < buildIds.size(); i++ )
         {
             KojiMultiCallValueObj valueObj = multiCallValueObjs.get( i );
@@ -751,7 +751,7 @@ public class KojiClient
                 List<KojiTagInfo> kojiTagInfoList = new ArrayList<>();
                 for ( Object o : (List) data )
                 {
-                    KojiTagInfo kojiTagInfo = (KojiTagInfo) kojiTagInfoParser.parse( o );
+                    KojiTagInfo kojiTagInfo = registry.parseAs( o, KojiTagInfo.class );
                     kojiTagInfoList.add( kojiTagInfo );
                 }
                 ret.put( buildIds.get( i ), kojiTagInfoList );
@@ -926,7 +926,7 @@ public class KojiClient
 
         archives.forEach(( archive ) -> {
             KojiMultiCallObj callObj = new KojiMultiCallObj();
-            callObj.setMethodName( "getBuild" );
+            callObj.setMethodName( GET_BUILD );
             List<Object> params = new ArrayList<>();
             params.add( archive.getBuildId() );
             callObj.setParams( params );
@@ -944,12 +944,12 @@ public class KojiClient
 
         List<KojiBuildInfo> builds = new ArrayList<>();
 
-        Parser kojiBuildInfoParser = Registry.getInstance().getParser( KojiBuildInfo.class );
+        Registry registry = Registry.getInstance();
         multiCallValueObjs.forEach( (valueObj) -> {
             Object data = valueObj.getData();
             if (data != null)
             {
-                KojiBuildInfo kojiBuildInfo = (KojiBuildInfo) kojiBuildInfoParser.parse( data );
+                KojiBuildInfo kojiBuildInfo = registry.parseAs( data, KojiBuildInfo.class );
                 builds.add( kojiBuildInfo );
             }
         } );

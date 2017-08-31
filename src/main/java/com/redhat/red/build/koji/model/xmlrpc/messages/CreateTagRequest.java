@@ -23,10 +23,12 @@ import org.commonjava.rwx.anno.Request;
 
 import java.util.List;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.CREATE_TAG;
+
 /**
  * Created by jdcasey on 1/11/16.
  */
-@Request( method = "createTag" )
+@Request( method = CREATE_TAG )
 public class CreateTagRequest
 {
     @DataIndex( 0 )

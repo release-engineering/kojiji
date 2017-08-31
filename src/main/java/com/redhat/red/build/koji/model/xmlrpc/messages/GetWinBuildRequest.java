@@ -19,7 +19,9 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
-@Request( method="getWinBuild" )
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_WIN_BUILD;
+
+@Request( method = GET_WIN_BUILD )
 public class GetWinBuildRequest
 {
     @DataIndex( 0 )

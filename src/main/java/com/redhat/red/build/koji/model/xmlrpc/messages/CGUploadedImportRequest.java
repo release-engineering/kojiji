@@ -19,11 +19,13 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.CG_IMPORT;
+
 /**
  * Calls CGImport with the metadata.json file uploaded previously (and a reference to the file is included here).
  * Created by jdcasey on 2/19/16.
  */
-@Request( method = "CGImport" )
+@Request( method = CG_IMPORT )
 public class CGUploadedImportRequest
 {
     @DataIndex( 0 )

@@ -19,10 +19,12 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.PACKAGE_LIST_ADD;
+
 /**
  * Created by jdcasey on 8/8/16.
  */
-@Request( method = "packageListAdd" )
+@Request( method = PACKAGE_LIST_ADD )
 public class AddPackageToTagRequest
 {
     @DataIndex( 0 )

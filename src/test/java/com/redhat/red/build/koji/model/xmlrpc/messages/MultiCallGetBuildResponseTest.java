@@ -18,7 +18,6 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMultiCallValueObj;
 import com.redhat.red.build.koji.model.xmlrpc.KojiWinBuildInfo;
-import org.commonjava.rwx.core.Parser;
 import org.commonjava.rwx.core.Registry;
 import org.junit.Test;
 
@@ -67,8 +66,7 @@ public class MultiCallGetBuildResponseTest
         KojiMultiCallValueObj value = valueObjs.get( 0 );
         Object data = value.getData();
         assertTrue( data instanceof Map );
-        Parser kojiBuildInfoParser = Registry.getInstance().getParser( KojiBuildInfo.class );
-        KojiBuildInfo kojiBuildInfo = (KojiBuildInfo) kojiBuildInfoParser.parse( data );
+        KojiBuildInfo kojiBuildInfo = Registry.getInstance().parseAs( data, KojiBuildInfo.class );
         assertEquals( 513598, kojiBuildInfo.getId() );
         assertEquals( "org.dashbuilder-dashbuilder-parent-metadata", kojiBuildInfo.getName() );
 
@@ -91,14 +89,14 @@ public class MultiCallGetBuildResponseTest
         KojiMultiCallValueObj value = valueObjs.get( 0 );
         Object data = value.getData();
         assertTrue( data instanceof Map );
-        Parser kojiBuildInfoParser = Registry.getInstance().getParser( KojiBuildInfo.class );
-        KojiBuildInfo kojiBuildInfo = (KojiBuildInfo) kojiBuildInfoParser.parse( data );
+
+        KojiBuildInfo kojiBuildInfo = Registry.getInstance().parseAs( data, KojiBuildInfo.class );
         assertEquals( 513598, kojiBuildInfo.getId() );
         assertEquals( "org.dashbuilder-dashbuilder-parent-metadata", kojiBuildInfo.getName() );
 
         // check #2 object
         value = valueObjs.get( 1 );
-        kojiBuildInfo = (KojiBuildInfo) kojiBuildInfoParser.parse( value.getData() );
+        kojiBuildInfo = Registry.getInstance().parseAs( value.getData(), KojiBuildInfo.class );
         assertEquals( 513599, kojiBuildInfo.getId() );
         assertEquals( "org.kie-kie-parent-metadata", kojiBuildInfo.getName() );
 

@@ -20,10 +20,12 @@ import org.commonjava.maven.atlas.ident.ref.ProjectRef;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_ARCHIVES;
+
 /**
  * Created by jdcasey on 1/29/16.
  */
-@Request( method="listArchives" )
+@Request( method = LIST_ARCHIVES )
 public class ListArchivesRequest
 {
     @DataIndex( 0 )

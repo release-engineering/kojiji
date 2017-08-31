@@ -18,10 +18,12 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.SSL_LOGIN;
+
 /**
  * Created by jdcasey on 12/3/15.
  */
-@Request( method="sslLogin" )
+@Request( method = SSL_LOGIN )
 public class LoginRequest
 {
     @DataIndex( 0 )

@@ -18,10 +18,12 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_TASK_INFO;
+
 /**
  * Created by jdcasey on 1/29/16.
  */
-@Request( method="getTaskInfo" )
+@Request( method = GET_TASK_INFO )
 public class GetTaskRequest
 {
     @DataIndex( 0 )

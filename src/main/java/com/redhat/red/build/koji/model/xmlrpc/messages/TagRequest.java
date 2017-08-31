@@ -19,10 +19,12 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_TAG;
+
 /**
  * Created by jdcasey on 1/6/16.
  */
-@Request( method="getTag" )
+@Request( method = GET_TAG )
 public class TagRequest
 {
     @DataIndex( 0 )

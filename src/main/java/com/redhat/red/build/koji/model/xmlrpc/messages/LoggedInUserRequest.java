@@ -17,10 +17,12 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_LOGGED_IN_USER;
+
 /**
  * Created by jdcasey on 12/3/15.
  */
-@Request( method = "getLoggedInUser")
+@Request( method = GET_LOGGED_IN_USER )
 public class LoggedInUserRequest
 {
 }

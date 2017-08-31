@@ -20,10 +20,12 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiNVR;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.TAG_BUILD;
+
 /**
  * Created by jdcasey on 8/8/16.
  */
-@Request( method = "tagBuild" )
+@Request( method = TAG_BUILD )
 public class TagBuildRequest
 {
     @DataIndex( 0 )
