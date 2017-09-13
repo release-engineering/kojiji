@@ -17,6 +17,7 @@ import org.apache.kerby.kerberos.kerb.KrbCodec;
 import org.apache.kerby.kerberos.kerb.KrbConstant;
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
+import org.apache.kerby.kerberos.kerb.ccache.CredentialCache;
 import org.apache.kerby.kerberos.kerb.client.KrbClient;
 import org.apache.kerby.kerberos.kerb.client.KrbConfig;
 import org.apache.kerby.kerberos.kerb.client.KrbOption;
@@ -31,6 +32,7 @@ import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
+import org.apache.kerby.kerberos.kerb.ccache.Credential;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.util.Base64;
 import org.slf4j.Logger;
@@ -127,7 +129,7 @@ public class KrbAuthenticator
         return krbClient;
     }
 
-    public static TgtTicket getTgt( KrbClient krbClient, String keytab, String principal, String password )
+    public static TgtTicket getTgt( KrbClient krbClient, String keytab, String ccache, String principal, String password )
             throws KrbException
     {
         TgtTicket tgt = null;
@@ -135,6 +137,19 @@ public class KrbAuthenticator
         if ( keytab != null )
         {
             tgt = krbClient.requestTgt( principal, keytab );
+        }
+        else if ( ccache != null )
+        {
+            try
+            {
+                CredentialCache cc = krbClient.resolveCredCache( new File( ccache ) );
+                Credential cred = cc.getCredentials().get( 0 );
+                tgt = krbClient.getTgtTicketFromCredential( cred );
+            }
+            catch ( IOException e )
+            {
+                throw new KrbException( e.getMessage() );
+            }
         }
         else
         {
@@ -144,7 +159,7 @@ public class KrbAuthenticator
         return tgt;
     }
 
-    public static TgtTicket getSgt( KrbClient krbClient, String keytab, String password, TgtTicket tgt, String serverPrincipal )
+    public static TgtTicket getSgt( KrbClient krbClient, String keytab, String ccache, String password, TgtTicket tgt, String serverPrincipal )
             throws KrbException
     {
         KOptions requestOptions = new KOptions();
@@ -268,9 +283,9 @@ public class KrbAuthenticator
                 throw new KojiClientException( "Must set krbService option before logging in" );
             }
 
-            if ( config.getKrbPrincipal() == null && ( config.getKrbKeytab() == null && config.getKrbPassword() == null ) )
+            if ( config.getKrbPrincipal() == null && ( config.getKrbKeytab() == null && config.getKrbCCache() == null && config.getKrbPassword() == null ) )
             {
-                throw new KojiClientException( "Must set either krbPrincipal and krbKeytab or krbPassword options before logging in" );
+                throw new KojiClientException( "Must set krbPrincipal and krbPassword or krbKeyTab or krbCCache options before logging in" );
             }
 
             String krb5ConfFilename = getKrb5ConfFilename();
@@ -286,11 +301,11 @@ public class KrbAuthenticator
 
            this.krbClient = newClient( krb5ConfFilename );
 
-            TgtTicket tgt = getTgt( krbClient, config.getKrbKeytab(), config.getKrbPrincipal(), config.getKrbPassword() );
+            TgtTicket tgt = getTgt( krbClient, config.getKrbKeytab(), config.getKrbCCache(), config.getKrbPrincipal(), config.getKrbPassword() );
 
             String serverPrincipal = makeServerPrincipal( config.getKrbService(), config.getKojiURL(), tgt.getRealm() );
 
-            TgtTicket sgt = getSgt( krbClient, config.getKrbKeytab(), config.getKrbPassword(), tgt, serverPrincipal );
+            TgtTicket sgt = getSgt( krbClient, config.getKrbKeytab(), config.getKrbCCache(), config.getKrbPassword(), tgt, serverPrincipal );
 
             this.key = sgt.getSessionKey();
 
