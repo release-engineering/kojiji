@@ -16,7 +16,6 @@
 package com.redhat.red.build.koji.model.json;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.*;
-import static com.sun.imageio.plugins.jpeg.JPEG.version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
