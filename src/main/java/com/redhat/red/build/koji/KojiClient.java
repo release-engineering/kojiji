@@ -1105,6 +1105,17 @@ public class KojiClient
             }, "Failed to load task info for: %s", taskId );
     }
 
+    public KojiTaskRequest getTaskRequest( int taskId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            GetTaskRequestResponse response = xmlrpcClient.call( new GetTaskRequestRequest( taskId ), GetTaskRequestResponse.class,
+                                   sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : new KojiTaskRequest( response.getTaskRequestInfo() );
+        }, "Failed to get task request info for: %s", taskId );
+    }
+
     public List<KojiBuildInfo> listTagged( KojiTagInfo tag, KojiSessionInfo session )
             throws KojiClientException
     {
