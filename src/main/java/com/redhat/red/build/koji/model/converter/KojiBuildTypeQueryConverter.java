@@ -6,6 +6,8 @@ import org.commonjava.rwx.core.Converter;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.redhat.red.build.koji.model.xmlrpc.KojiQuery.__STARSTAR;
+
 /**
  * Created by ruhan on 8/11/17.
  */
@@ -41,6 +43,15 @@ public class KojiBuildTypeQueryConverter
             }
         }
 
+        if ( map.containsKey( __STARSTAR ) )
+        {
+            Object __starstar = map.get( __STARSTAR );
+            if ( __starstar instanceof Boolean )
+            {
+                query.setEnabled( (Boolean) __starstar );
+            }
+        }
+
         return query;
     }
 
@@ -52,7 +63,10 @@ public class KojiBuildTypeQueryConverter
             return null;
         }
 
-        Map<String, Object> map = new HashMap<>( 2 );
+        Map<String, Object> map = new HashMap<>();
+
+        boolean __starstar = value.getEnabled();
+        map.put( __STARSTAR, __starstar );
 
         String name = value.getName();
         if ( name != null )

@@ -25,13 +25,17 @@ import org.commonjava.rwx.anno.StructPart;
 
 import java.util.Date;
 
+import static com.redhat.red.build.koji.model.xmlrpc.KojiQuery.__STARSTAR;
+
 /**
  * Created by jdcasey on 5/6/16.
  */
 @StructPart
-public class KojiBuildQuery
-        extends KojiQuery
+public class KojiBuildQuery extends KojiQuery
 {
+    @DataKey( __STARSTAR )
+    protected boolean enabled = true;
+
     @DataKey( value = "type" )
     private String type;
 
