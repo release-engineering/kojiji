@@ -29,11 +29,6 @@ import java.util.List;
 @StructPart
 public class KojiTagInfo
 {
-
-    @DataKey( "_starstar" )
-    @JsonProperty( "_starstar" )
-    private boolean useKojiKeywords = true;
-
     @DataKey( "id" )
     private int id;
 
@@ -176,21 +171,6 @@ public class KojiTagInfo
     public void setMavenIncludeAll( boolean mavenIncludeAll )
     {
         this.mavenIncludeAll = mavenIncludeAll;
-    }
-
-    public boolean isUseKojiKeywords()
-    {
-        return useKojiKeywords;
-    }
-
-    public boolean getUseKojiKeywords()
-    {
-        return useKojiKeywords;
-    }
-
-    public void setUseKojiKeywords( boolean useKojiKeywords )
-    {
-        this.useKojiKeywords = useKojiKeywords;
     }
 
     @Override

@@ -45,7 +45,6 @@ public class KojiTagInfoTest
         info.setName( "foo" );
         info.setPermission( "bar" );
         info.setPermissionId( 0 );
-        info.setUseKojiKeywords( false );
 
         String json = mapper.writeValueAsString( info );
         System.out.println( json );
