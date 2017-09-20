@@ -18,13 +18,17 @@ package com.redhat.red.build.koji.model.xmlrpc;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
+import static com.redhat.red.build.koji.model.xmlrpc.KojiQuery.__STARSTAR;
+
 /**
  * Created by jdcasey on 8/5/16.
  */
 @StructPart
-public class KojiPackageQuery
-        extends KojiQuery
+public class KojiPackageQuery extends KojiQuery
 {
+    @DataKey( __STARSTAR )
+    protected boolean enabled = true;
+
     @DataKey( "tagID" )
     private Integer tagId;
 

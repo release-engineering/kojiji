@@ -21,15 +21,18 @@ import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
+import static com.redhat.red.build.koji.model.xmlrpc.KojiQuery.__STARSTAR;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 /**
  * Created by jdcasey on 5/6/16.
  */
 @StructPart
-public class KojiArchiveQuery
-        extends KojiQuery
+public class KojiArchiveQuery extends KojiQuery
 {
+    @DataKey( __STARSTAR )
+    protected boolean enabled = true;
+
     @DataKey( value = "type" )
     private String type;
 

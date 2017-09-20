@@ -15,17 +15,19 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.anno.DataKey;
-import org.commonjava.rwx.anno.StructPart;
-
 /**
- * Created by jdcasey on 5/6/16.
+ * Subclasses of this need to declare a enabled field with DataKey annotation so that the RWX2 can handle it properly, as
+ * RWX2 won't consider the fields in a super class when it does parse/rendering.
+ *
+ * The ** operator has to do with how python handles arguments, where the function parameters get passed as
+ * a python dict (xml-rpc struct) instead of as normal. Presumably, the query is supposed to work either way,
+ * but we are not handling the case where __starstar is false.
  */
-@StructPart
-public class KojiQuery
+public abstract class KojiQuery
 {
-    @DataKey( "__starstar" )
-    private boolean enabled = true;
+    public static final String __STARSTAR = "__starstar";
+
+    protected boolean enabled = true;
 
     public boolean getEnabled()
     {

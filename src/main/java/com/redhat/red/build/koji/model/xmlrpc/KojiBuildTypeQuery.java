@@ -17,12 +17,14 @@ package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.redhat.red.build.koji.model.converter.KojiBuildTypeQueryConverter;
 import org.commonjava.rwx.anno.Converter;
+import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
+
+import static com.redhat.red.build.koji.model.xmlrpc.KojiQuery.__STARSTAR;
 
 @StructPart
 @Converter( KojiBuildTypeQueryConverter.class )
-public class KojiBuildTypeQuery
-        extends KojiQuery
+public class KojiBuildTypeQuery extends KojiQuery
 {
     private String name;
 
