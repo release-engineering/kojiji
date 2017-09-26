@@ -15,6 +15,9 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import com.redhat.red.build.koji.model.xmlrpc.KojiBuildRequest;
+import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildRequest;
+import com.redhat.red.build.koji.model.xmlrpc.KojiTaskRequest;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -37,10 +40,10 @@ public class GetTaskRequestResponseTest
 
         List<Object> taskRequestInfo = parsed.getTaskRequestInfo();
 
-        assertEquals("git+https://c.e.r.c/gerrit/dashbuilder.git#sync-6.4.x-2016.09.15", taskRequestInfo.get( 0 ));
+        assertEquals( "git+https://c.e.r.c/gerrit/dashbuilder.git#sync-6.4.x-2016.09.15", taskRequestInfo.get( 0 ) );
         assertEquals( "jb-bxms-6.3-candidate", taskRequestInfo.get( 1 ) );
 
-        Map<String, Object> map = (Map)taskRequestInfo.get( 2 );
+        Map<String, Object> map = (Map) taskRequestInfo.get( 2 );
         Object obj = map.get( "jvm_options" );
         assertTrue( obj instanceof List );
 
@@ -52,16 +55,16 @@ public class GetTaskRequestResponseTest
 
         obj = map.get( "profiles" );
         assertTrue( obj instanceof List );
-        assertTrue(( (List) obj ).isEmpty());
+        assertTrue( ( (List) obj ).isEmpty() );
 
-        obj = map.get("deps");
+        obj = map.get( "deps" );
         assertTrue( obj instanceof List );
 
         obj = map.get( "properties" );
         assertTrue( obj instanceof Map );
 
-        Map properties = (Map)obj;
-        assertEquals( "0.4.0.Final", properties.get( "version.override" ));
+        Map properties = (Map) obj;
+        assertEquals( "0.4.0.Final", properties.get( "version.override" ) );
 
         // and so on...
     }
@@ -69,7 +72,7 @@ public class GetTaskRequestResponseTest
     @Test
     public void roundTrip() throws Exception
     {
-        GetTaskRequestResponse inst = new GetTaskRequestResponse( );
+        GetTaskRequestResponse inst = new GetTaskRequestResponse();
         List<Object> taskRequestInfo = new ArrayList<>();
         taskRequestInfo.add( "This" );
         taskRequestInfo.add( "is" );
@@ -80,5 +83,32 @@ public class GetTaskRequestResponseTest
         GetTaskRequestResponse parsed = roundTrip( GetTaskRequestResponse.class, inst );
 
         assertThat( parsed.getTaskRequestInfo().size(), equalTo( inst.getTaskRequestInfo().size() ) );
+    }
+
+    @Test
+    public void verifyVsCapturedHttp_asBuildRequest() throws Exception
+    {
+        final String source = "git+https://c.e.r.c/gerrit/dashbuilder.git#sync-6.4.x-2016.09.15";
+        final String target = "jb-bxms-6.3-candidate";
+
+        GetTaskRequestResponse parsed =
+                        parseCapturedMessage( GetTaskRequestResponse.class, "getTaskRequest-response.xml" );
+
+        KojiTaskRequest kojiTaskRequest = new KojiTaskRequest( parsed.getTaskRequestInfo() );
+
+        KojiBuildRequest buildRequest = kojiTaskRequest.asBuildRequest();
+        assertEquals( source, buildRequest.getSource());
+        assertEquals( target, buildRequest.getTarget() );
+
+        KojiMavenBuildRequest mavenBuildRequest = kojiTaskRequest.asMavenBuildRequest();
+        assertEquals( source, mavenBuildRequest.getScmUrl() );
+        List<String> options = mavenBuildRequest.getJvmOptions();
+        assertTrue( options.contains( "-Xms512m" ) );
+
+        assertTrue( mavenBuildRequest.getDeps().contains( "org.uberfire-uberfire-extensions-0.8.0.Final-1" ) );
+
+        assertTrue( mavenBuildRequest.getProfiles().isEmpty() );
+
+        assertEquals( "0.4.0.Final", mavenBuildRequest.getProperties().get( "version.override" ));
     }
 }
