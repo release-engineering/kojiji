@@ -22,6 +22,8 @@ public class KojiTaskRequest
 {
     private List<Object> request;
 
+    public KojiTaskRequest() {}
+
     public KojiTaskRequest( List<Object> request )
     {
         this.request = request;
