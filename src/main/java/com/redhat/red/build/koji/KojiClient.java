@@ -891,7 +891,7 @@ public class KojiClient
     public KojiBuildArchiveCollection listArchivesForBuild( final KojiBuildInfo build, final KojiSessionInfo session )
     {
         ListArchivesResponse archivesResponse = doXmlRpcAndWarn( () -> xmlrpcClient.call(
-                new ListArchivesRequest( new KojiArchiveQuery().withBuildId( build.getId() ) ),
+                new ListArchivesRequest( new KojiArchiveQuery().withBuildId( build.getId() ).withType( "maven" ) ),
                 ListArchivesResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER ),
                                                                  "Failed to retrieve archives for build: '%s'",
                                                                  build.getNvr() );
