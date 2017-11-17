@@ -30,10 +30,41 @@ public class KojiBuildTypeInfo
     @DataKey ("image")
     private KojiImageBuildInfo image;
 
+    @DataKey ("rpm")
+    private KojiRpmBuildInfo rpm;
+
     private String name;
+
+    private void clear()
+    {
+        maven = null;
+        win = null;
+        image = null;
+        rpm = null;
+    }
 
     public KojiBuildTypeInfo()
     {
+        this.name = "rpm"; // default
+    }
+
+    public KojiRpmBuildInfo getRpm()
+    {
+        return rpm;
+    }
+
+    /**
+     * When 'getBuildType' is called for an rpm nvr, Koji basically returns back:
+     * {
+     *   'rpm': null
+     * }
+     * So that this method never get called when parsing xml response because map.get("rpm") returns null.
+     * We set default as rpm when it is not maven/win/image in constructor to workaround this issue.
+     */
+    public void setRpm( KojiRpmBuildInfo rpm )
+    {
+        clear();
+        this.name = "rpm";
     }
 
     public KojiMavenBuildInfo getMaven()
@@ -43,11 +74,7 @@ public class KojiBuildTypeInfo
 
     public void setMaven( KojiMavenBuildInfo maven )
     {
-        if ( this.win != null || this.image != null )
-        {
-            throw new IllegalArgumentException( "Type info already set" );
-        }
-
+        clear();
         this.maven = maven;
         this.name = "maven";
     }
@@ -59,11 +86,7 @@ public class KojiBuildTypeInfo
 
     public void setWin( KojiWinBuildInfo win )
     {
-        if ( this.maven != null || this.image != null )
-        {
-            throw new IllegalArgumentException( "Type info already set" );
-        }
-
+        clear();
         this.win = win;
         this.name = "win";
     }
@@ -75,10 +98,7 @@ public class KojiBuildTypeInfo
 
     public void setImage( KojiImageBuildInfo image )
     {
-        if ( this.maven != null || this.win != null )
-        {
-            throw new IllegalArgumentException( "Type info already set" );
-        }
+        clear();
         this.image = image;
         this.name = "image";
     }
@@ -103,7 +123,7 @@ public class KojiBuildTypeInfo
 
         if ( buildTypeInfo == null )
         {
-            return null;
+            return buildInfo;
         }
 
         if ( buildTypeInfo instanceof KojiMavenBuildInfo )
@@ -154,7 +174,7 @@ public class KojiBuildTypeInfo
 
     public Object getBuildInfo()
     {
-        return ( maven != null ? maven : ( win != null ? win : ( image != null ? image : null ) ) );
+        return ( maven != null ? maven : ( win != null ? win : ( image != null ? image : new KojiRpmBuildInfo() ) ) );
     }
 
     @Override
