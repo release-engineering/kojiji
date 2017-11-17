@@ -30,7 +30,7 @@ public class ExternalGetBuildInfoIT
 {
     @Ignore
     @Test
-    public void run()
+    public void getMavenbuildTest()
             throws Exception
     {
         KojiClient client = newKojiClient();
@@ -48,4 +48,18 @@ public class ExternalGetBuildInfoIT
         assertThat(info.getMavenVersion(), equalTo("3.0.17.Final"));
     }
 
+    @Ignore
+    @Test
+    public void getRPMbuildTest()
+                    throws Exception
+    {
+        KojiClient client = newKojiClient();
+
+        KojiSessionInfo session = client.login();
+        KojiBuildInfo info = client.getBuildInfo("hornetq-2.3.25-23.SP21_redhat_1.1.ep6.el7", session);
+        client.logout(session);
+
+        assertThat(info, notNullValue());
+        assertThat(info.getTypeName(), equalTo("rpm"));
+    }
 }
