@@ -311,7 +311,6 @@
                                 </run>
                             </image>
                         </images>
-                        <dockerHost>unix:///var/run/docker.sock</dockerHost>
                     </configuration>
                     <executions>
                         <execution>
