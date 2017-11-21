@@ -107,6 +107,10 @@ public class KojiBuildInfo
     @DataKey( "extra" )
     private Map<String, Object> extra;
 
+    @DataKey( "source" )
+    @JsonProperty( "source" )
+    private String source;
+
     @JsonIgnore
     private String typeName;
 
@@ -312,6 +316,16 @@ public class KojiBuildInfo
     public void setPlatform( String platform )
     {
         this.platform = platform;
+    }
+
+    public String getSource()
+    {
+        return source;
+    }
+
+    public void setSource( String source )
+    {
+        this.source = source;
     }
 
     public String getTypeName()
