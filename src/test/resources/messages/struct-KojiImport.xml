@@ -75,18 +75,6 @@
                     <value>
                         <struct>
                             <member>
-                                <name>external_build_system</name>
-                                <value>
-                                    <nil></nil>
-                                </value>
-                            </member>
-                            <member>
-                                <name>external_build_id</name>
-                                <value>
-                                    <nil></nil>
-                                </value>
-                            </member>
-                            <member>
                                 <name>maven</name>
                                 <value>
                                     <struct>
@@ -109,12 +97,6 @@
                                             </value>
                                         </member>
                                     </struct>
-                                </value>
-                            </member>
-                            <member>
-                                <name>build_system</name>
-                                <value>
-                                    <nil></nil>
                                 </value>
                             </member>
                         </struct>
