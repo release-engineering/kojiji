@@ -15,23 +15,22 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
-import org.junit.Test;
-
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiRpmBuildInfo;
+import org.junit.Test;
 
-public class GetBuildTypeResponseTest
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+public class GetBuildTypeResponseMultiTypesTest
                 extends AbstractKojiMessageTest
 {
     @Test
     public void verifyVsCapturedHttp() throws Exception
     {
-        GetBuildTypeResponse parsed = parseCapturedMessage( GetBuildTypeResponse.class, "getBuildType-response.xml" );
+        GetBuildTypeResponse parsed = parseCapturedMessage( GetBuildTypeResponse.class, "getBuildType-response-multiTypes.xml" );
         GetBuildTypeResponse expected = getInstance();
 
         assertEquals( expected.getBuildTypeInfo(), parsed.getBuildTypeInfo() );
@@ -51,12 +50,16 @@ public class GetBuildTypeResponseTest
         KojiBuildTypeInfo info = new KojiBuildTypeInfo();
 
         KojiMavenBuildInfo mInfo = new KojiMavenBuildInfo();
-        mInfo.setGroupId( "org.jboss.ws.cxf" );
-        mInfo.setArtifactId( "jbossws-cxf" );
-        mInfo.setVersion( "5.1.5.Final-redhat-1" );
-        mInfo.setBuildId( 506045 );
+        mInfo.setGroupId( "artemis-native-linux" );
+        mInfo.setArtifactId( "artemis-native-linux-repolib" );
+        mInfo.setVersion( "2.3.0.amq_710003-1.redhat_1.el6" );
+        mInfo.setBuildId( 610867 );
 
-        info.setBuildInfo( mInfo );
+        info.setMaven( mInfo );
+
+        KojiRpmBuildInfo rpm = new KojiRpmBuildInfo();
+        info.setRpm( rpm );
+
         return new GetBuildTypeResponse( info );
     }
 }

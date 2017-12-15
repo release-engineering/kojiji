@@ -25,6 +25,20 @@ public class KojiRpmBuildInfo
     }
 
     @Override
+    public boolean equals( Object obj )
+    {
+        if ( super.equals( obj ) )
+        {
+            return true;
+        }
+        if ( !( obj instanceof KojiRpmBuildInfo ) )
+        {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public String toString() {
         return "KojiRpmBuildInfo";
     }

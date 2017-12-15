@@ -76,6 +76,7 @@ import java.util.function.Supplier;
 import javax.security.auth.DestroyFailedException;
 
 import static com.redhat.red.build.koji.model.util.KojiFormats.toKojiName;
+import static com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeInfo.addBuildTypeInfo;
 import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.*;
 
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_BUILD;
@@ -1238,7 +1239,7 @@ public class KojiClient
 
             if ( buildTypeInfo != null )
             {
-                return buildTypeInfo.addBuildTypeInfo( buildInfo );
+                return addBuildTypeInfo( buildTypeInfo, buildInfo );
             }
         }
 
