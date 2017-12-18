@@ -104,6 +104,8 @@ public final class KojiJsonConstants
 
     public static final String BUILD_SYSTEM = "build_system";
 
+    public static final String IMPORT_INITIATOR = "import_initiator";
+
     private KojiJsonConstants(){}
 
 }
