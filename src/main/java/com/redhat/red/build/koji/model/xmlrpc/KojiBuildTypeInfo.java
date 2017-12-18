@@ -19,9 +19,7 @@ import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @StructPart
 public class KojiBuildTypeInfo
@@ -46,8 +44,8 @@ public class KojiBuildTypeInfo
     @DataKey ( RPM )
     private KojiRpmBuildInfo rpm;
 
-    // a build may contain more than one types, e.g., maven and rpm.
-    private List<String> name = new ArrayList<>(  );
+    // a build may contain more than one types, e.g., maven and rpm
+    private List<String> names = new ArrayList<>(  );
 
     private List<Object> buildInfoList = new ArrayList<>(  );
 
@@ -59,7 +57,7 @@ public class KojiBuildTypeInfo
     public void setRpm( KojiRpmBuildInfo rpm )
     {
         this.rpm = rpm;
-        name.add( RPM );
+        names.add( RPM );
         buildInfoList.add( rpm );
     }
 
@@ -71,7 +69,7 @@ public class KojiBuildTypeInfo
     public void setMaven( KojiMavenBuildInfo maven )
     {
         this.maven = maven;
-        name.add( MAVEN );
+        names.add( MAVEN );
         buildInfoList.add( maven );
     }
 
@@ -83,7 +81,7 @@ public class KojiBuildTypeInfo
     public void setWin( KojiWinBuildInfo win )
     {
         this.win = win;
-        name.add( WIN );
+        names.add( WIN );
         buildInfoList.add( win );
     }
 
@@ -95,13 +93,13 @@ public class KojiBuildTypeInfo
     public void setImage( KojiImageBuildInfo image )
     {
         this.image = image;
-        name.add( IMAGE );
+        names.add( IMAGE );
         buildInfoList.add( image );
     }
 
-    public List<String> getName()
+    public List<String> getNames()
     {
-        return name;
+        return names;
     }
 
     /**
@@ -151,38 +149,9 @@ public class KojiBuildTypeInfo
                 KojiRpmBuildInfo rpm = (KojiRpmBuildInfo) obj; // nothing to set
             }
         }
-        buildInfo.setTypeName( buildTypeInfo.getName() );
+        buildInfo.setTypeNames( buildTypeInfo.getNames() );
 
         return buildInfo;
-    }
-
-    @Deprecated
-    public void setBuildInfo( Object buildInfo )
-    {
-        if ( buildInfo == null )
-        {
-            return;
-        }
-        if ( buildInfo instanceof KojiMavenBuildInfo )
-        {
-            setMaven( (KojiMavenBuildInfo) buildInfo );
-        }
-        else if ( buildInfo instanceof KojiWinBuildInfo )
-        {
-            setWin( (KojiWinBuildInfo) buildInfo );
-        }
-        else if ( buildInfo instanceof KojiImageBuildInfo )
-        {
-            setImage( (KojiImageBuildInfo) buildInfo );
-        }
-        else if ( buildInfo instanceof KojiRpmBuildInfo )
-        {
-            setRpm( (KojiRpmBuildInfo) buildInfo );
-        }
-        else
-        {
-            throw new IllegalArgumentException( buildInfo.getClass() + " not supported" );
-        }
     }
 
     public List<Object> getBuildInfo()
@@ -225,6 +194,6 @@ public class KojiBuildTypeInfo
 
     @Override
     public String toString() {
-        return "KojiBuildTypeInfo { name=" + name + ", buildInfo=" + getBuildInfo() + " }";
+        return "KojiBuildTypeInfo { names=" + names + ", buildInfo=" + getBuildInfo() + " }";
     }
 }

@@ -56,7 +56,7 @@ public class GetBuildTypeResponseTest
         mInfo.setVersion( "5.1.5.Final-redhat-1" );
         mInfo.setBuildId( 506045 );
 
-        info.setBuildInfo( mInfo );
+        info.setMaven( mInfo );
         return new GetBuildTypeResponse( info );
     }
 }

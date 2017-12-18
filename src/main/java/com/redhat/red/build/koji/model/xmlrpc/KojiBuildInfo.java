@@ -29,7 +29,6 @@ import org.commonjava.rwx.anno.StructPart;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static com.redhat.red.build.koji.model.util.DateUtils.toUTC;
 
@@ -114,7 +113,7 @@ public class KojiBuildInfo
     private String source;
 
     @JsonIgnore
-    private List<String> typeName; // a build may contain more than one types, e.g., maven and rpm.
+    private List<String> typeNames; // a build may contain more than one types, e.g., maven and rpm.
 
     /*
       TODO: Implement the following fields, once we care about them:
@@ -330,14 +329,14 @@ public class KojiBuildInfo
         this.source = source;
     }
 
-    public List<String> getTypeName()
+    public List<String> getTypeNames()
     {
-        return typeName;
+        return typeNames;
     }
 
-    public void setTypeName( List<String> typeName )
+    public void setTypeNames( List<String> typeNames )
     {
-        this.typeName = typeName;
+        this.typeNames = typeNames;
     }
 
     @Override

@@ -62,6 +62,6 @@ public class ExternalGetBuildInfoIT
         client.logout(session);
 
         assertThat( info, notNullValue() );
-        assertTrue( info.getTypeName().contains( "rpm" ) );
+        assertTrue( info.getTypeNames().contains( "rpm" ) );
     }
 }
