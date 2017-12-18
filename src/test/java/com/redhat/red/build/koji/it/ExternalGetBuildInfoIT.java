@@ -21,6 +21,8 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -59,7 +61,7 @@ public class ExternalGetBuildInfoIT
         KojiBuildInfo info = client.getBuildInfo("hornetq-2.3.25-23.SP21_redhat_1.1.ep6.el7", session);
         client.logout(session);
 
-        assertThat(info, notNullValue());
-        assertThat(info.getTypeName(), equalTo("rpm"));
+        assertThat( info, notNullValue() );
+        assertTrue( info.getTypeNames().contains( "rpm" ) );
     }
 }

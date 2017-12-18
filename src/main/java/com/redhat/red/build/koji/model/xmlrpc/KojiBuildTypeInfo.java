@@ -18,53 +18,47 @@ package com.redhat.red.build.koji.model.xmlrpc;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @StructPart
 public class KojiBuildTypeInfo
 {
-    @DataKey ("maven")
+    private final static String MAVEN = "maven";
+
+    private final static String WIN = "win";
+
+    private final static String IMAGE = "image";
+
+    private final static String RPM = "rpm";
+
+    @DataKey ( MAVEN )
     private KojiMavenBuildInfo maven;
 
-    @DataKey ("win")
+    @DataKey ( WIN )
     private KojiWinBuildInfo win;
 
-    @DataKey ("image")
+    @DataKey ( IMAGE )
     private KojiImageBuildInfo image;
 
-    @DataKey ("rpm")
+    @DataKey ( RPM )
     private KojiRpmBuildInfo rpm;
 
-    private String name;
+    // a build may contain more than one types, e.g., maven and rpm
+    private List<String> names = new ArrayList<>(  );
 
-    private void clear()
-    {
-        maven = null;
-        win = null;
-        image = null;
-        rpm = null;
-    }
-
-    public KojiBuildTypeInfo()
-    {
-        this.name = "rpm"; // default
-    }
+    private List<Object> buildInfoList = new ArrayList<>(  );
 
     public KojiRpmBuildInfo getRpm()
     {
         return rpm;
     }
 
-    /**
-     * When 'getBuildType' is called for an rpm nvr, Koji basically returns back:
-     * {
-     *   'rpm': null
-     * }
-     * So that this method never get called when parsing xml response because map.get("rpm") returns null.
-     * We set default as rpm when it is not maven/win/image in constructor to workaround this issue.
-     */
     public void setRpm( KojiRpmBuildInfo rpm )
     {
-        clear();
-        this.name = "rpm";
+        this.rpm = rpm;
+        names.add( RPM );
+        buildInfoList.add( rpm );
     }
 
     public KojiMavenBuildInfo getMaven()
@@ -74,9 +68,9 @@ public class KojiBuildTypeInfo
 
     public void setMaven( KojiMavenBuildInfo maven )
     {
-        clear();
         this.maven = maven;
-        this.name = "maven";
+        names.add( MAVEN );
+        buildInfoList.add( maven );
     }
 
     public KojiWinBuildInfo getWin()
@@ -86,9 +80,9 @@ public class KojiBuildTypeInfo
 
     public void setWin( KojiWinBuildInfo win )
     {
-        clear();
         this.win = win;
-        this.name = "win";
+        names.add( WIN );
+        buildInfoList.add( win );
     }
 
     public KojiImageBuildInfo getImage()
@@ -98,90 +92,85 @@ public class KojiBuildTypeInfo
 
     public void setImage( KojiImageBuildInfo image )
     {
-        clear();
         this.image = image;
-        this.name = "image";
+        names.add( IMAGE );
+        buildInfoList.add( image );
     }
 
-    public String getName()
+    public List<String> getNames()
     {
-        return name;
+        return names;
     }
 
-    public void setName( String name ) {
-        this.name = name;
-    }
-
-    public KojiBuildInfo addBuildTypeInfo( KojiBuildInfo buildInfo )
+    /**
+     * Util method. Add buildTypeInfo to buildInfo.
+     *
+     * @param buildTypeInfo source
+     * @param buildInfo target
+     * @return buildInfo
+     */
+    public static KojiBuildInfo addBuildTypeInfo( KojiBuildTypeInfo buildTypeInfo, KojiBuildInfo buildInfo )
     {
         if ( buildInfo == null )
         {
             return null;
         }
 
-        Object buildTypeInfo = getBuildInfo();
+        List<Object> inf = buildTypeInfo.getBuildInfo();
 
-        if ( buildTypeInfo == null )
+        if ( inf == null || inf.isEmpty() )
         {
             return buildInfo;
         }
 
-        if ( buildTypeInfo instanceof KojiMavenBuildInfo )
+        for ( Object obj : inf )
         {
-            KojiMavenBuildInfo maven = (KojiMavenBuildInfo) buildTypeInfo;
-            buildInfo.setId( maven.getBuildId() );
-            buildInfo.setMavenArtifactId( maven.getArtifactId() );
-            buildInfo.setMavenGroupId( maven.getGroupId() );
-            buildInfo.setMavenVersion( maven.getVersion() );
+            if ( obj instanceof KojiMavenBuildInfo )
+            {
+                KojiMavenBuildInfo maven = (KojiMavenBuildInfo) obj;
+                buildInfo.setId( maven.getBuildId() );
+                buildInfo.setMavenArtifactId( maven.getArtifactId() );
+                buildInfo.setMavenGroupId( maven.getGroupId() );
+                buildInfo.setMavenVersion( maven.getVersion() );
+            }
+            else if ( obj instanceof KojiWinBuildInfo )
+            {
+                KojiWinBuildInfo win = (KojiWinBuildInfo) obj;
+                buildInfo.setId( win.getBuildId() );
+                buildInfo.setPlatform( win.getPlatform() );
+            }
+            else if ( obj instanceof KojiImageBuildInfo )
+            {
+                KojiImageBuildInfo image = (KojiImageBuildInfo) obj;
+                buildInfo.setId( image.getBuildId() );
+            }
+            else if ( obj instanceof KojiRpmBuildInfo )
+            {
+                KojiRpmBuildInfo rpm = (KojiRpmBuildInfo) obj; // nothing to set
+            }
         }
-        else if ( buildTypeInfo instanceof KojiWinBuildInfo )
-        {
-            KojiWinBuildInfo win = (KojiWinBuildInfo) buildTypeInfo;
-            buildInfo.setId( win.getBuildId() );
-            buildInfo.setPlatform( win.getPlatform() );
-        }
-        else if ( buildTypeInfo instanceof KojiImageBuildInfo )
-        {
-            KojiImageBuildInfo image = (KojiImageBuildInfo) buildTypeInfo;
-            buildInfo.setId( image.getBuildId() );
-        }
-
-        buildInfo.setTypeName(name);
+        buildInfo.setTypeNames( buildTypeInfo.getNames() );
 
         return buildInfo;
     }
 
-    public void setBuildInfo(Object buildInfo)
+    public List<Object> getBuildInfo()
     {
-        if ( buildInfo == null )
-        {
-            return;
-        }
-
-        if ( buildInfo instanceof KojiMavenBuildInfo )
-        {
-            this.maven = (KojiMavenBuildInfo) buildInfo;
-        }
-        else if ( buildInfo instanceof KojiWinBuildInfo )
-        {
-            this.win = (KojiWinBuildInfo) buildInfo;
-        }
-        else if ( buildInfo instanceof KojiImageBuildInfo )
-        {
-            this.image = (KojiImageBuildInfo) buildInfo;
-        }
-    }
-
-    public Object getBuildInfo()
-    {
-        return ( maven != null ? maven : ( win != null ? win : ( image != null ? image : new KojiRpmBuildInfo() ) ) );
+        return buildInfoList;
     }
 
     @Override
     public int hashCode()
     {
-        int result = ( getBuildInfo() != null ? getBuildInfo().hashCode() : 0 );
-        result = 31 * result + ( getName() != null ? getName().hashCode() : 0 );
+        int result = 0;
+        List<Object> inf = getBuildInfo();
+        if ( inf != null )
+        {
+            for ( Object o : inf )
+            {
+                result = 31 * result + o.hashCode();
+            }
+        }
         return result;
     }
 
@@ -198,18 +187,13 @@ public class KojiBuildTypeInfo
             return false;
         }
 
-        KojiBuildTypeInfo that = (KojiBuildTypeInfo) o;
+        KojiBuildTypeInfo other = (KojiBuildTypeInfo) o;
 
-        if ( getBuildInfo() != null && !getBuildInfo().equals( that.getBuildInfo() ) )
-        {
-            return false;
-        }
-
-        return getName() != null ? getName().equals( that.getName() ) : that.getName() == null;
+        return getBuildInfo().containsAll( other.getBuildInfo() );
     }
 
     @Override
     public String toString() {
-        return "KojiBuildTypeInfo{name=" + name + ", getBuildInfo()=" + getBuildInfo() + "}";
+        return "KojiBuildTypeInfo { names=" + names + ", buildInfo=" + getBuildInfo() + " }";
     }
 }
