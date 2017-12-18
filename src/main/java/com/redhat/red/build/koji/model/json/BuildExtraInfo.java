@@ -23,6 +23,7 @@ import org.commonjava.rwx.anno.StructPart;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.BUILD_SYSTEM;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BUILD_ID;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BUILD_URL;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMPORT_INITIATOR;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
 
 /**
@@ -46,6 +47,10 @@ public class BuildExtraInfo
     @JsonProperty( EXTERNAL_BUILD_URL )
     @DataKey( EXTERNAL_BUILD_URL )
     private String externalBuildUrl;
+
+    @JsonProperty( IMPORT_INITIATOR )
+    @DataKey( IMPORT_INITIATOR )
+    private String importInitiator;
 
     public BuildExtraInfo(){}
 
@@ -93,6 +98,16 @@ public class BuildExtraInfo
 
     public void setExternalBuildUrl(String externalBuildUrl) {
         this.externalBuildUrl = externalBuildUrl;
+    }
+
+    public String getImportInitiator()
+    {
+        return importInitiator;
+    }
+
+    public void setImportInitiator( String importInitiator )
+    {
+        this.importInitiator = importInitiator;
     }
 
     @Override
