@@ -26,9 +26,6 @@ import static com.redhat.red.build.koji.model.xmlrpc.KojiQuery.__STARSTAR;
 @StructPart
 public class KojiTagQuery extends KojiQuery
 {
-    @DataKey( __STARSTAR )
-    protected boolean enabled = true;
-
     @DataKey( "build" )
     private KojiIdOrName buildId;
 
