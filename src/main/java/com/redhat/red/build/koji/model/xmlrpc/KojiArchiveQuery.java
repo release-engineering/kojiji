@@ -30,9 +30,6 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
 @StructPart
 public class KojiArchiveQuery extends KojiQuery
 {
-    @DataKey( __STARSTAR )
-    protected boolean enabled = true;
-
     @DataKey( value = "type" )
     private String type;
 
