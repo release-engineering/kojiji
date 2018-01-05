@@ -43,6 +43,8 @@ public class KojiObjectMapper
 
         disable( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES );
 
+        disable( SerializationFeature.FAIL_ON_EMPTY_BEANS );
+
         registerModule( new KojiJsonModule() );
     }
 }
