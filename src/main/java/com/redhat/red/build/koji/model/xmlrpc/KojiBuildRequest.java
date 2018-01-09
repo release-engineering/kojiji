@@ -37,7 +37,7 @@ public class KojiBuildRequest
                 this.source = (String) request.get( 0 );
             }
 
-            if ( request.get( 0 ) instanceof String )
+            if ( request.get( 1 ) instanceof String )
             {
                 this.target = (String) request.get( 1 );
             }

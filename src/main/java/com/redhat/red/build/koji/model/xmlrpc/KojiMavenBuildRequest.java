@@ -18,6 +18,9 @@ package com.redhat.red.build.koji.model.xmlrpc;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.redhat.red.build.koji.model.util.RWXUtil.isBlankObj;
 
 public class KojiMavenBuildRequest
                 extends KojiBuildRequest
@@ -45,24 +48,28 @@ public class KojiMavenBuildRequest
             {
                 Map<?, ?> map = (Map) request.get( 2 );
                 Object obj = map.get( "jvm_options" );
-                if ( obj != null )
+                if ( !isBlankObj( obj ) )
                 {
                     jvmOptions = (List) obj;
                 }
                 obj = map.get( "profiles" );
-                if ( obj != null )
+                if ( !isBlankObj( obj ) )
                 {
                     profiles = (List) obj;
                 }
                 obj = map.get( "deps" );
-                if ( obj != null )
+                if ( !isBlankObj( obj ) )
                 {
                     deps = (List) obj;
                 }
                 obj = map.get( "properties" );
-                if ( obj != null )
+                if ( !isBlankObj( obj ) )
                 {
-                    properties = (Map) obj;
+                    properties = ( (Map<String, Object>) obj ).entrySet()
+                                                              .stream()
+                                                              .filter( et -> !isBlankObj( et.getValue() ) )
+                                                              .collect( Collectors.toMap( et -> et.getKey(),
+                                                                                          et -> (String) et.getValue() ) );
                 }
             }
         }
