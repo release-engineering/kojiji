@@ -264,6 +264,14 @@ public class BuildOutput
             return this;
         }
 
+        public Builder withNpmInfoAndType( String name, String version )
+        {
+            target.outputType = StandardOutputType.maven.name();
+            target.extraInfo = new FileExtraInfo( new NpmExtraInfo( name, version ) );
+
+            return this;
+        }
+
         @Override
         public BuildOutput build()
                 throws VerificationException

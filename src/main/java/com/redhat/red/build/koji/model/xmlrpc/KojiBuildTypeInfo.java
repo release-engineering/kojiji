@@ -32,6 +32,8 @@ public class KojiBuildTypeInfo
 
     private final static String RPM = "rpm";
 
+    private final static String NPM = "npm";
+
     @DataKey ( MAVEN )
     private KojiMavenBuildInfo maven;
 
@@ -44,10 +46,25 @@ public class KojiBuildTypeInfo
     @DataKey ( RPM )
     private KojiRpmBuildInfo rpm;
 
+    @DataKey ( NPM )
+    private KojiNpmBuildInfo npm;
+
     // a build may contain more than one types, e.g., maven and rpm
     private List<String> names = new ArrayList<>(  );
 
     private List<Object> buildInfoList = new ArrayList<>(  );
+
+    public KojiNpmBuildInfo getNpm()
+    {
+        return npm;
+    }
+
+    public void setNpm( KojiNpmBuildInfo npm )
+    {
+        this.npm = npm;
+        names.add( NPM );
+        buildInfoList.add( npm );
+    }
 
     public KojiRpmBuildInfo getRpm()
     {
@@ -143,6 +160,13 @@ public class KojiBuildTypeInfo
             {
                 KojiImageBuildInfo image = (KojiImageBuildInfo) obj;
                 buildInfo.setId( image.getBuildId() );
+            }
+            else if ( obj instanceof KojiNpmBuildInfo )
+            {
+                KojiNpmBuildInfo npm = (KojiNpmBuildInfo) obj;
+                buildInfo.setId( npm.getBuildId() );
+                buildInfo.setName( npm.getName() );
+                buildInfo.setVersion( npm.getVersion() );
             }
             else if ( obj instanceof KojiRpmBuildInfo )
             {

@@ -21,6 +21,7 @@ import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NPM_INFO;
 
 /**
  * Created by jdcasey on 9/15/16.
@@ -32,13 +33,32 @@ public class FileExtraInfo
     @DataKey( MAVEN_INFO )
     private MavenExtraInfo mavenExtraInfo;
 
+    @JsonProperty( NPM_INFO )
+    @DataKey( NPM_INFO )
+    private NpmExtraInfo npmExtraInfo;
+
     public FileExtraInfo( @JsonProperty( MAVEN_INFO ) MavenExtraInfo mavenExtraInfo )
     {
         this.mavenExtraInfo = mavenExtraInfo;
     }
 
+    public FileExtraInfo( @JsonProperty( NPM_INFO ) NpmExtraInfo npmExtraInfo )
+    {
+        this.npmExtraInfo = npmExtraInfo;
+    }
+
     public FileExtraInfo()
     {
+    }
+
+    public NpmExtraInfo getNpmExtraInfo()
+    {
+        return npmExtraInfo;
+    }
+
+    public void setNpmExtraInfo( NpmExtraInfo npmExtraInfo )
+    {
+        this.npmExtraInfo = npmExtraInfo;
     }
 
     public void setMavenExtraInfo( MavenExtraInfo mavenExtraInfo )
@@ -70,23 +90,39 @@ public class FileExtraInfo
 
         FileExtraInfo that = (FileExtraInfo) o;
 
-        return getMavenExtraInfo() != null ?
-                getMavenExtraInfo().equals( that.getMavenExtraInfo() ) :
-                that.getMavenExtraInfo() == null;
-
+        if ( getMavenExtraInfo() != null )
+        {
+            return getMavenExtraInfo().equals( that.getMavenExtraInfo() );
+        }
+        else if ( getNpmExtraInfo() != null )
+        {
+            return getNpmExtraInfo().equals( that.getNpmExtraInfo() );
+        }
+        else
+        {
+            return that.getMavenExtraInfo() == null && that.getNpmExtraInfo() == null;
+        }
     }
 
     @Override
     public int hashCode()
     {
-        return getMavenExtraInfo() != null ? getMavenExtraInfo().hashCode() : 0;
+        int result = mavenExtraInfo != null ? mavenExtraInfo.hashCode() : 0;
+        result = 31 * result + ( npmExtraInfo != null ? npmExtraInfo.hashCode() : 0 );
+        return result;
     }
 
     @Override
     public String toString()
     {
-        return "FileMavenInfo{" +
-                "mavenInfo=" + mavenExtraInfo +
-                '}';
+        if ( getMavenExtraInfo() != null )
+        {
+            return "FileExtraInfo{" + "mavenExtraInfo=" + mavenExtraInfo + "}";
+        }
+        else if ( getNpmExtraInfo() != null )
+        {
+            return "FileExtraInfo{" + "npmExtraInfo=" + npmExtraInfo + "}";
+        }
+        return "null";
     }
 }

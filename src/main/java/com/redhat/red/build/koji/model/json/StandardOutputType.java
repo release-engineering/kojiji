@@ -20,5 +20,5 @@ package com.redhat.red.build.koji.model.json;
  */
 public enum StandardOutputType
 {
-    log, maven;
+    log, maven, npm;
 }
