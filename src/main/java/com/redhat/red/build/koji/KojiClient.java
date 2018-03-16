@@ -159,6 +159,7 @@ public class KojiClient
     }
 
     public KojiClient( KojiConfig config, PasswordManager passwordManager, ExecutorService executorService )
+                    throws KojiClientException
     {
         this.config = config;
         this.httpFactory = new HttpFactory( passwordManager );
@@ -182,6 +183,7 @@ public class KojiClient
     }
 
     public void setup()
+                    throws KojiClientException
     {
         uploadService = new ExecutorCompletionService<>( executorService );
         objectMapper = new KojiObjectMapper();
@@ -193,35 +195,32 @@ public class KojiClient
         }
         catch ( IOException e )
         {
-            logger.error( "Cannot construct koji HTTP site-config: " + e.getMessage(), e );
             xmlrpcClient.close();
             xmlrpcClient = null;
+            throw new KojiClientException("Cannot construct koji HTTP site-config: " + e.getMessage(), e);
         }
 
-        if ( xmlrpcClient != null )
+        try
         {
-            try
-            {
-                ApiVersionResponse response =
-                        xmlrpcClient.call( new ApiVersionRequest(), ApiVersionResponse.class, NO_OP_URL_BUILDER,
-                                           STANDARD_REQUEST_MODIFIER );
+            ApiVersionResponse response =
+                    xmlrpcClient.call( new ApiVersionRequest(), ApiVersionResponse.class, NO_OP_URL_BUILDER,
+                                       STANDARD_REQUEST_MODIFIER );
 
-                if ( 1 != response.getApiVersion() )
-                {
-                    logger.error( "Cannot connect to koji at: " + config.getKojiURL() + ". API Version reported is '"
-                                          + response.getApiVersion() + "' but this client only supports version 1." );
-                    xmlrpcClient.close();
-                    xmlrpcClient = null;
-                }
-            }
-            catch ( XmlRpcException e )
+            if ( 1 != response.getApiVersion() )
             {
-                logger.error(
-                        "Cannot retrieve koji API version from: " + config.getKojiURL() + ". (Reason: " + e.getMessage()
-                                + ")", e );
+                logger.error( "Cannot connect to koji at: " + config.getKojiURL() + ". API Version reported is '"
+                                      + response.getApiVersion() + "' but this client only supports version 1." );
                 xmlrpcClient.close();
                 xmlrpcClient = null;
             }
+        }
+        catch ( XmlRpcException e )
+        {
+            logger.error(
+                    "Cannot retrieve koji API version from: " + config.getKojiURL() + ". (Reason: " + e.getMessage()
+                            + ")", e );
+            xmlrpcClient.close();
+            xmlrpcClient = null;
         }
     }
 
