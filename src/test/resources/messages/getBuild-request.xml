@@ -1,0 +1,9 @@
+<?xml version='1.0'?>
+<methodCall>
+    <methodName>getBuild</methodName>
+    <params>
+        <param>
+            <value><string>org.dashbuilder-dashbuilder-parent-metadata-0.4.0.Final</string></value>
+        </param>
+    </params>
+</methodCall>
