@@ -115,11 +115,14 @@ public class KojiBuildInfo
     @JsonIgnore
     private List<String> typeNames; // a build may contain more than one types, e.g., maven and rpm.
 
+    @DataKey( "volume_name" )
+    @JsonProperty( "volume_name" )
+    private String volumeName;
+
     /*
       TODO: Implement the following fields, once we care about them:
       epoch
       volume_id: ID of the storage volume
-      volume_name: name of the storage volume
       creation_ts: time the build was created (epoch)
       completion_ts: time the build was completed (epoch, may be null)
      */
@@ -337,6 +340,16 @@ public class KojiBuildInfo
     public void setTypeNames( List<String> typeNames )
     {
         this.typeNames = typeNames;
+    }
+
+    public String getVolumeName()
+    {
+        return volumeName;
+    }
+
+    public void setVolumeName( String volumeName )
+    {
+        this.volumeName = volumeName;
     }
 
     @Override
