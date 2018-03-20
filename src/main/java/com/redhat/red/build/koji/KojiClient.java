@@ -81,6 +81,7 @@ import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.*;
 
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_BUILD;
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_TAGS;
+import static com.redhat.red.build.koji.model.xmlrpc.messages.MultiCallRequest.getBuilder;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.apache.http.client.utils.HttpClientUtils.closeQuietly;
@@ -717,27 +718,14 @@ public class KojiClient
     public Map<Integer, List<KojiTagInfo>> listTags( List<Integer> buildIds, KojiSessionInfo session )
                     throws KojiClientException
     {
-        MultiCallRequest multiCallRequest = new MultiCallRequest();
-        List<KojiMultiCallObj> multiCallObjs = new ArrayList<>();
-        multiCallRequest.setMultiCallObjs( multiCallObjs );
-
+        MultiCallRequest.Builder builder = getBuilder();
         buildIds.forEach(( buildId ) -> {
-            KojiMultiCallObj callObj = new KojiMultiCallObj();
-            callObj.setMethodName( LIST_TAGS );
-            List<Object> params = new ArrayList<>();
-            params.add( buildId );
-            callObj.setParams( params );
-            multiCallObjs.add( callObj );
+            builder.addCallObj( LIST_TAGS, buildId );
         });
+        MultiCallRequest multiCallRequest = builder.build();
 
-        List<KojiMultiCallValueObj> multiCallValueObjs = doXmlRpcAndWarn( () -> {
-            MultiCallResponse response =
-                            xmlrpcClient.call( multiCallRequest,
-                                               MultiCallResponse.class, sessionUrlBuilder( session ),
-                                               STANDARD_REQUEST_MODIFIER );
-
-            return response == null ? null : response.getValueObjs();
-        }, "Failed to retrieve tags multicall info for: %s", buildIds );
+        MultiCallResponse response = multiCall( multiCallRequest, session );
+        List<KojiMultiCallValueObj> multiCallValueObjs = response.getValueObjs();
 
         Map<Integer, List<KojiTagInfo>> ret = new HashMap<>(  );
 
@@ -967,18 +955,11 @@ public class KojiClient
             return response == null ? Collections.emptyList() : response.getArchives();
         }, "Failed to retrieve list of archives for: %s", gav );
 
-        MultiCallRequest multiCallRequest = new MultiCallRequest();
-        List<KojiMultiCallObj> multiCallObjs = new ArrayList<>();
-        multiCallRequest.setMultiCallObjs( multiCallObjs );
-
+        MultiCallRequest.Builder builder = getBuilder();
         archives.forEach(( archive ) -> {
-            KojiMultiCallObj callObj = new KojiMultiCallObj();
-            callObj.setMethodName( GET_BUILD );
-            List<Object> params = new ArrayList<>();
-            params.add( archive.getBuildId() );
-            callObj.setParams( params );
-            multiCallObjs.add( callObj );
+            builder.addCallObj( GET_BUILD, archive.getBuildId() );
         });
+        MultiCallRequest multiCallRequest = builder.build();
 
         return multiCall( multiCallRequest, session, KojiBuildInfo.class );
     }
