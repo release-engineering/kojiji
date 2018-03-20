@@ -906,6 +906,53 @@ public class KojiClient
     }
 
     /**
+     * Generic multiCall method. User can construct their own multicall request and parse the returned muticall response.
+     * @param multiCallRequest
+     * @param session
+     * @return
+     */
+    public MultiCallResponse multiCall( MultiCallRequest multiCallRequest, KojiSessionInfo session )
+    {
+        return doXmlRpcAndWarn( () -> {
+            MultiCallResponse response =
+                            xmlrpcClient.call( multiCallRequest,
+                                               MultiCallResponse.class, sessionUrlBuilder( session ),
+                                               STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response;
+        }, "Failed to do multicall" );
+    }
+
+    /**
+     * Generic multiCall method. User can construct their own multicall request. This is for homogeneous request type,
+     * i.e., the "method" in multicall request objects are same.
+     * @param multiCallRequest
+     * @param session
+     * @param type
+     * @param <T> response object type
+     * @return a list of type "T" objects representing the multicall results
+     */
+    public <T> List<T> multiCall( MultiCallRequest multiCallRequest, KojiSessionInfo session, Class<T> type )
+    {
+        MultiCallResponse response = multiCall( multiCallRequest, session );
+        List<KojiMultiCallValueObj> multiCallValueObjs = response.getValueObjs();
+
+        List<T> ret = new ArrayList<>();
+
+        Registry registry = Registry.getInstance();
+        for ( KojiMultiCallValueObj valueObj : multiCallValueObjs )
+        {
+            Object data = valueObj.getData();
+            if ( data != null )
+            {
+                T obj = registry.parseAs( data, type );
+                ret.add( obj );
+            }
+        }
+        return ret;
+    }
+
+    /**
      * Get list of KojiBuildInfo objects that contains specified GAV. It first get archives list, and retrieve
      * build ids. Then use the ids to issue a multicall request to retrieve all build info objects.
      */
@@ -933,27 +980,7 @@ public class KojiClient
             multiCallObjs.add( callObj );
         });
 
-        List<KojiMultiCallValueObj> multiCallValueObjs = doXmlRpcAndWarn( () -> {
-            MultiCallResponse response =
-                            xmlrpcClient.call( multiCallRequest,
-                                               MultiCallResponse.class, sessionUrlBuilder( session ),
-                                               STANDARD_REQUEST_MODIFIER );
-
-            return response == null ? null : response.getValueObjs();
-        }, "Failed to retrieve build multicall info for: %s", gav );
-
-        List<KojiBuildInfo> builds = new ArrayList<>();
-
-        Registry registry = Registry.getInstance();
-        multiCallValueObjs.forEach( (valueObj) -> {
-            Object data = valueObj.getData();
-            if (data != null)
-            {
-                KojiBuildInfo kojiBuildInfo = registry.parseAs( data, KojiBuildInfo.class );
-                builds.add( kojiBuildInfo );
-            }
-        } );
-        return builds;
+        return multiCall( multiCallRequest, session, KojiBuildInfo.class );
     }
 
     public List<KojiPackageInfo> listPackagesForTag( String tag, KojiSessionInfo session )
