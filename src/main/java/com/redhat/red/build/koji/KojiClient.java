@@ -59,6 +59,7 @@ import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -938,6 +939,33 @@ public class KojiClient
             }
         }
         return ret;
+    }
+
+    /**
+     * Generic multiCall method. This is for homogeneous request, i.e., the "method" in multicall request objects are same.
+     * Users do not need to construct their own multicall request object.
+     * @param method
+     * @param session
+     * @param args arguments list. Each element is for one KojiMultiCallObj.
+     *             If each call object has more than one parameters, use List for each element.
+     * @param type result object type
+     * @param <T>
+     * @return a list containing objects of type T
+     */
+    public <T> List<T> multiCall( String method, List<Object> args, Class<T> type, KojiSessionInfo session )
+    {
+        MultiCallRequest.Builder builder = getBuilder();
+        args.forEach(( arg ) -> {
+            if ( arg instanceof List )
+            {
+                builder.addCallObj( method, (List) arg );
+            }
+            else
+            {
+                builder.addCallObj( method, arg );
+            }
+        });
+        return multiCall( builder.build(), session, type );
     }
 
     /**
