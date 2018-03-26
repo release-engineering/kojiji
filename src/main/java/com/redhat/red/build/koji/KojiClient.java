@@ -808,8 +808,62 @@ public class KojiClient
                                                                STANDARD_REQUEST_MODIFIER );
 
             List<KojiArchiveInfo> archives = response.getArchives();
+
+            if ( archives != null && query.getType() == null )
+            {
+                return updateArchiveTypeInfo( archives, session );
+            }
+
             return archives == null ? Collections.emptyList() : archives;
         }, "Failed to retrieve list of artifacts matching archive query: %s", query );
+    }
+
+    private List<KojiArchiveInfo> updateArchiveTypeInfo( List<KojiArchiveInfo> archiveInfos, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        for ( int i = 0; i < archiveInfos.size(); i++ )
+        {
+            KojiArchiveInfo archiveInfo = archiveInfos.get(i);
+
+            switch ( archiveInfo.getBType() )
+            {
+                case "maven":
+                    KojiMavenArchiveInfo mavenArchiveInfo = getMavenArchiveInfo( archiveInfo.getArchiveId(), session );
+                    if ( mavenArchiveInfo != null )
+                    {
+                        archiveInfo.setArchiveId( mavenArchiveInfo.getArchiveId());
+                        archiveInfo.setGroupId( mavenArchiveInfo.getGroupId() );
+                        archiveInfo.setArtifactId( mavenArchiveInfo.getArtifactId() );
+                        archiveInfo.setVersion( mavenArchiveInfo.getVersion() );
+                    }
+                    break;
+                case "win":
+                    KojiWinArchiveInfo winArchiveInfo = getWinArchiveInfo( archiveInfo.getArchiveId(), session );
+                    if ( winArchiveInfo != null )
+                    {
+                        archiveInfo.setArchiveId( winArchiveInfo.getArchiveId());
+                        archiveInfo.setRelPath( winArchiveInfo.getRelPath() );
+                        archiveInfo.setPlatforms( winArchiveInfo.getPlatforms() );
+                        archiveInfo.setFlags( winArchiveInfo.getFlags() );
+                    }
+                    break;
+                case "image":
+                    KojiImageArchiveInfo imageArchiveInfo = getImageArchiveInfo( archiveInfo.getArchiveId(), session );
+                    if ( imageArchiveInfo != null )
+                    {
+                        archiveInfo.setArchiveId( imageArchiveInfo.getArchiveId());
+                        archiveInfo.setArch( imageArchiveInfo.getArch());
+                        archiveInfo.setRootId( imageArchiveInfo.getRootId());
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid build type: " + archiveInfo.getBType());
+            }
+
+            archiveInfos.set( i, archiveInfo );
+        }
+
+        return archiveInfos;
     }
 
     public List<KojiArchiveInfo> listMavenArchivesMatching( String groupId, KojiSessionInfo session )
