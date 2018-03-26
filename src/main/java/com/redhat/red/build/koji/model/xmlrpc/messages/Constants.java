@@ -32,6 +32,8 @@ public class Constants
 
     public static final String CREATE_TAG = "createTag";
 
+    public static final String GET_ARCHIVE = "getArchive";
+
     public static final String GET_ARCHIVE_TYPE = "getArchiveType";
 
     public static final String GET_ARCHIVE_TYPES = "getArchiveTypes";
@@ -40,7 +42,11 @@ public class Constants
 
     public static final String GET_BUILD_TYPE = "getBuildType";
 
+    public static final String GET_IMAGE_ARCHIVE = "getImageArchive";
+
     public static final String GET_IMAGE_BUILD = "getImageBuild";
+
+    public static final String GET_MAVEN_ARCHIVE = "getMavenArchive";
 
     public static final String GET_MAVEN_BUILD = "getMavenBuild";
 
@@ -51,6 +57,8 @@ public class Constants
     public static final String GET_TASK_INFO = "getTaskInfo";
 
     public static final String GET_TASK_REQUEST = "getTaskRequest";
+
+    public static final String GET_WIN_ARCHIVE = "getWinArchive";
 
     public static final String GET_WIN_BUILD = "getWinBuild";
 
