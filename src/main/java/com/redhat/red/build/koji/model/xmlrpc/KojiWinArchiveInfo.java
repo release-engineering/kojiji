@@ -118,6 +118,6 @@ public class KojiWinArchiveInfo
 
     @Override
     public String toString() {
-        return "KojiWinArchiveInfo{archiveId=" + archiveId + ", platforms=" + platforms + ", flags=" + flags + "}";
+        return "KojiWinArchiveInfo{archiveId=" + archiveId + ", relPath=" + relPath + ", platforms=" + platforms + ", flags=" + flags + "}";
     }
 }

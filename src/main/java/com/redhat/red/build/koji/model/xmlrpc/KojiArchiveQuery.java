@@ -288,6 +288,8 @@ public class KojiArchiveQuery extends KojiQuery
                 ", hostId=" + hostId +
                 ", size='" + size + '\'' +
                 ", checksum=" + checksum +
+                ", imageId=" + imageId +
+                ", archiveId=" + archiveId +
                 '}';
     }
 }
