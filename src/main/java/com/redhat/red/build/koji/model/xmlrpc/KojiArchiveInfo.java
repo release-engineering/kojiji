@@ -29,6 +29,7 @@ import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +42,14 @@ public class KojiArchiveInfo
     @DataKey( "id" )
     @JsonProperty( "id" )
     private Integer archiveId;
+
+    @DataKey( "btype" )
+    @JsonProperty( "btype" )
+    private String bType;
+
+    @DataKey( "btype_id" )
+    @JsonProperty( "btype_id" )
+    private Integer bTypeId;
 
     @DataKey( "group_id" )
     @JsonProperty( "group_id" )
@@ -70,6 +79,10 @@ public class KojiArchiveInfo
 
     @DataKey ( "arch" )
     private String arch;
+
+    @DataKey ( "rootid" )
+    @JsonProperty( "rootid" )
+    private Boolean rootId;
 
     @DataKey( "type_extensions" )
     @JsonProperty( "type_extensions" )
@@ -113,8 +126,31 @@ public class KojiArchiveInfo
     @DataKey( "size" )
     private Integer size;
 
+    @DataKey( "extra" )
+    Map<String, Object> extra;
+
     public KojiArchiveInfo()
     {
+    }
+
+    public String getBType()
+    {
+        return bType;
+    }
+
+    public void setBType( String bType )
+    {
+        this.bType = bType;
+    }
+
+    public Integer getBTypeId()
+    {
+        return bTypeId;
+    }
+
+    public void setBTypeId( Integer bTypeId )
+    {
+        this.bTypeId = bTypeId;
     }
 
     public Integer getArchiveId()
@@ -225,6 +261,16 @@ public class KojiArchiveInfo
     public void setArch( String arch )
     {
         this.arch = arch;
+    }
+
+    public Boolean getRootId()
+    {
+        return rootId;
+    }
+
+    public void setRootId( Boolean rootId )
+    {
+        this.rootId = rootId;
     }
 
     public String getTypeExtensions()
@@ -339,6 +385,16 @@ public class KojiArchiveInfo
         this.buildrootId = buildrootId;
     }
 
+    public Map<String, Object> getExtra()
+    {
+        return extra;
+    }
+
+    public void setExtra( Map<String, Object> extra )
+    {
+        this.extra = extra;
+    }
+
     public Integer getSize()
     {
         return size;
@@ -377,6 +433,8 @@ public class KojiArchiveInfo
     {
         return "KojiArchiveInfo{" +
                 "archiveId=" + archiveId +
+                ", btype='" + bType + '\'' +
+                ", btypeId='" + bTypeId + '\'' +
                 ", groupId='" + groupId + '\'' +
                 ", artifactId='" + artifactId + '\'' +
                 ", version='" + version + '\'' +
@@ -385,6 +443,7 @@ public class KojiArchiveInfo
                 ", platforms=" + platforms +
                 ", flags=" + flags +
                 ", arch='" + arch + '\'' +
+                ", rootId='" + rootId + '\'' +
                 ", typeExtensions='" + typeExtensions + '\'' +
                 ", filename='" + filename + '\'' +
                 ", buildId=" + buildId +
@@ -396,6 +455,7 @@ public class KojiArchiveInfo
                 ", metadataOnly=" + metadataOnly +
                 ", buildrootId=" + buildrootId +
                 ", size=" + size +
+                ", extra=" + extra +
                 '}';
     }
 }
