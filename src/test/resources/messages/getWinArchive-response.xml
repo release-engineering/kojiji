@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>archive_id</name>
+            <value>
+              <int>1912682</int>
+            </value>
+          </member>
+          <member>
+            <name>platforms</name>
+            <value>
+              <string>i686</string>
+            </value>
+          </member>
+          <member>
+            <name>flags</name>
+            <value>
+              <string>fre</string>
+            </value>
+          </member>
+          <member>
+            <name>relpath</name>
+            <value>
+              <string/>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodResponse>

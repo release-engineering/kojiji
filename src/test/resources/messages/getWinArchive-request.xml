@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>getWinArchive</methodName>
+  <params>
+    <param>
+      <value>
+        <int>1912682</int>
+      </value>
+    </param>
+  </params>
+</methodCall>
