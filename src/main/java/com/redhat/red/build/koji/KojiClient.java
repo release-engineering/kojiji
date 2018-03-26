@@ -750,6 +750,55 @@ public class KojiClient
         return ret;
     }
 
+    public KojiArchiveInfo getArchiveInfo( int archiveId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            GetArchiveResponse response = xmlrpcClient.call( new GetArchiveRequest( archiveId ),
+                                                             GetArchiveResponse.class, sessionUrlBuilder( session ),
+                                                             STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getArchiveInfo();
+        }, "Failed to retrieve archive info for: %d", archiveId );
+
+    }
+
+    public KojiMavenArchiveInfo getMavenArchiveInfo( int archiveId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetMavenArchiveResponse response =
+                    xmlrpcClient.call( new GetMavenArchiveRequest( archiveId ), GetMavenArchiveResponse.class,
+                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getMavenArchiveInfo();
+        }, "Failed to retrieve maven archive info for: %d", archiveId );
+    }
+
+    public KojiImageArchiveInfo getImageArchiveInfo( int archiveId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetImageArchiveResponse response =
+                    xmlrpcClient.call( new GetImageArchiveRequest( archiveId ), GetImageArchiveResponse.class,
+                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getImageArchiveInfo();
+        }, "Failed to retrieve image archive info for: %d", archiveId );
+    }
+
+    public KojiWinArchiveInfo getWinArchiveInfo( int archiveId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetWinArchiveResponse response =
+                    xmlrpcClient.call( new GetWinArchiveRequest( archiveId ), GetWinArchiveResponse.class,
+                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getWinArchiveInfo();
+        }, "Failed to retrieve win archive info for: %d", archiveId );
+    }
+
     public List<KojiArchiveInfo> listArchives( KojiArchiveQuery query, KojiSessionInfo session )
             throws KojiClientException
     {
