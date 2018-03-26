@@ -30,6 +30,12 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
 @StructPart
 public class KojiArchiveQuery extends KojiQuery
 {
+    @DataKey( value = "archiveID" )
+    private Integer archiveId;
+
+    @DataKey( value = "imageID" )
+    private Integer imageId;
+
     @DataKey( value = "type" )
     private String type;
 
@@ -88,6 +94,26 @@ public class KojiArchiveQuery extends KojiQuery
 
             filename = sb.toString();
         }
+    }
+
+    public Integer getArchiveId()
+    {
+        return archiveId;
+    }
+
+    public void setArchiveId( Integer archiveId )
+    {
+        this.archiveId = archiveId;
+    }
+
+    public Integer getImageId()
+    {
+        return imageId;
+    }
+
+    public void setImageId( Integer imageId )
+    {
+        this.imageId = imageId;
     }
 
     public String getType()
