@@ -857,7 +857,7 @@ public class KojiClient
                     }
                     break;
                 default:
-                    throw new IllegalArgumentException("Invalid build type: " + archiveInfo.getBuildType());
+                    logger.warn( "Invalid build type: {} ({})", archiveInfo.getBuildType(), archiveInfo.getBuildTypeId() );
             }
 
             archiveInfos.set( i, archiveInfo );
