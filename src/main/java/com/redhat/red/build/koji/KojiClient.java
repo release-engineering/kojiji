@@ -811,14 +811,14 @@ public class KojiClient
 
             if ( archives != null && query.getType() == null )
             {
-                return updateArchiveTypeInfo( archives, session );
+                return enrichArchiveTypeInfo( archives, session );
             }
 
             return archives == null ? Collections.emptyList() : archives;
         }, "Failed to retrieve list of artifacts matching archive query: %s", query );
     }
 
-    private List<KojiArchiveInfo> updateArchiveTypeInfo( List<KojiArchiveInfo> archiveInfos, KojiSessionInfo session )
+    private List<KojiArchiveInfo> enrichArchiveTypeInfo( List<KojiArchiveInfo> archiveInfos, KojiSessionInfo session )
             throws KojiClientException
     {
         for ( KojiArchiveInfo archiveInfo : archiveInfos )
