@@ -38,8 +38,8 @@ public class GetArchiveResponseTest
         KojiArchiveInfo archiveInfo = parsed.getArchiveInfo();
 
         assertThat( archiveInfo.getArtifactId(), equalTo( "netty-all" ) );
-        assertThat( archiveInfo.getBType(), equalTo( "maven" ) );
-        assertThat( archiveInfo.getBTypeId(), equalTo( 2 ) );
+        assertThat( archiveInfo.getBuildType(), equalTo( "maven" ) );
+        assertThat( archiveInfo.getBuildTypeId(), equalTo( 2 ) );
         assertThat( archiveInfo.getBuildId(), equalTo( 558964 ) );
         assertThat( archiveInfo.getBuildrootId(), equalTo( null ) );
         assertThat( archiveInfo.getChecksum(), equalTo( "a04e5b625b09efcf1af859f365f44e60" ) );
@@ -63,8 +63,8 @@ public class GetArchiveResponseTest
         GetArchiveResponse resp = new GetArchiveResponse();
         KojiArchiveInfo archiveInfo = new KojiArchiveInfo();
         archiveInfo.setArtifactId( "netty-all" );
-        archiveInfo.setBType( "maven" );
-        archiveInfo.setBTypeId( 2 );
+        archiveInfo.setBuildType( "maven" );
+        archiveInfo.setBuildTypeId( 2 );
         archiveInfo.setBuildId( 558964 );
         archiveInfo.setBuildrootId( null );
         archiveInfo.setChecksum( "a04e5b625b09efcf1af859f365f44e60" );
@@ -86,8 +86,8 @@ public class GetArchiveResponseTest
         GetArchiveResponse parsed = roundTrip( GetArchiveResponse.class, resp );
 
         assertThat( parsed.getArchiveInfo().getArtifactId(), equalTo( resp.getArchiveInfo().getArtifactId() ) );
-        assertThat( parsed.getArchiveInfo().getBType(), equalTo( resp.getArchiveInfo().getBType() ) );
-        assertThat( parsed.getArchiveInfo().getBTypeId(), equalTo( resp.getArchiveInfo().getBTypeId() ) );
+        assertThat( parsed.getArchiveInfo().getBuildType(), equalTo( resp.getArchiveInfo().getBuildType() ) );
+        assertThat( parsed.getArchiveInfo().getBuildTypeId(), equalTo( resp.getArchiveInfo().getBuildTypeId() ) );
         assertThat( parsed.getArchiveInfo().getBuildId(), equalTo( resp.getArchiveInfo().getBuildId() ) );
         assertThat( parsed.getArchiveInfo().getBuildrootId(), equalTo( resp.getArchiveInfo().getBuildrootId() ) );
         assertThat( parsed.getArchiveInfo().getChecksum(), equalTo( resp.getArchiveInfo().getChecksum() ) );

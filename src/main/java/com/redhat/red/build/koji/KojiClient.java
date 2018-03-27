@@ -825,7 +825,7 @@ public class KojiClient
         {
             KojiArchiveInfo archiveInfo = archiveInfos.get(i);
 
-            switch ( archiveInfo.getBType() )
+            switch ( archiveInfo.getBuildType() )
             {
                 case "maven":
                     KojiMavenArchiveInfo mavenArchiveInfo = getMavenArchiveInfo( archiveInfo.getArchiveId(), session );
@@ -857,7 +857,7 @@ public class KojiClient
                     }
                     break;
                 default:
-                    throw new IllegalArgumentException("Invalid build type: " + archiveInfo.getBType());
+                    throw new IllegalArgumentException("Invalid build type: " + archiveInfo.getBuildType());
             }
 
             archiveInfos.set( i, archiveInfo );

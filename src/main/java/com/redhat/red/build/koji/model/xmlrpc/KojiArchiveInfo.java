@@ -45,11 +45,11 @@ public class KojiArchiveInfo
 
     @DataKey( "btype" )
     @JsonProperty( "btype" )
-    private String bType;
+    private String buildType;
 
     @DataKey( "btype_id" )
     @JsonProperty( "btype_id" )
-    private Integer bTypeId;
+    private Integer buildTypeId;
 
     @DataKey( "group_id" )
     @JsonProperty( "group_id" )
@@ -133,24 +133,24 @@ public class KojiArchiveInfo
     {
     }
 
-    public String getBType()
+    public String getBuildType()
     {
-        return bType;
+        return buildType;
     }
 
-    public void setBType( String bType )
+    public void setBuildType( String buildType )
     {
-        this.bType = bType;
+        this.buildType = buildType;
     }
 
-    public Integer getBTypeId()
+    public Integer getBuildTypeId()
     {
-        return bTypeId;
+        return buildTypeId;
     }
 
-    public void setBTypeId( Integer bTypeId )
+    public void setBuildTypeId( Integer buildTypeId )
     {
-        this.bTypeId = bTypeId;
+        this.buildTypeId = buildTypeId;
     }
 
     public Integer getArchiveId()
@@ -433,8 +433,8 @@ public class KojiArchiveInfo
     {
         return "KojiArchiveInfo{" +
                 "archiveId=" + archiveId +
-                ", btype='" + bType + '\'' +
-                ", btypeId='" + bTypeId + '\'' +
+                ", buildType='" + buildType + '\'' +
+                ", buildTypeId='" + buildTypeId + '\'' +
                 ", groupId='" + groupId + '\'' +
                 ", artifactId='" + artifactId + '\'' +
                 ", version='" + version + '\'' +
