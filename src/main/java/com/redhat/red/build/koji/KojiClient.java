@@ -821,10 +821,8 @@ public class KojiClient
     private List<KojiArchiveInfo> updateArchiveTypeInfo( List<KojiArchiveInfo> archiveInfos, KojiSessionInfo session )
             throws KojiClientException
     {
-        for ( int i = 0; i < archiveInfos.size(); i++ )
+        for ( KojiArchiveInfo archiveInfo : archiveInfos )
         {
-            KojiArchiveInfo archiveInfo = archiveInfos.get(i);
-
             switch ( archiveInfo.getBuildType() )
             {
                 case "maven":
@@ -857,10 +855,8 @@ public class KojiClient
                     }
                     break;
                 default:
-                    logger.warn( "Invalid build type: {} ({})", archiveInfo.getBuildType(), archiveInfo.getBuildTypeId() );
+                    logger.warn( "Unhandled archive build type: {} ({})", archiveInfo.getBuildType(), archiveInfo.getBuildTypeId() );
             }
-
-            archiveInfos.set( i, archiveInfo );
         }
 
         return archiveInfos;
