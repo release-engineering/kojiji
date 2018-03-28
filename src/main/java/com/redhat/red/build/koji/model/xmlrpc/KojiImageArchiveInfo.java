@@ -71,6 +71,15 @@ public class KojiImageArchiveInfo
         this.rootId = rootId;
     }
 
+    public static KojiArchiveInfo addImageArchiveInfo( KojiImageArchiveInfo imageArchiveInfo, KojiArchiveInfo archiveInfo )
+    {
+        archiveInfo.setArchiveId( imageArchiveInfo.getArchiveId() );
+        archiveInfo.setArch( imageArchiveInfo.getArch() );
+        archiveInfo.setRootId( imageArchiveInfo.getRootId() );
+
+        return archiveInfo;
+    }
+
     @Override
     public boolean equals( Object o )
     {
@@ -78,15 +87,15 @@ public class KojiImageArchiveInfo
         {
             return true;
         }
-        if ( !( o instanceof KojiImageArchiveInfo) )
+
+        if ( !( o instanceof KojiImageArchiveInfo ) )
         {
             return false;
         }
 
         KojiImageArchiveInfo that = (KojiImageArchiveInfo) o;
 
-        return getArchiveId() == that.getArchiveId();
-
+        return getArchiveId().equals( that.getArchiveId() );
     }
 
     @Override
@@ -96,7 +105,8 @@ public class KojiImageArchiveInfo
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "KojiImageArchiveInfo{archiveId=" + archiveId + ", arch=" + arch + ", rootId=" + rootId + "}";
     }
 }

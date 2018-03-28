@@ -92,6 +92,16 @@ public class KojiMavenArchiveInfo
         return new SimpleProjectVersionRef( groupId, artifactId, version );
     }
 
+    public static KojiArchiveInfo addMavenArchiveInfo( KojiMavenArchiveInfo mavenArchiveInfo, KojiArchiveInfo archiveInfo )
+    {
+        archiveInfo.setArchiveId( mavenArchiveInfo.getArchiveId() );
+        archiveInfo.setArtifactId( mavenArchiveInfo.getArtifactId() );
+        archiveInfo.setGroupId( mavenArchiveInfo.getGroupId() );
+        archiveInfo.setVersion( mavenArchiveInfo.getVersion() );
+
+        return archiveInfo;
+    }
+
     @Override
     public boolean equals( Object o )
     {
@@ -99,15 +109,15 @@ public class KojiMavenArchiveInfo
         {
             return true;
         }
-        if ( !( o instanceof KojiMavenArchiveInfo) )
+
+        if ( !( o instanceof KojiMavenArchiveInfo ) )
         {
             return false;
         }
 
         KojiMavenArchiveInfo that = (KojiMavenArchiveInfo) o;
 
-        return getArchiveId() == that.getArchiveId();
-
+        return getArchiveId().equals( that.getArchiveId() );
     }
 
     @Override
@@ -116,6 +126,7 @@ public class KojiMavenArchiveInfo
         return getArchiveId();
     }
 
+    @Override
     public String toString()
     {
         return String.format( "KojiMavenArchiveInfo[%s:%s:%s]", getGroupId(), getArtifactId(), getVersion() );

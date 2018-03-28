@@ -92,6 +92,17 @@ public class KojiWinArchiveInfo
         this.flags = flags;
     }
 
+    public static KojiArchiveInfo addWinArchiveInfo( KojiWinArchiveInfo winArchiveInfo, KojiArchiveInfo archiveInfo )
+    {
+        archiveInfo.setArchiveId( winArchiveInfo.getArchiveId() );
+        archiveInfo.setRelPath( winArchiveInfo.getRelPath() );
+        archiveInfo.setPlatforms( winArchiveInfo.getPlatforms() );
+        archiveInfo.setFlags( winArchiveInfo.getFlags() );
+
+        return archiveInfo;
+
+    }
+
     @Override
     public boolean equals( Object o )
     {
@@ -99,15 +110,15 @@ public class KojiWinArchiveInfo
         {
             return true;
         }
-        if ( !( o instanceof KojiWinArchiveInfo) )
+
+        if ( !( o instanceof KojiWinArchiveInfo ) )
         {
             return false;
         }
 
         KojiWinArchiveInfo that = (KojiWinArchiveInfo) o;
 
-        return getArchiveId() == that.getArchiveId();
-
+        return getArchiveId().equals( that.getArchiveId() );
     }
 
     @Override
@@ -117,7 +128,8 @@ public class KojiWinArchiveInfo
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "KojiWinArchiveInfo{archiveId=" + archiveId + ", relPath=" + relPath + ", platforms=" + platforms + ", flags=" + flags + "}";
     }
 }
