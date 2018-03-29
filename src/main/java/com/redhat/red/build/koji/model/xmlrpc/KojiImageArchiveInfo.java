@@ -71,15 +71,6 @@ public class KojiImageArchiveInfo
         this.rootId = rootId;
     }
 
-    public static KojiArchiveInfo addImageArchiveInfo( KojiImageArchiveInfo imageArchiveInfo, KojiArchiveInfo archiveInfo )
-    {
-        archiveInfo.setArchiveId( imageArchiveInfo.getArchiveId() );
-        archiveInfo.setArch( imageArchiveInfo.getArch() );
-        archiveInfo.setRootId( imageArchiveInfo.getRootId() );
-
-        return archiveInfo;
-    }
-
     @Override
     public boolean equals( Object o )
     {

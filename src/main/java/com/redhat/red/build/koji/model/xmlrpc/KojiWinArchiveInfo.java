@@ -92,17 +92,6 @@ public class KojiWinArchiveInfo
         this.flags = flags;
     }
 
-    public static KojiArchiveInfo addWinArchiveInfo( KojiWinArchiveInfo winArchiveInfo, KojiArchiveInfo archiveInfo )
-    {
-        archiveInfo.setArchiveId( winArchiveInfo.getArchiveId() );
-        archiveInfo.setRelPath( winArchiveInfo.getRelPath() );
-        archiveInfo.setPlatforms( winArchiveInfo.getPlatforms() );
-        archiveInfo.setFlags( winArchiveInfo.getFlags() );
-
-        return archiveInfo;
-
-    }
-
     @Override
     public boolean equals( Object o )
     {

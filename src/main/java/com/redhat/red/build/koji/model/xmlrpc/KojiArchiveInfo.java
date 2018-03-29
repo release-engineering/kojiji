@@ -405,6 +405,29 @@ public class KojiArchiveInfo
         this.size = size;
     }
 
+    public void addMavenArchiveInfo( KojiMavenArchiveInfo mavenArchiveInfo )
+    {
+        setArchiveId( mavenArchiveInfo.getArchiveId() );
+        setArtifactId( mavenArchiveInfo.getArtifactId() );
+        setGroupId( mavenArchiveInfo.getGroupId() );
+        setVersion( mavenArchiveInfo.getVersion() );
+    }
+
+    public void addImageArchiveInfo( KojiImageArchiveInfo imageArchiveInfo )
+    {
+        setArchiveId( imageArchiveInfo.getArchiveId() );
+        setArch( imageArchiveInfo.getArch() );
+        setRootId( imageArchiveInfo.getRootId() );
+    }
+
+    public void addWinArchiveInfo( KojiWinArchiveInfo winArchiveInfo )
+    {
+        setArchiveId( winArchiveInfo.getArchiveId() );
+        setRelPath( winArchiveInfo.getRelPath() );
+        setPlatforms( winArchiveInfo.getPlatforms() );
+        setFlags( winArchiveInfo.getFlags() );
+    }
+
     @Override
     public boolean equals( Object o )
     {
