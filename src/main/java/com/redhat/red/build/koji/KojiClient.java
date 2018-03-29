@@ -59,7 +59,6 @@ import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -73,7 +72,10 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import javax.security.auth.DestroyFailedException;
 
 import static com.redhat.red.build.koji.model.util.KojiFormats.toKojiName;
@@ -809,57 +811,39 @@ public class KojiClient
 
             List<KojiArchiveInfo> archives = response.getArchives();
 
-            if ( archives != null && query.getType() == null )
-            {
-                return enrichArchiveTypeInfo( archives, session );
-            }
-
             return archives == null ? Collections.emptyList() : archives;
         }, "Failed to retrieve list of artifacts matching archive query: %s", query );
     }
 
-    private List<KojiArchiveInfo> enrichArchiveTypeInfo( List<KojiArchiveInfo> archiveInfos, KojiSessionInfo session )
+    public List<KojiArchiveInfo> enrichArchiveTypeInfo( List<KojiArchiveInfo> archives, KojiSessionInfo session )
             throws KojiClientException
     {
-        for ( KojiArchiveInfo archiveInfo : archiveInfos )
-        {
-            switch ( archiveInfo.getBuildType() )
+        Map<Integer, KojiArchiveInfo> archiveIdMap = archives.stream().collect( Collectors.toMap( KojiArchiveInfo::getArchiveId, Function.identity() ) );
+        Map<String, List<KojiArchiveInfo>> buildTypeMap = archives.stream().collect( Collectors.groupingBy( KojiArchiveInfo::getBuildType ) );
+
+        buildTypeMap.forEach( ( buildType, archiveInfos ) -> {
+            List<Object> archiveIds = archiveInfos.stream().map( KojiArchiveInfo::getArchiveId ).collect( Collectors.toList() );
+
+            switch ( buildType )
             {
                 case "maven":
-                    KojiMavenArchiveInfo mavenArchiveInfo = getMavenArchiveInfo( archiveInfo.getArchiveId(), session );
-                    if ( mavenArchiveInfo != null )
-                    {
-                        archiveInfo.setArchiveId( mavenArchiveInfo.getArchiveId());
-                        archiveInfo.setGroupId( mavenArchiveInfo.getGroupId() );
-                        archiveInfo.setArtifactId( mavenArchiveInfo.getArtifactId() );
-                        archiveInfo.setVersion( mavenArchiveInfo.getVersion() );
-                    }
-                    break;
-                case "win":
-                    KojiWinArchiveInfo winArchiveInfo = getWinArchiveInfo( archiveInfo.getArchiveId(), session );
-                    if ( winArchiveInfo != null )
-                    {
-                        archiveInfo.setArchiveId( winArchiveInfo.getArchiveId());
-                        archiveInfo.setRelPath( winArchiveInfo.getRelPath() );
-                        archiveInfo.setPlatforms( winArchiveInfo.getPlatforms() );
-                        archiveInfo.setFlags( winArchiveInfo.getFlags() );
-                    }
+                    List<KojiMavenArchiveInfo> mavenArchiveInfos = multiCall( Constants.GET_MAVEN_ARCHIVE, archiveIds, KojiMavenArchiveInfo.class, session );
+                    mavenArchiveInfos.forEach( mavenArchiveInfo -> KojiMavenArchiveInfo.addMavenArchiveInfo( mavenArchiveInfo, archiveIdMap.get( mavenArchiveInfo.getArchiveId() ) ) );
                     break;
                 case "image":
-                    KojiImageArchiveInfo imageArchiveInfo = getImageArchiveInfo( archiveInfo.getArchiveId(), session );
-                    if ( imageArchiveInfo != null )
-                    {
-                        archiveInfo.setArchiveId( imageArchiveInfo.getArchiveId());
-                        archiveInfo.setArch( imageArchiveInfo.getArch());
-                        archiveInfo.setRootId( imageArchiveInfo.getRootId());
-                    }
+                    List<KojiImageArchiveInfo> imageArchiveInfos = multiCall( Constants.GET_IMAGE_ARCHIVE, archiveIds, KojiImageArchiveInfo.class, session );
+                    imageArchiveInfos.forEach( imageArchiveInfo -> KojiImageArchiveInfo.addImageArchiveInfo( imageArchiveInfo, archiveIdMap.get( imageArchiveInfo.getArchiveId() ) ) );
+                    break;
+                case "win":
+                    List<KojiWinArchiveInfo> winArchiveInfos = multiCall( Constants.GET_WIN_ARCHIVE, archiveIds, KojiWinArchiveInfo.class, session );
+                    winArchiveInfos.forEach( winArchiveInfo -> KojiWinArchiveInfo.addWinArchiveInfo( winArchiveInfo, archiveIdMap.get( winArchiveInfo.getArchiveId() ) ) );
                     break;
                 default:
-                    logger.warn( "Unhandled archive build type: {} ({})", archiveInfo.getBuildType(), archiveInfo.getBuildTypeId() );
+                    logger.warn( "Unknown archive build type: {}", buildType );
             }
-        }
+        });
 
-        return archiveInfos;
+        return new ArrayList<>(archiveIdMap.values());
     }
 
     public List<KojiArchiveInfo> listMavenArchivesMatching( String groupId, KojiSessionInfo session )
