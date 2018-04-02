@@ -29,6 +29,7 @@ import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +42,14 @@ public class KojiArchiveInfo
     @DataKey( "id" )
     @JsonProperty( "id" )
     private Integer archiveId;
+
+    @DataKey( "btype" )
+    @JsonProperty( "btype" )
+    private String buildType;
+
+    @DataKey( "btype_id" )
+    @JsonProperty( "btype_id" )
+    private Integer buildTypeId;
 
     @DataKey( "group_id" )
     @JsonProperty( "group_id" )
@@ -70,6 +79,10 @@ public class KojiArchiveInfo
 
     @DataKey ( "arch" )
     private String arch;
+
+    @DataKey ( "rootid" )
+    @JsonProperty( "rootid" )
+    private Boolean rootId;
 
     @DataKey( "type_extensions" )
     @JsonProperty( "type_extensions" )
@@ -113,8 +126,31 @@ public class KojiArchiveInfo
     @DataKey( "size" )
     private Integer size;
 
+    @DataKey( "extra" )
+    Map<String, Object> extra;
+
     public KojiArchiveInfo()
     {
+    }
+
+    public String getBuildType()
+    {
+        return buildType;
+    }
+
+    public void setBuildType( String buildType )
+    {
+        this.buildType = buildType;
+    }
+
+    public Integer getBuildTypeId()
+    {
+        return buildTypeId;
+    }
+
+    public void setBuildTypeId( Integer buildTypeId )
+    {
+        this.buildTypeId = buildTypeId;
     }
 
     public Integer getArchiveId()
@@ -225,6 +261,16 @@ public class KojiArchiveInfo
     public void setArch( String arch )
     {
         this.arch = arch;
+    }
+
+    public Boolean getRootId()
+    {
+        return rootId;
+    }
+
+    public void setRootId( Boolean rootId )
+    {
+        this.rootId = rootId;
     }
 
     public String getTypeExtensions()
@@ -339,6 +385,16 @@ public class KojiArchiveInfo
         this.buildrootId = buildrootId;
     }
 
+    public Map<String, Object> getExtra()
+    {
+        return extra;
+    }
+
+    public void setExtra( Map<String, Object> extra )
+    {
+        this.extra = extra;
+    }
+
     public Integer getSize()
     {
         return size;
@@ -347,6 +403,29 @@ public class KojiArchiveInfo
     public void setSize( Integer size )
     {
         this.size = size;
+    }
+
+    public void addMavenArchiveInfo( KojiMavenArchiveInfo mavenArchiveInfo )
+    {
+        setArchiveId( mavenArchiveInfo.getArchiveId() );
+        setArtifactId( mavenArchiveInfo.getArtifactId() );
+        setGroupId( mavenArchiveInfo.getGroupId() );
+        setVersion( mavenArchiveInfo.getVersion() );
+    }
+
+    public void addImageArchiveInfo( KojiImageArchiveInfo imageArchiveInfo )
+    {
+        setArchiveId( imageArchiveInfo.getArchiveId() );
+        setArch( imageArchiveInfo.getArch() );
+        setRootId( imageArchiveInfo.getRootId() );
+    }
+
+    public void addWinArchiveInfo( KojiWinArchiveInfo winArchiveInfo )
+    {
+        setArchiveId( winArchiveInfo.getArchiveId() );
+        setRelPath( winArchiveInfo.getRelPath() );
+        setPlatforms( winArchiveInfo.getPlatforms() );
+        setFlags( winArchiveInfo.getFlags() );
     }
 
     @Override
@@ -377,6 +456,8 @@ public class KojiArchiveInfo
     {
         return "KojiArchiveInfo{" +
                 "archiveId=" + archiveId +
+                ", buildType='" + buildType + '\'' +
+                ", buildTypeId='" + buildTypeId + '\'' +
                 ", groupId='" + groupId + '\'' +
                 ", artifactId='" + artifactId + '\'' +
                 ", version='" + version + '\'' +
@@ -385,6 +466,7 @@ public class KojiArchiveInfo
                 ", platforms=" + platforms +
                 ", flags=" + flags +
                 ", arch='" + arch + '\'' +
+                ", rootId='" + rootId + '\'' +
                 ", typeExtensions='" + typeExtensions + '\'' +
                 ", filename='" + filename + '\'' +
                 ", buildId=" + buildId +
@@ -396,6 +478,7 @@ public class KojiArchiveInfo
                 ", metadataOnly=" + metadataOnly +
                 ", buildrootId=" + buildrootId +
                 ", size=" + size +
+                ", extra=" + extra +
                 '}';
     }
 }

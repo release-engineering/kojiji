@@ -59,7 +59,6 @@ import java.net.URLEncoder;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -74,6 +73,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import javax.security.auth.DestroyFailedException;
 
 import static com.redhat.red.build.koji.model.util.KojiFormats.toKojiName;
@@ -750,6 +751,55 @@ public class KojiClient
         return ret;
     }
 
+    public KojiArchiveInfo getArchiveInfo( int archiveId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            GetArchiveResponse response = xmlrpcClient.call( new GetArchiveRequest( archiveId ),
+                                                             GetArchiveResponse.class, sessionUrlBuilder( session ),
+                                                             STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getArchiveInfo();
+        }, "Failed to retrieve archive info for: %d", archiveId );
+
+    }
+
+    public KojiMavenArchiveInfo getMavenArchiveInfo( int archiveId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetMavenArchiveResponse response =
+                    xmlrpcClient.call( new GetMavenArchiveRequest( archiveId ), GetMavenArchiveResponse.class,
+                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getMavenArchiveInfo();
+        }, "Failed to retrieve maven archive info for: %d", archiveId );
+    }
+
+    public KojiImageArchiveInfo getImageArchiveInfo( int archiveId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetImageArchiveResponse response =
+                    xmlrpcClient.call( new GetImageArchiveRequest( archiveId ), GetImageArchiveResponse.class,
+                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getImageArchiveInfo();
+        }, "Failed to retrieve image archive info for: %d", archiveId );
+    }
+
+    public KojiWinArchiveInfo getWinArchiveInfo( int archiveId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetWinArchiveResponse response =
+                    xmlrpcClient.call( new GetWinArchiveRequest( archiveId ), GetWinArchiveResponse.class,
+                            sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? null : response.getWinArchiveInfo();
+        }, "Failed to retrieve win archive info for: %d", archiveId );
+    }
+
     public List<KojiArchiveInfo> listArchives( KojiArchiveQuery query, KojiSessionInfo session )
             throws KojiClientException
     {
@@ -759,8 +809,46 @@ public class KojiClient
                                                                STANDARD_REQUEST_MODIFIER );
 
             List<KojiArchiveInfo> archives = response.getArchives();
+
             return archives == null ? Collections.emptyList() : archives;
         }, "Failed to retrieve list of artifacts matching archive query: %s", query );
+    }
+
+    public void enrichArchiveTypeInfo( List<KojiArchiveInfo> archives, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        Map<String, List<KojiArchiveInfo>> buildTypeMap = archives.stream().collect( Collectors.groupingBy( KojiArchiveInfo::getBuildType ) );
+
+        buildTypeMap.forEach( ( buildType, archiveInfos ) -> {
+            List<Object> archiveIds = archiveInfos.stream().map( KojiArchiveInfo::getArchiveId ).collect( Collectors.toList() );
+
+            switch ( buildType )
+            {
+                case "maven":
+                    List<KojiMavenArchiveInfo> mavenArchiveInfos = multiCall( Constants.GET_MAVEN_ARCHIVE, archiveIds, KojiMavenArchiveInfo.class, session );
+                    for ( int i = 0; i < mavenArchiveInfos.size(); i++ )
+                    {
+                        archiveInfos.get(i).addMavenArchiveInfo( mavenArchiveInfos.get(i) );
+                    }
+                    break;
+                case "image":
+                    List<KojiImageArchiveInfo> imageArchiveInfos = multiCall( Constants.GET_IMAGE_ARCHIVE, archiveIds, KojiImageArchiveInfo.class, session );
+                    for ( int i = 0; i < imageArchiveInfos.size(); i++ )
+                    {
+                        archiveInfos.get(i).addImageArchiveInfo( imageArchiveInfos.get(i) );
+                    }
+                    break;
+                case "win":
+                    List<KojiWinArchiveInfo> winArchiveInfos = multiCall( Constants.GET_WIN_ARCHIVE, archiveIds, KojiWinArchiveInfo.class, session );
+                    for ( int i = 0; i < winArchiveInfos.size(); i++ )
+                    {
+                        archiveInfos.get(i).addWinArchiveInfo( winArchiveInfos.get(i) );
+                    }
+                    break;
+                default:
+                    logger.warn( "Unknown archive build type: {}", buildType );
+            }
+        });
     }
 
     public List<KojiArchiveInfo> listMavenArchivesMatching( String groupId, KojiSessionInfo session )

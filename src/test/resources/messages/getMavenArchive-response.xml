@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>archive_id</name>
+            <value>
+              <int>238496</int>
+            </value>
+          </member>
+          <member>
+            <name>group_id</name>
+            <value>
+              <string>commons-lang</string>
+            </value>
+          </member>
+          <member>
+            <name>artifact_id</name>
+            <value>
+              <string>commons-lang</string>
+            </value>
+          </member>
+          <member>
+            <name>version</name>
+            <value>
+              <string>2.6-redhat-2</string>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodResponse>
