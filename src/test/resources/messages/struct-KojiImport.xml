@@ -61,7 +61,7 @@
                 <member>
                     <name>start_time</name>
                     <value>
-                        <double>1501590180</double>
+                        <i8>1501590180</i8>
                     </value>
                 </member>
                 <member>
@@ -111,7 +111,7 @@
                 <member>
                     <name>end_time</name>
                     <value>
-                        <double>1501591080</double>
+                        <i8>1501591080</i8>
                     </value>
                 </member>
                 <member>
