@@ -15,6 +15,8 @@
  */
 package com.redhat.red.build.koji.http.httpclient4;
 
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
 import com.redhat.red.build.koji.model.xmlrpc.messages.VoidResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.ClientProtocolException;
@@ -40,28 +42,51 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 
+import static com.codahale.metrics.MetricRegistry.name;
+
 public class HC4SyncObjectClient
 {
     private final HttpFactory httpFactory;
 
     private final SiteConfig siteConfig;
 
+    private final MetricRegistry metricRegistry;
+
     private final String[] extraPath;
 
-    public HC4SyncObjectClient( final HttpFactory httpFactory, final SiteConfig siteConfig, String... extraPath )
+    public HC4SyncObjectClient( final HttpFactory httpFactory, final SiteConfig siteConfig,
+                                final MetricRegistry metricRegistry, String... extraPath )
     {
         this.httpFactory = httpFactory;
         this.siteConfig = siteConfig;
+        this.metricRegistry = metricRegistry;
         this.extraPath = extraPath;
-    }
-
-    public <T> T call( final Object request, final Class<T> responseType ) throws XmlRpcException
-    {
-        return call( request, responseType, null, null );
     }
 
     public <T> T call( final Object request, final Class<T> responseType, final UrlBuilder urlBuilder,
                        final RequestModifier requestModifier ) throws XmlRpcException
+    {
+        if ( metricRegistry == null )
+        {
+            return doCall( request, responseType, urlBuilder, requestModifier );
+        }
+
+        // Apply metric
+
+        final Timer timer = metricRegistry.timer( name( getClass(), "call" ) );
+        final Timer.Context timerContext = timer.time();
+        try
+        {
+            return doCall( request, responseType, urlBuilder, requestModifier );
+        }
+        finally
+        {
+            timerContext.stop();
+        }
+    }
+
+    private <T> T doCall( final Object request, final Class<T> responseType, final UrlBuilder urlBuilder,
+                          final RequestModifier requestModifier ) throws XmlRpcException
     {
         final String methodName = getRequestMethod( request );
         if ( methodName == null )

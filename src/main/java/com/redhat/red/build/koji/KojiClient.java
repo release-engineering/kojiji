@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji;
 
+import com.codahale.metrics.MetricRegistry;
 import com.redhat.red.build.koji.config.KojiConfig;
 import com.redhat.red.build.koji.kerberos.KrbAuthenticator;
 import com.redhat.red.build.koji.model.ImportFile;
@@ -102,6 +103,8 @@ public class KojiClient
 
     private ExecutorService executorService;
 
+    private MetricRegistry metricRegistry;
+
     private ExecutorCompletionService<KojiUploaderResult> uploadService;
 
     private KojiObjectMapper objectMapper;
@@ -161,13 +164,20 @@ public class KojiClient
         };
     }
 
-    public KojiClient( KojiConfig config, PasswordManager passwordManager, ExecutorService executorService )
-                    throws KojiClientException
+    public KojiClient( KojiConfig config, PasswordManager passwordManager, ExecutorService executorService,
+                       MetricRegistry metricRegistry ) throws KojiClientException
     {
         this.config = config;
         this.httpFactory = new HttpFactory( passwordManager );
         this.executorService = executorService;
+        this.metricRegistry = metricRegistry;
         setup();
+    }
+
+    public KojiClient( KojiConfig config, PasswordManager passwordManager, ExecutorService executorService )
+                    throws KojiClientException
+    {
+        this( config, passwordManager, executorService, null );
     }
 
     @Override
@@ -194,7 +204,7 @@ public class KojiClient
         logger.debug( "SETUP: Starting KojiClient for: " + config.getKojiURL() );
         try
         {
-            xmlrpcClient = new HC4SyncObjectClient( httpFactory, config.getKojiSiteConfig() );
+            xmlrpcClient = new HC4SyncObjectClient( httpFactory, config.getKojiSiteConfig(), metricRegistry );
         }
         catch ( IOException e )
         {
