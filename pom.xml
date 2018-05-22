@@ -48,6 +48,7 @@
         <atlasVersion>0.16.0</atlasVersion>
         <mockitoVersion>2.7.20</mockitoVersion>
         <kerbyVersion>1.0.1</kerbyVersion>
+        <metrics.version>3.1.0</metrics.version>
 
         <dbImage>postgres:9.4</dbImage>
         <hubImage>docker.io/buildchimp/koji-dojo-hub:dev</hubImage>
@@ -104,6 +105,13 @@
                 <groupId>org.apache.kerby</groupId>
                 <artifactId>kerb-client</artifactId>
                 <version>${kerbyVersion}</version>
+            </dependency>
+
+            <!-- metrics support-->
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
+                <version>${metrics.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -207,6 +215,10 @@
             <artifactId>kerb-client</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
