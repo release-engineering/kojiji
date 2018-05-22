@@ -71,10 +71,10 @@ public class HC4SyncObjectClient
             return doCall( request, responseType, urlBuilder, requestModifier );
         }
 
-        // Apply metric
+        // Apply global and per request metric
 
-        final Timer timer = metricRegistry.timer( name( getClass(), "call" ) );
-        final Timer.Context timerContext = timer.time();
+        final Timer.Context timerContext = metricRegistry.timer( name( getClass(), "call" ) ).time();
+        final Timer.Context requestTimerContext = metricRegistry.timer( name( request.getClass(), "call" ) ).time();
         try
         {
             return doCall( request, responseType, urlBuilder, requestModifier );
@@ -82,6 +82,7 @@ public class HC4SyncObjectClient
         finally
         {
             timerContext.stop();
+            requestTimerContext.stop();
         }
     }
 
