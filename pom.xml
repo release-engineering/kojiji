@@ -48,7 +48,7 @@
         <atlasVersion>0.16.0</atlasVersion>
         <mockitoVersion>2.7.20</mockitoVersion>
         <kerbyVersion>1.0.1</kerbyVersion>
-        <metrics.version>3.1.0</metrics.version>
+        <metrics.version>4.0.2</metrics.version>
 
         <dbImage>postgres:9.4</dbImage>
         <hubImage>docker.io/buildchimp/koji-dojo-hub:dev</hubImage>
