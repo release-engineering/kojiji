@@ -1463,7 +1463,7 @@ public class KojiClient
         int total = count.get();
         do
         {
-            logger.debug( "Waiting for %s uploads.", count.get() );
+            logger.debug( "Waiting for {} uploads.", count.get() );
 
             try
             {
