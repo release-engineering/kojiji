@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.converter.KojiChecksumTypeConverter;
 import com.redhat.red.build.koji.model.converter.StringListConverter;
+import com.redhat.red.build.koji.model.util.ExternalizableUtils;
 
 import org.commonjava.maven.atlas.ident.ref.ArtifactRef;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
@@ -28,6 +29,10 @@ import org.commonjava.rwx.anno.Converter;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -38,7 +43,12 @@ import java.util.regex.Pattern;
  */
 @StructPart
 public class KojiArchiveInfo
+    implements Externalizable
 {
+    private static final int VERSION = 1;
+
+    private static final long serialVersionUID = 6877608047448106469L;
+
     @DataKey( "id" )
     @JsonProperty( "id" )
     private Integer archiveId;
@@ -131,6 +141,7 @@ public class KojiArchiveInfo
 
     public KojiArchiveInfo()
     {
+
     }
 
     public String getBuildType()
@@ -480,5 +491,72 @@ public class KojiArchiveInfo
                 ", size=" + size +
                 ", extra=" + extra +
                 '}';
+    }
+
+    @Override
+    public void writeExternal( ObjectOutput out )
+            throws IOException
+    {
+        out.writeInt( VERSION );
+        out.writeObject( archiveId );
+        ExternalizableUtils.writeUTF( out, buildType );
+        out.writeObject( buildTypeId );
+        ExternalizableUtils.writeUTF( out, groupId );
+        ExternalizableUtils.writeUTF( out, artifactId );
+        ExternalizableUtils.writeUTF( out, version );
+        ExternalizableUtils.writeUTF( out, relPath );
+        out.writeObject( platforms );
+        out.writeObject( flags );
+        ExternalizableUtils.writeUTF( out, arch );
+        out.writeObject( rootId );
+        ExternalizableUtils.writeUTF( out, typeExtensions );
+        ExternalizableUtils.writeUTF( out, filename );
+        out.writeObject( buildId );
+        ExternalizableUtils.writeUTF( out, extension );
+        out.writeObject( typeId );
+        ExternalizableUtils.writeUTF( out, checksum );
+        out.writeObject( checksumType );
+        ExternalizableUtils.writeUTF( out, typeDescription );
+        out.writeObject( metadataOnly );
+        out.writeObject( buildrootId );
+        out.writeObject( size );
+        out.writeObject( extra );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    @Override
+    public void readExternal( ObjectInput in )
+            throws IOException, ClassNotFoundException
+    {
+        int version = in.readInt();
+
+        if ( version != 1 )
+        {
+            throw new IOException( "Invalid version: " + version );
+        }
+
+        this.archiveId = (Integer) in.readObject();
+        this.buildType = ExternalizableUtils.readUTF( in );
+        this.buildTypeId = (Integer) in.readObject();
+        this.groupId = ExternalizableUtils.readUTF( in );
+        this.artifactId = ExternalizableUtils.readUTF( in );
+        this.version = ExternalizableUtils.readUTF( in );
+        this.relPath = ExternalizableUtils.readUTF( in );
+        this.platforms = (List<String>) in.readObject();
+        this.flags = (List<String>) in.readObject();
+        this.arch = ExternalizableUtils.readUTF( in );
+        this.rootId = (Boolean) in.readObject();
+        this.typeExtensions = ExternalizableUtils.readUTF( in );
+        this.filename = ExternalizableUtils.readUTF( in );
+        this.buildId = (Integer) in.readObject();
+        this.extension = ExternalizableUtils.readUTF( in );
+        this.typeId = (Integer) in.readObject();
+        this.checksum = ExternalizableUtils.readUTF( in );
+        this.checksumType = (KojiChecksumType) in.readObject();
+        this.typeDescription = ExternalizableUtils.readUTF( in );
+        this.metadataOnly = (Boolean) in.readObject();
+        this.buildrootId = (Integer) in.readObject();
+        this.size = (Integer) in.readObject();
+        this.extra = (Map<String, Object>) in.readObject();
     }
 }
