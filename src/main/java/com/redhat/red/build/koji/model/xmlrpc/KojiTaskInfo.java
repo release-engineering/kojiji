@@ -16,10 +16,16 @@
 package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.redhat.red.build.koji.model.converter.TimestampConverter;
+import com.redhat.red.build.koji.model.util.ExternalizableUtils;
+
 import org.commonjava.rwx.anno.Converter;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +34,12 @@ import java.util.List;
  */
 @StructPart
 public class KojiTaskInfo
+    implements Externalizable
 {
+    private static final long serialVersionUID = -4033517639092179002L;
+
+    private static final int VERSION = 1;
+
     @DataKey( "id" )
     private int taskId;
 
@@ -76,6 +87,11 @@ public class KojiTaskInfo
 
     @DataKey( "request" )
     private List<Object> request;
+
+    public KojiTaskInfo()
+    {
+
+    }
 
     public int getTaskId()
     {
@@ -225,5 +241,82 @@ public class KojiTaskInfo
     public void setRequest( List<Object> request )
     {
         this.request = request;
+    }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+
+        if ( !( o instanceof KojiTaskInfo ) )
+        {
+            return false;
+        }
+
+        KojiTaskInfo that = (KojiTaskInfo) o;
+
+        return getTaskId() == that.getTaskId();
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Integer.valueOf( getTaskId() ).hashCode();
+    }
+
+    @Override
+    public void writeExternal( ObjectOutput out )
+            throws IOException
+
+    {
+        out.writeInt( VERSION );
+        out.writeInt( taskId );
+        out.writeDouble( weight );
+        out.writeInt( parentTaskId );
+        out.writeInt( channelId );
+        out.writeObject( startTime );
+        ExternalizableUtils.writeUTF( out, label );
+        out.writeInt( priority );
+        out.writeObject( completionTime );
+        out.writeInt( state );
+        out.writeObject( createTime );
+        out.writeInt( ownerId );
+        out.writeInt( hostId );
+        ExternalizableUtils.writeUTF( out, method );
+        ExternalizableUtils.writeUTF( out, arch );
+        out.writeObject( request );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    @Override
+    public void readExternal( ObjectInput in )
+            throws IOException, ClassNotFoundException
+    {
+        int version = in.readInt();
+
+        if ( version != 1 )
+        {
+            throw new IOException( "Invalid version: " + version );
+        }
+
+        this.taskId = in.readInt();
+        this.weight = in.readDouble();
+        this.parentTaskId = in.readInt();
+        this.channelId = in.readInt();
+        this.startTime = (Date) in.readObject();
+        this.label = ExternalizableUtils.readUTF( in );
+        this.priority = in.readInt();
+        this.completionTime = (Date) in.readObject();
+        this.state = in.readInt();
+        this.createTime = (Date) in.readObject();
+        this.ownerId = in.readInt();
+        this.hostId = in.readInt();
+        this.method = ExternalizableUtils.readUTF( in );
+        this.arch = ExternalizableUtils.readUTF( in );
+        this.request = (List<Object>) in.readObject();
     }
 }

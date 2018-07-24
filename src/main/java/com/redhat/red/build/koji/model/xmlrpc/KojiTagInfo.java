@@ -17,10 +17,16 @@ package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.converter.StringListConverter;
+import com.redhat.red.build.koji.model.util.ExternalizableUtils;
+
 import org.commonjava.rwx.anno.Converter;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.List;
 
 /**
@@ -28,7 +34,12 @@ import java.util.List;
  */
 @StructPart
 public class KojiTagInfo
+    implements Externalizable
 {
+    private static final long serialVersionUID = 3783816258249355144L;
+
+    private static final int VERSION = 1;
+
     @DataKey( "id" )
     private int id;
 
@@ -58,7 +69,10 @@ public class KojiTagInfo
     @JsonProperty( "maven_include_all" )
     private boolean mavenIncludeAll = true;
 
-    public KojiTagInfo(){}
+    public KojiTagInfo()
+    {
+
+    }
 
     public KojiTagInfo( int id, String name, String permission, Integer permissionId, List<String> arches, boolean locked,
                         boolean mavenSupport, boolean mavenIncludeAll )
@@ -73,7 +87,7 @@ public class KojiTagInfo
         this.mavenIncludeAll = mavenIncludeAll;
     }
 
-    public KojiTagInfo(String name)
+    public KojiTagInfo( String name )
     {
         this.name = name;
     }
@@ -171,6 +185,43 @@ public class KojiTagInfo
     public void setMavenIncludeAll( boolean mavenIncludeAll )
     {
         this.mavenIncludeAll = mavenIncludeAll;
+    }
+
+    @Override
+    public void writeExternal( ObjectOutput out )
+            throws IOException
+    {
+        out.writeInt( VERSION );
+        out.writeInt( id );
+        ExternalizableUtils.writeUTF( out, name );
+        ExternalizableUtils.writeUTF( out, permission );
+        out.writeObject( permissionId );
+        out.writeObject( arches );
+        out.writeBoolean( locked );
+        out.writeBoolean( mavenSupport );
+        out.writeBoolean( mavenIncludeAll );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    @Override
+    public void readExternal( ObjectInput in )
+            throws IOException, ClassNotFoundException
+    {
+        int version = in.readInt();
+
+        if ( version != 1 )
+        {
+            throw new IOException( "Invalid version: " + version );
+        }
+
+        this.id = in.readInt();
+        this.name = ExternalizableUtils.readUTF( in );
+        this.permission = ExternalizableUtils.readUTF( in );
+        this.permissionId = (Integer) in.readObject();
+        this.arches = (List<String>) in.readObject();
+        this.locked = in.readBoolean();
+        this.mavenSupport = in.readBoolean();
+        this.mavenIncludeAll = in.readBoolean();
     }
 
     @Override

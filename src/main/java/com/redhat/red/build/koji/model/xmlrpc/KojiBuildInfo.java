@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.converter.KojiBuildStateConverter;
 import com.redhat.red.build.koji.model.converter.TimestampConverter;
+import com.redhat.red.build.koji.model.util.ExternalizableUtils;
+
 import org.apache.commons.lang.StringUtils;
 import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
@@ -26,6 +28,10 @@ import org.commonjava.rwx.anno.Converter;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +43,12 @@ import static com.redhat.red.build.koji.model.util.DateUtils.toUTC;
  */
 @StructPart
 public class KojiBuildInfo
+    implements Externalizable
 {
+    private static final int VERSION = 1;
+
+    private static final long serialVersionUID = 3810197749870211773L;
+
     @DataKey( "build_id" )
     @JsonProperty( "build_id" )
     private int id;
@@ -129,6 +140,7 @@ public class KojiBuildInfo
 
     public KojiBuildInfo()
     {
+
     }
 
     public KojiBuildInfo( int id, int packageId, String name, String version, String release )
@@ -309,6 +321,7 @@ public class KojiBuildInfo
         {
             return null;
         }
+
         return new SimpleProjectVersionRef( getMavenGroupId(), getMavenArtifactId(), getMavenVersion() );
     }
 
@@ -352,6 +365,91 @@ public class KojiBuildInfo
         this.volumeName = volumeName;
     }
 
+    /**
+     * Returns extra metadata of the build, mapped as a XML-RPC struct.
+     * @return Map of XML-RPC types of extra data.
+     * @see <a href="https://ws.apache.org/xmlrpc/types.html">https://ws.apache.org/xmlrpc/types.html</a>
+     */
+    public Map<String, Object> getExtra()
+    {
+        return extra;
+    }
+
+    /**
+     * Sets the extra metadata for the build.
+     * @param extra The extra metadata, mapped to XML-RPC types.
+     * @see #getExtra()
+     */
+    public void setExtra( Map<String, Object> extra )
+    {
+        this.extra = extra;
+    }
+
+    @Override
+    public void writeExternal( ObjectOutput out )
+            throws IOException
+    {
+        out.writeInt( VERSION );
+        out.writeInt( id );
+        out.writeInt( packageId );
+        ExternalizableUtils.writeUTF( out, name );
+        ExternalizableUtils.writeUTF( out, version );
+        ExternalizableUtils.writeUTF( out, release );
+        out.writeObject( completionTime );
+        out.writeObject( creationTime );
+        ExternalizableUtils.writeUTF( out, nvr );
+        out.writeObject( taskId );
+        out.writeObject( ownerId );
+        ExternalizableUtils.writeUTF( out, ownerName );
+        out.writeObject( buildState );
+        out.writeObject( creationEventId );
+        ExternalizableUtils.writeUTF( out, mavenGroupId );
+        ExternalizableUtils.writeUTF( out, mavenArtifactId );
+        ExternalizableUtils.writeUTF( out, mavenVersion );
+        ExternalizableUtils.writeUTF( out, platform );
+        out.writeObject( extra );
+        ExternalizableUtils.writeUTF( out, source );
+        // XXX: This has @JsonIgnore
+        out.writeObject( typeNames );
+        ExternalizableUtils.writeUTF( out, volumeName );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    @Override
+    public void readExternal( ObjectInput in )
+            throws IOException, ClassNotFoundException
+    {
+        int version = in.readInt();
+
+        if ( version != 1 )
+        {
+            throw new IOException( "Invalid version: " + version );
+        }
+
+        this.id = in.readInt();
+        this.packageId = in.readInt();
+        this.name = ExternalizableUtils.readUTF ( in );
+        this.version = ExternalizableUtils.readUTF ( in );
+        this.release = ExternalizableUtils.readUTF ( in );
+        this.completionTime = (Date) in.readObject();
+        this.creationTime = (Date) in.readObject();
+        this.nvr = ExternalizableUtils.readUTF ( in );
+        this.taskId = (Integer) in.readObject();
+        this.ownerId = (Integer) in.readObject();
+        this.ownerName = ExternalizableUtils.readUTF ( in );
+        this.buildState = (KojiBuildState) in.readObject();
+        this.creationEventId = (Integer) in.readObject();
+        this.mavenGroupId = ExternalizableUtils.readUTF ( in );
+        this.mavenArtifactId = ExternalizableUtils.readUTF ( in );
+        this.mavenVersion = ExternalizableUtils.readUTF ( in );
+        this.platform = ExternalizableUtils.readUTF ( in );
+        this.extra = (Map<String, Object>) in.readObject();
+        this.source = ExternalizableUtils.readUTF ( in );
+        // XXX: This has @JsonIgnore
+        this.typeNames = (List<String>) in.readObject();
+        this.volumeName = ExternalizableUtils.readUTF ( in );
+    }
+
     @Override
     public boolean equals( Object o )
     {
@@ -379,23 +477,5 @@ public class KojiBuildInfo
     public String toString()
     {
         return String.format( "KojiBuildInfo[%s-%s-%s]", getName(), getVersion().replace( '-', '_' ), getRelease() );
-    }
-
-    /**
-     * Returns extra metadata of the build, mapped as a XML-RPC struct.
-     * @return Map of XML-RPC types of extra data.
-     * @see <a href="https://ws.apache.org/xmlrpc/types.html">https://ws.apache.org/xmlrpc/types.html</a>
-     */
-    public Map<String, Object> getExtra() {
-        return extra;
-    }
-
-    /**
-     * Sets the extra metadata for the build.
-     * @param extra The extra metadata, mapped to XML-RPC types.
-     * @see #getExtra()
-     */
-    public void setExtra(Map<String, Object> extra) {
-        this.extra = extra;
     }
 }
