@@ -1285,23 +1285,6 @@ public class KojiClient
             throws KojiClientException
     {
         return doXmlRpcAndThrow( ()->{
-            BuildListResponse buildsResponse =
-                    xmlrpcClient.call( new ListTaggedRequest( tag ).withPrefix( buildNvr ), BuildListResponse.class,
-                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
-
-            if ( buildsResponse == null )
-            {
-                logger.debug( "No builds response was returned!" );
-                return false;
-            }
-
-            List<KojiBuildInfo> builds = buildsResponse.getBuilds();
-            if ( builds == null || builds.isEmpty() )
-            {
-                logger.debug( "Build: '{}' is not tagged in: '{}'", buildNvr, tag );
-                return false;
-            }
-
             xmlrpcClient.call( new UntagBuildRequest( tag, buildNvr ), AckResponse.class, sessionUrlBuilder( session ),
                                STANDARD_REQUEST_MODIFIER );
 

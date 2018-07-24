@@ -37,7 +37,7 @@ public class ListTaggedRequest
     private boolean inherit;
 
     @DataIndex( 3 )
-    private String prefix;
+    private String prefix; // filter results by build['package_name'].startswith(prefix)
 
     @DataIndex( 4 )
     private boolean latest;
