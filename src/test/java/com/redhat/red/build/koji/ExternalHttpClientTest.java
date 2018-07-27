@@ -41,10 +41,6 @@ public class ExternalHttpClientTest
     public void setUp() throws KojiClientException
     {
         String hubUrl = System.getProperty( "koji.hubUrl" );
-        if ( isBlank( hubUrl ) )
-        {
-            return;
-        }
         KojiConfig config = new SimpleKojiConfigBuilder().withKojiURL( hubUrl ).build();
         client = new KojiClient( config, null, Executors.newFixedThreadPool( 5 ) );
     }
