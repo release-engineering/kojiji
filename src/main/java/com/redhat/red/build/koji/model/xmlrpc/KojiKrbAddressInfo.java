@@ -15,25 +15,32 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import java.net.InetAddress;
+
 import org.commonjava.rwx.anno.ArrayPart;
+import org.commonjava.rwx.anno.Converter;
 import org.commonjava.rwx.anno.DataIndex;
+
+import com.redhat.red.build.koji.model.converter.InetAddressConverter;
 
 @ArrayPart
 public class KojiKrbAddressInfo
 {
     @DataIndex( 0 )
-    private String serverAddress;
+    @Converter( InetAddressConverter.class )
+    private InetAddress serverAddress;
 
     @DataIndex( 1 )
     private int serverPort;
 
     @DataIndex( 2 )
-    private String clientAddress;
+    @Converter( InetAddressConverter.class )
+    private InetAddress clientAddress;
 
     @DataIndex( 3 )
     private int clientPort;
 
-    public KojiKrbAddressInfo( String serverAddress, int serverPort, String clientAddress, int clientPort )
+    public KojiKrbAddressInfo( InetAddress serverAddress, int serverPort, InetAddress clientAddress, int clientPort )
     {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
@@ -45,12 +52,12 @@ public class KojiKrbAddressInfo
     {
     }
 
-    public String getServerAddress()
+    public InetAddress getServerAddress()
     {
         return serverAddress;
     }
 
-    public void setServerAddress( String serverAddress )
+    public void setServerAddress( InetAddress serverAddress )
     {
         this.serverAddress = serverAddress;
     }
@@ -65,12 +72,12 @@ public class KojiKrbAddressInfo
         this.serverPort = serverPort;
     }
 
-    public String getClientAddress()
+    public InetAddress getClientAddress()
     {
         return clientAddress;
     }
 
-    public void setClientAddress( String clientAddress )
+    public void setClientAddress( InetAddress clientAddress )
     {
         this.clientAddress = clientAddress;
     }
@@ -88,7 +95,7 @@ public class KojiKrbAddressInfo
     @Override
     public String toString()
     {
-        return "KojiKrbAddressInfo{serverAddress='" + serverAddress + "', serverPort=" + serverPort + ", clientAddress='"
-                + clientAddress + "', clientPort=" + clientPort + "}";
+        return "KojiKrbAddressInfo{serverAddress='" + serverAddress.getHostAddress() + "', serverPort=" + serverPort + ", clientAddress='"
+                + clientAddress.getHostAddress() + "', clientPort=" + clientPort + "}";
     }
 }

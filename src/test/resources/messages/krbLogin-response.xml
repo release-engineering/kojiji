@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value>
+              <string>VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZy4KVGhlIHF1aWNrIGJy
+b3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZy4=
+</string>
+            </value>
+            <value>
+              <string>VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZy4KVGhlIHF1aWNrIGJy
+b3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZy4KVGhlIHF1aWNrIGJyb3duIGZveCBqdW1w
+cyBvdmVyIHRoZSBsYXp5IGRvZy4=
+</string>
+            </value>
+            <value>
+              <array>
+                <data>
+                  <value>
+                    <string>1.2.3.4</string>
+                  </value>
+                  <value>
+                    <int>5</int>
+                  </value>
+                  <value>
+                    <string>5.6.7.8</string>
+                  </value>
+                  <value>
+                    <int>9</int>
+                  </value>
+                </data>
+              </array>
+            </value>
+          </data>
+        </array>
+      </value>
+    </param>
+  </params>
+</methodResponse>
