@@ -28,9 +28,7 @@
                             <array>
                                 <data>
                                     <value>
-                                        <string>
-                                            git://g.a.e.b.r.c/apache/cxf.git#154e3b7969fcf622aba3fb494b1b11f9215a9173
-                                        </string>
+                                        <string>git://g.a.e.b.r.c/apache/cxf.git#154e3b7969fcf622aba3fb494b1b11f9215a9173</string>
                                     </value>
                                     <value>
                                         <string>jb-eap-7.0-rhel-7-maven-candidate</string>
