@@ -11,6 +11,12 @@
                         </value>
                     </member>
                     <member>
+                        <name>authtype</name>
+                        <value>
+                          <int>1</int>
+                        </value>
+                    </member>
+                    <member>
                         <name>usertype</name>
                         <value>
                             <int>0</int>

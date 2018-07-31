@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.redhat.red.build.koji.model.converter.KojiAuthTypeConverter;
 import com.redhat.red.build.koji.model.converter.KojiUserStatusConverter;
 import com.redhat.red.build.koji.model.converter.KojiUserTypeConverter;
 import org.commonjava.rwx.anno.Converter;
@@ -31,6 +32,10 @@ public class KojiUserInfo
     @Converter( KojiUserStatusConverter.class )
     private KojiUserStatus status;
 
+    @DataKey( "authtype" )
+    @Converter( KojiAuthTypeConverter.class )
+    private KojiAuthType authType;
+
     @DataKey( "usertype" )
     @Converter( KojiUserTypeConverter.class )
     private KojiUserType userType;
@@ -44,9 +49,10 @@ public class KojiUserInfo
     @DataKey( "krb_principal" )
     private String kerberosPrincipal;
 
-    public KojiUserInfo( KojiUserStatus status, KojiUserType userType, int userId, String userName, String kerberosPrincipal )
+    public KojiUserInfo( KojiUserStatus status, KojiAuthType authType, KojiUserType userType, int userId, String userName, String kerberosPrincipal )
     {
         this.status = status;
+        this.authType = authType;
         this.userType = userType;
         this.userId = userId;
         this.userName = userName;
@@ -60,6 +66,11 @@ public class KojiUserInfo
     public void setStatus( KojiUserStatus status )
     {
         this.status = status;
+    }
+
+    public void setAuthType( KojiAuthType authType )
+    {
+        this.authType = authType;
     }
 
     public void setUserType( KojiUserType userType )
@@ -92,6 +103,11 @@ public class KojiUserInfo
         return status;
     }
 
+    public KojiAuthType getAuthType()
+    {
+        return authType;
+    }
+
     public KojiUserType getUserType()
     {
         return userType;
@@ -112,6 +128,7 @@ public class KojiUserInfo
     {
         return "KojiUserInfo{" +
                 "status=" + status +
+                ", authType=" + authType +
                 ", userType=" + userType +
                 ", userId=" + userId +
                 ", userName='" + userName + '\'' +
