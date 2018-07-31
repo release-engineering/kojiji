@@ -6,9 +6,7 @@
                 <array>
                     <data>
                         <value>
-                            <string>
-                                git+https://c.e.r.c/gerrit/dashbuilder.git#sync-6.4.x-2016.09.15
-                            </string>
+                            <string>git+https://c.e.r.c/gerrit/dashbuilder.git#sync-6.4.x-2016.09.15</string>
                         </value>
                         <value>
                             <string>jb-bxms-6.3-candidate</string>
@@ -53,18 +51,13 @@
                                         <array>
                                             <data>
                                                 <value>
-                                                    <string>
-                                                        org.jboss.brms.component.management-brms-bom-builder-2.1.0-91
-                                                    </string>
+                                                    <string>org.jboss.brms.component.management-brms-bom-builder-2.1.0-91</string>
                                                 </value>
                                                 <value>
-                                                    <string>org.uberfire-uberfire-extensions-0.8.0.Final-1
-                                                    </string>
+                                                    <string>org.uberfire-uberfire-extensions-0.8.0.Final-1</string>
                                                 </value>
                                                 <value>
-                                                    <string>
-                                                        org.uberfire-uberfire-parent-metadata-0.8.0.Final-1
-                                                    </string>
+                                                    <string>org.uberfire-uberfire-parent-metadata-0.8.0.Final-1</string>
                                                 </value>
                                             </data>
                                         </array>
