@@ -105,7 +105,17 @@ public class GetTaskRequestResponseTest
         List<String> options = mavenBuildRequest.getJvmOptions();
         assertTrue( options.contains( "-Xms512m" ) );
 
-        assertTrue( mavenBuildRequest.getDeps().contains( "org.uberfire-uberfire-extensions-0.8.0.Final-1" ) );
+        //assertTrue( mavenBuildRequest.getDeps().contains( "org.uberfire-uberfire-extensions-0.8.0.Final-1" ) );
+        boolean hasUberfire = false;
+        for ( String s : mavenBuildRequest.getDeps() )
+        {
+            assertTrue( s != null );
+            if ( s.contains( "org.uberfire-uberfire-extensions-0.8.0.Final-1" ))
+            {
+                hasUberfire = true;
+            }
+        }
+        assertTrue( hasUberfire );
 
         assertTrue( mavenBuildRequest.getProfiles().isEmpty() );
 
