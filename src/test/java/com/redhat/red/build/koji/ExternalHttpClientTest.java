@@ -19,15 +19,24 @@ import com.redhat.red.build.koji.config.KojiConfig;
 import com.redhat.red.build.koji.config.SimpleKojiConfigBuilder;
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveQuery;
+import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
+import org.commonjava.maven.atlas.ident.ref.SimpleArtifactRef;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
+import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_TASK_INFO;
 import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Before running these tests, you need to set VM argument -Dkoji.hubUrl
@@ -41,13 +50,51 @@ public class ExternalHttpClientTest
     public void setUp() throws KojiClientException
     {
         String hubUrl = System.getProperty( "koji.hubUrl" );
+        assumeTrue( hubUrl != null );
+
         KojiConfig config = new SimpleKojiConfigBuilder().withKojiURL( hubUrl ).build();
         client = new KojiClient( config, null, Executors.newFixedThreadPool( 5 ) );
     }
 
-    @Ignore
     @Test
-    public void testListArchives() throws Exception
+    public void testGetTaskInfo_multiCall() throws Exception
+    {
+        List<Object> req1 = new ArrayList<>(  );
+        req1.add( 513598 );
+        req1.add( true );
+
+        List<Object> req2 = new ArrayList<>(  );
+        req2.add( 513599 );
+        req2.add( true );
+
+        List<Object> args = new ArrayList<>();
+        args.add( req1 );
+        args.add( req2 );
+        List<KojiTaskInfo> ret = client.multiCall( GET_TASK_INFO, args, KojiTaskInfo.class, null );
+        ret.forEach( kojiTaskInfo ->
+            {
+                System.out.println( ">>> " + kojiTaskInfo.getTaskId() );
+                assertTrue( kojiTaskInfo.getTaskId() == 513598 || kojiTaskInfo.getTaskId() == 513599 );
+            } );
+    }
+
+    @Test
+    public void testListBuildsContaining_multiCall() throws Exception
+    {
+        String groupId = "javax.activation";
+        String artifactId = "activation";
+        String version = "1.1-rev-1";
+        SimpleArtifactRef gav = new SimpleArtifactRef( groupId, artifactId, version, "jar", null );
+        List<KojiBuildInfo> ret = client.listBuildsContaining( gav, null );
+        for ( KojiBuildInfo info : ret )
+        {
+            System.out.println( ">>> " + info.toString() );
+            assertTrue( "KojiBuildInfo[javax.activation-activation-1.1_rev_1-1]".equals( info.toString() ) );
+        }
+    }
+
+    @Test
+    public void testListArchives_multiCall() throws Exception
     {
         KojiClientHelper kojiClientHelper = new KojiClientHelper( client );
 
@@ -75,6 +122,25 @@ public class ExternalHttpClientTest
                 System.out.println("   >>>" + archiveInfo);
             }
         }
+    }
+
+    @Test
+    public void testlistTags_multiCall() throws Exception
+    {
+        List<Integer> buildIds = new ArrayList<>(  );
+        buildIds.add( 731240 );
+        buildIds.add( 0 ); // this would cause a Fault resp
+        buildIds.add( 731239 );
+
+        Map<Integer, List<KojiTagInfo>> ret = client.listTags( buildIds, null );
+        List<KojiTagInfo> l = ret.get( 731240 );
+        assertTrue( l != null );
+
+        l = ret.get( 0 );
+        assertTrue( l == null );
+
+        l = ret.get( 731239 );
+        assertTrue( l != null );
     }
 
 }
