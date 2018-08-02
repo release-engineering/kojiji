@@ -15,8 +15,6 @@
  */
 package com.redhat.red.build.koji.kerberos;
 
-import java.time.temporal.ChronoField;
-
 import org.apache.kerby.kerberos.kerb.KrbErrorCode;
 import org.apache.kerby.kerberos.kerb.KrbException;
 import org.apache.kerby.kerberos.kerb.common.EncryptionUtil;
@@ -27,11 +25,15 @@ import org.apache.kerby.kerberos.kerb.type.ap.ApReq;
 import org.apache.kerby.kerberos.kerb.type.ap.Authenticator;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptedData;
 import org.apache.kerby.kerberos.kerb.type.base.EncryptionKey;
+import org.apache.kerby.kerberos.kerb.type.base.HostAddresses;
 import org.apache.kerby.kerberos.kerb.type.base.KeyUsage;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.type.ticket.EncTicketPart;
-import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
+
+import java.net.InetAddress;
+import java.util.EnumSet;
 
 /**
  * A wrapper for ApReq request
@@ -40,12 +42,18 @@ import org.apache.kerby.kerberos.kerb.type.ticket.Ticket;
 public class ApRequest {
 
     private PrincipalName clientPrincipal;
-    private TgtTicket sgtTicket; // upstream uses SgtTicket, but it's broken, cf. DIRKRB-234, DIRKRB-472
+    private SgtTicket sgtTicket;
     private ApReq apReq;
+    private EnumSet<ApOption> flags;
 
-    public ApRequest(PrincipalName clientPrincipal, TgtTicket sgtTicket) {
+    public ApRequest(PrincipalName clientPrincipal, SgtTicket sgtTicket) {
+        this(clientPrincipal, sgtTicket, EnumSet.of(ApOption.USE_SESSION_KEY));
+    }
+
+    public ApRequest(PrincipalName clientPrincipal, SgtTicket sgtTicket, EnumSet<ApOption> flags) {
         this.clientPrincipal = clientPrincipal;
         this.sgtTicket = sgtTicket;
+        this.flags = flags;
     }
 
     public ApReq getApReq() throws KrbException {
@@ -70,7 +78,9 @@ public class ApRequest {
         apReq.setAuthenticator(authenticator);
         apReq.setTicket(sgtTicket.getTicket());
         ApOptions apOptions = new ApOptions();
-        apOptions.setFlag(ApOption.MUTUAL_REQUIRED); // upstream doesn't allow setting options, forces USE_SESSION_KEY, so just force what we want here
+        for (ApOption flag : flags) {
+            apOptions.setFlag(flag);
+        }
         apReq.setApOptions(apOptions);
 
         return apReq;
@@ -84,11 +94,15 @@ public class ApRequest {
         authenticator.setAuthenticatorVno(5);
         authenticator.setCname(clientPrincipal);
         authenticator.setCrealm(sgtTicket.getRealm());
-        KerberosTime now = KerberosTime.now();
-        authenticator.setCtime(now);
-        authenticator.setCusec(now.getValue().toInstant().get(ChronoField.MICRO_OF_SECOND)); // upstream doesn't set usec
-        // upstream doesn't set seq number
-        // upstream forces use of sub key which is set to the session key
+        long millis = System.currentTimeMillis();
+        int usec = (int) (millis % 1000) * 1000;
+        millis -= millis % 1000;
+        authenticator.setCtime(new KerberosTime(millis));
+        authenticator.setCusec(usec);
+        if (flags.contains(ApOption.USE_SESSION_KEY)) {
+            authenticator.setSubKey(sgtTicket.getSessionKey());
+        }
+
         return authenticator;
     }
 
@@ -113,6 +127,40 @@ public class ApRequest {
         }
         if (!authenticator.getCrealm().equals(ticket.getEncPart().getCrealm())) {
             throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADMATCH);
+        }
+    }
+
+    /*
+     * Validate the ApReq with channel binding and time
+     */
+    public static void validate(EncryptionKey encKey, ApReq apReq,
+                                InetAddress initiator,
+                                long timeSkew) throws KrbException {
+        validate(encKey, apReq);
+        Ticket ticket = apReq.getTicket();
+        EncTicketPart tktEncPart = ticket.getEncPart();
+        Authenticator authenticator = apReq.getAuthenticator();
+        if (initiator != null) {
+            HostAddresses clientAddrs = tktEncPart.getClientAddresses();
+            if (clientAddrs != null && !clientAddrs.contains(initiator)) {
+                throw new KrbException(KrbErrorCode.KRB_AP_ERR_BADADDR);
+            }
+        }
+
+        if (timeSkew != 0) {
+            if (!authenticator.getCtime().isInClockSkew(timeSkew)) {
+                throw new KrbException(KrbErrorCode.KRB_AP_ERR_SKEW);
+            }
+
+            KerberosTime now = KerberosTime.now();
+            KerberosTime startTime = tktEncPart.getStartTime();
+            if (startTime != null && !startTime.lessThanWithSkew(now, timeSkew)) {
+                throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_NYV);
+            }
+
+            if (tktEncPart.getEndTime().lessThanWithSkew(now, timeSkew)) {
+                throw new KrbException(KrbErrorCode.KRB_AP_ERR_TKT_EXPIRED);
+            }
         }
     }
 

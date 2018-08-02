@@ -48,6 +48,7 @@ import org.apache.kerby.kerberos.kerb.type.base.KrbMessageType;
 import org.apache.kerby.kerberos.kerb.type.base.NameType;
 import org.apache.kerby.kerberos.kerb.type.base.PrincipalName;
 import org.apache.kerby.kerberos.kerb.ccache.Credential;
+import org.apache.kerby.kerberos.kerb.type.ticket.SgtTicket;
 import org.apache.kerby.kerberos.kerb.type.ticket.TgtTicket;
 import org.apache.kerby.util.Base64;
 import org.slf4j.Logger;
@@ -62,9 +63,14 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.KrbLoginResponseInfo;
 
 public class KrbAuthenticator
 {
+    private static final Logger logger = LoggerFactory.getLogger( KrbAuthenticator.class );
+
     private KojiConfig config;
+
     private ApReq apReq;
+
     private EncryptionKey key;
+
     private KrbClient krbClient;
 
     public KrbAuthenticator( KojiConfig config )
@@ -174,7 +180,7 @@ public class KrbAuthenticator
         return tgt;
     }
 
-    public static TgtTicket getSgt( KrbClient krbClient, String keytab, String ccache, String password, TgtTicket tgt, String serverPrincipal )
+    public static SgtTicket getSgt( KrbClient krbClient, String keytab, String ccache, String password, TgtTicket tgt, String serverPrincipal )
             throws KrbException
     {
         KOptions requestOptions = new KOptions();
@@ -194,12 +200,12 @@ public class KrbAuthenticator
         requestOptions.add( KrbOption.SERVER_PRINCIPAL, serverPrincipal );
         requestOptions.add( KrbOption.USE_TGT, tgt );
 
-        TgtTicket sgt = krbClient.requestTgt( requestOptions );
+        SgtTicket sgt = krbClient.requestSgt( requestOptions );
 
         return sgt;
     }
 
-    public static ApReq makeReq( TgtTicket sgt )
+    public static ApReq makeReq( SgtTicket sgt )
             throws KrbException
     {
         ApRequest apRequest = new ApRequest( sgt.getClientPrincipal(), sgt );
@@ -209,37 +215,44 @@ public class KrbAuthenticator
         return apReq;
     }
 
-    public static ApRep readRep( byte[] buf, EncryptionKey key, ApReq apReq )
+    public static ApRep readRep( byte[] buf, EncryptionKey key, long allowableClockSkew, ApReq apReq, InetAddress initiator )
             throws KrbException
     {
-           ApRep apRep = KrbCodec.decode( buf, ApRep.class );
+        ApRep apRep = KrbCodec.decode( buf, ApRep.class );
 
-           if ( apRep.getPvno() != KrbConstant.KRB_V5 )
-           {
-               throw new KrbException( KrbErrorCode.KRB_AP_ERR_BADVERSION );
-           }
+        if ( apRep.getPvno() != KrbConstant.KRB_V5 )
+        {
+            throw new KrbException( KrbErrorCode.KRB_AP_ERR_BADVERSION );
+        }
 
-           if ( !apRep.getMsgType().equals( KrbMessageType.AP_REP ) )
-           {
-               throw new KrbException( KrbErrorCode.KRB_AP_ERR_MSG_TYPE );
-           }
+        if ( !apRep.getMsgType().equals( KrbMessageType.AP_REP ) )
+        {
+            throw new KrbException( KrbErrorCode.KRB_AP_ERR_MSG_TYPE );
+        }
 
-           EncAPRepPart encRepPart = EncryptionUtil.unseal( apRep.getEncryptedEncPart(), key, KeyUsage.AP_REP_ENCPART, EncAPRepPart.class );
+        try {
+            ApRequest.validate( key, apReq, initiator, allowableClockSkew * 1000 );
+        } catch (KrbException e) {
+            // XXX: The checksum verification fails, but we can continue, so just log the error
+            logger.debug("Ap Request validation error: code={}, message={}", e.getKrbErrorCode(), e.getMessage(), e );
+        }
 
-           apRep.setEncRepPart( encRepPart );
+        EncAPRepPart encRepPart = EncryptionUtil.unseal( apRep.getEncryptedEncPart(), key, KeyUsage.AP_REP_ENCPART, EncAPRepPart.class );
 
-           ApRequest.unsealAuthenticator( key, apReq );
+        apRep.setEncRepPart( encRepPart );
 
-           EncAPRepPart encAPRepPart = apRep.getEncRepPart();
+        ApRequest.unsealAuthenticator( key, apReq );
 
-           Authenticator authenticator = apReq.getAuthenticator();
+        EncAPRepPart encAPRepPart = apRep.getEncRepPart();
 
-           if ( !encAPRepPart.getCtime().equals( authenticator.getCtime() ) || encAPRepPart.getCusec() != authenticator.getCusec() )
-           {
-               throw new KrbException( KrbErrorCode.KRB_AP_ERR_MODIFIED );
-           }
+        Authenticator authenticator = apReq.getAuthenticator();
 
-           return apRep;
+        if ( !encAPRepPart.getCtime().equals( authenticator.getCtime() ) || encAPRepPart.getCusec() != authenticator.getCusec() )
+        {
+            throw new KrbException( KrbErrorCode.KRB_AP_ERR_MODIFIED );
+        }
+
+        return apRep;
     }
 
     public static KrbPriv readPriv( byte[] buf, EncryptionKey key, InetAddress sAddress, InetAddress rAddress, long allowableClockSkew, ApRep apRep )
@@ -310,32 +323,26 @@ public class KrbAuthenticator
                 throw new KojiClientException( "Must create or point to a krb5 configuration file before logging in" );
             }
 
-            Logger logger = LoggerFactory.getLogger( getClass() );
-
             logger.debug( "Logging into Kerberos service {} using krb5 configuration file {}", config.getKrbService(), krb5ConfFilename );
 
-           this.krbClient = newClient( krb5ConfFilename );
+            this.krbClient = newClient( krb5ConfFilename );
 
             TgtTicket tgt = getTgt( krbClient, config.getKrbKeytab(), config.getKrbCCache(), config.getKrbPrincipal(), config.getKrbPassword() );
 
             String serverPrincipal = makeServerPrincipal( config.getKrbService(), config.getKojiURL(), tgt.getRealm() );
 
-            TgtTicket sgt = getSgt( krbClient, config.getKrbKeytab(), config.getKrbCCache(), config.getKrbPassword(), tgt, serverPrincipal );
+            SgtTicket sgt = getSgt( krbClient, config.getKrbKeytab(), config.getKrbCCache(), config.getKrbPassword(), tgt, serverPrincipal );
 
             this.key = sgt.getSessionKey();
 
             this.apReq = makeReq( sgt );
+
             byte[] asn1EncodedApReq = apReq.encode();
             byte[] base64EncodedApReq = new Base64().encode( asn1EncodedApReq );
-            String encodedApReq = new String( base64EncodedApReq, "US-ASCII" );
 
-            return encodedApReq;
+            return new String( base64EncodedApReq, "US-ASCII" );
         }
-       catch ( KrbException e )
-        {
-            throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
-        }
-        catch ( IOException e )
+        catch ( KrbException | IOException e )
         {
             throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
         }
@@ -351,10 +358,10 @@ public class KrbAuthenticator
             String encodedEncryptedSessionInfo = info.getEncodedEncryptedSessionInfo();
 
             byte[] decodedApRep = new Base64().decode( encodedResponse );
-            ApRep apRep = readRep( decodedApRep, key, apReq );
+            ApRep apRep = readRep( decodedApRep, key, krbClient.getKrbConfig().getAllowableClockSkew(), apReq, addressInfo.getClientAddress() );
 
             byte[] decodedSessionInfoPriv = new Base64().decode( encodedEncryptedSessionInfo );
-            KrbPriv sessionInfoPriv = readPriv( decodedSessionInfoPriv, key, InetAddress.getByName( addressInfo.getServerAddress() ), InetAddress.getByName( addressInfo.getClientAddress() ), krbClient.getKrbConfig().getAllowableClockSkew(), apRep );
+            KrbPriv sessionInfoPriv = readPriv( decodedSessionInfoPriv, key, addressInfo.getServerAddress(), addressInfo.getClientAddress(), krbClient.getKrbConfig().getAllowableClockSkew(), apRep );
             EncKrbPrivPart encKrbPrivPart = sessionInfoPriv.getEncPart();
             byte[] userData = encKrbPrivPart.getUserData();
 
@@ -371,19 +378,9 @@ public class KrbAuthenticator
                 throw new KojiClientException( "Failed to split session info string" );
             }
 
-            KojiSessionInfo session = new KojiSessionInfo( Integer.parseInt(sessionInfoParts[0]), sessionInfoParts[1] );
-
-            return session;
+            return new  KojiSessionInfo( Integer.parseInt(sessionInfoParts[0]), sessionInfoParts[1] );
         }
-        catch ( KrbException e )
-        {
-            throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
-        }
-        catch ( UnknownHostException e )
-        {
-            throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
-        }
-        catch ( UnsupportedEncodingException e )
+        catch ( KrbException | UnsupportedEncodingException e )
         {
             throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
         }
