@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import com.redhat.red.build.koji.model.xmlrpc.KojiAuthType;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserStatus;
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserType;
@@ -69,7 +70,7 @@ public class UserResponseTest
 
     private UserResponse newResponse( boolean enableKerberosPrincipal )
     {
-        return new UserResponse( new KojiUserInfo( STATUS, USER_TYPE, USER_ID, USER_NAME,
+        return new UserResponse( new KojiUserInfo( STATUS, enableKerberosPrincipal ? KojiAuthType.KERB : KojiAuthType.NORMAL, USER_TYPE, USER_ID, USER_NAME,
                                                    enableKerberosPrincipal ? KRB_PRINCIPAL : null ) );
     }
 
