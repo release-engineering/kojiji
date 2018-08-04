@@ -1030,10 +1030,20 @@ public class KojiClient
         for ( KojiMultiCallValueObj valueObj : multiCallValueObjs )
         {
             Object data = valueObj.getData();
+
             if ( data != null )
             {
                 T obj = registry.parseAs( data, type );
                 ret.add( obj );
+            }
+            else
+            {
+                if ( valueObj.getFault() != null )
+                {
+                    logger.warn( "multiCall error: faultCode={}, faultString={}, traceback={}", valueObj.getFault().getFaultCode(), valueObj.getFault().getFaultString(), valueObj.getFault().getTraceback() );
+                }
+
+                ret.add( null );
             }
         }
         return ret;
