@@ -15,17 +15,46 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.anno.ArrayPart;
-import org.commonjava.rwx.anno.DataIndex;
+import java.util.Map;
+
+import org.commonjava.rwx.core.Registry;
 
 /**
  * Created by ruhan on 8/4/17.
  */
-@ArrayPart
 public class KojiMultiCallValueObj
 {
-    @DataIndex( 0 )
+    private Object response;
+
     private Object data;
+
+    private KojiMultiCallFault fault;
+
+    public KojiMultiCallValueObj( Object response )
+    {
+        setResponse( response );
+    }
+
+    public Object getResponse()
+    {
+        return response;
+    }
+
+    public void setResponse( Object response )
+    {
+        this.response = response;
+
+        Registry registry = Registry.getInstance();
+
+        if ( response instanceof Map )
+        {
+            this.fault = registry.parseAs( response, KojiMultiCallFault.class );
+        }
+        else
+        {
+            this.data = registry.parseAs( response, KojiMultiCallData.class ).getData();
+        }
+    }
 
     public Object getData()
     {
@@ -35,5 +64,15 @@ public class KojiMultiCallValueObj
     public void setData( Object data )
     {
         this.data = data;
+    }
+
+    public KojiMultiCallFault getFault()
+    {
+        return fault;
+    }
+
+    public void setFault( KojiMultiCallFault fault )
+    {
+        this.fault = fault;
     }
 }

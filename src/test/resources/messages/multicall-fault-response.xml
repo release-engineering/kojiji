@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <array>
+          <data>
+            <value>
+              <struct>
+                <member>
+                  <name>faultCode</name>
+                  <value>
+                    <int>1000</int>
+                  </value>
+                </member>
+                <member>
+                  <name>traceback</name>
+                  <value>
+                    <array>
+                      <data>
+                        <value>
+                          <string>Traceback (most recent call last):
+</string>
+                        </value>
+                        <value>
+                          <string>  File "/usr/share/koji-hub/kojixmlrpc.py", line 325, in multiCall
+    result = self._dispatch(call['methodName'], call['params'])
+</string>
+                        </value>
+                        <value>
+                          <string>  File "/usr/share/koji-hub/kojixmlrpc.py", line 292, in _dispatch
+    func = self._get_handler(method)
+</string>
+                        </value>
+                        <value>
+                          <string>  File "/usr/share/koji-hub/kojixmlrpc.py", line 206, in _get_handler
+    return self.handlers.get(name)
+</string>
+                        </value>
+                        <value>
+                          <string>  File "/usr/share/koji-hub/kojixmlrpc.py", line 175, in get
+    raise koji.GenericError("Invalid method: %s" % name)
+</string>
+                        </value>
+                        <value>
+                          <string>GenericError: Invalid method: test
+</string>
+                        </value>
+                      </data>
+                    </array>
+                  </value>
+                </member>
+                <member>
+                  <name>faultString</name>
+                  <value>
+                    <string>Invalid method: test</string>
+                  </value>
+                </member>
+              </struct>
+            </value>
+          </data>
+        </array>
+      </value>
+    </param>
+  </params>
+</methodResponse>

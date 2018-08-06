@@ -19,6 +19,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiMultiCallValueObj;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +29,21 @@ import java.util.List;
 public class MultiCallResponse
 {
     @DataIndex( 0 )
+    private List<Object> response;
+
     private List<KojiMultiCallValueObj> valueObjs;
+
+    public Object getResponse()
+    {
+        return response;
+    }
+
+    public void setResponse( List<Object> response )
+    {
+        this.response = response;
+        this.valueObjs = new ArrayList<>( response.size() );
+        response.forEach(r -> this.valueObjs.add( new KojiMultiCallValueObj( r ) ) );
+    }
 
     public List<KojiMultiCallValueObj> getValueObjs()
     {
