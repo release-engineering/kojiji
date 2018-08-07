@@ -996,20 +996,6 @@ public class KojiClient
     }
 
     /**
-     * This is multiCall for homogeneous request. The "method" in requests need to be the same and the call responses
-     * are of single type T.
-     * @param multiCallRequest
-     * @param session
-     * @param type response object type
-     * @return a list of type "T" objects representing the multicall results
-     */
-    public <T> List<T> multiCall( MultiCallRequest multiCallRequest, Class<T> type, KojiSessionInfo session )
-    {
-        MultiCallResponse response = multiCall( multiCallRequest, session );
-        return parseMultiCallResponse( response, type );
-    }
-
-    /**
      * This is multiCall for homogeneous request. The "method" is specified and the call responses are of single type T.
      * @param method
      * @param session
@@ -1020,7 +1006,8 @@ public class KojiClient
     public <T> List<T> multiCall( String method, List<Object> args, Class<T> type, KojiSessionInfo session )
     {
         MultiCallRequest req = buildMultiCallRequest( method, args );
-        return multiCall( req, type, session );
+        MultiCallResponse response = multiCall( req, session );
+        return parseMultiCallResponse( response, type );
     }
 
     /**
@@ -1052,13 +1039,12 @@ public class KojiClient
             return response == null ? Collections.emptyList() : response.getArchives();
         }, "Failed to retrieve list of archives for: %s", gav );
 
-        MultiCallRequest.Builder builder = getBuilder();
+        List<Object> args = new ArrayList<>();
         archives.forEach(( archive ) -> {
-            builder.addCallObj( GET_BUILD, archive.getBuildId() );
+            args.add( archive.getBuildId() );
         });
-        MultiCallRequest multiCallRequest = builder.build();
 
-        return multiCall( multiCallRequest, KojiBuildInfo.class, session );
+        return multiCall( GET_BUILD, args, KojiBuildInfo.class, session );
     }
 
     public List<KojiPackageInfo> listPackagesForTag( String tag, KojiSessionInfo session )
