@@ -6,7 +6,6 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildType;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeQuery;
-import com.redhat.red.build.koji.model.xmlrpc.KojiMultiCallValueObj;
 import com.redhat.red.build.koji.model.xmlrpc.KojiPackageInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiPackageQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
@@ -14,19 +13,18 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
 import com.redhat.red.build.koji.model.xmlrpc.messages.MultiCallRequest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.MultiCallResponse;
-import org.commonjava.rwx.core.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.redhat.red.build.koji.KojiClientUtils.parseMultiCallResponseToLists;
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_ARCHIVES;
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_BTYPES;
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_BUILDS;
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_PACKAGES;
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_TAGS;
-import static com.redhat.red.build.koji.model.xmlrpc.messages.MultiCallRequest.getBuilder;
 
 /**
  * This class provides advanced helper methods, e.g., using multicall to batch query operations.
@@ -36,8 +34,6 @@ public class KojiClientHelper
     private final Logger logger = LoggerFactory.getLogger( getClass() );
 
     private final KojiClient client;
-
-    private final Registry registry = Registry.getInstance();
 
     public KojiClientHelper( KojiClient client )
     {
@@ -94,43 +90,20 @@ public class KojiClientHelper
         return list( LIST_TAGS, queries, KojiTagInfo.class, session );
     }
 
-    private  <R,T> List<List<R>> list( String method, List<T> queries, Class<R> resultType, KojiSessionInfo session )
+    /**
+     * This method sends a list of build Ids and return the tags for each build.
+     */
+    public List<List<KojiTagInfo>> listTagsByIds( List<Integer> buildIds, KojiSessionInfo session )
                     throws KojiClientException
     {
-        List<Object> args = new ArrayList<>();
-        for ( T query : queries )
-        {
-            args.add( registry.renderTo( query ) );
-        }
+        return list( LIST_TAGS, buildIds, KojiTagInfo.class, session );
+    }
 
-        MultiCallRequest.Builder builder = getBuilder();
-        args.forEach(( arg ) -> builder.addCallObj( method, arg ) );
-
-        List<List<R>> ret = new ArrayList<>();
-
-        MultiCallResponse multiCallResponse = client.multiCall( builder.build(), session );
-        List<KojiMultiCallValueObj> multiCallValueObjs = multiCallResponse.getValueObjs();
-
-        multiCallValueObjs.forEach( v -> {
-            Object data = v.getData();
-            if ( data instanceof List )
-            {
-                List<R> typed = new ArrayList<>();
-                List l = (List) data;
-                l.forEach( element -> {
-                    R obj = registry.parseAs( element, resultType );
-                    typed.add( obj );
-                } );
-                ret.add( typed );
-            }
-            else
-            {
-                logger.debug( "Data object is not List, type: {}, data: {}", data.getClass(), data );
-                ret.add( null ); // indicate an error
-            }
-        } );
-
-        return ret;
+    private  <R> List<List<R>> list( String method, List args, Class<R> resultType, KojiSessionInfo session )
+                    throws KojiClientException
+    {
+        MultiCallResponse multiCallResponse = client.multiCall( method, args, session );
+        return parseMultiCallResponseToLists( multiCallResponse, resultType );
     }
 
 }
