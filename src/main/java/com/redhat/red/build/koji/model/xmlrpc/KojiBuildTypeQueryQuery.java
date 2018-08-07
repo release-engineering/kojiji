@@ -19,66 +19,54 @@ import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
 @StructPart
-public class KojiBuildTypeQuery extends KojiQuery
+public class KojiBuildTypeQueryQuery
 {
-    @DataKey( "query" )
-    private KojiBuildTypeQueryQuery query;
+    @DataKey( "id" )
+    private Integer id;
 
-    public KojiBuildTypeQuery()
-    {
-        query = new KojiBuildTypeQueryQuery();
-    }
+    @DataKey( "name" )
+    private String name;
 
     public void setId( Integer id )
     {
-        query.setId ( id );
+        this.id = id;
     }
 
     public String getName()
     {
-        return query.getName();
+        return name;
     }
 
     public void setName( String name )
     {
-        query.setName( name );
+        this.name = name;
     }
 
-    public KojiBuildTypeQuery withName( String name )
+    public KojiBuildTypeQueryQuery withName( String name )
     {
-        query.setName( name );
+        this.name = name;
         return this;
     }
 
     public Integer getId()
     {
-        return query.getId();
+        return id;
     }
 
     public void setId( int id )
     {
-        query.setId( id );
+        this.id = id;
     }
 
-    public KojiBuildTypeQuery withId( int id )
+    public KojiBuildTypeQueryQuery withId( int id )
     {
-        query.setId( id );
+        this.id = id;
         return this;
-    }
-
-    public KojiBuildTypeQueryQuery getQuery()
-    {
-        return query;
-    }
-
-    public void setQuery( KojiBuildTypeQueryQuery query )
-    {
-        this.query = query;
     }
 
     @Override
     public String toString()
     {
-        return "KojiBuildTypeQuery{query=" + query + "}";
+        return "KojiBuildTypeQueryQuery{id=" + id + ", name = " + name + "}";
     }
 }

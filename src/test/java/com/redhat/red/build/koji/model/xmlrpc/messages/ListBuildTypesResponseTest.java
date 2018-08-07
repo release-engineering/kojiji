@@ -33,12 +33,23 @@ public class ListBuildTypesResponseTest
         ListBuildTypesResponse parsed =
                         parseCapturedMessage( ListBuildTypesResponse.class, "listBuildTypes-response.xml" );
         assertListBuildTypesResponse( parsed );
+
+        ListBuildTypesResponse parsed2 =
+                parseCapturedMessage( ListBuildTypesResponse.class, "listBuildTypes-with-query-response.xml" );
+        assertListBuildTypesWithQueryResponse( parsed2 );
     }
 
     private void assertListBuildTypesResponse( ListBuildTypesResponse parsed )
     {
         ListBuildTypesResponse expected = getInstance();
         assertThat( parsed.getBuildTypes().size(), equalTo( 4 ) );
+        assertThat( parsed.getBuildTypes().containsAll( expected.getBuildTypes() ), equalTo( true ) );
+    }
+
+    private void assertListBuildTypesWithQueryResponse( ListBuildTypesResponse parsed )
+    {
+        ListBuildTypesResponse expected = getInstanceWithQuery();
+        assertThat( parsed.getBuildTypes().size(), equalTo( 1 ) );
         assertThat( parsed.getBuildTypes().containsAll( expected.getBuildTypes() ), equalTo( true ) );
     }
 
@@ -59,10 +70,24 @@ public class ListBuildTypesResponseTest
         return response;
     }
 
+    private ListBuildTypesResponse getInstanceWithQuery()
+    {
+        List<KojiBuildType> list = new ArrayList<>( 1 );
+        KojiBuildType one = new KojiBuildType( 1, "rpm" );
+        list.add( one );
+
+        ListBuildTypesResponse response = new ListBuildTypesResponse();
+        response.setBuildTypes( list );
+        return response;
+    }
+
     @Test
     public void roundTrip() throws Exception
     {
         ListBuildTypesResponse parsed = roundTrip( ListBuildTypesResponse.class, getInstance() );
         assertListBuildTypesResponse( parsed );
+
+        ListBuildTypesResponse parsed2 = roundTrip( ListBuildTypesResponse.class, getInstanceWithQuery() );
+        assertListBuildTypesWithQueryResponse( parsed2 );
     }
 }

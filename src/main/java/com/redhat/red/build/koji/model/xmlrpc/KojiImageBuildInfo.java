@@ -68,9 +68,8 @@ public class KojiImageBuildInfo
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "KojiImageBuildInfo{buildId=" + buildId + "}";
     }
-
-
 }

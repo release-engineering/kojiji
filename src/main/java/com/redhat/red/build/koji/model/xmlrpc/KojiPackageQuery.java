@@ -18,8 +18,6 @@ package com.redhat.red.build.koji.model.xmlrpc;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
-import static com.redhat.red.build.koji.model.xmlrpc.KojiQuery.__STARSTAR;
-
 /**
  * Created by jdcasey on 8/5/16.
  */

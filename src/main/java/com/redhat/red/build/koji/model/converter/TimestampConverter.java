@@ -21,12 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-
-import static com.redhat.red.build.koji.model.util.DateUtils.toUTC;
 
 /**
  * Created by ruhan on 8/11/17.

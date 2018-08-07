@@ -25,53 +25,51 @@ import org.commonjava.rwx.anno.StructPart;
 
 import java.util.Date;
 
-import static com.redhat.red.build.koji.model.xmlrpc.KojiQuery.__STARSTAR;
-
 /**
  * Created by jdcasey on 5/6/16.
  */
 @StructPart
 public class KojiBuildQuery extends KojiQuery
 {
-    @DataKey( value = "type" )
+    @DataKey( "type" )
     private String type;
 
-    @DataKey( value = "typeInfo" )
+    @DataKey( "typeInfo" )
     private KojiMavenRef mavenRef;
 
-    @DataKey( value = "packageID" )
+    @DataKey( "packageID" )
     private Integer packageId;
 
-    @DataKey( value = "userID" )
+    @DataKey( "userID" )
     private Integer userId;
 
-    @DataKey( value = "taskID" )
+    @DataKey( "taskID" )
     private Integer taskId;
 
-    @DataKey( value = "prefix" )
+    @DataKey( "prefix" )
     private String prefix;
 
     @Converter( KojiBuildStateConverter.class )
-    @DataKey( value = "state" )
+    @DataKey( "state" )
     private KojiBuildState state;
 
-    @DataKey( value = "volumeID" )
+    @DataKey( "volumeID" )
     private Integer volumeId;
 
     @Converter( TimestampConverter.class )
-    @DataKey( value = "createdBefore" )
+    @DataKey( "createdBefore" )
     private Date createdBefore;
 
     @Converter( TimestampConverter.class )
-    @DataKey( value = "createdAfter" )
+    @DataKey( "createdAfter" )
     private Date createdAfter;
 
     @Converter( TimestampConverter.class )
-    @DataKey( value = "completedBefore" )
+    @DataKey( "completedBefore" )
     private Date completedBefore;
 
     @Converter( TimestampConverter.class )
-    @DataKey( value = "completedAfter" )
+    @DataKey( "completedAfter" )
     private Date completedAfter;
 
     public KojiBuildQuery()
@@ -299,7 +297,8 @@ public class KojiBuildQuery extends KojiQuery
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "KojiBuildQuery{type='" + type + "', mavenRef=" + mavenRef + ", packageId=" + packageId + ", userId="
                 + userId + ", taskId=" + taskId + ", prefix='" + prefix + "', state=" + state + ", volumeId=" + volumeId
                 + ", createdBefore=" + createdBefore + ", createdAfter=" + createdAfter + ", completedBefore="

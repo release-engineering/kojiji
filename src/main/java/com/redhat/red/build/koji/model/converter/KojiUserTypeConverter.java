@@ -17,7 +17,6 @@ package com.redhat.red.build.koji.model.converter;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiUserType;
 import org.commonjava.rwx.core.Converter;
-import org.commonjava.rwx.vocab.ValueType;
 
 /**
  * Created by ruhan on 8/11/17.

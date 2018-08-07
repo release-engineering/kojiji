@@ -620,6 +620,49 @@ public class KojiClient
         }, "Failed to execute content-generator import" );
     }
 
+    public <T extends KojiQuery> List<Integer> queryCountOnly( String method, List<T> queries, KojiSessionInfo session )
+        throws KojiClientException
+    {
+        Registry registry = Registry.getInstance();
+
+        List<Object> args = new ArrayList<>();
+        for ( T query : queries )
+        {
+            if ( query.getQueryOpts() != null )
+            {
+                query.getQueryOpts().setCountOnly( true );
+            }
+            else
+            {
+                query.setQueryOpts( new KojiQueryOpts().withCountOnly( true ) );
+            }
+
+            args.add( registry.renderTo( query ) );
+        }
+
+        MultiCallRequest.Builder builder = getBuilder();
+        args.forEach( arg -> builder.addCallObj( method, arg ) );
+
+        MultiCallResponse multiCallResponse = multiCall( builder.build(), session );
+        List<KojiMultiCallValueObj> multiCallValueObjs = multiCallResponse.getValueObjs();
+        List<Integer> ret = new ArrayList<>( multiCallValueObjs.size() );
+
+        multiCallValueObjs.forEach( v -> {
+            Object data = v.getData();
+            if ( data instanceof Integer )
+            {
+                ret.add( (Integer) data );
+            }
+            else
+            {
+                logger.debug( "Data object is not of type Integer, type: {}, data: {}", data.getClass(), data );
+                ret.add( null ); // indicate an error
+            }
+        } );
+
+        return ret;
+    }
+
     public List<KojiBuildType> listBuildTypes( KojiSessionInfo session )
             throws KojiClientException
     {
@@ -646,6 +689,27 @@ public class KojiClient
         }, "Failed to retrieve list of available build types for build type query: %s", query );
     }
 
+    public int getBuildTypeCount( KojiBuildTypeQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        if ( query.getQueryOpts() != null )
+        {
+            query.getQueryOpts().setCountOnly( true );
+        }
+        else
+        {
+            query.setQueryOpts( new KojiQueryOpts().withCountOnly( true ) );
+        }
+
+        return doXmlRpcAndThrow( ()->{
+            KojiQueryCountOnlyResponse response =
+                    xmlrpcClient.call( new ListBuildTypesRequest( query ), KojiQueryCountOnlyResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getCount();
+        }, "Failed to retrieve count for query: %s", query );
+    }
+
     public List<KojiBuildInfo> listBuilds( KojiBuildQuery query, KojiSessionInfo session )
             throws KojiClientException
     {
@@ -660,6 +724,27 @@ public class KojiClient
 
     }
 
+    public int getBuildCount( KojiBuildQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        if ( query.getQueryOpts() != null )
+        {
+            query.getQueryOpts().setCountOnly( true );
+        }
+        else
+        {
+            query.setQueryOpts( new KojiQueryOpts().withCountOnly( true ) );
+        }
+
+        return doXmlRpcAndThrow( ()->{
+            KojiQueryCountOnlyResponse response =
+                    xmlrpcClient.call( new ListBuildsRequest( query ), KojiQueryCountOnlyResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getCount();
+        }, "Failed to retrieve count for query: %s", query );
+    }
+
     public List<KojiTagInfo> listAllTags( KojiSessionInfo session )
             throws KojiClientException
     {
@@ -671,6 +756,27 @@ public class KojiClient
             List<KojiTagInfo> tags = response.getTags();
             return tags == null ? Collections.emptyList() : tags;
         }, "Failed to retrieve list of all tags" );
+    }
+
+    public int getTagCount( KojiTagQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        if ( query.getQueryOpts() != null )
+        {
+            query.getQueryOpts().setCountOnly( true );
+        }
+        else
+        {
+            query.setQueryOpts( new KojiQueryOpts().withCountOnly( true ) );
+        }
+
+        return doXmlRpcAndThrow( ()->{
+            KojiQueryCountOnlyResponse response =
+                    xmlrpcClient.call( new ListTagsRequest( query ), KojiQueryCountOnlyResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getCount();
+        }, "Failed to retrieve count for query: %s", query );
     }
 
     public List<KojiTagInfo> listTags( KojiBuildInfo buildInfo, KojiSessionInfo session )
@@ -793,6 +899,27 @@ public class KojiClient
 
             return response == null ? null : response.getWinArchiveInfo();
         }, "Failed to retrieve win archive info for: %d", archiveId );
+    }
+
+    public int getArchiveCount( KojiArchiveQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        if ( query.getQueryOpts() != null )
+        {
+            query.getQueryOpts().setCountOnly( true );
+        }
+        else
+        {
+            query.setQueryOpts( new KojiQueryOpts().withCountOnly( true ) );
+        }
+
+        return doXmlRpcAndThrow( ()->{
+            KojiQueryCountOnlyResponse response =
+                    xmlrpcClient.call( new ListArchivesRequest( query ), KojiQueryCountOnlyResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getCount();
+        }, "Failed to retrieve count for query: %s", query );
     }
 
     public List<KojiArchiveInfo> listArchives( KojiArchiveQuery query, KojiSessionInfo session )
@@ -1045,6 +1172,27 @@ public class KojiClient
         });
 
         return multiCall( GET_BUILD, args, KojiBuildInfo.class, session );
+    }
+
+    public int getPackageCount( KojiPackageQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        if ( query.getQueryOpts() != null )
+        {
+            query.getQueryOpts().setCountOnly( true );
+        }
+        else
+        {
+            query.setQueryOpts( new KojiQueryOpts().withCountOnly( true ) );
+        }
+
+        return doXmlRpcAndThrow( ()->{
+            KojiQueryCountOnlyResponse response =
+                    xmlrpcClient.call( new ListPackagesRequest( query ), KojiQueryCountOnlyResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getCount();
+        }, "Failed to retrieve count for query: %s", query );
     }
 
     public List<KojiPackageInfo> listPackagesForTag( String tag, KojiSessionInfo session )

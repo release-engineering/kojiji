@@ -21,7 +21,6 @@ import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
-import static com.redhat.red.build.koji.model.xmlrpc.KojiQuery.__STARSTAR;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 /**
@@ -30,37 +29,37 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
 @StructPart
 public class KojiArchiveQuery extends KojiQuery
 {
-    @DataKey( value = "archiveID" )
+    @DataKey( "archiveID" )
     private Integer archiveId;
 
-    @DataKey( value = "imageID" )
+    @DataKey( "imageID" )
     private Integer imageId;
 
-    @DataKey( value = "type" )
+    @DataKey( "type" )
     private String type;
 
-    @DataKey( value = "typeInfo" )
+    @DataKey( "typeInfo" )
     private KojiMavenRef mavenRef;
 
-    @DataKey( value = "filename" )
+    @DataKey( "filename" )
     private String filename;
 
-    @DataKey( value = "buildID" )
+    @DataKey( "buildID" )
     private Integer buildId;
 
-    @DataKey( value = "buildrootID" )
+    @DataKey( "buildrootID" )
     private Integer buildrootId;
 
-    @DataKey( value = "componentBuildrootID" )
+    @DataKey( "componentBuildrootID" )
     private Integer componentBuildrootId;
 
-    @DataKey( value = "hostID" )
+    @DataKey( "hostID" )
     private Integer hostId;
 
-    @DataKey( value = "size" )
+    @DataKey( "size" )
     private Long size;
 
-    @DataKey( value = "checksum" )
+    @DataKey( "checksum" )
     private String checksum;
 
     public KojiArchiveQuery()

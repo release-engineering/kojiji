@@ -217,7 +217,8 @@ public class KojiBuildTypeInfo
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "KojiBuildTypeInfo { names=" + names + ", buildInfo=" + getBuildInfo() + " }";
     }
 }

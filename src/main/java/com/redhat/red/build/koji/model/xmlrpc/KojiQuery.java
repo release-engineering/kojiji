@@ -31,6 +31,14 @@ public class KojiQuery
     @DataKey( __STARSTAR )
     protected boolean enabled = true;
 
+    @DataKey( "queryOpts" )
+    protected KojiQueryOpts queryOpts;
+
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
     public boolean getEnabled()
     {
         return enabled;
@@ -39,5 +47,15 @@ public class KojiQuery
     public void setEnabled( boolean enabled )
     {
         this.enabled = enabled;
+    }
+
+    public KojiQueryOpts getQueryOpts()
+    {
+        return queryOpts;
+    }
+
+    public void setQueryOpts( KojiQueryOpts queryOpts )
+    {
+        this.queryOpts = queryOpts;
     }
 }
