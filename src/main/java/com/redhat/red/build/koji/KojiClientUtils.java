@@ -18,14 +18,14 @@ public class KojiClientUtils
 
     private static final Registry registry = Registry.getInstance();
 
-    public static MultiCallRequest buildMultiCallRequest( String method, List<Object> args )
+    public static <T> MultiCallRequest buildMultiCallRequest( String method, List<T> args )
     {
         MultiCallRequest.Builder builder = getBuilder();
         args.forEach(( arg ) -> {
-            if ( arg instanceof List )
+            if ( arg instanceof List<?> )
             {
                 List<Object> rendered = new ArrayList<>();
-                for ( Object a : (List) arg )
+                for ( Object a : (List<?>) arg )
                 {
                     if ( registry.hasRender( a.getClass() ) )
                     {
@@ -39,9 +39,14 @@ public class KojiClientUtils
             {
                 if ( registry.hasRender( arg.getClass() ) )
                 {
-                    arg = registry.renderTo( arg );
+
+                    Object obj = registry.renderTo( arg );
+                    builder.addCallObj( method, obj );
                 }
-                builder.addCallObj( method, arg );
+                else
+                {
+                    builder.addCallObj( method, arg );
+                }
             }
         });
         return builder.build();
@@ -87,7 +92,7 @@ public class KojiClientUtils
             if ( data instanceof List )
             {
                 List<R> typed = new ArrayList<>();
-                List l = (List) data;
+                List<?> l = (List<?>) data;
                 l.forEach( element -> {
                     R obj = registry.parseAs( element, type );
                     typed.add( obj );

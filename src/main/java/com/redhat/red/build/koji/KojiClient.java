@@ -85,8 +85,6 @@ import static com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeInfo.addBuildT
 import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.*;
 
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_BUILD;
-import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LIST_TAGS;
-import static com.redhat.red.build.koji.model.xmlrpc.messages.MultiCallRequest.getBuilder;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.apache.http.client.utils.HttpClientUtils.closeQuietly;
@@ -737,7 +735,7 @@ public class KojiClient
         List<List<KojiTagInfo>> l = new KojiClientHelper( this ).listTagsByIds( buildIds, session );
         for ( int i = 0; i < buildIds.size(); i++ )
         {
-            List list = l.get( i );
+            List<KojiTagInfo> list = l.get( i );
             if ( list != null )
             {
                 ret.put( buildIds.get( i ), list );
@@ -1003,7 +1001,7 @@ public class KojiClient
      * @param type result object type
      * @return a list containing objects of type T
      */
-    public <T> List<T> multiCall( String method, List<Object> args, Class<T> type, KojiSessionInfo session )
+    public <S extends Object, T> List<T> multiCall( String method, List<S> args, Class<T> type, KojiSessionInfo session )
     {
         MultiCallRequest req = buildMultiCallRequest( method, args );
         MultiCallResponse response = multiCall( req, session );
