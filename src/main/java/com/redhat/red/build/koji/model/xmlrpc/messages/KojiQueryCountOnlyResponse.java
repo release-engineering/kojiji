@@ -15,14 +15,26 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.anno.Request;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
-import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.LOGOUT;
-
-/**
- * Created by jdcasey on 12/3/15.
- */
-@Request( method = LOGOUT )
-public class LogoutRequest
+@Response
+public class KojiQueryCountOnlyResponse
 {
+    @DataIndex( 0 )
+    private Integer count;
+
+    public KojiQueryCountOnlyResponse()
+    {
+    }
+
+    public Integer getCount()
+    {
+        return count;
+    }
+
+    public void setCount( Integer count )
+    {
+        this.count = count;
+    }
 }

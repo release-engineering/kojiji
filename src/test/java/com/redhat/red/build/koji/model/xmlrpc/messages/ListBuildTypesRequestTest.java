@@ -29,6 +29,8 @@ public class ListBuildTypesRequestTest
     public void verifyVsCapturedHttpRequest() throws Exception
     {
         verifyVsCapturedMessage( ListBuildTypesRequest.class, "listBuildTypes-request.xml" );
+
+        verifyVsCapturedMessage( ListBuildTypesRequest.class, "listBuildTypes-with-query-request.xml" );
     }
 
     @Test
@@ -36,6 +38,12 @@ public class ListBuildTypesRequestTest
     {
         ListBuildTypesRequest parsed = roundTrip( ListBuildTypesRequest.class, new ListBuildTypesRequest() );
         assertThat( parsed.getQuery(), equalTo( null ) );
+
+        ListBuildTypesRequest req = new ListBuildTypesRequest();
+        KojiBuildTypeQuery query = new KojiBuildTypeQuery().withName( "rpm" );
+        req.setQuery( query );
+        ListBuildTypesRequest parsed2 = roundTrip( ListBuildTypesRequest.class, req );
+        assertThat( parsed2.getQuery().getName(), equalTo( "rpm" ) );
     }
 
     @Test
@@ -43,5 +51,12 @@ public class ListBuildTypesRequestTest
     {
         String xml = rwxMapper.render( new ListBuildTypesRequest() );
         System.out.println( xml );
+
+        ListBuildTypesRequest req = new ListBuildTypesRequest();
+        KojiBuildTypeQuery query = new KojiBuildTypeQuery().withName( "rpm" );
+        req.setQuery( query );
+
+        String xml2 = rwxMapper.render( req );
+        System.out.println( xml2 );
     }
 }

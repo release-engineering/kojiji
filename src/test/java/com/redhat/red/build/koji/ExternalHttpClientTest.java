@@ -24,8 +24,9 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
 import org.commonjava.maven.atlas.ident.ref.SimpleArtifactRef;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assume.assumeNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,7 @@ public class ExternalHttpClientTest
     public void setUp() throws KojiClientException
     {
         String hubUrl = System.getProperty( "koji.hubUrl" );
+
         assumeTrue( hubUrl != null );
 
         KojiConfig config = new SimpleKojiConfigBuilder().withKojiURL( hubUrl ).build();

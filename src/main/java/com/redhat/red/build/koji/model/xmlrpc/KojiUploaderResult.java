@@ -15,7 +15,6 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import com.redhat.red.build.koji.KojiClientException;
 import com.redhat.red.build.koji.model.ImportFile;
 import com.redhat.red.build.koji.model.xmlrpc.messages.UploadResponse;
 

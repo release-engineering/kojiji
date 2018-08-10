@@ -39,8 +39,8 @@ public class KojiRpmBuildInfo
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "KojiRpmBuildInfo";
     }
-
 }

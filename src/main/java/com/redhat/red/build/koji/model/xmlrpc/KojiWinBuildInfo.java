@@ -82,9 +82,8 @@ public class KojiWinBuildInfo
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "KojiWinBuildInfo{buildId=" + buildId + ", platform=" + platform + "}";
     }
-
-
 }
