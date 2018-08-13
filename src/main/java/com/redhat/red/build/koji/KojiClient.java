@@ -85,6 +85,7 @@ import static com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeInfo.addBuildT
 import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.*;
 
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_BUILD;
+import static com.redhat.red.build.koji.model.xmlrpc.messages.MultiCallRequest.getBuilder;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.apache.http.client.utils.HttpClientUtils.closeQuietly;
