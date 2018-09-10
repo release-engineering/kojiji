@@ -43,7 +43,7 @@
         <enforcer.skip>true</enforcer.skip>
         <javaVersion>1.8</javaVersion>
         <jhttpcVersion>1.6</jhttpcVersion>
-        <rwxVersion>2.3-SNAPSHOT</rwxVersion>
+        <rwxVersion>2.3</rwxVersion>
         <httpcVersion>4.4</httpcVersion>
         <atlasVersion>0.16.0</atlasVersion>
         <mockitoVersion>2.7.20</mockitoVersion>
