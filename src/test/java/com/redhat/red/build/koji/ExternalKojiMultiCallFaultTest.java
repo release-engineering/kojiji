@@ -54,7 +54,7 @@ public class ExternalKojiMultiCallFaultTest
     }
 
     @Test
-    public void testKojiMultiCallFault()
+    public void testKojiMultiCallFault() throws KojiClientException
     {
         String method = "test";
 

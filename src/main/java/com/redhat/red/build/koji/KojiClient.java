@@ -73,6 +73,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -940,36 +941,54 @@ public class KojiClient
     {
         Map<String, List<KojiArchiveInfo>> buildTypeMap = archives.stream().collect( Collectors.groupingBy( KojiArchiveInfo::getBuildType ) );
 
+        final AtomicReference<KojiClientException> err = new AtomicReference();
+
         buildTypeMap.forEach( ( buildType, archiveInfos ) -> {
             List<Object> archiveIds = archiveInfos.stream().map( KojiArchiveInfo::getArchiveId ).collect( Collectors.toList() );
-
-            switch ( buildType )
+            try
             {
-                case "maven":
-                    List<KojiMavenArchiveInfo> mavenArchiveInfos = multiCall( Constants.GET_MAVEN_ARCHIVE, archiveIds, KojiMavenArchiveInfo.class, session );
-                    for ( int i = 0; i < mavenArchiveInfos.size(); i++ )
-                    {
-                        archiveInfos.get(i).addMavenArchiveInfo( mavenArchiveInfos.get(i) );
-                    }
-                    break;
-                case "image":
-                    List<KojiImageArchiveInfo> imageArchiveInfos = multiCall( Constants.GET_IMAGE_ARCHIVE, archiveIds, KojiImageArchiveInfo.class, session );
-                    for ( int i = 0; i < imageArchiveInfos.size(); i++ )
-                    {
-                        archiveInfos.get(i).addImageArchiveInfo( imageArchiveInfos.get(i) );
-                    }
-                    break;
-                case "win":
-                    List<KojiWinArchiveInfo> winArchiveInfos = multiCall( Constants.GET_WIN_ARCHIVE, archiveIds, KojiWinArchiveInfo.class, session );
-                    for ( int i = 0; i < winArchiveInfos.size(); i++ )
-                    {
-                        archiveInfos.get(i).addWinArchiveInfo( winArchiveInfos.get(i) );
-                    }
-                    break;
-                default:
-                    logger.warn( "Unknown archive build type: {}", buildType );
+                switch ( buildType )
+                {
+                    case "maven":
+                        List<KojiMavenArchiveInfo> mavenArchiveInfos =
+                                        multiCall( Constants.GET_MAVEN_ARCHIVE, archiveIds, KojiMavenArchiveInfo.class,
+                                                   session );
+                        for ( int i = 0; i < mavenArchiveInfos.size(); i++ )
+                        {
+                            archiveInfos.get( i ).addMavenArchiveInfo( mavenArchiveInfos.get( i ) );
+                        }
+                        break;
+                    case "image":
+                        List<KojiImageArchiveInfo> imageArchiveInfos =
+                                        multiCall( Constants.GET_IMAGE_ARCHIVE, archiveIds, KojiImageArchiveInfo.class,
+                                                   session );
+                        for ( int i = 0; i < imageArchiveInfos.size(); i++ )
+                        {
+                            archiveInfos.get( i ).addImageArchiveInfo( imageArchiveInfos.get( i ) );
+                        }
+                        break;
+                    case "win":
+                        List<KojiWinArchiveInfo> winArchiveInfos =
+                                        multiCall( Constants.GET_WIN_ARCHIVE, archiveIds, KojiWinArchiveInfo.class,
+                                                   session );
+                        for ( int i = 0; i < winArchiveInfos.size(); i++ )
+                        {
+                            archiveInfos.get( i ).addWinArchiveInfo( winArchiveInfos.get( i ) );
+                        }
+                        break;
+                    default:
+                        logger.warn( "Unknown archive build type: {}", buildType );
+                }
+            }
+            catch ( KojiClientException e )
+            {
+                err.set( e );
             }
         });
+        if ( err.get() != null )
+        {
+            throw err.get();
+        }
     }
 
     public List<KojiArchiveInfo> listMavenArchivesMatching( String groupId, KojiSessionInfo session )
@@ -1030,14 +1049,15 @@ public class KojiClient
             }
 
             List<KojiBuildArchiveCollection> builds = new ArrayList<>();
-            buildsResponse.getBuilds().forEach( ( build ) -> {
-                KojiBuildArchiveCollection collection = listArchivesForBuild( build, session );
+
+            for ( KojiBuildInfo build : buildsResponse.getBuilds() )
+            {
+                KojiBuildArchiveCollection collection = listArchivesForBuild( build, session );;
                 if ( collection != null )
                 {
                     builds.add( collection );
                 }
-            } );
-
+            }
             return builds;
 
         }, "Failed to retrieve list of archives for: %s", ga );
@@ -1087,8 +1107,9 @@ public class KojiClient
     }
 
     public KojiBuildArchiveCollection listArchivesForBuild( final KojiBuildInfo build, final KojiSessionInfo session )
+                    throws KojiClientException
     {
-        ListArchivesResponse archivesResponse = doXmlRpcAndWarn( () -> xmlrpcClient.call(
+        ListArchivesResponse archivesResponse = doXmlRpcAndThrow( () -> xmlrpcClient.call(
                 new ListArchivesRequest( new KojiArchiveQuery().withBuildId( build.getId() ) ),
                 ListArchivesResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER ),
                                                                  "Failed to retrieve archives for build: '%s'",
@@ -1110,14 +1131,15 @@ public class KojiClient
      * @return
      */
     public MultiCallResponse multiCall( MultiCallRequest multiCallRequest, KojiSessionInfo session )
+                    throws KojiClientException
     {
-        return doXmlRpcAndWarn( () -> {
+        return doXmlRpcAndThrow( () -> {
             MultiCallResponse response =
                             xmlrpcClient.call( multiCallRequest,
                                                MultiCallResponse.class, sessionUrlBuilder( session ),
                                                STANDARD_REQUEST_MODIFIER );
 
-            return response == null ? null : response;
+            return response;
         }, "Failed to do multicall" );
     }
 
@@ -1130,6 +1152,7 @@ public class KojiClient
      * @return a list containing objects of type T
      */
     public <S extends Object, T> List<T> multiCall( String method, List<S> args, Class<T> type, KojiSessionInfo session )
+                    throws KojiClientException
     {
         MultiCallRequest req = buildMultiCallRequest( method, args );
         MultiCallResponse response = multiCall( req, session );
@@ -1145,6 +1168,7 @@ public class KojiClient
      * {@link KojiClientUtils#parseMultiCallResponseToLists(MultiCallResponse, Class)}.
      */
     public MultiCallResponse multiCall( String method, List<Object> args, KojiSessionInfo session )
+                    throws KojiClientException
     {
         MultiCallRequest req = buildMultiCallRequest( method, args );
         return multiCall( req, session );
