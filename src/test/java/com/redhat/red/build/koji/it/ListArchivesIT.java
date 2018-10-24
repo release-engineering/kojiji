@@ -28,7 +28,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by ruhan on 9/14/17.
  */
-public class ListArchievesIT
+public class ListArchivesIT
     extends AbstractIT
 {
 
