@@ -113,6 +113,11 @@ public class KojiClient
 
     private KojiConfig config;
 
+    public KojiConfig getConfig()
+    {
+        return config;
+    }
+
     private AtomicInteger callCount = new AtomicInteger( 0 );
 
     private static final RequestModifier STANDARD_REQUEST_MODIFIER = ( request ) -> {
