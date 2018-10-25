@@ -33,7 +33,7 @@ public class SimpleKojiConfig
 {
     private static final String DEFAULT_KOJI_SITE_ID = "koji";
 
-    private static final int DEFAULT_TIMEOUT_SECONDS = 30;
+    private static final int DEFAULT_TIMEOUT_SECONDS = 300;
 
     private String clientKeyCertificateFile;
 
