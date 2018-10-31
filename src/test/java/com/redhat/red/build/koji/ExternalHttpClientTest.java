@@ -22,7 +22,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
-import org.commonjava.maven.atlas.ident.ref.SimpleArtifactRef;
+import org.commonjava.atlas.maven.ident.ref.SimpleArtifactRef;
 import org.junit.Before;
 import org.junit.Test;
 

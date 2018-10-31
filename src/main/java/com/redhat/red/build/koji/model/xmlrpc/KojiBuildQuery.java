@@ -17,8 +17,8 @@ package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.redhat.red.build.koji.model.converter.KojiBuildStateConverter;
 import com.redhat.red.build.koji.model.converter.TimestampConverter;
-import org.commonjava.maven.atlas.ident.ref.ProjectRef;
-import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
+import org.commonjava.atlas.maven.ident.ref.ProjectRef;
+import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.anno.Converter;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;

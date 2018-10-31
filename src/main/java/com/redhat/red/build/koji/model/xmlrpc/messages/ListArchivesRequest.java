@@ -16,7 +16,7 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveQuery;
-import org.commonjava.maven.atlas.ident.ref.ProjectRef;
+import org.commonjava.atlas.maven.ident.ref.ProjectRef;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
 

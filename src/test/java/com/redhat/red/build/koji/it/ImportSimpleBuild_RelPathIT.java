@@ -31,8 +31,8 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
+import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
+import org.commonjava.atlas.maven.ident.ref.SimpleProjectVersionRef;
 import org.junit.Ignore;
 import org.junit.Test;
 

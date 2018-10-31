@@ -21,10 +21,10 @@ import com.redhat.red.build.koji.model.converter.KojiChecksumTypeConverter;
 import com.redhat.red.build.koji.model.converter.StringListConverter;
 import com.redhat.red.build.koji.model.util.ExternalizableUtils;
 
-import org.commonjava.maven.atlas.ident.ref.ArtifactRef;
-import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.maven.atlas.ident.ref.SimpleArtifactRef;
-import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
+import org.commonjava.atlas.maven.ident.ref.ArtifactRef;
+import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
+import org.commonjava.atlas.maven.ident.ref.SimpleArtifactRef;
+import org.commonjava.atlas.maven.ident.ref.SimpleProjectVersionRef;
 import org.commonjava.rwx.anno.Converter;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;

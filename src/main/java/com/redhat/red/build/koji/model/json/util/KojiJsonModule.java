@@ -19,8 +19,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.redhat.red.build.koji.model.json.BuildExtraInfo;
 import com.redhat.red.build.koji.model.json.BuildSource;
 import com.redhat.red.build.koji.model.json.FileExtraInfo;
-import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
-import org.commonjava.maven.atlas.ident.ref.SimpleProjectVersionRef;
+import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
+import org.commonjava.atlas.maven.ident.ref.SimpleProjectVersionRef;
 
 import java.util.Date;
 

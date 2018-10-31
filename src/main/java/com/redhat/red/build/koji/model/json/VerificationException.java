@@ -16,7 +16,7 @@
 package com.redhat.red.build.koji.model.json;
 
 import com.redhat.red.build.koji.KojiClientException;
-import org.commonjava.maven.atlas.ident.util.JoinString;
+import org.commonjava.atlas.maven.ident.util.JoinString;
 
 import java.util.Set;
 

@@ -15,9 +15,9 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.maven.atlas.ident.ref.ArtifactRef;
-import org.commonjava.maven.atlas.ident.ref.ProjectRef;
-import org.commonjava.maven.atlas.ident.ref.ProjectVersionRef;
+import org.commonjava.atlas.maven.ident.ref.ArtifactRef;
+import org.commonjava.atlas.maven.ident.ref.ProjectRef;
+import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
