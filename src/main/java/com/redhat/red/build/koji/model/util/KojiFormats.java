@@ -15,7 +15,7 @@
  */
 package com.redhat.red.build.koji.model.util;
 
-import org.commonjava.maven.atlas.ident.ref.ProjectRef;
+import org.commonjava.atlas.maven.ident.ref.ProjectRef;
 
 /**
  * Created by jdcasey on 9/14/16.

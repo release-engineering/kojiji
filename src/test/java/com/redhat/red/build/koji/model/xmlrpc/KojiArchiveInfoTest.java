@@ -15,7 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.maven.atlas.ident.ref.SimpleArtifactRef;
+import org.commonjava.atlas.maven.ident.ref.SimpleArtifactRef;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
