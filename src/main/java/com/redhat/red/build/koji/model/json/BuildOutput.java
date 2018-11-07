@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
-import org.commonjava.atlas.npm.ident.ref.NpmArtifactRef;
+import org.commonjava.atlas.npm.ident.ref.NpmPackageRef;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
@@ -265,7 +265,7 @@ public class BuildOutput
             return this;
         }
 
-        public Builder withNpmInfoAndType( NpmArtifactRef ref )
+        public Builder withNpmInfoAndType( NpmPackageRef ref )
         {
             target.outputType = StandardOutputType.npm.name();
             target.extraInfo = new FileExtraInfo( new NpmExtraInfo( ref.getName(), ref.getVersion().toString() ) );
