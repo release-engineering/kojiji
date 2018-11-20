@@ -45,7 +45,7 @@
         <jhttpcVersion>1.6</jhttpcVersion>
         <rwxVersion>2.3</rwxVersion>
         <httpcVersion>4.4</httpcVersion>
-        <atlasVersion>1.0.0-SNAPSHOT</atlasVersion>
+        <atlasVersion>1.0.0</atlasVersion>
         <mockitoVersion>2.7.20</mockitoVersion>
         <kerbyVersion>1.1.1</kerbyVersion>
         <metrics.version>4.0.2</metrics.version>
