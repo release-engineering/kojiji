@@ -1577,9 +1577,9 @@ public class KojiClient
         Map<String, KojijiErrorInfo> uploadErrors = new HashMap<>();
         Set<UploadResponse> responses = new HashSet<>();
         int total = count.get();
-        do
+        while ( count.decrementAndGet() > 0 )
         {
-            logger.debug( "Waiting for {} uploads.", count.get() );
+            logger.debug( "Waiting for {} uploads.", count.get() + 1 );
 
             try
             {
@@ -1607,7 +1607,6 @@ public class KojiClient
                                                e.getMessage() );
             }
         }
-        while ( count.decrementAndGet() > 0 );
 
         return uploadErrors;
     }
