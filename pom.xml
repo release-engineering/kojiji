@@ -47,7 +47,7 @@
         <httpcVersion>4.4</httpcVersion>
         <atlasVersion>1.0.0</atlasVersion>
         <mockitoVersion>2.7.20</mockitoVersion>
-        <kerbyVersion>1.1.1</kerbyVersion>
+        <kerbyVersion>2.0.0</kerbyVersion>
         <metrics.version>4.0.2</metrics.version>
 
         <dbImage>postgres:9.4</dbImage>
