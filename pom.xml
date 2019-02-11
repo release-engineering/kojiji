@@ -68,6 +68,8 @@
         <docker.container.koji-hub.ip>localhost</docker.container.koji-hub.ip>
         <docker.container.koji-hub.net.ci-network.ip>localhost</docker.container.koji-hub.net.ci-network.ip>
         <koji-hub-address>${docker.container.koji-hub.ip}</koji-hub-address>
+
+        <plugin.jacoco.version>0.8.3</plugin.jacoco.version>
     </properties>
 
     <dependencyManagement>
@@ -236,7 +238,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.7.4.201502262128</version>
+                    <version>${plugin.jacoco.version}</version>
                     <!-- Broken for sonarqube! -->
                     <!--<version>0.7.5.201505241946</version>-->
                     <executions>
