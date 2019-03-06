@@ -33,7 +33,7 @@ public class RpmListResponseTest
     @Test
     public void verifyVsCapturedHttp() throws Exception
     {
-        RpmListResponse parsed = parseCapturedMessage( RpmListResponse.class, "listRPMS-response.xml" );
+        RpmListResponse parsed = parseCapturedMessage( RpmListResponse.class, "listRPMs-response.xml" );
         assertThat( parsed.getRpms() != null, equalTo( true ) );
         assertThat( parsed.getRpms().size(), equalTo( 2 ) );
 
@@ -67,7 +67,7 @@ public class RpmListResponseTest
     @Test
     public void parseEmptyResult() throws Exception
     {
-        RpmListResponse parsed = parseCapturedMessage( RpmListResponse.class, "listRPMS-responseEmpty.xml" );
+        RpmListResponse parsed = parseCapturedMessage( RpmListResponse.class, "listRPMs-responseEmpty.xml" );
         assertThat( parsed.getRpms() == null || parsed.getRpms().isEmpty(), equalTo( true ) );
     }
 }
