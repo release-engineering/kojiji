@@ -94,4 +94,23 @@ public class Constants
 
     public static final String GET_USER = "getUser";
 
+    public static final String GET_LATEST_RPMS = "getLatestRPMS";
+
+    public static final String GET_RPM = "getRPM";
+
+    public static final String GET_RPM_DEPS = "getRPMDeps";
+
+    public static final String GET_RPM_FILE = "getRPMFile";
+
+    public static final String GET_RPM_HEADERS = "getRPMHeaders";
+
+    public static final String LIST_BUILD_RPMS = "listBuildRPMs";
+
+    public static final String LIST_RPMS = "listRPMs";
+
+    public static final String LIST_RPM_FILES = "listRPMFiles";
+
+    public static final String LIST_TAGGED_RPMS = "listTaggedRPMS";
+
+    public static final String QUERY_RPM_SIGS = "queryRPMSigs";
 }

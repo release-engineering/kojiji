@@ -15,23 +15,20 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
-import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
 @StructPart
-public class KojiQuery
-        extends KojiParams
+public class KojiRpmFilesQuery
+                extends KojiQuery
 {
-    @DataKey( "queryOpts" )
-    protected KojiQueryOpts queryOpts;
-
-    public KojiQueryOpts getQueryOpts()
+    public KojiRpmFilesQuery()
     {
-        return queryOpts;
+
     }
 
-    public void setQueryOpts( KojiQueryOpts queryOpts )
+    @Override
+    public String toString()
     {
-        this.queryOpts = queryOpts;
+        return super.toString();
     }
 }

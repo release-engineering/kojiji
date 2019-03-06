@@ -385,6 +385,7 @@ public class KojiClient
         }
     }
 
+    @SuppressWarnings("unused")
     private <T> T doXmlRpcAndWarn( KojiInternalCommand<T> cmd, String message, Object... params )
     {
         try
@@ -946,7 +947,7 @@ public class KojiClient
     {
         Map<String, List<KojiArchiveInfo>> buildTypeMap = archives.stream().collect( Collectors.groupingBy( KojiArchiveInfo::getBuildType ) );
 
-        final AtomicReference<KojiClientException> err = new AtomicReference();
+        final AtomicReference<KojiClientException> err = new AtomicReference<>();
 
         buildTypeMap.forEach( ( buildType, archiveInfos ) -> {
             List<Object> archiveIds = archiveInfos.stream().map( KojiArchiveInfo::getArchiveId ).collect( Collectors.toList() );
@@ -1127,6 +1128,162 @@ public class KojiClient
         }
 
         return null;
+    }
+
+    public KojiRpmBuildList getLatestRPMs( KojiTagInfo tag, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return getLatestRPMs( tag.getName(), session );
+    }
+
+    public KojiRpmBuildList getLatestRPMs( String tagName, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()-> {
+            RpmBuildListResponse response =
+                    xmlrpcClient.call( new ListTaggedRpmsRequest( tagName ), RpmBuildListResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getRpmBuildList();
+        }, "Failed to list builds tagged in: %s", tagName );
+    }
+
+    public List<KojiRpmInfo> getRPM( KojiIdOrName rpm, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            RpmListResponse response =
+                    xmlrpcClient.call( new GetRpmRequest().withRpminfo( rpm ).withParams( new KojiGetRpmParams().withMulti( Boolean.TRUE ) ),
+                                       RpmListResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            List<KojiRpmInfo> builds = response.getRpms();
+            return builds == null ? Collections.emptyList() : builds;
+        }, "Failed to retrieve list of rpms for rpm: %s", rpm );
+    }
+
+    public List<KojiRpmDependencyInfo> getRPMDeps( int rpmId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return getRPMDeps( rpmId, null, session );
+    }
+
+    public List<KojiRpmDependencyInfo> getRPMDeps( int rpmId, KojiRpmDepsQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetRpmDepsResponse response =
+                    xmlrpcClient.call( new GetRpmDepsRequest( rpmId, query ),
+                                       GetRpmDepsResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            List<KojiRpmDependencyInfo> depInfos = response.getRpmDependencyInfos();
+            return depInfos == null ? Collections.emptyList() : depInfos;
+        }, "Failed to retrieve list of rpm dependency info for rpm id: %d", rpmId );
+    }
+
+    public KojiRpmFileInfo getRPMFile( int rpmId, String filename, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetRpmFileResponse response =
+                    xmlrpcClient.call( new GetRpmFileRequest( rpmId, filename ),
+                                       GetRpmFileResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getRpmFileInfo();
+        }, "Failed to retrieve list of rpm dependency info for rpm id: %d, filename: %s", rpmId, filename );
+    }
+
+    public Map<String, Object> getRPMHeaders( KojiGetRpmHeadersParams params, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            GetRpmHeadersResponse response =
+                    xmlrpcClient.call( new GetRpmHeadersRequest( params ),
+                                       GetRpmHeadersResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            Map<String, Object> ret = response.getHeaders();
+            return ret == null ? Collections.emptyMap() : ret;
+        }, "Failed to retrieve list of rpm headers for params: %s", params );
+    }
+
+    public List<KojiRpmInfo> listBuildRPMs( int buildId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return listBuildRPMs( KojiIdOrName.getFor( buildId ), session );
+    }
+
+    public List<KojiRpmInfo> listBuildRPMs( String buildName, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return listBuildRPMs( KojiIdOrName.getFor( buildName ), session );
+    }
+
+    public List<KojiRpmInfo> listBuildRPMs( KojiIdOrName build, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            RpmListResponse response =
+                    xmlrpcClient.call( new ListBuildRpmsRequest( build ), RpmListResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response == null ? Collections.emptyList() : response.getRpms();
+        }, "Failed to retrieve rpms for build: %s", build );
+    }
+
+    public List<KojiRpmFileInfo> listRPMFiles( int rpmId, KojiRpmFilesQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            ListRpmFilesResponse response =
+                    xmlrpcClient.call( new ListRpmFilesRequest( rpmId, query ),
+                                       ListRpmFilesResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            List<KojiRpmFileInfo> rpmFileInfos = response.getRpmFileInfos();
+            return rpmFileInfos == null ? Collections.emptyList() : rpmFileInfos;
+        }, "Failed to retrieve list of rpms files for rpm id: %d", rpmId );
+    }
+
+    public List<KojiRpmInfo> listRPMs( KojiRpmQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            RpmListResponse response =
+                    xmlrpcClient.call( new ListRpmsRequest( query ),
+                                       RpmListResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            List<KojiRpmInfo> builds = response.getRpms();
+            return builds == null ? Collections.emptyList() : builds;
+        }, "Failed to retrieve list of rpms for rpm query: %s", query );
+    }
+
+    public KojiRpmBuildList listTaggedRPMS( KojiTagInfo tag, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return listTaggedRPMS( tag.getName(), session );
+    }
+
+    public KojiRpmBuildList listTaggedRPMS( String tagName, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()-> {
+            RpmBuildListResponse response =
+                    xmlrpcClient.call( new ListTaggedRpmsRequest( tagName ), RpmBuildListResponse.class,
+                                       sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            return response.getRpmBuildList();
+        }, "Failed to list builds tagged in: %s", tagName );
+    }
+
+    public List<KojiRpmSignatureInfo> queryRPMSigs( KojiRpmSigsQuery query, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( () -> {
+            QueryRpmSigsResponse response =
+                    xmlrpcClient.call( new QueryRpmSigsRequest( query ),
+                                       QueryRpmSigsResponse.class, sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            List<KojiRpmSignatureInfo> rpmSignatureInfos = response.getRpmSignatureInfos();
+            return rpmSignatureInfos == null ? Collections.emptyList() : rpmSignatureInfos;
+        }, "Failed to retrieve list of rpm sigs for query: %s", query );
     }
 
     /**

@@ -18,20 +18,40 @@ package com.redhat.red.build.koji.model.xmlrpc;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
+/**
+ * The __starstar ** operator has to do with how python handles arguments, where the function parameters get passed as
+ * a python dict (xml-rpc struct) instead of as normal. Presumably, the query is supposed to work either way,
+ * but we are not handling the case where __starstar is false.
+ */
 @StructPart
-public class KojiQuery
-        extends KojiParams
+public class KojiParams
 {
-    @DataKey( "queryOpts" )
-    protected KojiQueryOpts queryOpts;
+    public static final String __STARSTAR = "__starstar";
 
-    public KojiQueryOpts getQueryOpts()
+    @DataKey( __STARSTAR )
+    protected boolean enabled = true;
+
+    public boolean isEnabled()
     {
-        return queryOpts;
+        return enabled;
     }
 
-    public void setQueryOpts( KojiQueryOpts queryOpts )
+    public boolean getEnabled()
     {
-        this.queryOpts = queryOpts;
+        return enabled;
     }
+
+    public void setEnabled( boolean enabled )
+    {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "KojiParams{" +
+                "enabled=" + enabled +
+                "}";
+    }
+
 }

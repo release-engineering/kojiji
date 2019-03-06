@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>description</name>
+            <value>
+              <string>Set of OpenShift templates that can be used to setup the Core and the MBaaS of the Red Hat Mobile Application Platform On-Premise product.</string>
+            </value>
+          </member>
+          <member>
+            <name>summary</name>
+            <value>
+              <string>Set of OpenShift templates that can be used to setup the Core and the MBaaS of the Red Hat Mobile Application Platform On-Premise product</string>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodResponse>
