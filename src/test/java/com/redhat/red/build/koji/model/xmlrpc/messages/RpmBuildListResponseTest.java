@@ -15,7 +15,6 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
@@ -50,7 +49,6 @@ public class RpmBuildListResponseTest
     }
 
     @Test
-    @Ignore
     public void roundTrip() throws Exception
     {
         KojiRpmInfo a1 = new KojiRpmInfo( 6777603, 848604, "rhmap-fh-openshift-templates", "4.7.4", "2.el7", "noarch" );
