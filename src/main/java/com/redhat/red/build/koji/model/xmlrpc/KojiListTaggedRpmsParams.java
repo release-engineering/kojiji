@@ -29,7 +29,7 @@ public class KojiListTaggedRpmsParams
     private Boolean inherit;
 
     @DataKey( "latest" )
-    private Boolean latest;
+    private KojiBooleanOrInteger latest;
 
     @DataKey( "package" )
     private Integer packageId;
@@ -71,14 +71,24 @@ public class KojiListTaggedRpmsParams
         this.inherit = inherit;
     }
 
-    public Boolean getLatest()
+    public KojiBooleanOrInteger getLatest()
     {
         return latest;
     }
 
-    public void setLatest( Boolean latest )
+    public void setLatest( KojiBooleanOrInteger latest )
     {
         this.latest = latest;
+    }
+
+    public void setLatest( Integer latest )
+    {
+        this.latest = KojiBooleanOrInteger.getFor( latest );
+    }
+
+    public void setLatest( Boolean latest )
+    {
+        this.latest = KojiBooleanOrInteger.getFor( latest );
     }
 
     public Integer getPackageId()
@@ -143,9 +153,21 @@ public class KojiListTaggedRpmsParams
         return this;
     }
 
-    public KojiListTaggedRpmsParams withLatest( Boolean latest )
+    public KojiListTaggedRpmsParams withLatest( KojiBooleanOrInteger latest )
     {
         this.latest = latest;
+        return this;
+    }
+
+    public KojiListTaggedRpmsParams withLatest( Boolean latest )
+    {
+        this.latest = KojiBooleanOrInteger.getFor( latest );
+        return this;
+    }
+
+    public KojiListTaggedRpmsParams withLatest( Integer latest )
+    {
+        this.latest = KojiBooleanOrInteger.getFor( latest );
         return this;
     }
 

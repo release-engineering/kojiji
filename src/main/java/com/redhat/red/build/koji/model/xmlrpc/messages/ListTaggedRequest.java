@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import com.redhat.red.build.koji.model.xmlrpc.KojiBooleanOrInteger;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import org.commonjava.rwx.anno.DataIndex;
 import org.commonjava.rwx.anno.Request;
@@ -40,7 +41,7 @@ public class ListTaggedRequest
     private String prefix; // filter results by build['package_name'].startswith(prefix)
 
     @DataIndex( 4 )
-    private boolean latest;
+    private KojiBooleanOrInteger latest = KojiBooleanOrInteger.getFor( Boolean.FALSE );
 
     @DataIndex( 5 )
     private Integer packageId;
@@ -51,7 +52,10 @@ public class ListTaggedRequest
     @DataIndex( 7 )
     private String type;
 
-    public ListTaggedRequest(){}
+    public ListTaggedRequest()
+    {
+
+    }
 
     public ListTaggedRequest( String tag )
     {
@@ -105,17 +109,27 @@ public class ListTaggedRequest
 
     public boolean isLatest()
     {
+        return latest.getAsBoolean();
+    }
+
+    public KojiBooleanOrInteger getLatest()
+    {
         return latest;
     }
 
-    public boolean getLatest()
+    public void setLatest( KojiBooleanOrInteger latest )
     {
-        return latest;
+        this.latest = latest;
     }
 
     public void setLatest( boolean latest )
     {
-        this.latest = latest;
+        this.latest = KojiBooleanOrInteger.getFor( latest );
+    }
+
+    public void setLatest( int latest )
+    {
+        this.latest = KojiBooleanOrInteger.getFor( latest );
     }
 
     public Integer getPackageId()
@@ -148,54 +162,75 @@ public class ListTaggedRequest
         this.type = type;
     }
 
-    public ListTaggedRequest withTag(KojiIdOrName tag) {
-      this.tag = tag;
-      return this;
+    public ListTaggedRequest withTag( KojiIdOrName tag )
+    {
+        this.tag = tag;
+        return this;
     }
 
-    public ListTaggedRequest withTag(String tag) {
+    public ListTaggedRequest withTag( String tag )
+    {
         this.tag = new KojiIdOrName( tag );
         return this;
     }
 
-    public ListTaggedRequest withTag(int tag) {
+    public ListTaggedRequest withTag( int tag )
+    {
         this.tag = new KojiIdOrName( tag );
         return this;
     }
 
-    public ListTaggedRequest withEventId(Integer eventId) {
-      this.eventId = eventId;
-      return this;
+    public ListTaggedRequest withEventId( Integer eventId )
+    {
+        this.eventId = eventId;
+        return this;
     }
 
-    public ListTaggedRequest withInherit(boolean inherit) {
-      this.inherit = inherit;
-      return this;
+    public ListTaggedRequest withInherit( boolean inherit )
+    {
+        this.inherit = inherit;
+        return this;
     }
 
-    public ListTaggedRequest withPrefix(String prefix) {
+    public ListTaggedRequest withPrefix( String prefix )
+    {
       this.prefix = prefix;
       return this;
     }
 
-    public ListTaggedRequest withLatest(boolean latest) {
-      this.latest = latest;
-      return this;
+    public ListTaggedRequest withLatest( KojiBooleanOrInteger latest )
+    {
+        this.latest = latest;
+        return this;
     }
 
-    public ListTaggedRequest withPackageId(Integer packageId) {
-      this.packageId = packageId;
-      return this;
+    public ListTaggedRequest withLatest( boolean latest )
+    {
+        this.latest = KojiBooleanOrInteger.getFor( latest );
+        return this;
     }
 
-    public ListTaggedRequest withOwnerId(Integer ownerId) {
-      this.ownerId = ownerId;
-      return this;
+    public ListTaggedRequest withLatest( int latest )
+    {
+        this.latest = KojiBooleanOrInteger.getFor( latest );
+        return this;
     }
 
-    public ListTaggedRequest withType(String type) {
-      this.type = type;
-      return this;
+    public ListTaggedRequest withPackageId( Integer packageId )
+    {
+        this.packageId = packageId;
+        return this;
     }
 
+    public ListTaggedRequest withOwnerId( Integer ownerId )
+    {
+        this.ownerId = ownerId;
+        return this;
+    }
+
+    public ListTaggedRequest withType( String type )
+    {
+        this.type = type;
+        return this;
+    }
 }
