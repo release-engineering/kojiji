@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import org.commonjava.rwx.core.Registry;
 import org.junit.Test;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
@@ -51,16 +52,17 @@ public class RpmBuildListResponseTest
     @Test
     public void roundTrip() throws Exception
     {
+        Registry registry = Registry.getInstance();
+
         KojiRpmInfo a1 = new KojiRpmInfo( 6777603, 848604, "rhmap-fh-openshift-templates", "4.7.4", "2.el7", "noarch" );
         KojiRpmInfo b1 = new KojiRpmInfo( 6777602, 848604, "rhmap-fh-openshift-templates", "4.7.4", "2.el7", "noarch" );
-        List<Object> one = Arrays.asList( a1, b1 );
+        List<Object> one = Arrays.asList( registry.renderTo( a1 ), registry.renderTo( b1 ) );
 
         KojiBuildInfo a2 = new KojiBuildInfo( 848604, 59108, "rhmap-fh-openshift-templates", "4.7.4", "2.el7" );
-        List<Object> two = Arrays.asList( a2 );
+        List<Object> two = Arrays.asList( registry.renderTo( a2 ) );
 
         List<List<Object>> objs = Arrays.asList( one, two );
 
-        // FIXME: Fix this test
         RpmBuildListResponse parsed = roundTrip( RpmBuildListResponse.class, new RpmBuildListResponse( objs ) );
 
         List<KojiRpmInfo> rpms = parsed.getRpmBuildList().getRpms();
