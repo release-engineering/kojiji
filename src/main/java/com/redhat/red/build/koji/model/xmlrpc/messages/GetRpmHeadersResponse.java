@@ -13,25 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.red.build.koji.model.xmlrpc;
+package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.anno.DataKey;
-import org.commonjava.rwx.anno.StructPart;
+import java.util.Map;
 
-@StructPart
-public class KojiQuery
-        extends KojiParams
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
+
+@Response
+public class GetRpmHeadersResponse
 {
-    @DataKey( "queryOpts" )
-    protected KojiQueryOpts queryOpts;
+    @DataIndex( 0 )
+    private Map<String, Object> headers;
 
-    public KojiQueryOpts getQueryOpts()
+    public GetRpmHeadersResponse( Map<String, Object> headers )
     {
-        return queryOpts;
+        this.headers = headers;
     }
 
-    public void setQueryOpts( KojiQueryOpts queryOpts )
+    public GetRpmHeadersResponse()
     {
-        this.queryOpts = queryOpts;
+    }
+
+    public void setHeaders( Map<String, Object> headers )
+    {
+        this.headers = headers;
+    }
+
+    public Map<String, Object> getHeaders()
+    {
+        return headers;
     }
 }

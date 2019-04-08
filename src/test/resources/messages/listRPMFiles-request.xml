@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>listRPMFiles</methodName>
+  <params>
+    <param>
+      <value>
+        <int>6719757</int>
+      </value>
+    </param>
+    <param>
+      <value>
+        <nil/>
+      </value>
+    </param>
+  </params>
+</methodCall>

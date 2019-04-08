@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>getRPMDeps</methodName>
+  <params>
+    <param>
+      <value>
+        <int>6719757</int>
+      </value>
+    </param>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>depType</name>
+            <value>
+              <int>0</int>
+            </value>
+          </member>
+          <member>
+            <name>__starstar</name>
+            <value>
+              <boolean>1</boolean>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>

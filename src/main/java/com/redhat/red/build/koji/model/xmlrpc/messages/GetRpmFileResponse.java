@@ -13,25 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.red.build.koji.model.xmlrpc;
+package com.redhat.red.build.koji.model.xmlrpc.messages;
 
-import org.commonjava.rwx.anno.DataKey;
-import org.commonjava.rwx.anno.StructPart;
+import org.commonjava.rwx.anno.DataIndex;
+import org.commonjava.rwx.anno.Response;
 
-@StructPart
-public class KojiQuery
-        extends KojiParams
+import com.redhat.red.build.koji.model.xmlrpc.KojiRpmFileInfo;
+
+@Response
+public class GetRpmFileResponse
 {
-    @DataKey( "queryOpts" )
-    protected KojiQueryOpts queryOpts;
+    @DataIndex( 0 )
+    private KojiRpmFileInfo rpmFileInfo;
 
-    public KojiQueryOpts getQueryOpts()
+    public GetRpmFileResponse( KojiRpmFileInfo rpmFileInfo )
     {
-        return queryOpts;
+        this.rpmFileInfo = rpmFileInfo;
     }
 
-    public void setQueryOpts( KojiQueryOpts queryOpts )
+    public GetRpmFileResponse()
     {
-        this.queryOpts = queryOpts;
+    }
+
+    public void setRpmFileInfo( KojiRpmFileInfo rpmFileInfo )
+    {
+        this.rpmFileInfo = rpmFileInfo;
+    }
+
+    public KojiRpmFileInfo getRpmFileInfo()
+    {
+        return rpmFileInfo;
     }
 }

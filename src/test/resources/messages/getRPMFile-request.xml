@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>getRPMFile</methodName>
+  <params>
+    <param>
+      <value>
+        <int>6719757</int>
+      </value>
+    </param>
+    <param>
+      <value>
+        <string>4.3-core-fh-core-backend.json</string>
+      </value>
+    </param>
+  </params>
+</methodCall>

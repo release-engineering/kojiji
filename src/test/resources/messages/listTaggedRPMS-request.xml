@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<methodCall>
+  <methodName>listTaggedRPMS</methodName>
+  <params>
+    <param>
+      <value>
+        <string>rhmap-4.7-rhel-7-candidate</string>
+      </value>
+    </param>
+    <param>
+      <value>
+        <struct>
+          <member>
+            <name>__starstar</name>
+            <value>
+              <boolean>1</boolean>
+            </value>
+          </member>
+        </struct>
+      </value>
+    </param>
+  </params>
+</methodCall>

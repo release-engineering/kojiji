@@ -19,19 +19,39 @@ import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
 @StructPart
-public class KojiQuery
-        extends KojiParams
+public class KojiRpmDepsQuery
+                extends KojiQuery
 {
-    @DataKey( "queryOpts" )
-    protected KojiQueryOpts queryOpts;
+    @DataKey( "depType" )
+    private Integer depType;
 
-    public KojiQueryOpts getQueryOpts()
+    public KojiRpmDepsQuery()
     {
-        return queryOpts;
+
     }
 
-    public void setQueryOpts( KojiQueryOpts queryOpts )
+    public Integer getDepType()
     {
-        this.queryOpts = queryOpts;
+        return depType;
+    }
+
+    public void setDepType( Integer depType )
+    {
+        this.depType = depType;
+    }
+
+    public KojiRpmDepsQuery withDepType( Integer depType )
+    {
+        this.depType = depType;
+        return this;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "KojiRpmDepsQuery{" +
+                "depType=" + depType +
+                ", " + super.toString() +
+                "}";
     }
 }
