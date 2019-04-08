@@ -44,7 +44,6 @@ public class RpmBuildListResponse
     public RpmBuildListResponse( List<List<Object>> objs )
     {
         this.objs = objs;
-        this.rpmBuildList = handleObjs ( objs );
     }
 
     public List<List<Object>> getObjs()
