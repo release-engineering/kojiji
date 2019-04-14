@@ -23,24 +23,24 @@ import org.commonjava.rwx.anno.Response;
 public class GetRpmResponse
 {
     @DataIndex( 0 )
-    private KojiRpmInfo rpmBuildInfo;
+    private KojiRpmInfo rpmInfo;
 
-    public GetRpmResponse( KojiRpmInfo rpmBuildInfo )
+    public GetRpmResponse( KojiRpmInfo rpmInfo )
     {
-        this.rpmBuildInfo = rpmBuildInfo;
+        this.rpmInfo = rpmInfo;
     }
 
     public GetRpmResponse()
     {
     }
 
-    public void setRpmBuildInfo( KojiRpmInfo rpmBuildInfo )
+    public void setRpmInfo( KojiRpmInfo rpmInfo )
     {
-        this.rpmBuildInfo = rpmBuildInfo;
+        this.rpmInfo = rpmInfo;
     }
 
-    public KojiRpmInfo getRpmBuildInfo()
+    public KojiRpmInfo getRpmInfo()
     {
-        return rpmBuildInfo;
+        return rpmInfo;
     }
 }

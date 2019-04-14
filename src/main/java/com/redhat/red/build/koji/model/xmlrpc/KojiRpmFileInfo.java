@@ -178,7 +178,7 @@ public class KojiRpmFileInfo
 
         KojiRpmFileInfo that = (KojiRpmFileInfo) obj;
 
-        return Objects.equals(this.digest, that.digest) && Objects.equals(this.digestAlgo, that.digestAlgo) && Objects.equals(this.flags, that.flags) && Objects.equals(this.group, that.group) && Objects.equals(this.md5, that.md5) && Objects.equals(this.mode, that.mode) && Objects.equals(this.mtime, that.mtime) && Objects.equals(this.name, that.name) && Objects.equals(this.size, that.size) && Objects.equals(this.user, that.user);
+        return Objects.equals( this.digest, that.digest ) && Objects.equals( this.digestAlgo, that.digestAlgo ) && Objects.equals( this.flags, that.flags ) && Objects.equals( this.group, that.group ) && Objects.equals( this.md5, that.md5 ) && Objects.equals( this.mode, that.mode ) && Objects.equals( this.mtime, that.mtime ) && Objects.equals( this.name, that.name ) && Objects.equals( this.size, that.size ) && Objects.equals( this.user, that.user );
     }
 
     @Override
