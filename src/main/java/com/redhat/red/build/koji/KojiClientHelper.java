@@ -126,11 +126,16 @@ public class KojiClientHelper
             Integer id = idOrName.getId();
             String name = idOrName.getName();
 
-            if ( id != null ) {
+            if ( id != null )
+            {
                 args.add( id );
-            } else if ( name != null ) {
+            }
+            else if ( name != null )
+            {
                 args.add( name );
-            } else {
+            }
+            else
+            {
                 throw new KojiClientException( "Invalid KojiIdOrName: " + idOrName );
             }
         }
