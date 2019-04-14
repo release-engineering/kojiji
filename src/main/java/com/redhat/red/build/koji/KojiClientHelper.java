@@ -28,7 +28,6 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiRpmInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagQuery;
-import com.redhat.red.build.koji.model.xmlrpc.messages.Constants;
 import com.redhat.red.build.koji.model.xmlrpc.messages.MultiCallResponse;
 
 import java.util.ArrayList;
