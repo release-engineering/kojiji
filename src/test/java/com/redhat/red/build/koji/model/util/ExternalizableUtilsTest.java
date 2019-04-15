@@ -20,11 +20,13 @@ import org.junit.Test;
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiChecksumType;
+import com.redhat.red.build.koji.model.xmlrpc.KojiRpmInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
 import com.redhat.red.build.koji.model.xmlrpc.messages.AbstractKojiMessageTest;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetArchiveResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetBuildResponse;
+import com.redhat.red.build.koji.model.xmlrpc.messages.GetRpmResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.GetTaskResponse;
 import com.redhat.red.build.koji.model.xmlrpc.messages.TagResponse;
 
@@ -39,6 +41,7 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -170,5 +173,42 @@ public class ExternalizableUtilsTest
 
         assertEquals( "install", goals.get( 0 ) );
         assertEquals( "javadoc:aggregate-jar", goals.get( 1 ) );
+    }
+
+    @Test
+    public void testExternalizeKojiRpmInfo()
+            throws Exception
+    {
+        GetRpmResponse response = parseCapturedMessage( GetRpmResponse.class, "getRPM-response.xml" );
+        KojiRpmInfo o1 = response.getRpmInfo();
+        KojiRpmInfo o2 = new KojiRpmInfo();
+
+        try ( ByteArrayOutputStream bout = new ByteArrayOutputStream(); ObjectOutputStream out = new ObjectOutputStream( bout ) )
+        {
+            o1.writeExternal( out );
+
+            out.close();
+
+            try ( ByteArrayInputStream bin = new ByteArrayInputStream( bout.toByteArray() ); ObjectInputStream in = new ObjectInputStream( bin ) )
+            {
+                o2.readExternal( in );
+            }
+        }
+
+        assertEquals( Integer.valueOf( 834166 ), o2.getBuildId() );
+        assertEquals( "rhmap-fh-openshift-templates", o2.getName() );
+        assertNull( o2.getExtra() );
+        assertEquals( "src", o2.getArch() );
+        assertEquals( Long.valueOf( 1548265387L * 1000L ), Long.valueOf( o2.getBuildtime().getTime() ) );
+        assertEquals( "7b6b83eb9f34747e8ddc782dbd8a186e", o2.getPayloadhash() );
+        assertNull( o2.getEpoch() );
+        assertEquals( "4.7.4", o2.getVersion() );
+        assertEquals( Boolean.FALSE, o2.getMetadataOnly() );
+        assertEquals( Integer.valueOf( 0 ), o2.getExternalRepoId() );
+        assertEquals( "1.el7", o2.getRelease() );
+        assertEquals( Integer.valueOf( 4695526 ), o2.getBuildrootId() );
+        assertEquals( Integer.valueOf( 6719757 ), o2.getId() );
+        assertEquals( "INTERNAL", o2.getExternalRepoName() );
+        assertEquals( Long.valueOf( 973320L ), Long.valueOf( o2.getSize() ) );
     }
 }

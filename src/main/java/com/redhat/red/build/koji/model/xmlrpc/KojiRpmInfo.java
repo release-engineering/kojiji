@@ -15,6 +15,10 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -24,10 +28,16 @@ import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
 import com.redhat.red.build.koji.model.converter.TimestampIntConverter;
+import com.redhat.red.build.koji.model.util.ExternalizableUtils;
 
 @StructPart
 public class KojiRpmInfo
+    implements Externalizable
 {
+    private static final int VERSION = 1;
+
+    private static final long serialVersionUID = 1841110211141549413L;
+
     @DataKey( "id" )
     private Integer id;
 
@@ -277,6 +287,63 @@ public class KojiRpmInfo
     }
 
     @Override
+    public void writeExternal( ObjectOutput out )
+            throws IOException
+    {
+        out.writeInt( VERSION );
+        out.writeObject( id );
+        ExternalizableUtils.writeUTF( out, name );
+        ExternalizableUtils.writeUTF( out, version );
+        ExternalizableUtils.writeUTF( out, release );
+        ExternalizableUtils.writeUTF( out, nvr );
+        ExternalizableUtils.writeUTF( out, arch );
+        ExternalizableUtils.writeUTF( out, epoch );
+        ExternalizableUtils.writeUTF( out, payloadhash );
+        out.writeLong( size );
+        out.writeObject( buildtime );
+        out.writeObject( buildId );
+        out.writeObject( buildrootId );
+        out.writeObject( externalRepoId );
+        ExternalizableUtils.writeUTF( out, externalRepoName );
+        out.writeObject( metadataOnly );
+        out.writeObject( extra );
+        out.writeObject( componentBuildrootId );
+        out.writeObject( isUpdate );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    @Override
+    public void readExternal( ObjectInput in )
+            throws IOException, ClassNotFoundException
+    {
+        int version = in.readInt();
+
+        if ( version != 1 )
+        {
+            throw new IOException( "Invalid version: " + version );
+        }
+
+        this.id = (Integer) in.readObject();
+        this.name = ExternalizableUtils.readUTF( in );
+        this.version = ExternalizableUtils.readUTF( in );
+        this.release = ExternalizableUtils.readUTF( in );
+        this.nvr = ExternalizableUtils.readUTF( in );
+        this.arch = ExternalizableUtils.readUTF( in );
+        this.epoch = ExternalizableUtils.readUTF( in );
+        this.payloadhash = ExternalizableUtils.readUTF( in );
+        this.size = in.readLong();
+        this.buildtime = (Date) in.readObject();
+        this.buildId = (Integer) in.readObject();
+        this.buildrootId = (Integer) in.readObject();
+        this.externalRepoId = (Integer) in.readObject();
+        this.externalRepoName = ExternalizableUtils.readUTF( in );
+        this.metadataOnly = (Boolean) in.readObject();
+        this.extra = (Map<String, Object>) in.readObject();
+        this.componentBuildrootId = (Integer) in.readObject();
+        this.isUpdate = (Boolean) in.readObject();
+    }
+
+    @Override
     public boolean equals( Object obj )
     {
         if ( super.equals( obj ) )
@@ -291,7 +358,7 @@ public class KojiRpmInfo
 
         KojiRpmInfo that = (KojiRpmInfo) obj;
 
-        return Objects.equals(this.id, that.id);
+        return Objects.equals( this.id, that.id );
     }
 
     @Override

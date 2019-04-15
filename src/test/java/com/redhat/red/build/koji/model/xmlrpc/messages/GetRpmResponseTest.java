@@ -30,7 +30,7 @@ public class GetRpmResponseTest
     public void verifyVsCapturedHttp() throws Exception
     {
         GetRpmResponse response = parseCapturedMessage( GetRpmResponse.class, "getRPM-response.xml" );
-        KojiRpmInfo rpmBuildInfo = response.getRpmBuildInfo();
+        KojiRpmInfo rpmBuildInfo = response.getRpmInfo();
 
         assertEquals( Integer.valueOf ( 6719757 ), rpmBuildInfo.getId() );
         assertEquals( Integer.valueOf( 834166 ), rpmBuildInfo.getBuildId() );
@@ -49,6 +49,6 @@ public class GetRpmResponseTest
 
         GetRpmResponse parsed = roundTrip( GetRpmResponse.class, new GetRpmResponse( info ) );
 
-        assertThat( parsed.getRpmBuildInfo().getName(), equalTo( "rhmap-fh-openshift-templates" ) );
+        assertThat( parsed.getRpmInfo().getName(), equalTo( "rhmap-fh-openshift-templates" ) );
     }
 }

@@ -1329,7 +1329,7 @@ public class KojiClient
      * The caller can parse/interperete the response by {@link KojiClientUtils#parseMultiCallResponse(MultiCallResponse, Class)} or
      * {@link KojiClientUtils#parseMultiCallResponseToLists(MultiCallResponse, Class)}.
      */
-    public MultiCallResponse multiCall( String method, List<Object> args, KojiSessionInfo session )
+    public MultiCallResponse multiCall( String method, List<?> args, KojiSessionInfo session )
                     throws KojiClientException
     {
         MultiCallRequest req = buildMultiCallRequest( method, args );
