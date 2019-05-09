@@ -108,6 +108,8 @@ public final class KojiJsonConstants
 
     public static final String IMPORT_INITIATOR = "import_initiator";
 
+    public static final String SCM_TAG = "scmTag";
+
     private KojiJsonConstants(){}
 
 }
