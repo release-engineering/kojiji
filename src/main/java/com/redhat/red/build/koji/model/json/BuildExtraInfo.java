@@ -25,6 +25,7 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BU
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BUILD_URL;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMPORT_INITIATOR;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.SCM_TAG;
 
 /**
  * Created by jdcasey on 9/15/16.
@@ -51,6 +52,10 @@ public class BuildExtraInfo
     @JsonProperty( IMPORT_INITIATOR )
     @DataKey( IMPORT_INITIATOR )
     private String importInitiator;
+
+    @JsonProperty( SCM_TAG )
+    @DataKey( SCM_TAG )
+    private String scmTag;
 
     public BuildExtraInfo(){}
 
@@ -108,6 +113,16 @@ public class BuildExtraInfo
     public void setImportInitiator( String importInitiator )
     {
         this.importInitiator = importInitiator;
+    }
+
+    public String getScmTag()
+    {
+        return scmTag;
+    }
+
+    public void setScmTag( String scmTag )
+    {
+        this.scmTag = scmTag;
     }
 
     @Override

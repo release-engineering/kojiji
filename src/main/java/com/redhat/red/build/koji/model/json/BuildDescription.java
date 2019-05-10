@@ -292,6 +292,18 @@ public class BuildDescription
             return this;
         }
 
+        public Builder withSCMTag( String scmTag )
+        {
+            if ( target.extraInfo == null )
+            {
+                target.extraInfo = new BuildExtraInfo();
+            }
+
+            target.extraInfo.setScmTag( scmTag );
+
+            return this;
+        }
+
         @Override
         public BuildDescription build()
                 throws VerificationException
