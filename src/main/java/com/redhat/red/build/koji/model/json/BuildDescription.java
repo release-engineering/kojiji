@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.converter.TimestampIntConverter;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
+import org.commonjava.atlas.npm.ident.ref.NpmPackageRef;
 import org.commonjava.rwx.anno.Converter;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
@@ -252,6 +253,19 @@ public class BuildDescription
 
             MavenExtraInfo mavenExtraInfo = new MavenExtraInfo( gav.getGroupId(), gav.getArtifactId(), gav.getVersionString() );
             target.extraInfo.setMavenExtraInfo(mavenExtraInfo);
+
+            return this;
+        }
+
+        public Builder withNpmInfoAndType( NpmPackageRef nv )
+        {
+            if ( target.extraInfo == null )
+            {
+                target.extraInfo = new BuildExtraInfo();
+            }
+
+            NpmExtraInfo npmExtraInfo = new NpmExtraInfo( nv.getName(), nv.getVersion().toString() );
+            target.extraInfo.setNpmExtraInfo(npmExtraInfo);
 
             return this;
         }

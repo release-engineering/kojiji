@@ -17,6 +17,7 @@ package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.commonjava.atlas.npm.ident.ref.NpmPackageRef;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
@@ -43,6 +44,12 @@ public class NpmExtraInfo
     {
         this.name = name;
         this.version = version;
+    }
+
+    public NpmExtraInfo( NpmPackageRef nv )
+    {
+        this.name = nv.getName();
+        this.version = nv.getVersion().toString();
     }
 
     public NpmExtraInfo()

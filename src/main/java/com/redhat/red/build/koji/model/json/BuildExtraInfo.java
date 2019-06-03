@@ -17,6 +17,7 @@ package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
+import org.commonjava.atlas.npm.ident.ref.NpmPackageRef;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
@@ -25,6 +26,7 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BU
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BUILD_URL;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMPORT_INITIATOR;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NPM_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.SCM_TAG;
 
 /**
@@ -36,6 +38,10 @@ public class BuildExtraInfo
     @JsonProperty( MAVEN_INFO )
     @DataKey( MAVEN_INFO )
     private MavenExtraInfo mavenExtraInfo;
+
+    @JsonProperty( NPM_INFO )
+    @DataKey( NPM_INFO )
+    private NpmExtraInfo npmExtraInfo;
 
     @JsonProperty( EXTERNAL_BUILD_ID )
     @DataKey( EXTERNAL_BUILD_ID )
@@ -64,9 +70,19 @@ public class BuildExtraInfo
         this.mavenExtraInfo = mavenExtraInfo;
     }
 
+    public BuildExtraInfo( NpmExtraInfo npmExtraInfo )
+    {
+        this.npmExtraInfo = npmExtraInfo;
+    }
+
     public BuildExtraInfo( ProjectVersionRef gav )
     {
         this.mavenExtraInfo = new MavenExtraInfo( gav );
+    }
+
+    public BuildExtraInfo( NpmPackageRef nv )
+    {
+        this.npmExtraInfo = new NpmExtraInfo( nv );
     }
 
     public MavenExtraInfo getMavenExtraInfo()
@@ -77,6 +93,14 @@ public class BuildExtraInfo
     public void setMavenExtraInfo( MavenExtraInfo mavenExtraInfo )
     {
         this.mavenExtraInfo = mavenExtraInfo;
+    }
+
+    public NpmExtraInfo getNpmExtraInfo() {
+        return npmExtraInfo;
+    }
+
+    public void setNpmExtraInfo(NpmExtraInfo npmExtraInfo) {
+        this.npmExtraInfo = npmExtraInfo;
     }
 
     public String getExternalBuildId()
@@ -139,23 +163,39 @@ public class BuildExtraInfo
 
         BuildExtraInfo that = (BuildExtraInfo) o;
 
-        return getMavenExtraInfo() != null ?
-                getMavenExtraInfo().equals( that.getMavenExtraInfo() ) :
-                that.getMavenExtraInfo() == null;
-
+        if ( getMavenExtraInfo() != null )
+        {
+            return getMavenExtraInfo().equals( that.getMavenExtraInfo() );
+        }
+        else if ( getNpmExtraInfo() != null )
+        {
+            return getNpmExtraInfo().equals( that.getNpmExtraInfo() );
+        }
+        else
+        {
+            return that.getMavenExtraInfo() == null && that.getNpmExtraInfo() == null;
+        }
     }
 
     @Override
     public int hashCode()
     {
-        return getMavenExtraInfo() != null ? getMavenExtraInfo().hashCode() : 0;
+        int result = mavenExtraInfo != null ? mavenExtraInfo.hashCode() : 0;
+        result = 31 * result + ( npmExtraInfo != null ? npmExtraInfo.hashCode() : 0 );
+        return result;
     }
 
     @Override
     public String toString()
     {
-        return "BuildMavenInfo{" +
-                "mavenExtraInfo=" + mavenExtraInfo +
-                '}';
+        if ( getMavenExtraInfo() != null )
+        {
+            return "FileExtraInfo{" + "mavenExtraInfo=" + mavenExtraInfo + "}";
+        }
+        else if ( getNpmExtraInfo() != null )
+        {
+            return "FileExtraInfo{" + "npmExtraInfo=" + npmExtraInfo + "}";
+        }
+        return "null";
     }
 }
