@@ -26,7 +26,7 @@
 
     <groupId>com.redhat.red.build</groupId>
     <artifactId>kojiji</artifactId>
-    <version>2.12</version>
+    <version>2.13-SNAPSHOT</version>
 
     <name>Kojiji</name>
     <description>Koji Java Interface</description>
@@ -36,7 +36,7 @@
         <connection>scm:git:https://github.com/release-engineering/kojiji.git</connection>
         <developerConnection>scm:git:git@github.com:release-engineering/kojiji.git</developerConnection>
         <url>https://github.com/release-engineering/kojiji</url>
-        <tag>kojiji-2.12</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
