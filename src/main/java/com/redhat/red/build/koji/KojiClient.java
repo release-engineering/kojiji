@@ -107,8 +107,6 @@ public class KojiClient
 
     private MetricRegistry metricRegistry;
 
-    private ExecutorCompletionService<KojiUploaderResult> uploadService;
-
     private KojiObjectMapper objectMapper;
 
     private KojiConfig config;
@@ -205,7 +203,6 @@ public class KojiClient
     public void setup()
                     throws KojiClientException
     {
-        uploadService = new ExecutorCompletionService<>( executorService );
         objectMapper = new KojiObjectMapper();
 
         logger.debug( "SETUP: Starting KojiClient for: " + config.getKojiURL() );
@@ -1702,6 +1699,7 @@ public class KojiClient
                                                                 String dirname, KojiSessionInfo session )
             throws KojiClientException
     {
+        ExecutorCompletionService<KojiUploaderResult> uploadService = new ExecutorCompletionService<>( executorService );
         AtomicInteger count = new AtomicInteger( 0 );
 
         if ( buildInfo != null )
