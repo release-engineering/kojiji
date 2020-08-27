@@ -15,14 +15,14 @@
  */
 package com.redhat.red.build.koji.http.httpclient4;
 
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Timer;
 import com.redhat.red.build.koji.model.xmlrpc.messages.VoidResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.commonjava.o11yphant.metrics.api.MetricRegistry;
+import org.commonjava.o11yphant.metrics.api.Timer;
 import org.commonjava.rwx.anno.Request;
 import org.commonjava.rwx.api.RWXMapper;
 import org.commonjava.rwx.error.XmlRpcException;
@@ -42,7 +42,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 
-import static com.codahale.metrics.MetricRegistry.name;
+import static org.commonjava.o11yphant.metrics.util.NameUtils.name;
 
 public class HC4SyncObjectClient
 {

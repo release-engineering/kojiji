@@ -48,7 +48,7 @@
         <atlasVersion>1.0.0</atlasVersion>
         <mockitoVersion>2.7.20</mockitoVersion>
         <kerbyVersion>2.0.1</kerbyVersion>
-        <metrics.version>4.0.2</metrics.version>
+        <o11yphantVersion>1.0-SNAPSHOT</o11yphantVersion>
 
         <dbImage>postgres:9.4</dbImage>
         <hubImage>docker.io/buildchimp/koji-dojo-hub:dev</hubImage>
@@ -116,9 +116,9 @@
 
             <!-- metrics support-->
             <dependency>
-                <groupId>io.dropwizard.metrics</groupId>
-                <artifactId>metrics-core</artifactId>
-                <version>${metrics.version}</version>
+                <groupId>org.commonjava.util</groupId>
+                <artifactId>o11yphant-metrics-api</artifactId>
+                <version>${o11yphantVersion}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -227,8 +227,8 @@
         </dependency>
 
         <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
+            <groupId>org.commonjava.util</groupId>
+            <artifactId>o11yphant-metrics-api</artifactId>
         </dependency>
     </dependencies>
 
