@@ -15,7 +15,6 @@
  */
 package com.redhat.red.build.koji;
 
-import com.codahale.metrics.MetricRegistry;
 import com.redhat.red.build.koji.config.KojiConfig;
 import com.redhat.red.build.koji.kerberos.KrbAuthenticator;
 import com.redhat.red.build.koji.model.ImportFile;
@@ -34,6 +33,7 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.commonjava.atlas.maven.ident.ref.ProjectRef;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
+import org.commonjava.o11yphant.metrics.api.MetricRegistry;
 import org.commonjava.rwx.api.RWXMapper;
 import org.commonjava.rwx.core.Registry;
 import org.commonjava.rwx.error.XmlRpcException;
