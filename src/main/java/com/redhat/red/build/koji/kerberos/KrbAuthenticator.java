@@ -153,12 +153,15 @@ public class KrbAuthenticator
     }
 
     public static TgtTicket getTgt( KrbClient krbClient, String keytab, String ccache, String principal, String password )
-            throws KrbException
-    {
+            throws KrbException, KojiClientException {
         TgtTicket tgt = null;
 
         if ( keytab != null )
         {
+            File keytabFile = new File(keytab);
+            if(!keytabFile.exists() || !keytabFile.canRead()) {
+                throw new KojiClientException("Unable to read keytab file. Invalid keytab file or keytab file does not exist");
+            }
             tgt = krbClient.requestTgt( principal, keytab );
         }
         else if ( ccache != null )
