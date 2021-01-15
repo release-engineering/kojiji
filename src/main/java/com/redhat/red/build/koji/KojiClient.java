@@ -280,7 +280,8 @@ public class KojiClient
                 throw new KojiClientException( "Failed to get loginResponse" );
             }
 
-            KojiSessionInfo session = krbAuthenticator.hanldleResponse( loginResponse );
+            KojiSessionInfo session = krbAuthenticator.handleResponse( loginResponse );
+
             setLoggedInUser( session );
 
             return session;
