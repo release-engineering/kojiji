@@ -282,6 +282,19 @@ public class BuildDescription
             return this;
         }
 
+        public Builder withRemoteSourceFile( String checksum )
+        {
+            if ( target.extraInfo == null )
+            {
+                target.extraInfo = new BuildExtraInfo();
+            }
+
+            TypeInfoExtraInfo typeInfo = new TypeInfoExtraInfo(new RemoteSourceFileExtraInfo(checksum));
+            target.extraInfo.setTypeInfo(typeInfo);
+
+            return this;
+        }
+
         public Builder withExternalBuildUrl( String url )
         {
             if ( target.extraInfo == null )

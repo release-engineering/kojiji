@@ -22,6 +22,8 @@ import org.commonjava.rwx.anno.StructPart;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NPM_INFO;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.REMOTE_SOURCE_FILE;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPEINFO;
 
 /**
  * Created by jdcasey on 9/15/16.
@@ -37,6 +39,10 @@ public class FileExtraInfo
     @DataKey( NPM_INFO )
     private NpmExtraInfo npmExtraInfo;
 
+    @JsonProperty( TYPEINFO )
+    @DataKey( TYPEINFO )
+    private TypeInfoExtraInfo typeInfo;
+
     public FileExtraInfo( @JsonProperty( MAVEN_INFO ) MavenExtraInfo mavenExtraInfo )
     {
         this.mavenExtraInfo = mavenExtraInfo;
@@ -45,6 +51,11 @@ public class FileExtraInfo
     public FileExtraInfo( @JsonProperty( NPM_INFO ) NpmExtraInfo npmExtraInfo )
     {
         this.npmExtraInfo = npmExtraInfo;
+    }
+
+    public FileExtraInfo( @JsonProperty( TYPEINFO ) TypeInfoExtraInfo typeInfo)
+    {
+        this.typeInfo = typeInfo;
     }
 
     public FileExtraInfo()
@@ -66,6 +77,11 @@ public class FileExtraInfo
         this.mavenExtraInfo = mavenExtraInfo;
     }
 
+    public void setTypeInfo(TypeInfoExtraInfo typeInfo)
+    {
+        this.typeInfo = typeInfo;
+    }
+
     public FileExtraInfo( ProjectVersionRef gav )
     {
         this.mavenExtraInfo = new MavenExtraInfo( gav );
@@ -74,6 +90,11 @@ public class FileExtraInfo
     public MavenExtraInfo getMavenExtraInfo()
     {
         return mavenExtraInfo;
+    }
+
+    public TypeInfoExtraInfo getTypeInfo()
+    {
+        return typeInfo;
     }
 
     @Override
@@ -98,6 +119,10 @@ public class FileExtraInfo
         {
             return getNpmExtraInfo().equals( that.getNpmExtraInfo() );
         }
+        else if ( getTypeInfo() != null )
+        {
+            return getTypeInfo().equals( that.getTypeInfo() );
+        }
         else
         {
             return that.getMavenExtraInfo() == null && that.getNpmExtraInfo() == null;
@@ -109,6 +134,7 @@ public class FileExtraInfo
     {
         int result = mavenExtraInfo != null ? mavenExtraInfo.hashCode() : 0;
         result = 31 * result + ( npmExtraInfo != null ? npmExtraInfo.hashCode() : 0 );
+        result = 31 * result + ( typeInfo != null ? typeInfo.hashCode() : 0 );
         return result;
     }
 
@@ -122,6 +148,10 @@ public class FileExtraInfo
         else if ( getNpmExtraInfo() != null )
         {
             return "FileExtraInfo{" + "npmExtraInfo=" + npmExtraInfo + "}";
+        }
+        else if ( getMavenExtraInfo() != null )
+        {
+            return "FileExtraInfo{" + "typeInfo=" + typeInfo + "}";
         }
         return "null";
     }

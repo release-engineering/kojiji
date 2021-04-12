@@ -28,6 +28,7 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMPORT_INIT
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NPM_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.SCM_TAG;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPEINFO;
 
 /**
  * Created by jdcasey on 9/15/16.
@@ -62,6 +63,10 @@ public class BuildExtraInfo
     @JsonProperty( SCM_TAG )
     @DataKey( SCM_TAG )
     private String scmTag;
+
+    @JsonProperty( TYPEINFO )
+    @DataKey( TYPEINFO )
+    private TypeInfoExtraInfo typeInfo;
 
     public BuildExtraInfo(){}
 
@@ -149,6 +154,16 @@ public class BuildExtraInfo
         this.scmTag = scmTag;
     }
 
+    public TypeInfoExtraInfo getTypeInfo()
+    {
+        return typeInfo;
+    }
+
+    public void setTypeInfo( TypeInfoExtraInfo typeInfo )
+    {
+        this.typeInfo = typeInfo;
+    }
+
     @Override
     public boolean equals( Object o )
     {
@@ -171,6 +186,10 @@ public class BuildExtraInfo
         {
             return getNpmExtraInfo().equals( that.getNpmExtraInfo() );
         }
+        else if ( getTypeInfo() != null )
+        {
+            return getTypeInfo().equals( that.getTypeInfo() );
+        }
         else
         {
             return that.getMavenExtraInfo() == null && that.getNpmExtraInfo() == null;
@@ -182,6 +201,7 @@ public class BuildExtraInfo
     {
         int result = mavenExtraInfo != null ? mavenExtraInfo.hashCode() : 0;
         result = 31 * result + ( npmExtraInfo != null ? npmExtraInfo.hashCode() : 0 );
+        result = 31 * result + ( typeInfo != null ? typeInfo.hashCode() : 0 );
         return result;
     }
 
@@ -195,6 +215,10 @@ public class BuildExtraInfo
         else if ( getNpmExtraInfo() != null )
         {
             return "FileExtraInfo{" + "npmExtraInfo=" + npmExtraInfo + "}";
+        }
+        else if ( getTypeInfo() != null )
+        {
+            return "FileExtraInfo{" + "typeInfo=" + typeInfo + "}";
         }
         return "null";
     }

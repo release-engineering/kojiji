@@ -259,7 +259,7 @@ public class BuildOutput
 
         public Builder withMavenInfoAndType( ProjectVersionRef gav )
         {
-            target.outputType = StandardOutputType.maven.name();
+            target.outputType = StandardOutputType.maven.getName();
             target.extraInfo = new FileExtraInfo( new MavenExtraInfo( gav ) );
 
             return this;
@@ -267,8 +267,16 @@ public class BuildOutput
 
         public Builder withNpmInfoAndType( NpmPackageRef ref )
         {
-            target.outputType = StandardOutputType.npm.name();
+            target.outputType = StandardOutputType.npm.getName();
             target.extraInfo = new FileExtraInfo( new NpmExtraInfo( ref.getName(), ref.getVersion().toString() ) );
+
+            return this;
+        }
+
+        public Builder withRemoteSourceFileInfoAndType( String checksum )
+        {
+            target.outputType = StandardOutputType.REMOTE_SOURCE_FILE.getName();
+            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo(new RemoteSourceFileExtraInfo(checksum)) );
 
             return this;
         }
