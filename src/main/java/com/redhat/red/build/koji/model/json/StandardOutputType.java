@@ -20,5 +20,18 @@ package com.redhat.red.build.koji.model.json;
  */
 public enum StandardOutputType
 {
-    log, maven, npm;
+    log("log"),
+    maven("maven"),
+    npm("npm"),
+    REMOTE_SOURCE_FILE("remote-source-file");
+
+    private String name;
+
+    StandardOutputType(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
