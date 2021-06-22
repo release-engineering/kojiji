@@ -79,15 +79,18 @@ public class NpmExtraInfo
     @Override
     public boolean equals( Object o )
     {
-        if ( this == o )
+        if ( this == o ) {
             return true;
-        if ( o == null || getClass() != o.getClass() )
+        }
+        if ( o == null || getClass() != o.getClass() ) {
             return false;
+        }
 
         NpmExtraInfo that = (NpmExtraInfo) o;
 
-        if ( !name.equals( that.name ) )
+        if ( !name.equals( that.name ) ) {
             return false;
+        }
         return version.equals( that.version );
 
     }

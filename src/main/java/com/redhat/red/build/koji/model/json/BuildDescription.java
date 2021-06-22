@@ -267,6 +267,11 @@ public class BuildDescription
             NpmExtraInfo npmExtraInfo = new NpmExtraInfo( nv.getName(), nv.getVersion().toString() );
             target.extraInfo.setNpmExtraInfo(npmExtraInfo);
 
+            if (target.extraInfo.getTypeInfo() == null) {
+                target.extraInfo.setTypeInfo(new TypeInfoExtraInfo());
+            }
+            target.extraInfo.getTypeInfo().setNpmTypeInfoExtraInfo( NpmTypeInfoExtraInfo.getInstance() );
+
             return this;
         }
 
@@ -289,8 +294,14 @@ public class BuildDescription
                 target.extraInfo = new BuildExtraInfo();
             }
 
-            TypeInfoExtraInfo typeInfo = new TypeInfoExtraInfo(new RemoteSourceFileExtraInfo(checksum));
-            target.extraInfo.setTypeInfo(typeInfo);
+            TypeInfoExtraInfo typeInfo = target.extraInfo.getTypeInfo();
+            if ( typeInfo == null )
+            {
+                target.extraInfo.setTypeInfo(new TypeInfoExtraInfo());
+                typeInfo = target.extraInfo.getTypeInfo();
+            }
+
+            typeInfo.setRemoteSourceFileExtraInfo(new RemoteSourceFileExtraInfo(checksum));
 
             return this;
         }

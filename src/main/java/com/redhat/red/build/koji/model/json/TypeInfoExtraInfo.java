@@ -21,6 +21,7 @@ import org.commonjava.rwx.anno.StructPart;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NPM_TYPE_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.REMOTE_SOURCE_FILE;
 
 /**
@@ -33,9 +34,15 @@ public class TypeInfoExtraInfo
     @DataKey( REMOTE_SOURCE_FILE )
     private RemoteSourceFileExtraInfo remoteSourceFileExtraInfo;
 
+    @JsonProperty( NPM_TYPE_INFO )
+    @DataKey( NPM_TYPE_INFO )
+    private NpmTypeInfoExtraInfo npmTypeInfoExtraInfo;
+
 
     @JsonCreator
-    public TypeInfoExtraInfo(@JsonProperty( REMOTE_SOURCE_FILE ) RemoteSourceFileExtraInfo typeInfo)
+    public TypeInfoExtraInfo(
+            @JsonProperty(REMOTE_SOURCE_FILE) RemoteSourceFileExtraInfo typeInfo,
+            @JsonProperty(NPM_TYPE_INFO) Object npm)
     {
         this.remoteSourceFileExtraInfo = typeInfo;
     }
@@ -54,6 +61,16 @@ public class TypeInfoExtraInfo
         this.remoteSourceFileExtraInfo = remoteSourceFileExtraInfo;
     }
 
+    public NpmTypeInfoExtraInfo getNpmTypeInfoExtraInfo()
+    {
+        return npmTypeInfoExtraInfo;
+    }
+
+    public void setNpmTypeInfoExtraInfo(NpmTypeInfoExtraInfo npmTypeInfoExtraInfo)
+    {
+        this.npmTypeInfoExtraInfo = npmTypeInfoExtraInfo;
+    }
+
     @Override
     public boolean equals( Object o )
     {
@@ -68,20 +85,24 @@ public class TypeInfoExtraInfo
 
         TypeInfoExtraInfo that = (TypeInfoExtraInfo) o;
 
-        return getRemoteSourceFileExtraInfo() != null ? getRemoteSourceFileExtraInfo().equals( that.getRemoteSourceFileExtraInfo() ) : that.getRemoteSourceFileExtraInfo() == null;
+        return getRemoteSourceFileExtraInfo() != null ? getRemoteSourceFileExtraInfo().equals( that.getRemoteSourceFileExtraInfo() ) : that.getRemoteSourceFileExtraInfo() == null
+                && getNpmTypeInfoExtraInfo() != null ? getNpmTypeInfoExtraInfo().equals( that.getNpmTypeInfoExtraInfo() ) : that.getNpmTypeInfoExtraInfo() == null;
 
     }
 
     @Override
     public int hashCode()
     {
-        int result = getRemoteSourceFileExtraInfo() != null ? getRemoteSourceFileExtraInfo().hashCode() : 0;
+        int result = getRemoteSourceFileExtraInfo() == null ? 0 : getRemoteSourceFileExtraInfo().hashCode();
+        result = 31 * result + (getNpmTypeInfoExtraInfo() == null ? 0 : getNpmTypeInfoExtraInfo().hashCode());
         return result;
     }
 
     @Override
     public String toString()
     {
-        return "TypeInfoExtraInfo{" + "remoteSourceFileExtraInfo='" + remoteSourceFileExtraInfo + "'}";
+        return "TypeInfoExtraInfo{"
+                + "remoteSourceFileExtraInfo='" + remoteSourceFileExtraInfo + "', "
+                + "npmTypeInfoExtraInfo='" + npmTypeInfoExtraInfo + "'}";
     }
 }
