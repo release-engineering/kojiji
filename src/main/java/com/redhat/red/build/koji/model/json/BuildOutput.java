@@ -276,7 +276,7 @@ public class BuildOutput
         public Builder withRemoteSourceFileInfoAndType( String checksum )
         {
             target.outputType = StandardOutputType.REMOTE_SOURCE_FILE.getName();
-            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo(new RemoteSourceFileExtraInfo(checksum)) );
+            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo(new RemoteSourceFileExtraInfo(checksum), null) );
 
             return this;
         }
@@ -384,7 +384,7 @@ public class BuildOutput
     {
         int result = getBuildrootId();
         result = 31 * result + ( getFilename() != null ? getFilename().hashCode() : 0 );
-        result = 31 * result + (int) ( getFileSize() ^ ( getFileSize() >>> 32 ) );
+        result = 31 * result + ( getFileSize() ^ ( getFileSize() >>> 32 ) );
         result = 31 * result + ( getArch() != null ? getArch().hashCode() : 0 );
         result = 31 * result + ( getChecksumType() != null ? getChecksumType().hashCode() : 0 );
         result = 31 * result + ( getChecksum() != null ? getChecksum().hashCode() : 0 );

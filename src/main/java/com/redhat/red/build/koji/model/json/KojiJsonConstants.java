@@ -100,6 +100,8 @@ public final class KojiJsonConstants
 
     public static final String NPM_INFO = "npm";
 
+    public static final String NPM_TYPE_INFO = "npm";
+
     public static final String REMOTE_SOURCE_FILE = "remote-source-file";
 
     public static final String TYPEINFO = "typeinfo";
