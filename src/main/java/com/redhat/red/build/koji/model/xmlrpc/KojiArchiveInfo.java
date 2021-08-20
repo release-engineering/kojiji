@@ -460,7 +460,7 @@ public class KojiArchiveInfo
     @Override
     public int hashCode()
     {
-        return getArchiveId();
+        return Objects.hashCode(getArchiveId());
     }
 
     @Override
