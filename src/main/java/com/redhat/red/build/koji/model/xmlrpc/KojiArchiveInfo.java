@@ -35,6 +35,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -453,13 +454,13 @@ public class KojiArchiveInfo
 
         KojiArchiveInfo that = (KojiArchiveInfo) o;
 
-        return getArchiveId() == that.getArchiveId();
+        return Objects.equals(getArchiveId(), that.getArchiveId());
     }
 
     @Override
     public int hashCode()
     {
-        return getArchiveId();
+        return Objects.hashCode(getArchiveId());
     }
 
     @Override
