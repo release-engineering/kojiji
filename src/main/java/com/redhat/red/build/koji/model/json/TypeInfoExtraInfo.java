@@ -19,6 +19,8 @@ import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NPM_TYPE_INFO;
@@ -28,6 +30,7 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.REMOTE_SOUR
  * Created by jbrazdil on 2021-04-08.
  */
 @StructPart
+@JsonInclude( Include.NON_NULL )
 public class TypeInfoExtraInfo
 {
     @JsonProperty( REMOTE_SOURCE_FILE )
@@ -41,10 +44,16 @@ public class TypeInfoExtraInfo
 
     @JsonCreator
     public TypeInfoExtraInfo(
-            @JsonProperty(REMOTE_SOURCE_FILE) RemoteSourceFileExtraInfo typeInfo,
-            @JsonProperty(NPM_TYPE_INFO) Object npm)
+            @JsonProperty(REMOTE_SOURCE_FILE) RemoteSourceFileExtraInfo sourceFileInfo,
+            @JsonProperty(NPM_TYPE_INFO) NpmTypeInfoExtraInfo npm)
     {
-        this.remoteSourceFileExtraInfo = typeInfo;
+        this.remoteSourceFileExtraInfo = sourceFileInfo;
+        this.npmTypeInfoExtraInfo = npm;
+    }
+
+    public TypeInfoExtraInfo( @JsonProperty(NPM_TYPE_INFO) NpmTypeInfoExtraInfo npm )
+    {
+        this.npmTypeInfoExtraInfo = npm;
     }
 
     public TypeInfoExtraInfo()

@@ -16,7 +16,10 @@
 package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
@@ -75,6 +78,7 @@ public class BuildOutput
     private String outputType;
 
     @JsonProperty(EXTRA_INFO)
+    @JsonInclude( Include.NON_NULL )
     @DataKey( EXTRA_INFO )
     private FileExtraInfo extraInfo;
 
@@ -268,7 +272,10 @@ public class BuildOutput
         public Builder withNpmInfoAndType( NpmPackageRef ref )
         {
             target.outputType = StandardOutputType.npm.getName();
-            target.extraInfo = new FileExtraInfo( new NpmExtraInfo( ref.getName(), ref.getVersion().toString() ) );
+
+            NpmExtraInfo npmExtraInfo = new NpmExtraInfo( ref.getName(), ref.getVersion().toString() );
+            TypeInfoExtraInfo typeInfo = new TypeInfoExtraInfo( NpmTypeInfoExtraInfo.getInstance() );
+            target.extraInfo = new FileExtraInfo( npmExtraInfo, typeInfo );
 
             return this;
         }

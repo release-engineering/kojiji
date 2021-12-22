@@ -15,7 +15,10 @@
  */
 package com.redhat.red.build.koji.model.json;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
 import org.commonjava.atlas.npm.ident.ref.NpmPackageRef;
 import org.commonjava.rwx.anno.DataKey;
@@ -34,6 +37,7 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPEINFO;
  * Created by jdcasey on 9/15/16.
  */
 @StructPart
+@JsonInclude( Include.NON_NULL )
 public class BuildExtraInfo
 {
     @JsonProperty( MAVEN_INFO )
