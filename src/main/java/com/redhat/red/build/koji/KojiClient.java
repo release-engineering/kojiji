@@ -552,7 +552,7 @@ public class KojiClient
             throws KojiClientException
     {
         return doXmlRpcAndThrow( () -> {
-            IdResponse response = xmlrpcClient.call( new GetTagIdRequest( packageName ), IdResponse.class,
+            IdResponse response = xmlrpcClient.call( new GetPackageIdRequest( packageName ), IdResponse.class,
                                                      sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
 
             return response == null ? null : response.getId();
