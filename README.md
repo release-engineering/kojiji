@@ -1,6 +1,6 @@
 # Koji Java Interface
 
-This is a Java API for talking to [Koji](https://fedorahosted.org/koji/wiki).
+This is a Java API for talking to [Koji](https://fedoraproject.org/wiki/Koji).
 
 ## Dependencies
 
