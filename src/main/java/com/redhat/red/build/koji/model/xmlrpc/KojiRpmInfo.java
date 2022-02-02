@@ -23,11 +23,11 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
-import com.redhat.red.build.koji.model.converter.AnythingToStringConverter;
 import org.commonjava.rwx.anno.Converter;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
+import com.redhat.red.build.koji.model.converter.AnythingToStringConverter;
 import com.redhat.red.build.koji.model.converter.TimestampIntConverter;
 import com.redhat.red.build.koji.model.util.ExternalizableUtils;
 
