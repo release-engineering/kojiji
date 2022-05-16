@@ -16,7 +16,9 @@
 package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.redhat.red.build.koji.model.converter.TimestampIntConverter;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
 import org.commonjava.atlas.npm.ident.ref.NpmPackageRef;
@@ -73,6 +75,7 @@ public class BuildDescription
     private BuildSource source;
 
     @JsonProperty( EXTRA_INFO )
+    @JsonInclude( Include.NON_NULL )
     @DataKey( EXTRA_INFO )
     private BuildExtraInfo extraInfo;
 
@@ -246,29 +249,34 @@ public class BuildDescription
 
         public Builder withMavenInfoAndType( ProjectVersionRef gav )
         {
+            MavenExtraInfo mavenExtraInfo = new MavenExtraInfo( gav.getGroupId(), gav.getArtifactId(), gav.getVersionString() );
             if ( target.extraInfo == null )
             {
-                target.extraInfo = new BuildExtraInfo();
+                target.extraInfo = new BuildExtraInfo( mavenExtraInfo );
             }
-
-            MavenExtraInfo mavenExtraInfo = new MavenExtraInfo( gav.getGroupId(), gav.getArtifactId(), gav.getVersionString() );
-            target.extraInfo.setMavenExtraInfo(mavenExtraInfo);
+            else
+            {
+                target.extraInfo.setMavenExtraInfo( mavenExtraInfo );
+            }
 
             return this;
         }
 
         public Builder withNpmInfoAndType( NpmPackageRef nv )
         {
+            NpmExtraInfo npmExtraInfo = new NpmExtraInfo( nv.getName(), nv.getVersion().toString() );
             if ( target.extraInfo == null )
             {
-                target.extraInfo = new BuildExtraInfo();
+                target.extraInfo = new BuildExtraInfo( npmExtraInfo );
+            }
+            else
+            {
+                target.extraInfo.setNpmExtraInfo( npmExtraInfo );
             }
 
-            NpmExtraInfo npmExtraInfo = new NpmExtraInfo( nv.getName(), nv.getVersion().toString() );
-            target.extraInfo.setNpmExtraInfo(npmExtraInfo);
-
-            if (target.extraInfo.getTypeInfo() == null) {
-                target.extraInfo.setTypeInfo(new TypeInfoExtraInfo());
+            if (target.extraInfo.getTypeInfo() == null)
+            {
+                target.extraInfo.setTypeInfo( new TypeInfoExtraInfo() );
             }
             target.extraInfo.getTypeInfo().setNpmTypeInfoExtraInfo( NpmTypeInfoExtraInfo.getInstance() );
 
