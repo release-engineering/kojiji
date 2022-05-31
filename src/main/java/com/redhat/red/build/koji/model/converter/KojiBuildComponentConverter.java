@@ -53,7 +53,7 @@ public class KojiBuildComponentConverter
             map.put( NAME, rpm.getName() );
             map.put( VERSION, rpm.getVersion() );
             map.put( RELEASE, rpm.getRelease() );
-            map.put( EPOCH, rpm.getEpoch() );
+            map.put( EPOCH, rpm.getEpoch() != null ? rpm.getEpoch().toString() : null );
             map.put( ARCH, rpm.getArch() );
             map.put( SIGMD5, rpm.getSigmd5() );
             map.put( SIGNATURE, rpm.getSignature() );

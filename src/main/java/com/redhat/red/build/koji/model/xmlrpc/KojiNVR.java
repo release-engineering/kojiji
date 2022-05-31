@@ -45,9 +45,9 @@ public class KojiNVR
     private String release;
 
     @DataKey( "epoch" )
-    private String epoch;
+    private Integer epoch;
 
-    public KojiNVR( String name, String version, String release, String epoch )
+    public KojiNVR( String name, String version, String release, Integer epoch )
     {
         this.name = name;
         this.version = version;
@@ -109,7 +109,7 @@ public class KojiNVR
         this.release = release;
     }
 
-    public void setEpoch( String epoch )
+    public void setEpoch( Integer epoch )
     {
         this.epoch = epoch;
     }
@@ -129,7 +129,7 @@ public class KojiNVR
         return release;
     }
 
-    public String getEpoch()
+    public Integer getEpoch()
     {
         return epoch;
     }
@@ -161,7 +161,7 @@ public class KojiNVR
 
         if ( epochIndex != -1 )
         {
-            ret.setEpoch( ret.getName().substring( 0, epochIndex ) );
+            ret.setEpoch( Integer.parseInt( ret.getName().substring( 0, epochIndex ) ) );
             ret.setName( ret.getName().substring( epochIndex + 1,  ret.getName().length() ) );
         }
 
