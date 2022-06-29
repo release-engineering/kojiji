@@ -33,7 +33,7 @@ public class KojiNVRA
     private String release;
 
     @DataKey( "epoch" )
-    private String epoch;
+    private Integer epoch;
 
     @DataKey( "arch" )
     private String arch;
@@ -92,12 +92,12 @@ public class KojiNVRA
         this.release = release;
     }
 
-    public String getEpoch()
+    public Integer getEpoch()
     {
         return epoch;
     }
 
-    public void setEpoch( String epoch )
+    public void setEpoch( Integer epoch )
     {
         this.epoch = epoch;
     }

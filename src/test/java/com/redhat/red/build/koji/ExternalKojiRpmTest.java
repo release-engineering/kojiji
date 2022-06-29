@@ -43,6 +43,7 @@ import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
 
@@ -75,42 +76,42 @@ public class ExternalKojiRpmTest
     {
         String nvra = "rhmap-fh-openshift-templates-4.7.4-1.el7.src.rpm";
         KojiNVRA ret0 = KojiNVRA.parseNVRA( nvra );
-        assertEquals( ret0.getName(), "rhmap-fh-openshift-templates" );
-        assertEquals( ret0.getVersion(), "4.7.4" );
-        assertEquals( ret0.getRelease(), "1.el7" );
-        assertEquals( ret0.getEpoch(), null );
-        assertEquals( ret0.getSrc(), Boolean.TRUE );
-        assertEquals( ret0.getLocation(), null );
+        assertEquals( "rhmap-fh-openshift-templates", ret0.getName() );
+        assertEquals( "4.7.4", ret0.getVersion() );
+        assertEquals( "1.el7", ret0.getRelease() );
+        assertNull( ret0.getEpoch() );
+        assertEquals( Boolean.TRUE, ret0.getSrc() );
+        assertNull( ret0.getLocation() );
         logger.debug( ">>> {}", ret0 );
 
         nvra = "rhmap-fh-openshift-templates-4.7.4-1.el7.src";
         ret0 = KojiNVRA.parseNVRA( nvra );
-        assertEquals( ret0.getName(), "rhmap-fh-openshift-templates" );
-        assertEquals( ret0.getVersion(), "4.7.4" );
-        assertEquals( ret0.getRelease(), "1.el7" );
-        assertEquals( ret0.getEpoch(), null );
-        assertEquals( ret0.getSrc(), Boolean.TRUE );
-        assertEquals( ret0.getLocation(), null );
+        assertEquals( "rhmap-fh-openshift-templates", ret0.getName() );
+        assertEquals( "4.7.4", ret0.getVersion() );
+        assertEquals( "1.el7", ret0.getRelease() );
+        assertNull( ret0.getEpoch() );
+        assertEquals( Boolean.TRUE, ret0.getSrc() );
+        assertNull( ret0.getLocation() );
         logger.debug( ">>> {}", ret0 );
 
         nvra = "rhmap-fh-openshift-templates-4.7.4-1.el7.noarch";
         ret0 = KojiNVRA.parseNVRA( nvra );
-        assertEquals( ret0.getName(), "rhmap-fh-openshift-templates" );
-        assertEquals( ret0.getVersion(), "4.7.4" );
-        assertEquals( ret0.getRelease(), "1.el7" );
-        assertEquals( ret0.getEpoch(), null );
-        assertEquals( ret0.getSrc(), Boolean.FALSE );
-        assertEquals( ret0.getLocation(), null );
+        assertEquals( "rhmap-fh-openshift-templates", ret0.getName() );
+        assertEquals( "4.7.4", ret0.getVersion() );
+        assertEquals( "1.el7", ret0.getRelease() );
+        assertNull( ret0.getEpoch() );
+        assertEquals( Boolean.FALSE, ret0.getSrc() );
+        assertNull( ret0.getLocation() );
         logger.debug( ">>> {}", ret0 );
 
         nvra = "0:rhmap-fh-openshift-templates-4.7.4-1.el7.noarch@base";
         ret0 = KojiNVRA.parseNVRA( nvra );
-        assertEquals( ret0.getName(), "rhmap-fh-openshift-templates" );
-        assertEquals( ret0.getVersion(), "4.7.4" );
-        assertEquals( ret0.getRelease(), "1.el7" );
-        assertEquals( ret0.getEpoch(), "0" );
-        assertEquals( ret0.getSrc(), Boolean.FALSE );
-        assertEquals( ret0.getLocation(), "base" );
+        assertEquals( "rhmap-fh-openshift-templates", ret0.getName() );
+        assertEquals( "4.7.4", ret0.getVersion() );
+        assertEquals( "1.el7", ret0.getRelease() );
+        assertEquals( (Integer) 0, ret0.getEpoch());
+        assertEquals( Boolean.FALSE, ret0.getSrc() );
+        assertEquals( "base", ret0.getLocation() );
         logger.debug( ">>> {}", ret0 );
     }
 

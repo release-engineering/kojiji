@@ -18,7 +18,6 @@ package com.redhat.red.build.koji.model.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.commonjava.rwx.anno.DataKey;
-import org.commonjava.rwx.anno.StructPart;
 
 import java.util.Objects;
 import java.util.Set;
@@ -49,7 +48,7 @@ public class RPMBuildComponent extends BuildComponent {
 
     @JsonProperty(EPOCH)
     @DataKey( EPOCH )
-    private String epoch;
+    private Integer epoch;
 
     @JsonProperty(ARCH)
     @DataKey( ARCH )
@@ -79,7 +78,7 @@ public class RPMBuildComponent extends BuildComponent {
         return release;
     }
 
-    public String getEpoch() {
+    public Integer getEpoch() {
         return epoch;
     }
 
@@ -110,7 +109,7 @@ public class RPMBuildComponent extends BuildComponent {
         this.release = release;
     }
 
-    public void setEpoch( String epoch )
+    public void setEpoch( Integer epoch )
     {
         this.epoch = epoch;
     }
@@ -153,7 +152,7 @@ public class RPMBuildComponent extends BuildComponent {
             return this;
         }
 
-        public Builder withEpoch(String epoch) {
+        public Builder withEpoch(Integer epoch) {
             target.epoch = epoch;
             return this;
         }

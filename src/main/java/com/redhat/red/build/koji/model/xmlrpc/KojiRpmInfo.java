@@ -57,7 +57,7 @@ public class KojiRpmInfo
     private String arch;
 
     @DataKey( "epoch" )
-    private String epoch;
+    private Integer epoch;
 
     @DataKey( "payloadhash" )
     private String payloadhash;
@@ -168,12 +168,12 @@ public class KojiRpmInfo
         this.release = release;
     }
 
-    public String getEpoch()
+    public Integer getEpoch()
     {
         return epoch;
     }
 
-    public void setEpoch( String epoch )
+    public void setEpoch( Integer epoch )
     {
         this.epoch = epoch;
     }
@@ -297,7 +297,7 @@ public class KojiRpmInfo
         ExternalizableUtils.writeUTF( out, release );
         ExternalizableUtils.writeUTF( out, nvr );
         ExternalizableUtils.writeUTF( out, arch );
-        ExternalizableUtils.writeUTF( out, epoch );
+        ExternalizableUtils.writeUTF( out, epoch != null ? epoch.toString() : null );
         ExternalizableUtils.writeUTF( out, payloadhash );
         out.writeLong( size );
         out.writeObject( buildtime );
@@ -329,7 +329,8 @@ public class KojiRpmInfo
         this.release = ExternalizableUtils.readUTF( in );
         this.nvr = ExternalizableUtils.readUTF( in );
         this.arch = ExternalizableUtils.readUTF( in );
-        this.epoch = ExternalizableUtils.readUTF( in );
+        String epochString = ExternalizableUtils.readUTF( in );
+        this.epoch = epochString != null ? Integer.parseInt( epochString ) : null;
         this.payloadhash = ExternalizableUtils.readUTF( in );
         this.size = in.readLong();
         this.buildtime = (Date) in.readObject();
