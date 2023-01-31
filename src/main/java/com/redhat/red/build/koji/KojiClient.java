@@ -1695,7 +1695,75 @@ public class KojiClient
                               importInfo.getBuildNVR().getName(), importInfo.getBuildNVR().getVersion(), session.getUserInfo().getUserName() );
     }
 
-    protected Map<String, KojijiErrorInfo> uploadForImport( KojiImport buildInfo,
+    /**
+     * Upload built artifacts in sequence.
+     */
+    private Map<String, KojijiErrorInfo> uploadForImport( KojiImport buildInfo,
+                                                            Iterable<Supplier<ImportFile>> uploadedFileSuppliers,
+                                                            String dirname, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        final Map<String, KojijiErrorInfo> uploadErrors = new HashMap<>();
+
+        if ( buildInfo != null )
+        {
+            // there are two ways to call CGImport: with the metadata uploaded (here), and with it inlined in the request.
+            // if buildInfo is null, we're using the second approach.
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try
+            {
+                objectMapper.writeValue( baos, buildInfo );
+            }
+            catch ( IOException e )
+            {
+                throw new KojiClientException( "Failed to serialize import info to JSON. Reason: %s", e, e.getMessage() );
+            }
+
+            byte[] data = baos.toByteArray();
+            try {
+                KojiUploaderResult result = newUploader(() -> new ImportFile(METADATA_JSON_FILE, new ByteArrayInputStream(data), data.length),
+                        dirname, session).call();
+                Exception error = result.getError();
+                if ( error != null )
+                {
+                    uploadErrors.put(result.getUploadFilePath(),
+                            new KojijiErrorInfo( result.getUploadFilePath(), error, result.isTemporaryError() ) );
+                }
+            }
+            catch (Exception e)
+            {
+                throw new KojiClientException( "Failed to execute uploads for: %s. Reason: %s", e, buildInfo, e.getMessage() );
+            }
+        }
+
+        for ( Supplier<ImportFile> fileSupplier : uploadedFileSuppliers )
+        {
+            try
+            {
+                KojiUploaderResult result = newUploader(fileSupplier, dirname, session).call();
+                Exception error = result.getError();
+                if ( error != null )
+                {
+                    uploadErrors.put( result.getUploadFilePath(),
+                            new KojijiErrorInfo( result.getUploadFilePath(), error, result.isTemporaryError() ) );
+                }
+            }
+            catch ( Exception e )
+            {
+                throw new KojiClientException( "Failed to execute uploads for: %s. Reason: %s", e, buildInfo, e.getMessage() );
+            }
+        }
+        return uploadErrors;
+    }
+
+/*
+ * This is not thread-safe.
+ * Uploading files in parallel much be done in sub-sessions. Otherwise, it can fail on
+ * "requests are received out of sequence" err if the last call for the session has higher callnum than prev ones.
+ * Until we could add and test the sub-session approach, I leave out this method.
+ * ruhan, Jan 13, 2023
+
+     protected Map<String, KojijiErrorInfo> uploadForImport( KojiImport buildInfo,
                                                                 Iterable<Supplier<ImportFile>> uploadedFileSuppliers,
                                                                 String dirname, KojiSessionInfo session )
             throws KojiClientException
@@ -1766,6 +1834,7 @@ public class KojiClient
 
         return uploadErrors;
     }
+*/
 
     protected Callable<KojiUploaderResult> newUploader( Supplier<ImportFile> importFileSupplier, String dirname, KojiSessionInfo session )
     {

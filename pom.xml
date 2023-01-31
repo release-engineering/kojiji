@@ -46,7 +46,7 @@
         <rwxVersion>2.3</rwxVersion>
         <httpcVersion>4.4</httpcVersion>
         <atlasVersion>1.0.0</atlasVersion>
-        <mockitoVersion>2.7.20</mockitoVersion>
+        <mockitoVersion>2.22.0</mockitoVersion>
         <kerbyVersion>2.0.1</kerbyVersion>
         <o11yphantVersion>1.0</o11yphantVersion>
 
