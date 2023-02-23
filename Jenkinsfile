@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'maven-jdk11' }
+    agent { label 'maven-36-jdk11' }
     stages {
         stage('Prepare') {
             steps {
