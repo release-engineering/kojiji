@@ -68,7 +68,7 @@ public class HC4SyncObjectClient
     {
         if ( metricRegistry == null )
         {
-            return doCall( request, responseType, urlBuilder, requestModifier );
+            return RetryUtils.withRetry( () -> doCall(request, responseType, urlBuilder, requestModifier) );
         }
 
         // Apply global and per request metric
@@ -77,7 +77,7 @@ public class HC4SyncObjectClient
         final Timer.Context requestTimerContext = metricRegistry.timer( name( request.getClass(), "call" ) ).time();
         try
         {
-            return doCall( request, responseType, urlBuilder, requestModifier );
+            return RetryUtils.withRetry( () -> doCall(request, responseType, urlBuilder, requestModifier) );
         }
         finally
         {
