@@ -21,12 +21,5 @@ pipeline {
                 sh 'mvn help:effective-settings -B -V clean deploy -e'
             }
         }
-        stage('Archive') {
-            when { branch 'master' }
-            steps {
-                echo "Archive"
-                archiveArtifacts artifacts: "$artifact_glob", fingerprint: true
-            }
-        }
     }
 }
