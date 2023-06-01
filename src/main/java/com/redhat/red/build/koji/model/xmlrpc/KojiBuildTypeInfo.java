@@ -163,10 +163,11 @@ public class KojiBuildTypeInfo
             }
             else if ( obj instanceof KojiNpmBuildInfo )
             {
-                KojiNpmBuildInfo npm = (KojiNpmBuildInfo) obj;
-                buildInfo.setId( npm.getBuildId() );
-                buildInfo.setName( npm.getName() );
-                buildInfo.setVersion( npm.getVersion() );
+                // TODO Comment this until brew support to return the buildInfo for NPM builds
+                // KojiNpmBuildInfo npm = (KojiNpmBuildInfo) obj;
+                // buildInfo.setId( npm.getBuildId() );
+                // buildInfo.setName( npm.getName() );
+                // buildInfo.setVersion( npm.getVersion() );
             }
             else if ( obj instanceof KojiRpmBuildInfo )
             {
