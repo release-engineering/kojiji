@@ -319,4 +319,25 @@ public class KojiTaskInfo
         this.arch = ExternalizableUtils.readUTF( in );
         this.request = (List<Object>) in.readObject();
     }
+
+    @Override
+    public String toString() {
+        return "KojiTaskInfo{" +
+                "taskId=" + taskId +
+                ", weight=" + weight +
+                ", parentTaskId=" + parentTaskId +
+                ", channelId=" + channelId +
+                ", startTime=" + startTime +
+                ", label='" + label + '\'' +
+                ", priority=" + priority +
+                ", completionTime=" + completionTime +
+                ", state=" + state +
+                ", createTime=" + createTime +
+                ", ownerId=" + ownerId +
+                ", hostId=" + hostId +
+                ", method='" + method + '\'' +
+                ", arch='" + arch + '\'' +
+                ", request=" + request +
+                '}';
+    }
 }
