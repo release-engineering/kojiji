@@ -30,6 +30,7 @@ import org.commonjava.rwx.anno.StructPart;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.ARCH;
@@ -59,7 +60,7 @@ public class BuildOutput
 
     @JsonProperty(FILESIZE)
     @DataKey( FILESIZE )
-    private int fileSize;
+    private long fileSize;
 
     @JsonProperty(ARCH)
     @DataKey( ARCH )
@@ -110,7 +111,7 @@ public class BuildOutput
         this.filename = filename;
     }
 
-    public void setFileSize( int fileSize )
+    public void setFileSize( long fileSize )
     {
         this.fileSize = fileSize;
     }
@@ -150,7 +151,7 @@ public class BuildOutput
         return filename;
     }
 
-    public int getFileSize()
+    public long getFileSize()
     {
         return fileSize;
     }
@@ -215,7 +216,7 @@ public class BuildOutput
             return this;
         }
 
-        public Builder withFileSize( int size )
+        public Builder withFileSize( long size )
         {
             target.fileSize = size;
 
@@ -389,15 +390,7 @@ public class BuildOutput
     @Override
     public int hashCode()
     {
-        int result = getBuildrootId();
-        result = 31 * result + ( getFilename() != null ? getFilename().hashCode() : 0 );
-        result = 31 * result + ( getFileSize() ^ ( getFileSize() >>> 32 ) );
-        result = 31 * result + ( getArch() != null ? getArch().hashCode() : 0 );
-        result = 31 * result + ( getChecksumType() != null ? getChecksumType().hashCode() : 0 );
-        result = 31 * result + ( getChecksum() != null ? getChecksum().hashCode() : 0 );
-        result = 31 * result + ( getOutputType() != null ? getOutputType().hashCode() : 0 );
-        result = 31 * result + ( getExtraInfo() != null ? getExtraInfo().hashCode() : 0 );
-        return result;
+        return Objects.hash(buildrootId, filename, fileSize, arch, checksumType, checksum, outputType, extraInfo);
     }
 
     @Override
