@@ -22,7 +22,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;

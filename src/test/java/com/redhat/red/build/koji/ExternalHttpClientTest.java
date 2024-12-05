@@ -26,17 +26,13 @@ import org.commonjava.atlas.maven.ident.ref.SimpleArtifactRef;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assume.assumeNotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_TASK_INFO;
-import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeTrue;
 
 /**

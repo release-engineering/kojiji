@@ -22,7 +22,6 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by jdcasey on 11/13/15.

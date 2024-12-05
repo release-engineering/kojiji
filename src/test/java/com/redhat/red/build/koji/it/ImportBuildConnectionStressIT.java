@@ -16,7 +16,6 @@
 package com.redhat.red.build.koji.it;
 
 import com.redhat.red.build.koji.KojiClient;
-import com.redhat.red.build.koji.KojiClientException;
 import com.redhat.red.build.koji.KojijiErrorInfo;
 import com.redhat.red.build.koji.model.ImportFile;
 import com.redhat.red.build.koji.model.KojiImportResult;
@@ -50,7 +49,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

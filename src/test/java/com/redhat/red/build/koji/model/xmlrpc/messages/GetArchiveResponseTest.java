@@ -19,10 +19,6 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiChecksumType;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 

@@ -21,7 +21,6 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by jdcasey on 12/3/15.

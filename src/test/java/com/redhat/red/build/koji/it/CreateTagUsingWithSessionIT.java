@@ -16,7 +16,6 @@
 package com.redhat.red.build.koji.it;
 
 import com.redhat.red.build.koji.KojiClient;
-import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
 import org.junit.Test;
 

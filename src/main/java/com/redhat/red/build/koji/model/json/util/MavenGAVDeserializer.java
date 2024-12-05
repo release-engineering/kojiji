@@ -20,7 +20,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
 import org.commonjava.atlas.maven.ident.ref.SimpleProjectVersionRef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

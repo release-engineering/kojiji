@@ -19,11 +19,7 @@ import com.redhat.red.build.koji.KojiClient;
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveQuery;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenRef;
 import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 /**
  * Created by ruhan on 9/14/17.

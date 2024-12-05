@@ -17,7 +17,6 @@ package com.redhat.red.build.koji.it;
 
 import com.redhat.red.build.koji.KojiClient;
 import com.redhat.red.build.koji.KojiClientException;
-import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
 import org.junit.Test;
 

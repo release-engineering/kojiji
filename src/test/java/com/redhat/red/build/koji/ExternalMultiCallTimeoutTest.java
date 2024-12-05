@@ -23,7 +23,6 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveQuery;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
