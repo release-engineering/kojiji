@@ -120,7 +120,7 @@ public class HC4SyncObjectClient
             }
 
             final String content = new RWXMapper().render( request );
-            logger.trace( "Sending request:\n\n" + content + "\n\n" );
+            logger.trace( "Sending request:\n\n{}\n\n", content );
 
             method.setEntity( new StringEntity( content ) );
         }

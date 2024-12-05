@@ -39,7 +39,7 @@ public class KojiBuildSourceConverter implements Converter<BuildSource>
         String[] parts = String.valueOf( object ).split( "#" );
         if ( parts.length < 2 || isEmpty( parts[0] ) || isEmpty( parts[1] ) )
         {
-            logger.warn("Invalid build-source: '" + object + "'. Must be of format '<base-url>#<commit-ish>'");
+            logger.warn( "Invalid build-source: '{}'. Must be of format '<base-url>#<commit-ish>'", object );
         }
         BuildSource source = new BuildSource( parts[0] );
         if ( parts.length > 1 )
