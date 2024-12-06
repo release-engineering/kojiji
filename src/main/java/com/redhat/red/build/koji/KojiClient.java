@@ -205,7 +205,7 @@ public class KojiClient
     {
         objectMapper = new KojiObjectMapper();
 
-        logger.debug( "SETUP: Starting KojiClient for: " + config.getKojiURL() );
+        logger.debug( "SETUP: Starting KojiClient for: {}", config.getKojiURL() );
         try
         {
             xmlrpcClient = new HC4SyncObjectClient( httpFactory, config.getKojiSiteConfig(), metricRegistry );
@@ -225,17 +225,14 @@ public class KojiClient
 
             if ( 1 != response.getApiVersion() )
             {
-                logger.error( "Cannot connect to koji at: " + config.getKojiURL() + ". API Version reported is '"
-                                      + response.getApiVersion() + "' but this client only supports version 1." );
+                logger.error( "Cannot connect to koji at: {}. API Version reported is '{}' but this client only supports version 1.", config.getKojiURL(), response.getApiVersion() );
                 xmlrpcClient.close();
                 xmlrpcClient = null;
             }
         }
         catch ( XmlRpcException e )
         {
-            logger.error(
-                    "Cannot retrieve koji API version from: " + config.getKojiURL() + ". (Reason: " + e.getMessage()
-                            + ")", e );
+            logger.error( "Cannot retrieve koji API version from: {}. (Reason: {})", config.getKojiURL(), e.getMessage(), e );
             xmlrpcClient.close();
             xmlrpcClient = null;
         }
@@ -453,7 +450,7 @@ public class KojiClient
             }
             catch ( XmlRpcException e )
             {
-                logger.error( String.format( "Failed to logout: %s", e.getMessage() ), e );
+                logger.error( "Failed to logout: {}", e.getMessage(), e );
             }
         }
 
@@ -463,7 +460,7 @@ public class KojiClient
         }
         catch ( DestroyFailedException e )
         {
-            logger.error( String.format( "Failed to destroy session: %s", e.getMessage() ), e );
+            logger.error( "Failed to destroy session: {}", e.getMessage(), e );
         }
     }
 
@@ -618,7 +615,7 @@ public class KojiClient
             }
             catch ( RuntimeException e )
             {
-                logger.error( "FAIL: " + e.getMessage(), e );
+                logger.error( "FAIL: {}", e.getMessage(), e );
                 throw e;
             }
         }, "Failed to execute content-generator import" );
