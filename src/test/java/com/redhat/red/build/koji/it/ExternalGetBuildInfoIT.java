@@ -21,6 +21,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static com.redhat.red.build.koji.model.xmlrpc.KojiBtype.rpm;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -61,6 +62,6 @@ public class ExternalGetBuildInfoIT
         client.logout(session);
 
         assertThat( info, notNullValue() );
-        assertTrue( info.getTypeNames().contains( "rpm" ) );
+        assertTrue( info.getTypeNames().contains( rpm ) );
     }
 }

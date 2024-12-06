@@ -32,6 +32,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +46,9 @@ import static com.redhat.red.build.koji.model.util.DateUtils.toUTC;
 public class KojiBuildInfo
     implements Externalizable
 {
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
-    private static final long serialVersionUID = 3810197749870211773L;
+    private static final long serialVersionUID = -2380549426149135636L;
 
     @DataKey( "build_id" )
     @JsonProperty( "build_id" )
@@ -124,7 +125,7 @@ public class KojiBuildInfo
     private String source;
 
     @JsonIgnore
-    private List<String> typeNames; // a build may contain more than one types, e.g., maven and rpm.
+    private List<KojiBtype> typeNames; // a build may contain more than one types, e.g., maven and rpm.
 
     @DataKey( "volume_name" )
     @JsonProperty( "volume_name" )
@@ -317,7 +318,7 @@ public class KojiBuildInfo
     @JsonIgnore
     public ProjectVersionRef getGAV()
     {
-        if ( StringUtils.isEmpty(mavenGroupId) || StringUtils.isEmpty(mavenArtifactId) )
+        if ( StringUtils.isEmpty( mavenGroupId ) || StringUtils.isEmpty( mavenArtifactId ) )
         {
             return null;
         }
@@ -345,12 +346,12 @@ public class KojiBuildInfo
         this.source = source;
     }
 
-    public List<String> getTypeNames()
+    public List<KojiBtype> getTypeNames()
     {
         return typeNames;
     }
 
-    public void setTypeNames( List<String> typeNames )
+    public void setTypeNames( List<KojiBtype> typeNames )
     {
         this.typeNames = typeNames;
     }
@@ -421,7 +422,7 @@ public class KojiBuildInfo
     {
         int version = in.readInt();
 
-        if ( version != 1 )
+        if ( version <= 0 || version > 2 )
         {
             throw new IOException( "Invalid version: " + version );
         }
@@ -445,8 +446,27 @@ public class KojiBuildInfo
         this.platform = ExternalizableUtils.readUTF ( in );
         this.extra = (Map<String, Object>) in.readObject();
         this.source = ExternalizableUtils.readUTF ( in );
+
         // XXX: This has @JsonIgnore
-        this.typeNames = (List<String>) in.readObject();
+        if ( version == 2 )
+        {
+            this.typeNames = (List<KojiBtype>) in.readObject();
+        }
+        else
+        {
+            List<String> typeNames = (List<String>) in.readObject();
+
+            if ( typeNames != null )
+            {
+                this.typeNames = new ArrayList<>( typeNames.size() );
+
+                for ( String typeName : typeNames )
+                {
+                    this.typeNames.add( KojiBtype.fromString( typeName ) );
+                }
+            }
+        }
+
         this.volumeName = ExternalizableUtils.readUTF ( in );
     }
 

@@ -935,7 +935,7 @@ public class KojiClient
     public void enrichArchiveTypeInfo( List<KojiArchiveInfo> archives, KojiSessionInfo session )
             throws KojiClientException
     {
-        Map<String, List<KojiArchiveInfo>> buildTypeMap = archives.stream().collect( Collectors.groupingBy( KojiArchiveInfo::getBuildType ) );
+        Map<KojiBtype, List<KojiArchiveInfo>> buildTypeMap = archives.stream().collect( Collectors.groupingBy( KojiArchiveInfo::getBuildType ) );
 
         final AtomicReference<KojiClientException> err = new AtomicReference<>();
 
@@ -945,7 +945,7 @@ public class KojiClient
             {
                 switch ( buildType )
                 {
-                    case "maven":
+                    case maven:
                         List<KojiMavenArchiveInfo> mavenArchiveInfos =
                                         multiCall( Constants.GET_MAVEN_ARCHIVE, archiveIds, KojiMavenArchiveInfo.class,
                                                    session );
@@ -954,7 +954,7 @@ public class KojiClient
                             archiveInfos.get( i ).addMavenArchiveInfo( mavenArchiveInfos.get( i ) );
                         }
                         break;
-                    case "image":
+                    case image:
                         List<KojiImageArchiveInfo> imageArchiveInfos =
                                         multiCall( Constants.GET_IMAGE_ARCHIVE, archiveIds, KojiImageArchiveInfo.class,
                                                    session );
@@ -963,7 +963,7 @@ public class KojiClient
                             archiveInfos.get( i ).addImageArchiveInfo( imageArchiveInfos.get( i ) );
                         }
                         break;
-                    case "win":
+                    case win:
                         List<KojiWinArchiveInfo> winArchiveInfos =
                                         multiCall( Constants.GET_WIN_ARCHIVE, archiveIds, KojiWinArchiveInfo.class,
                                                    session );
@@ -972,8 +972,6 @@ public class KojiClient
                             archiveInfos.get( i ).addWinArchiveInfo( winArchiveInfos.get( i ) );
                         }
                         break;
-                    default:
-                        logger.warn( "Unknown archive build type: {}", buildType );
                 }
             }
             catch ( KojiClientException e )

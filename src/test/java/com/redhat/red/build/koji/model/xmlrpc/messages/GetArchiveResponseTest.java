@@ -19,6 +19,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiChecksumType;
 import org.junit.Test;
 
+import static com.redhat.red.build.koji.model.xmlrpc.KojiBtype.maven;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -34,7 +35,7 @@ public class GetArchiveResponseTest
         KojiArchiveInfo archiveInfo = parsed.getArchiveInfo();
 
         assertThat( archiveInfo.getArtifactId(), equalTo( "netty-all" ) );
-        assertThat( archiveInfo.getBuildType(), equalTo( "maven" ) );
+        assertThat( archiveInfo.getBuildType(), equalTo( maven ) );
         assertThat( archiveInfo.getBuildTypeId(), equalTo( 2 ) );
         assertThat( archiveInfo.getBuildId(), equalTo( 558964 ) );
         assertThat( archiveInfo.getBuildrootId(), equalTo( null ) );
@@ -59,7 +60,7 @@ public class GetArchiveResponseTest
         GetArchiveResponse resp = new GetArchiveResponse();
         KojiArchiveInfo archiveInfo = new KojiArchiveInfo();
         archiveInfo.setArtifactId( "netty-all" );
-        archiveInfo.setBuildType( "maven" );
+        archiveInfo.setBuildType( maven );
         archiveInfo.setBuildTypeId( 2 );
         archiveInfo.setBuildId( 558964 );
         archiveInfo.setBuildrootId( null );
