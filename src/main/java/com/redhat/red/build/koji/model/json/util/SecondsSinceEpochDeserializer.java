@@ -17,19 +17,12 @@ package com.redhat.red.build.koji.model.json.util;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
-import org.commonjava.atlas.maven.ident.ref.SimpleProjectVersionRef;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-
-import static org.apache.commons.lang.StringUtils.isEmpty;
 
 /**
  * Created by jdcasey on 2/10/16.

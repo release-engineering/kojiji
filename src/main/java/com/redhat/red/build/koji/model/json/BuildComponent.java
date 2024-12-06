@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.redhat.red.build.koji.model.converter.KojiBuildComponentConverter;
 import org.commonjava.rwx.anno.Converter;
 import org.commonjava.rwx.anno.DataKey;
-import org.commonjava.rwx.anno.StructPart;
 
 import java.util.HashSet;
 import java.util.Set;

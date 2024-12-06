@@ -18,7 +18,6 @@ package com.redhat.red.build.koji.model.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.commonjava.rwx.anno.DataKey;
-import org.commonjava.rwx.anno.StructPart;
 
 import java.util.Objects;
 import java.util.Set;

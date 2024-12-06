@@ -15,8 +15,6 @@
  */
 package com.redhat.red.build.koji.model.json;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.commonjava.atlas.maven.ident.ref.SimpleProjectVersionRef;
 import org.junit.Test;
 
 import java.io.IOException;

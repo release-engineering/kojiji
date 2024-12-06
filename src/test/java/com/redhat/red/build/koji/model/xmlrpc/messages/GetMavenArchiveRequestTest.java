@@ -21,8 +21,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
-
 public class GetMavenArchiveRequestTest
                 extends AbstractKojiMessageTest
 {

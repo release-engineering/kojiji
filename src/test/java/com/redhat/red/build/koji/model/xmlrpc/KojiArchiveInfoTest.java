@@ -18,12 +18,10 @@ package com.redhat.red.build.koji.model.xmlrpc;
 import org.commonjava.atlas.maven.ident.ref.SimpleArtifactRef;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.internal.matchers.Null;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 /**
  * Created by jdcasey on 1/23/17.

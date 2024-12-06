@@ -18,7 +18,6 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +25,6 @@ import java.util.List;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 /**

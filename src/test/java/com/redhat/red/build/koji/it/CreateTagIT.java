@@ -22,8 +22,6 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import static org.junit.Assert.assertThat;
-
 /**
  * Created by jdcasey on 1/14/16.
  */

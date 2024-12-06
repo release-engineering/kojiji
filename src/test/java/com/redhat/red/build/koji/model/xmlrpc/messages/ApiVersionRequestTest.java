@@ -17,8 +17,6 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertEquals;
-
 /**
  * Created by jdcasey on 12/3/15.
  */
