@@ -19,6 +19,7 @@ import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @StructPart
@@ -50,7 +51,7 @@ public class KojiBuildTypeInfo
     private KojiNpmBuildInfo npm;
 
     // a build may contain more than one types, e.g., maven and rpm
-    private List<String> names = new ArrayList<>(  );
+    private List<KojiBtype> names = new ArrayList<>(  );
 
     private List<Object> buildInfoList = new ArrayList<>(  );
 
@@ -62,7 +63,7 @@ public class KojiBuildTypeInfo
     public void setNpm( KojiNpmBuildInfo npm )
     {
         this.npm = npm;
-        names.add( NPM );
+        names.add( KojiBtype.npm );
         buildInfoList.add( npm );
     }
 
@@ -74,7 +75,7 @@ public class KojiBuildTypeInfo
     public void setRpm( KojiRpmBuildInfo rpm )
     {
         this.rpm = rpm;
-        names.add( RPM );
+        names.add( KojiBtype.rpm );
         buildInfoList.add( rpm );
     }
 
@@ -86,7 +87,7 @@ public class KojiBuildTypeInfo
     public void setMaven( KojiMavenBuildInfo maven )
     {
         this.maven = maven;
-        names.add( MAVEN );
+        names.add( KojiBtype.maven );
         buildInfoList.add( maven );
     }
 
@@ -98,7 +99,7 @@ public class KojiBuildTypeInfo
     public void setWin( KojiWinBuildInfo win )
     {
         this.win = win;
-        names.add( WIN );
+        names.add( KojiBtype.win );
         buildInfoList.add( win );
     }
 
@@ -110,13 +111,13 @@ public class KojiBuildTypeInfo
     public void setImage( KojiImageBuildInfo image )
     {
         this.image = image;
-        names.add( IMAGE );
+        names.add( KojiBtype.image );
         buildInfoList.add( image );
     }
 
-    public List<String> getNames()
+    public List<KojiBtype> getNames()
     {
-        return names;
+        return Collections.unmodifiableList( names );
     }
 
     /**
@@ -181,7 +182,7 @@ public class KojiBuildTypeInfo
 
     public List<Object> getBuildInfo()
     {
-        return buildInfoList;
+        return Collections.unmodifiableList( buildInfoList );
     }
 
     @Override

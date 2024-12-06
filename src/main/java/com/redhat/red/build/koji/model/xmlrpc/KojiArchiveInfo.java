@@ -17,6 +17,7 @@ package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.redhat.red.build.koji.model.converter.KojiBtypeConverter;
 import com.redhat.red.build.koji.model.converter.KojiChecksumTypeConverter;
 import com.redhat.red.build.koji.model.converter.StringListConverter;
 import com.redhat.red.build.koji.model.util.ExternalizableUtils;
@@ -46,17 +47,18 @@ import java.util.regex.Pattern;
 public class KojiArchiveInfo
     implements Externalizable
 {
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
-    private static final long serialVersionUID = 6877608047448106469L;
+    private static final long serialVersionUID = -2526545088406954594L;
 
     @DataKey( "id" )
     @JsonProperty( "id" )
     private Integer archiveId;
 
+    @Converter( KojiBtypeConverter.class )
     @DataKey( "btype" )
     @JsonProperty( "btype" )
-    private String buildType;
+    private KojiBtype buildType;
 
     @DataKey( "btype_id" )
     @JsonProperty( "btype_id" )
@@ -145,12 +147,12 @@ public class KojiArchiveInfo
 
     }
 
-    public String getBuildType()
+    public KojiBtype getBuildType()
     {
         return buildType;
     }
 
-    public void setBuildType( String buildType )
+    public void setBuildType( KojiBtype buildType )
     {
         this.buildType = buildType;
     }
@@ -500,7 +502,16 @@ public class KojiArchiveInfo
     {
         out.writeInt( VERSION );
         out.writeObject( archiveId );
-        ExternalizableUtils.writeUTF( out, buildType );
+
+        if ( VERSION == 2 )
+        {
+            out.writeObject( buildType );
+        }
+        else
+        {
+            ExternalizableUtils.writeUTF( out, buildType.name() );
+        }
+
         out.writeObject( buildTypeId );
         ExternalizableUtils.writeUTF( out, groupId );
         ExternalizableUtils.writeUTF( out, artifactId );
@@ -531,13 +542,22 @@ public class KojiArchiveInfo
     {
         int version = in.readInt();
 
-        if ( version != 1 )
+        if ( version <= 0 || version > 2 )
         {
             throw new IOException( "Invalid version: " + version );
         }
 
         this.archiveId = (Integer) in.readObject();
-        this.buildType = ExternalizableUtils.readUTF( in );
+
+        if ( version == 2 )
+        {
+            this.buildType = (KojiBtype) in.readObject();
+        }
+        else
+        {
+            this.buildType = KojiBtype.fromString( ExternalizableUtils.readUTF( in ) );
+        }
+
         this.buildTypeId = (Integer) in.readObject();
         this.groupId = ExternalizableUtils.readUTF( in );
         this.artifactId = ExternalizableUtils.readUTF( in );

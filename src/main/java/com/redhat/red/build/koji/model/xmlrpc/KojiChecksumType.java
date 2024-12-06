@@ -21,8 +21,9 @@ public enum KojiChecksumType
     sha1   ( 1, "SHA-1" ),
     sha256 ( 2, "SHA-256" );
 
-    private Integer value;
-    private String algorithm;
+    private final Integer value;
+
+    private final String algorithm;
 
     private KojiChecksumType( int value, String algorithm )
     {
@@ -40,7 +41,7 @@ public enum KojiChecksumType
         return algorithm;
     }
 
-    public static KojiChecksumType fromInteger( Integer value )
+    public static KojiChecksumType fromInteger( int value )
     {
         for ( KojiChecksumType checksum : values() )
         {
