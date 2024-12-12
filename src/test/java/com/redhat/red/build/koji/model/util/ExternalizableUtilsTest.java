@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static com.redhat.red.build.koji.model.xmlrpc.KojiBtype.maven;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -69,7 +70,7 @@ public class ExternalizableUtilsTest
         }
 
         assertThat( o2.getArtifactId(), equalTo( "netty-all" ) );
-        assertThat( o2.getBuildType(), equalTo( "maven" ) );
+        assertThat( o2.getBuildType(), equalTo( maven ) );
         assertThat( o2.getBuildTypeId(), equalTo( 2 ) );
         assertThat( o2.getBuildId(), equalTo( 558964 ) );
         assertThat( o2.getBuildrootId(), equalTo( null ) );
