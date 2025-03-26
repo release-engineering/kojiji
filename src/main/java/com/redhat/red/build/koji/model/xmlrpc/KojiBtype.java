@@ -15,13 +15,24 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public enum KojiBtype
 {
+    unknown,
     rpm,
     maven,
     win,
     image,
-    npm;
+    module,
+    operator_manifests,
+    remote_sources,
+    remote_source_file,
+    npm,
+    icm;
+
+    private static final Logger logger = LoggerFactory.getLogger( KojiBtype.class );
 
     KojiBtype()
     {
@@ -38,7 +49,8 @@ public enum KojiBtype
             }
         }
 
-        throw new IllegalArgumentException( "Unknown build type: " + name );
+        logger.warn( "Unknown Koji btype: {}", name );
+        return unknown;
     }
 
     @Override
