@@ -43,7 +43,7 @@ public enum KojiBtype
     {
         for ( KojiBtype btype : values() )
         {
-            if ( btype.name().equals( name ) )
+            if ( btype.name().replace( '_', '-' ).equals( name ) )
             {
                 return btype;
             }
