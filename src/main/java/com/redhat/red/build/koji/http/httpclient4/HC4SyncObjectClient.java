@@ -134,11 +134,8 @@ public class HC4SyncObjectClient
                                                 siteConfig.getUri(), Arrays.asList( extraPath ), e.getMessage() );
         }
 
-        CloseableHttpClient client = null;
-        try
+        try ( CloseableHttpClient client = httpFactory.createClient( siteConfig ) )
         {
-            client = httpFactory.createClient( siteConfig );
-
             if ( Void.class.equals( responseType ) )
             {
                 final ObjectResponseHandler<VoidResponse> handler =
@@ -170,10 +167,6 @@ public class HC4SyncObjectClient
         {
             throw new XmlRpcTransportException( "Call failed: " + methodName, request, e );
         }
-        finally
-        {
-            IOUtils.closeQuietly( client );
-        }
     }
 
     private String getRequestMethod( Object obj )
@@ -189,6 +182,14 @@ public class HC4SyncObjectClient
 
     public void close()
     {
-        IOUtils.closeQuietly( httpFactory );
+        if ( httpFactory != null )
+        {
+            try
+            {
+                httpFactory.close();
+            } catch (IOException e) {
+
+            }
+        }
     }
 }

@@ -24,6 +24,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Properties;
 
@@ -63,7 +64,7 @@ public class AbstractWithSetupIT
             fail( String.format( "Failed to execute GET request: %s. Reason: %s", url, e.getMessage() ) );
         }
 
-        String result = IOUtils.toString( response.getEntity().getContent() );
+        String result = IOUtils.toString( response.getEntity().getContent(), StandardCharsets.UTF_8 );
 
         System.out.println( result );
 
@@ -81,27 +82,20 @@ public class AbstractWithSetupIT
     protected void stageImport( String importsDirPath, CloseableHttpClient client )
             throws Exception
     {
-        InputStream is = getResourceStream( importsDirPath, "staging.properties" );
-
-        Properties p = new Properties();
-        try
+        try ( InputStream is = getResourceStream( importsDirPath, "staging.properties" ) )
         {
+            Properties p = new Properties();
             p.load( is );
-        }
-        finally
-        {
-            closeQuietly( is );
-        }
+            p.stringPropertyNames().forEach( (fname)->{
+                String targetPath = p.getProperty( fname );
+                if ( isEmpty( targetPath ) )
+                {
+                    fail( "No target path for staging file: " + fname + "!" );
+                }
 
-        p.stringPropertyNames().forEach( (fname)->{
-            String targetPath = p.getProperty( fname );
-            if ( isEmpty( targetPath ) )
-            {
-                fail( "No target path for staging file: " + fname + "!" );
-            }
-
-            uploadFile( getResourceStream( importsDirPath, fname ), targetPath, client );
-        });
+                uploadFile( getResourceStream( importsDirPath, fname ), targetPath, client );
+            });
+        }
     }
 
     protected void uploadFile( InputStream resourceStream, String targetPath, CloseableHttpClient client )

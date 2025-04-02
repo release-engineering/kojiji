@@ -46,6 +46,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -110,7 +111,7 @@ public class AbstractIT
             Logger logger = LoggerFactory.getLogger( getClass() );
             try
             {
-                logger.info( "Client Key/Cert PEM contents:\n\n{}\n\n", FileUtils.readFileToString( clientKeyCertPem ) );
+                logger.info( "Client Key/Cert PEM contents:\n\n{}\n\n", FileUtils.readFileToString( clientKeyCertPem, StandardCharsets.UTF_8 ) );
             }
             catch ( IOException e )
             {
@@ -123,7 +124,7 @@ public class AbstractIT
             File serverCertsPem = getServerCertsPem( client );
             try
             {
-                logger.info( "Server PEM contents:\n\n{}\n\n", FileUtils.readFileToString( serverCertsPem ) );
+                logger.info( "Server PEM contents:\n\n{}\n\n", FileUtils.readFileToString( serverCertsPem, StandardCharsets.UTF_8 ) );
             }
             catch ( IOException e )
             {
@@ -229,45 +230,38 @@ public class AbstractIT
         File targetFile = new File( downloadDir, path );
         targetFile.getParentFile().mkdirs();
 
-        CloseableHttpResponse response = null;
-        try
+        try ( CloseableHttpResponse response = client.execute( new HttpGet( url ) ) )
         {
-            response = client.execute( new HttpGet( url ) );
+            if ( response.getStatusLine().getStatusCode() == 200 )
+            {
+                try ( FileOutputStream stream = new FileOutputStream( targetFile ) )
+                {
+                    IOUtils.copy( response.getEntity().getContent(), stream );
+
+                    return targetFile;
+                }
+                catch ( IOException e )
+                {
+                    e.printStackTrace();
+                    fail(
+                            String.format( "Failed to retrieve body content from: %s. Reason: %s", url, e.getMessage() ) );
+                }
+                finally
+                {
+                    System.out.println(
+                            "\n\n ##### END: " + name.getMethodName() + " :: " + url + " #####\n\n" );
+                }
+            }
+            else
+            {
+                System.out.println( "Cannot retrieve: " + path + ". Status was: " + response.getStatusLine() );
+                System.out.println( "\n\n ##### END: " + name.getMethodName() + " :: " + url + " #####\n\n" );
+            }
         }
         catch ( IOException e )
         {
             e.printStackTrace();
             fail( String.format( "Failed to execute GET request: %s. Reason: %s", url, e.getMessage() ) );
-            return null;
-        }
-
-        FileOutputStream stream = null;
-        if ( response.getStatusLine().getStatusCode() == 200 )
-        {
-            try
-            {
-                stream = new FileOutputStream( targetFile );
-                IOUtils.copy( response.getEntity().getContent(), stream );
-
-                return targetFile;
-            }
-            catch ( IOException e )
-            {
-                e.printStackTrace();
-                fail(
-                        String.format( "Failed to retrieve body content from: %s. Reason: %s", url, e.getMessage() ) );
-            }
-            finally
-            {
-                IOUtils.closeQuietly( stream );
-                System.out.println(
-                        "\n\n ##### END: " + name.getMethodName() + " :: " + url + " #####\n\n" );
-            }
-        }
-        else
-        {
-            System.out.println( "Cannot retrieve: " + path + ". Status was: " + response.getStatusLine() );
-            System.out.println( "\n\n ##### END: " + name.getMethodName() + " :: " + url + " #####\n\n" );
         }
 
         return null;
@@ -275,21 +269,14 @@ public class AbstractIT
 
     protected void withNewClient( Consumer<CloseableHttpClient> consumer )
     {
-        CloseableHttpClient client = null;
-        FileOutputStream stream = null;
-        try
+        try ( CloseableHttpClient client = factory.createClient() )
         {
-            client = factory.createClient();
             consumer.accept( client );
         }
         catch ( Exception err )
         {
             System.out.println( "Failed to retrieve server logs after error. Reason: " + err.getMessage() );
             err.printStackTrace();
-        }
-        finally
-        {
-            IOUtils.closeQuietly( client );
         }
     }
 
@@ -363,28 +350,21 @@ public class AbstractIT
     //        String url = formatUrl( CONTENT_MGMT_PATH, path );
     //        HttpDelete put = new HttpDelete( url );
     //
-    //        CloseableHttpClient client = null;
-    //        try
+    //        try ( CloseableHttpClient client = factory.createClient(); CloseableHttpResponse response = client.execute( put ) )
     //        {
-    //            client = factory.createClient();
-    //            CloseableHttpResponse response = client.execute( put );
     //            int code = response.getStatusLine().getStatusCode();
     //            if ( code != 404 && code != 204 )
     //            {
     //                String extra = "";
     //                if ( response.getEntity() != null )
     //                {
-    //                    String body = IOUtils.toString( response.getEntity().getContent() );
+    //                    String body = IOUtils.toString( response.getEntity().getContent(), StandardCharsets.UTF_8 );
     //                    extra = "\nBody:\n\n" + body;
     //                }
     //
     //                Assert.fail( "Failed to delete content from: " + path + ".\nURL: " + url + "\nStatus: "
     //                                     + response.getStatusLine() + extra );
     //            }
-    //        }
-    //        finally
-    //        {
-    //            IOUtils.closeQuietly( client );
     //        }
     //    }
 
@@ -395,18 +375,15 @@ public class AbstractIT
         HttpPut put = new HttpPut( url );
         put.setEntity( new StringEntity( content ) );
 
-        CloseableHttpClient client = null;
-        try
+        try ( CloseableHttpClient client = factory.createClient(); CloseableHttpResponse response = client.execute( put ) )
         {
-            client = factory.createClient();
-            CloseableHttpResponse response = client.execute( put );
             int code = response.getStatusLine().getStatusCode();
             if ( code != 200 && code != 201 )
             {
                 String extra = "";
                 if ( response.getEntity() != null )
                 {
-                    String body = IOUtils.toString( response.getEntity().getContent() );
+                    String body = IOUtils.toString( response.getEntity().getContent(), StandardCharsets.UTF_8 );
                     extra = "\nBody:\n\n" + body;
                 }
 
@@ -414,10 +391,6 @@ public class AbstractIT
                         "Failed to put content to: " + path + ".\nURL: " + url + "\nStatus: " + response.getStatusLine()
                                 + extra );
             }
-        }
-        finally
-        {
-            IOUtils.closeQuietly( client );
         }
     }
 
@@ -428,18 +401,15 @@ public class AbstractIT
         HttpPost post = new HttpPost( url );
         post.setEntity( new StringEntity( scriptContent ) );
 
-        CloseableHttpClient client = null;
-        try
+        try ( CloseableHttpClient client = factory.createClient(); CloseableHttpResponse response = client.execute( post ) )
         {
-            client = factory.createClient();
-            CloseableHttpResponse response = client.execute( post );
             int code = response.getStatusLine().getStatusCode();
             if ( code != 200 && code != 201 )
             {
                 String extra = "";
                 if ( response.getEntity() != null )
                 {
-                    String body = IOUtils.toString( response.getEntity().getContent() );
+                    String body = IOUtils.toString( response.getEntity().getContent(), StandardCharsets.UTF_8 );
                     extra = "\nBody:\n\n" + body;
                 }
 
@@ -447,10 +417,6 @@ public class AbstractIT
                         "Failed to execute setup script using: " + url + ". Response was: " + response.getStatusLine()
                                 + extra + "\n\nScript body:\n\n" + scriptContent + "\n\n" );
             }
-        }
-        finally
-        {
-            IOUtils.closeQuietly( client );
         }
     }
 

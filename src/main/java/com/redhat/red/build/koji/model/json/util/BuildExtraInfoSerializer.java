@@ -49,7 +49,7 @@ public class BuildExtraInfoSerializer<T extends BuildExtraInfo>
         }
         else
         {
-            throw new JsonGenerationException( "Unknown BuildExtraInfo type: " + value.getClass().getName() );
+            throw new JsonGenerationException( "Unknown BuildExtraInfo type: " + value.getClass().getName(), jgen );
         }
     }
 }

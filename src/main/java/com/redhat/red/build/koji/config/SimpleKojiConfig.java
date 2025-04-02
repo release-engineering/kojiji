@@ -22,6 +22,7 @@ import org.commonjava.util.jhttpc.model.SiteTrustType;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.commonjava.util.jhttpc.model.SiteConfig.DEFAULT_CONNECTION_POOL_TIMEOUT_SECONDS;
 
@@ -112,7 +113,7 @@ public class SimpleKojiConfig
 
                 if ( keyCert.exists() )
                 {
-                    builder.withKeyCertPem( FileUtils.readFileToString( keyCert ) );
+                    builder.withKeyCertPem( FileUtils.readFileToString( keyCert, StandardCharsets.UTF_8 ) );
                 }
             }
 
@@ -122,7 +123,7 @@ public class SimpleKojiConfig
 
                 if ( serverCert.exists() )
                 {
-                    builder.withServerCertPem( FileUtils.readFileToString( serverCert ) );
+                    builder.withServerCertPem( FileUtils.readFileToString( serverCert, StandardCharsets.UTF_8 ) );
                 }
             }
 

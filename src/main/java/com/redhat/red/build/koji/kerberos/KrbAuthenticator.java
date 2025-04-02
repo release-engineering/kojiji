@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
@@ -95,7 +97,16 @@ public class KrbAuthenticator
     public static String makeServerPrincipal( String service, String url, String realm )
             throws UnknownHostException, MalformedURLException
     {
-        String serverName = InetAddress.getByName( new URL( url ).getHost() ).getCanonicalHostName();
+        String serverName;
+
+        try
+        {
+            serverName = InetAddress.getByName( new URI( url ).toURL().getHost() ).getCanonicalHostName();
+        }
+        catch ( URISyntaxException e )
+        {
+            throw new MalformedURLException( e.getMessage() );
+        }
 
         return new PrincipalName( service + "/" + serverName + "@" + realm, NT_PRINCIPAL ).toString();
     }

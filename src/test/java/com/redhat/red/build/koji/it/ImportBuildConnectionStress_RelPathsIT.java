@@ -43,6 +43,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -57,7 +58,7 @@ import java.util.function.Supplier;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -181,7 +182,7 @@ public class ImportBuildConnectionStress_RelPathsIT
     public static void loadWords()
             throws IOException
     {
-        words = IOUtils.readLines( Thread.currentThread().getContextClassLoader().getResourceAsStream( "words" ) );
+        words = IOUtils.readLines( Thread.currentThread().getContextClassLoader().getResourceAsStream( "words" ), StandardCharsets.UTF_8 );
     }
 
     private Supplier<ImportFile> addPom( ProjectVersionRef gav, KojiImport.Builder importBuilder )

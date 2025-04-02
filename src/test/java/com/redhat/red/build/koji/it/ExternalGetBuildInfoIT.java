@@ -25,7 +25,7 @@ import static com.redhat.red.build.koji.model.xmlrpc.KojiBtype.rpm;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ExternalGetBuildInfoIT
     extends ExternalAbstractIT

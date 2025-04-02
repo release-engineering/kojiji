@@ -19,7 +19,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiBuildTypeQuery;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ListBuildTypesRequestTest
                 extends AbstractKojiMessageTest

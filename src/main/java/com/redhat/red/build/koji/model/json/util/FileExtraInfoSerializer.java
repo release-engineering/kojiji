@@ -49,7 +49,7 @@ public class FileExtraInfoSerializer<T extends FileExtraInfo>
         }
         else
         {
-            throw new JsonGenerationException( "Unknown FileExtraInfo type: " + value.getClass().getName() );
+            throw new JsonGenerationException( "Unknown FileExtraInfo type: " + value.getClass().getName(), jgen );
         }
     }
 }
