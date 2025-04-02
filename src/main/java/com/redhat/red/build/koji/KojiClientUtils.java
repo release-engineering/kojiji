@@ -42,7 +42,7 @@ public class KojiClientUtils
                 List<Object> rendered = new ArrayList<>();
                 for ( Object a : (List<?>) arg )
                 {
-                    if ( registry.hasRender( a.getClass() ) )
+                    if ( registry.hasRenderer( a.getClass() ) )
                     {
                         a = registry.renderTo( a );
                     }
@@ -52,7 +52,7 @@ public class KojiClientUtils
             }
             else
             {
-                if ( registry.hasRender( arg.getClass() ) )
+                if ( registry.hasRenderer( arg.getClass() ) )
                 {
 
                     Object obj = registry.renderTo( arg );
