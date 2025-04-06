@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.redhat.rcm</groupId>
         <artifactId>redhat-releng-tools</artifactId>
-        <version>3</version>
+        <version>7</version>
     </parent>
 
     <groupId>com.redhat.red.build</groupId>
@@ -43,7 +43,7 @@
         <enforcer.skip>true</enforcer.skip>
         <javaVersion>1.8</javaVersion>
         <jhttpcVersion>1.6</jhttpcVersion>
-        <rwxVersion>2.3</rwxVersion>
+        <rwxVersion>2.4-SNAPSHOT</rwxVersion>
         <httpcVersion>4.4</httpcVersion>
         <atlasVersion>1.0.0</atlasVersion>
         <mockitoVersion>2.22.0</mockitoVersion>
@@ -239,8 +239,6 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${plugin.jacoco.version}</version>
-                    <!-- Broken for sonarqube! -->
-                    <!--<version>0.7.5.201505241946</version>-->
                     <executions>
                         <execution>
                             <id>prepare</id>
