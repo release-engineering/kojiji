@@ -20,7 +20,7 @@ import org.junit.Test;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GetRpmRequestTest
                 extends AbstractKojiMessageTest

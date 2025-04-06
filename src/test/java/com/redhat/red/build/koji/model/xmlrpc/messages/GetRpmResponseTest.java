@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GetRpmResponseTest
                 extends AbstractKojiMessageTest

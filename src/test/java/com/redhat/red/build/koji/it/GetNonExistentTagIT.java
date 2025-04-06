@@ -21,7 +21,7 @@ import com.redhat.red.build.koji.model.xmlrpc.KojiTagInfo;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by jdcasey on 1/14/16.

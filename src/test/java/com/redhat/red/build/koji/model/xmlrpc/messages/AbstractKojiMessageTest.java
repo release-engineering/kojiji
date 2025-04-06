@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -66,7 +67,7 @@ public class AbstractKojiMessageTest
                 Assert.fail( "Cannot find message XML file on classpath: " + resource );
             }
 
-            return IOUtils.toString( is );
+            return IOUtils.toString( is, StandardCharsets.UTF_8 );
         }
     }
 
@@ -107,7 +108,7 @@ public class AbstractKojiMessageTest
      */
     protected <T> void roundTrip( Class<T> type ) throws Exception
     {
-        roundTrip( type, type.newInstance() );
+        roundTrip( type, type.getDeclaredConstructor().newInstance() );
     }
 
     /**

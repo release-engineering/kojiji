@@ -29,6 +29,7 @@ public class KojiObjectMapper
         extends ObjectMapper
 {
 
+    @SuppressWarnings( "deprecation" )
     public KojiObjectMapper()
     {
         setSerializationInclusion( JsonInclude.Include.NON_EMPTY );

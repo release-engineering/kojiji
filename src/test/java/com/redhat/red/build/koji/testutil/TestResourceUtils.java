@@ -19,6 +19,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by jdcasey on 9/15/16.
@@ -41,7 +42,7 @@ public final class TestResourceUtils
     {
         try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream( resource ))
         {
-            return IOUtils.toString( in );
+            return IOUtils.toString( in, StandardCharsets.UTF_8 );
         }
     }
 

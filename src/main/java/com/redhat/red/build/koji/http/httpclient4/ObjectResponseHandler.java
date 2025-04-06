@@ -65,12 +65,9 @@ public class ObjectResponseHandler<T>
 
             if ( logger.isTraceEnabled() )
             {
-                File recording = null;
-                FileOutputStream stream = null;
-                try
+                File recording = File.createTempFile( "xml-rpc.response.", ".xml" );
+                try ( FileOutputStream stream = new FileOutputStream( recording ) )
                 {
-                    recording = File.createTempFile( "xml-rpc.response.", ".xml" );
-                    stream = new FileOutputStream( recording );
                     stream.write( baos.toByteArray() );
                 }
                 catch ( final IOException e )
@@ -80,7 +77,6 @@ public class ObjectResponseHandler<T>
                 }
                 finally
                 {
-                    IOUtils.closeQuietly( stream );
                     logger.info( "\n\n\nRecorded response to: {}\n\n\n", recording );
                 }
             }

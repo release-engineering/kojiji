@@ -15,8 +15,6 @@
  */
 package com.redhat.red.build.koji;
 
-import com.redhat.red.build.koji.KojiClient;
-import com.redhat.red.build.koji.KojiClientHelper;
 import com.redhat.red.build.koji.config.KojiConfig;
 import com.redhat.red.build.koji.config.SimpleKojiConfigBuilder;
 import com.redhat.red.build.koji.model.xmlrpc.KojiArchiveInfo;
@@ -36,9 +34,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
 

@@ -43,6 +43,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -57,7 +58,7 @@ import java.util.function.Supplier;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -81,26 +82,28 @@ public class ImportBuildConnectionStressIT
     public void run()
             throws Exception
     {
-        KojiClient client = newKojiClient();
-        for ( int i = 0; i < BUILD_COUNT; i++ )
+        try ( KojiClient client = newKojiClient() )
         {
-            final int idx = i;
-            completions.submit( () ->
-                              {
-                                  Thread.currentThread().setName( "Build-" + idx );
-                                  try
+            for ( int i = 0; i < BUILD_COUNT; i++ )
+            {
+                final int idx = i;
+                completions.submit( () ->
                                   {
-                                      runImport( client );
-                                  }
-                                  catch ( Exception e )
-                                  {
-                                      e.printStackTrace();
-                                      //fail( "Failed to import build." );
-                                      return e;
-                                  }
+                                      Thread.currentThread().setName( "Build-" + idx );
+                                      try
+                                      {
+                                          runImport( client );
+                                      }
+                                      catch ( Exception e )
+                                      {
+                                          e.printStackTrace();
+                                          //fail( "Failed to import build." );
+                                          return e;
+                                      }
 
-                                  return null;
-                              } );
+                                      return null;
+                                  } );
+            }
         }
 
         int errorCount = 0;
@@ -181,7 +184,7 @@ public class ImportBuildConnectionStressIT
     public static void loadWords()
             throws IOException
     {
-        words = IOUtils.readLines( Thread.currentThread().getContextClassLoader().getResourceAsStream( "words" ) );
+        words = IOUtils.readLines( Thread.currentThread().getContextClassLoader().getResourceAsStream( "words" ), StandardCharsets.UTF_8 );
     }
 
     private Supplier<ImportFile> addPom( ProjectVersionRef gav, KojiImport.Builder importBuilder )
