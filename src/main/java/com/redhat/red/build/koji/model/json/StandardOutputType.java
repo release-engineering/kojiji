@@ -22,8 +22,9 @@ public enum StandardOutputType
 {
     log("log"),
     maven("maven"),
-    npm("npm"),
-    REMOTE_SOURCE_FILE("remote-source-file");
+    remote_sources("remote-sources"),
+    REMOTE_SOURCE_FILE("remote-source-file"),
+    npm("npm");
 
     private String name;
 
