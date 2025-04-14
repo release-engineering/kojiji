@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,10 +27,10 @@ public class GetArchiveTypeRequest
     private String filename;
 
     @DataIndex( 1 )
-    private String typeName;	
+    private String typeName;
 
     @DataIndex( 2 )
-    private int typeId;	
+    private int typeId;
 
     public GetArchiveTypeRequest()
     {
@@ -65,13 +65,13 @@ public class GetArchiveTypeRequest
     {
         this.typeId = typeId;
     }
-	
+
     public GetArchiveTypeRequest withFilename( String filename )
     {
         this.filename = filename;
         return this;
     }
-	
+
     public GetArchiveTypeRequest withTypeName( String typeName )
     {
         this.typeName = typeName;
