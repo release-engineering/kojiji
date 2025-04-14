@@ -209,7 +209,7 @@ public class KojiClient
         {
             xmlrpcClient.close();
             xmlrpcClient = null;
-            throw new KojiClientException("Cannot construct koji HTTP site-config: " + e.getMessage(), e);
+            throw new KojiClientException( "Cannot construct koji HTTP site-config: " + e.getMessage(), e );
         }
 
         try
@@ -248,7 +248,7 @@ public class KojiClient
         }
         catch ( XmlRpcException e )
         {
-            throw new KojiClientException( "Cannot retrieve koji API version from: %s. (Reason: %s)", e,
+            throw new KojiClientException( "Cannot retrieve koji API version from: {}. (Reason: {})", e,
                                            config.getKojiURL(), e.getMessage() );
         }
     }
@@ -375,7 +375,7 @@ public class KojiClient
         }
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings( "unused" )
     private <T> T doXmlRpcAndWarn( KojiInternalCommand<T> cmd, String message, Object... params )
     {
         try
@@ -1340,7 +1340,7 @@ public class KojiClient
         }, "Failed to retrieve list of archives for: %s", gav );
 
         List<Object> args = new ArrayList<>();
-        archives.forEach(( archive ) -> {
+        archives.forEach( ( archive ) -> {
             args.add( archive.getBuildId() );
         });
 
@@ -1610,7 +1610,7 @@ public class KojiClient
         return withBuildTypeInfo( buildInfo, session );
     }
 
-    public KojiBuildTypeInfo getBuildTypeInfo(int buildId, KojiSessionInfo session)
+    public KojiBuildTypeInfo getBuildTypeInfo( int buildId, KojiSessionInfo session )
             throws KojiClientException
     {
         KojiBuildTypeInfo buildTypeInfo = doXmlRpcAndThrow( () -> {
@@ -1629,7 +1629,7 @@ public class KojiClient
     {
         if ( buildInfo != null )
         {
-            KojiBuildTypeInfo buildTypeInfo = getBuildTypeInfo(buildInfo.getId(), session);
+            KojiBuildTypeInfo buildTypeInfo = getBuildTypeInfo( buildInfo.getId(), session );
 
             if ( buildTypeInfo != null )
             {
@@ -1710,13 +1710,14 @@ public class KojiClient
             }
 
             byte[] data = baos.toByteArray();
-            try {
-                KojiUploaderResult result = newUploader(() -> new ImportFile(METADATA_JSON_FILE, new ByteArrayInputStream(data), data.length),
-                        dirname, session).call();
+            try
+            {
+                KojiUploaderResult result = newUploader( () -> new ImportFile( METADATA_JSON_FILE, new ByteArrayInputStream( data ), data.length ),
+                        dirname, session ).call();
                 Exception error = result.getError();
                 if ( error != null )
                 {
-                    uploadErrors.put(result.getUploadFilePath(),
+                    uploadErrors.put( result.getUploadFilePath(),
                             new KojijiErrorInfo( result.getUploadFilePath(), error, result.isTemporaryError() ) );
                 }
             }

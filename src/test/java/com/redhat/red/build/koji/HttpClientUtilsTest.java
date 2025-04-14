@@ -31,7 +31,7 @@ public class HttpClientUtilsTest
 {
 
     /**
-     * The test mocks available CloseableHttpQuietlyClient, and verfiy InputStream / CloseableHttpResponse close()
+     * The test mocks available CloseableHttpQuietlyClient, and verify InputStream / CloseableHttpResponse close()
      * methods will never be met when closeQuietly( client ) called.
      */
     @Test
@@ -54,7 +54,7 @@ public class HttpClientUtilsTest
     }
 
     /**
-     * The test mocks available CloseableHttpResponse, and verfiy InputStream close() method will never be met when
+     * The test mocks available CloseableHttpResponse, and verify InputStream close() method will never be met when
      * CloseableHttpResponse close() method called.
      */
     @Test
@@ -74,7 +74,7 @@ public class HttpClientUtilsTest
     }
 
     /**
-     * The test mocks available CloseableHttpResponse, and verfiy InputStream / CloseableHttpResponse close()
+     * The test mocks available CloseableHttpResponse, and verify InputStream / CloseableHttpResponse close()
      * methods will both be met when closeQuietly( response ) called.
      */
     @Test

@@ -38,7 +38,7 @@ public class KojiBuildComponentConverter
     @Override
     public BuildComponent parse( Object object )
     {
-        logger.warn( "Parsing not implemented for: %s", object.getClass() );
+        logger.warn( "Parsing not implemented for: {}", object.getClass() );
         return null;
     }
 

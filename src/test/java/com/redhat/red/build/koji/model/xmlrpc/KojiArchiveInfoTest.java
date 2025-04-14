@@ -68,7 +68,8 @@ public class KojiArchiveInfoTest
     {
         KojiArchiveInfo archiveInfo = new KojiArchiveInfo();
         archiveInfo.setArchiveId(null);
-        try {
+        try
+        {
             // call hashCode when archiveId is null, make sure it doesn't throw an exception
             archiveInfo.hashCode();
 

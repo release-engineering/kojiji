@@ -32,6 +32,6 @@ public class GetMyUserIT
     {
         KojiClient client = newKojiClient();
         KojiUserInfo userInfo = client.getLoggedInUserInfo( "kojiadmin" );
-        System.out.println(userInfo);
+        System.out.println( userInfo );
     }
 }

@@ -31,17 +31,17 @@ import java.util.stream.Collectors;
 
 /**
  * See: <a href="http://fedoraproject.org/wiki/Koji/ContentGeneratorMetadata">http://fedoraproject.org/wiki/Koji/ContentGeneratorMetadata</a>
- *
+ * <p>
  * Created by jdcasey on 2/10/16.
  */
 @StructPart
 public class KojiImport
 {
-    @JsonProperty(METADATA_VERSION)
+    @JsonProperty( METADATA_VERSION )
     @DataKey( METADATA_VERSION )
     private int metadataVersion;
 
-    @JsonProperty(BUILD)
+    @JsonProperty( BUILD )
     @DataKey( BUILD )
     private BuildDescription build;
 

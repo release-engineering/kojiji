@@ -40,7 +40,7 @@ public class ExternalAbstractIT extends AbstractIT
     protected SimpleKojiConfigBuilder getKojiConfigBuilder()
             throws Exception
     {
-        if ( kojiConfigDir == null)
+        if ( kojiConfigDir == null )
         {
             return null;
         }

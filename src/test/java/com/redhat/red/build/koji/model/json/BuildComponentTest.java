@@ -15,8 +15,6 @@
  */
 package com.redhat.red.build.koji.model.json;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.junit.Test;
 
 import java.io.IOException;
@@ -28,38 +26,39 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * Created by jdcasey on 2/17/16.
  */
 public class BuildComponentTest
-        extends AbstractJsonTest {
-
+        extends AbstractJsonTest
+{
     @Test
-    public void jsonRoundTripFile() throws VerificationException, JsonProcessingException, IOException {
-        FileBuildComponent src = new FileBuildComponent.Builder("foo.txt")
+    public void jsonRoundTripFile() throws VerificationException, IOException
+    {
+        FileBuildComponent src = new FileBuildComponent.Builder( "foo.txt" )
                 .withFileSize(42)
-                .withChecksum("md5", "2a4b3cd54e6f")
+                .withChecksum( "md5", "2a4b3cd54e6f" )
                 .build();
 
         String json = mapper.writeValueAsString(src);
         System.out.println(json);
 
-        BuildComponent out = mapper.readValue(json, BuildComponent.class);
+        BuildComponent out = mapper.readValue( json, BuildComponent.class );
 
         assertThat(out, equalTo(src));
     }
 
     @Test
-    public void jsonRoundTripRPM() throws VerificationException, JsonProcessingException, IOException {
-        RPMBuildComponent src = new RPMBuildComponent.Builder("foo")
-                .withVersion("1.0")
-                .withRelease("1")
-                .withArch(StandardArchitecture.noarch)
-                .withSigmd5("1a2c3c4d5e6f")
+    public void jsonRoundTripRPM() throws VerificationException, IOException
+    {
+        RPMBuildComponent src = new RPMBuildComponent.Builder( "foo" )
+                .withVersion( "1.0" )
+                .withRelease( "1" )
+                .withArch( StandardArchitecture.noarch )
+                .withSigmd5( "1a2c3c4d5e6f" )
                 .build();
 
-        String json = mapper.writeValueAsString(src);
-        System.out.println(json);
+        String json = mapper.writeValueAsString( src );
+        System.out.println( json );
 
-        BuildComponent out = mapper.readValue(json, BuildComponent.class);
+        BuildComponent out = mapper.readValue( json, BuildComponent.class );
 
-        assertThat(out, equalTo(src));
+        assertThat( out, equalTo( src ) );
     }
-
 }

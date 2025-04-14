@@ -31,7 +31,8 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.HOST;
 import static com.redhat.red.build.koji.model.json.util.Verifications.checkNull;
 
 @JsonTypeName("file")
-public class FileBuildComponent extends BuildComponent {
+public class FileBuildComponent extends BuildComponent
+{
 
     @JsonProperty(FILENAME)
     @DataKey( FILENAME )

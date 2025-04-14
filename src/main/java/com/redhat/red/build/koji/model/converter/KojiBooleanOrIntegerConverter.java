@@ -35,7 +35,7 @@ public class KojiBooleanOrIntegerConverter
     @Override
     public Object render( KojiBooleanOrInteger value )
     {
-        if (value == null)
+        if ( value == null )
         {
             return null;
         }
@@ -47,13 +47,6 @@ public class KojiBooleanOrIntegerConverter
             return booleanValue;
         }
 
-        Integer integerValue = value.getAsInteger();
-
-        if ( integerValue != null )
-        {
-            return integerValue;
-        }
-
-        return null;
+        return value.getAsInteger();
     }
 }

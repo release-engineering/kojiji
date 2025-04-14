@@ -40,7 +40,8 @@ import static org.junit.Assume.assumeNotNull;
 
 /**
  * Before running these tests, you need to set VM argument -Dkoji.hubUrl
- * These tests are ignored by default. They depends on the external Koji server content.
+ * These tests are ignored by default.
+ * They depend on the external Koji server content.
  */
 public class ExternalKojiQueryOptsTest
 {

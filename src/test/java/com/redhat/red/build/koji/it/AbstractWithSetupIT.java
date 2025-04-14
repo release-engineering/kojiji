@@ -86,7 +86,7 @@ public class AbstractWithSetupIT
         {
             Properties p = new Properties();
             p.load( is );
-            p.stringPropertyNames().forEach( (fname)->{
+            p.stringPropertyNames().forEach( ( fname ) -> {
                 String targetPath = p.getProperty( fname );
                 if ( isEmpty( targetPath ) )
                 {

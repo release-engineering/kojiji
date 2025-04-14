@@ -51,12 +51,11 @@ public class ExternalGetBuildExtraInfoIT
         KojiClient client = newKojiClient();
 
         KojiSessionInfo session = client.login();
-        KojiBuildInfo info = client.getBuildInfo("rhel-server-docker-6.9-49", session);
-        client.logout(session);
+        KojiBuildInfo info = client.getBuildInfo( "rhel-server-docker-6.9-49", session );
+        client.logout( session );
 
-        assertThat(info, notNullValue());
-        assertThat(info.getExtra().get("image"), instanceOf(HashMap.class));
-        assertThat(info.getExtra().get("container_koji_task_id"), equalTo(12522523));
+        assertThat( info, notNullValue() );
+        assertThat( info.getExtra().get( "image" ), instanceOf( HashMap.class ) );
+        assertThat( info.getExtra().get( "container_koji_task_id" ), equalTo( 12522523 ) );
     }
-
 }

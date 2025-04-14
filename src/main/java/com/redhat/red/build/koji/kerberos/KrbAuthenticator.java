@@ -404,27 +404,33 @@ public class KrbAuthenticator
             byte[] decodedSessionInfo = new Base64().decode( encryptedSessionInfo );
             KrbPriv sessionInfoPriv = readPriv( decodedSessionInfo, key, addressInfo.getServerAddress(),
                     addressInfo.getClientAddress(), krbClient.getKrbConfig().getAllowableClockSkew(), apRep );
-            EncKrbPrivPart encKrbPrivPart = sessionInfoPriv.getEncPart();
-            byte[] userData = encKrbPrivPart.getUserData();
-
-            if ( userData == null )
-            {
-                throw new KojiClientException( "Could not find session info in private message" );
-            }
-
-            String sessionInfoString = new String( userData, US_ASCII );
-            String[] sessionInfoParts = sessionInfoString.split( " " );
-
-            if ( sessionInfoParts.length != 2 )
-            {
-                throw new KojiClientException( "Failed to split session info string" );
-            }
-
+            String[] sessionInfoParts = getSessionInfoParts( sessionInfoPriv );
             return new KojiSessionInfo( Integer.parseInt( sessionInfoParts[0] ), sessionInfoParts[1] );
         }
         catch ( KrbException e )
         {
             throw new KojiClientException( "Failed to login: " + e.getMessage(), e );
         }
+    }
+
+    private static String[] getSessionInfoParts( KrbPriv sessionInfoPriv ) throws KojiClientException
+    {
+        EncKrbPrivPart encKrbPrivPart = sessionInfoPriv.getEncPart();
+        byte[] userData = encKrbPrivPart.getUserData();
+
+        if ( userData == null )
+        {
+            throw new KojiClientException( "Could not find session info in private message" );
+        }
+
+        String sessionInfoString = new String( userData, US_ASCII );
+        String[] sessionInfoParts = sessionInfoString.split( " " );
+
+        if ( sessionInfoParts.length != 2 )
+        {
+            throw new KojiClientException( "Failed to split session info string" );
+        }
+
+        return sessionInfoParts;
     }
 }

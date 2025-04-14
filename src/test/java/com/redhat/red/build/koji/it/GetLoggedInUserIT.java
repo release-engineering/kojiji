@@ -33,8 +33,8 @@ public class GetLoggedInUserIT
     {
         KojiClient client = newKojiClient();
         KojiSessionInfo sessionInfo = client.login();
-        System.out.println(sessionInfo);
+        System.out.println( sessionInfo );
         KojiUserInfo userInfo = client.getLoggedInUserInfo( sessionInfo );
-        System.out.println(userInfo);
+        System.out.println( userInfo );
     }
 }

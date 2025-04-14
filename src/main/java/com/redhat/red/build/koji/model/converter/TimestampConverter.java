@@ -47,7 +47,7 @@ public class TimestampConverter
             int idx = s.indexOf( "." );
             if ( idx > 0 )
             {
-                s = s.substring( 0, idx ); // Date not support nano second
+                s = s.substring( 0, idx ); // Date does not support nanosecond
             }
             return new SimpleDateFormat( TS_FORMAT ).parse( s );
         }

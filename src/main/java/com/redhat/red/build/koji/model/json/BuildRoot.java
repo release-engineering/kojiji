@@ -289,15 +289,17 @@ public class BuildRoot
             return this;
         }
 
-        public RPMBuildComponent.Builder withRPMComponent(String name){
-            RPMBuildComponent.Builder componentBuilder = new RPMBuildComponent.Builder(name, this);
-            componentBuilders.add(componentBuilder);
+        public RPMBuildComponent.Builder withRPMComponent( String name )
+        {
+            RPMBuildComponent.Builder componentBuilder = new RPMBuildComponent.Builder( name, this );
+            componentBuilders.add( componentBuilder );
             return componentBuilder;
         }
 
-        public FileBuildComponent.Builder withFileComponent(String filename){
-            FileBuildComponent.Builder componentBuilder = new FileBuildComponent.Builder(filename, this);
-            componentBuilders.add(componentBuilder);
+        public FileBuildComponent.Builder withFileComponent( String filename )
+        {
+            FileBuildComponent.Builder componentBuilder = new FileBuildComponent.Builder( filename, this );
+            componentBuilders.add( componentBuilder );
             return componentBuilder;
         }
 
@@ -319,17 +321,17 @@ public class BuildRoot
         public BuildRoot unsafeBuild()
         {
             target.components = componentBuilders.stream()
-                    .map(b -> (BuildComponent) b.unsafeBuild())
-                    .collect(Collectors.toList());
+                    .map( b -> (BuildComponent) b.unsafeBuild() )
+                    .collect( Collectors.toList() );
             return target;
         }
 
         @Override
         public void findMissingProperties( String propertyFormat, Set<String> missingProperties )
         {
-            checkNull(target.buildContainer, missingProperties, propertyFormat, CONTAINER);
-            checkNull(target.buildHost, missingProperties, propertyFormat, HOST);
-            checkNull(target.contentGenerator, missingProperties, propertyFormat, CONTENT_GENERATOR);
+            checkNull( target.buildContainer, missingProperties, propertyFormat, CONTAINER );
+            checkNull( target.buildHost, missingProperties, propertyFormat, HOST );
+            checkNull( target.contentGenerator, missingProperties, propertyFormat, CONTENT_GENERATOR );
 
             if ( target.id < 1 )
             {
@@ -338,7 +340,7 @@ public class BuildRoot
 
             for ( BuildComponent.Builder componentBuilder : componentBuilders )
             {
-                componentBuilder.findMissingProperties(OUTPUT + "[" + componentBuilder.getIdentifier() + "].%s", missingProperties);
+                componentBuilder.findMissingProperties(  OUTPUT + "[" + componentBuilder.getIdentifier() + "].%s", missingProperties );
             }
         }
 

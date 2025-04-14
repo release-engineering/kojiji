@@ -82,7 +82,7 @@ public class FileExtraInfo
         this.mavenExtraInfo = mavenExtraInfo;
     }
 
-    public void setTypeInfo(TypeInfoExtraInfo typeInfo)
+    public void setTypeInfo( TypeInfoExtraInfo typeInfo )
     {
         this.typeInfo = typeInfo;
     }

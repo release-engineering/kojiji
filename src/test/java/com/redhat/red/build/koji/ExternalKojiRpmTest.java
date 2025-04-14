@@ -49,7 +49,8 @@ import static org.junit.Assume.assumeNotNull;
 
 /**
  * Before running these tests, you need to set VM argument -Dkoji.hubUrl
- * These tests are ignored by default. They depends on the external Koji server content.
+ * These tests are ignored by default.
+ * They depend on the external Koji server content.
  */
 public class ExternalKojiRpmTest
 {
@@ -119,7 +120,7 @@ public class ExternalKojiRpmTest
     public void testGetRPM()
             throws KojiClientException
     {
-        Integer rpmId = Integer.valueOf( 6719757 );
+        Integer rpmId = 6719757;
         KojiIdOrName rpmInfo = KojiIdOrName.getFor( rpmId );
         List<KojiRpmInfo> ret0 = client.getRPM( rpmInfo, null );
 
@@ -176,7 +177,7 @@ public class ExternalKojiRpmTest
     public void testGetRPMHeaders()
             throws KojiClientException
     {
-        Integer rpmId = Integer.valueOf( 6719757 );
+        Integer rpmId = 6719757;
         Integer taskId = null;
         String filepath = null;
         List<String> headers = Arrays.asList( "summary", "description");
@@ -208,7 +209,7 @@ public class ExternalKojiRpmTest
     public void testListRPMs()
             throws KojiClientException
     {
-        Integer buildId = Integer.valueOf( 834166 );
+        int buildId = 834166;
         KojiRpmQuery query = new KojiRpmQuery().withBuildId( buildId );
         List<KojiRpmInfo> ret0 = client.listRPMs( query, null );
 
@@ -250,7 +251,7 @@ public class ExternalKojiRpmTest
     public void testQueryRPMSigs()
             throws KojiClientException
     {
-        Integer rpmId = Integer.valueOf ( 6719757 );
+        Integer rpmId = 6719757;
         KojiRpmSigsQuery query = new KojiRpmSigsQuery().withRpmId( rpmId );
 
         List<KojiRpmSignatureInfo> ret0 = client.queryRPMSigs( query, null );

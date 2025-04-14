@@ -36,8 +36,8 @@ public class GetNonExistentTagIdIT
             throws Exception
     {
         KojiClient client = newKojiClient();
-        client.withKojiSession( (session)->{
-            KojiTagInfo result = null;
+        client.withKojiSession( (session ) -> {
+            KojiTagInfo result;
             try
             {
                 result = client.getTag( "missing-tag", session );

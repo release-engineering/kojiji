@@ -37,7 +37,7 @@ public class KojiIdOrNameConverter
     @Override
     public Object render( KojiIdOrName value )
     {
-        if (value == null)
+        if ( value == null )
         {
             return null;
         }
