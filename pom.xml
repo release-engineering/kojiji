@@ -43,7 +43,7 @@
         <enforcer.skip>true</enforcer.skip>
         <javaVersion>1.8</javaVersion>
         <jhttpcVersion>1.6</jhttpcVersion>
-        <rwxVersion>2.4-SNAPSHOT</rwxVersion>
+        <rwxVersion>2.4</rwxVersion>
         <httpcVersion>4.4</httpcVersion>
         <atlasVersion>1.0.0</atlasVersion>
         <mockitoVersion>2.22.0</mockitoVersion>
@@ -69,7 +69,7 @@
         <docker.container.koji-hub.net.ci-network.ip>localhost</docker.container.koji-hub.net.ci-network.ip>
         <koji-hub-address>${docker.container.koji-hub.ip}</koji-hub-address>
 
-        <plugin.jacoco.version>0.8.3</plugin.jacoco.version>
+        <plugin.jacoco.version>0.8.13</plugin.jacoco.version>
     </properties>
 
     <dependencyManagement>

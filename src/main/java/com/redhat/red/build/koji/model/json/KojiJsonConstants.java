@@ -22,6 +22,8 @@ public final class KojiJsonConstants
 {
     public static final String ARCH = "arch";
 
+    public static final String ARCHIVES = "archives";
+
     public static final String TYPE = "type";
 
     public static final String OS = "os";
@@ -101,6 +103,8 @@ public final class KojiJsonConstants
     public static final String NPM_INFO = "npm";
 
     public static final String NPM_TYPE_INFO = "npm";
+
+    public static final String REMOTE_SOURCES = "remote-sources";
 
     public static final String REMOTE_SOURCE_FILE = "remote-source-file";
 
