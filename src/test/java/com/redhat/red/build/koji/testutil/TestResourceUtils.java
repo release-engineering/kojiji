@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import static org.junit.Assert.assertNotNull;
+
 /**
  * Created by jdcasey on 9/15/16.
  */
@@ -31,8 +33,9 @@ public final class TestResourceUtils
     public static byte[] readTestResourceBytes( String resource )
             throws IOException
     {
-        try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream( resource ))
+        try ( InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream( resource ) )
         {
+            assertNotNull( "Unable to load test resource: " + resource, in );
             return IOUtils.toByteArray( in );
         }
     }
@@ -42,6 +45,7 @@ public final class TestResourceUtils
     {
         try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream( resource ))
         {
+            assertNotNull( "Unable to load test resource: " + resource, in );
             return IOUtils.toString( in, StandardCharsets.UTF_8 );
         }
     }

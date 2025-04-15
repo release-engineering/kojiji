@@ -40,8 +40,8 @@ public class ExternalGetBuildInfoIT
         assertThat( apiVersion, equalTo( 1 ) );
 
         KojiSessionInfo session = client.login();
-        KojiBuildInfo info = client.getBuildInfo("org.jboss.resteasy-tjws-3.0.17.Final-1", session);
-        client.logout(session);
+        KojiBuildInfo info = client.getBuildInfo( "org.jboss.resteasy-tjws-3.0.17.Final-1", session );
+        client.logout( session );
 
         assertThat(info, notNullValue());
         assertThat(info.getGAV(), notNullValue());

@@ -33,15 +33,16 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE;
  *
  * @author Honza Brázdil &lt;jbrazdil@redhat.com&gt;
  */
-@JsonTypeInfo(use = Id.NAME, include = As.PROPERTY, property = TYPE)
-@JsonSubTypes({
-@JsonSubTypes.Type(value = FileBuildComponent.class, name = "file"),
-@JsonSubTypes.Type(value = RPMBuildComponent.class, name = "rpm")
+@JsonTypeInfo( use = Id.NAME, include = As.PROPERTY, property = TYPE )
+@JsonSubTypes( {
+@JsonSubTypes.Type( value = FileBuildComponent.class, name = "file" ),
+@JsonSubTypes.Type( value = RPMBuildComponent.class, name = "rpm" )
 })
 @Converter( KojiBuildComponentConverter.class )
-public abstract class BuildComponent {
+public abstract class BuildComponent
+{
 
-    @JsonProperty(TYPE)
+    @JsonProperty( TYPE )
     @DataKey( TYPE )
     private String type;
 
@@ -49,7 +50,7 @@ public abstract class BuildComponent {
     {
     }
 
-    public BuildComponent( String type)
+    public BuildComponent( String type )
     {
         this.type = type;
     }
@@ -59,32 +60,38 @@ public abstract class BuildComponent {
         return type;
     }
 
-    public void setType(String type)
+    public void setType(  String type )
     {
         this.type = type;
     }
 
-    public static abstract class Builder<T extends BuildComponent> implements SectionBuilder<T>, VerifiableBuilder<T> {
+    public static abstract class Builder<T extends BuildComponent> implements SectionBuilder<T>, VerifiableBuilder<T>
+    {
 
         private BuildRoot.Builder parent;
 
-        public Builder() {
+        public Builder()
+        {
         }
 
-        public Builder(BuildRoot.Builder parent) {
+        public Builder( BuildRoot.Builder parent )
+        {
             this.parent = parent;
         }
 
-        public BuildRoot.Builder parent() {
+        public BuildRoot.Builder parent()
+        {
             return parent;
         }
 
         @Override
-        public T build() throws VerificationException {
+        public T build() throws VerificationException
+        {
             Set<String> missing = new HashSet<>();
-            findMissingProperties("%s", missing);
-            if (!missing.isEmpty()) {
-                throw new VerificationException(missing);
+            findMissingProperties( "%s", missing );
+            if ( !missing.isEmpty() )
+            {
+                throw new VerificationException( missing );
             }
 
             return unsafeBuild();

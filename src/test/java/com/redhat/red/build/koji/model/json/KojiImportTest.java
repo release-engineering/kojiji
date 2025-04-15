@@ -18,8 +18,9 @@ package com.redhat.red.build.koji.model.json;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,11 +36,9 @@ public class KojiImportTest
             throws VerificationException, IOException
     {
         KojiImport info = new KojiImport( KojiJsonConstants.DEFAULT_METADATA_VERSION, newBuildDescription(),
-                                          Arrays.asList( newBuildRoot() ),
-                                          Arrays.asList( newBuildOutput( 1001, "foo-1.jar" ),
-                                                         newLogOutput( 1001, "build.log" ) )
-                                                .stream()
-                                                .collect( Collectors.toList() ) );
+                Collections.singletonList( newBuildRoot() ),
+                new ArrayList<>( Arrays.asList(newBuildOutput( 1001, "foo-1.jar" ),
+                        newLogOutput( 1001, "build.log" ) ) ) );
 
         String json = mapper.writeValueAsString( info );
         System.out.println( json );

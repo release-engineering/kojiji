@@ -100,7 +100,7 @@ public class AbstractIT
     protected SimpleKojiConfigBuilder getKojiConfigBuilder()
             throws Exception
     {
-        String baseUrl = formatSSLUrl("kojihub");
+        String baseUrl = formatSSLUrl( "kojihub" );
         SimpleKojiConfigBuilder builder = new SimpleKojiConfigBuilder( baseUrl ).withKojiSiteId( KOJI_ID )
                                                                                 .withKojiClientCertificatePassword(
                                                                                         "mypassword" )
@@ -171,13 +171,13 @@ public class AbstractIT
     {
         try
         {
-            System.out.println("SETTING UP KOJI CLIENT");
+            System.out.println( "SETTING UP KOJI CLIENT" );
             KojiConfig config = getKojiConfigBuilder().withMaxConnections( 2 ).build();
 
             PasswordManager passwords = new MemoryPasswordManager();
             passwords.bind( config.getKojiClientCertificatePassword(), config.getKojiSiteId(), PasswordType.KEY );
 
-            System.out.println("DONE: SETTING UP KOJI CLIENT");
+            System.out.println( "DONE: SETTING UP KOJI CLIENT" );
             return new KojiClient( config, passwords, executor );
         }
         catch ( Exception e )
@@ -282,13 +282,13 @@ public class AbstractIT
 
     protected File getServerCertsPem( CloseableHttpClient client )
     {
-        System.out.println("Getting server cert(s) PEM");
+        System.out.println( "Getting server cert(s) PEM" );
         return downloadFile( String.format( SITE_CERT_PATH, getKojiUser() ), client );
     }
 
     protected File getClientKeyCertPem( CloseableHttpClient client )
     {
-        System.out.println("Getting client key/cert PEM");
+        System.out.println( "Getting client key/cert PEM" );
         return downloadFile( String.format( SSL_CONFIG_BASE, getKojiUser() ) + "/client.pem", client );
     }
 

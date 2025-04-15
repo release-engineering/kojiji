@@ -18,6 +18,8 @@ package com.redhat.red.build.koji;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
 import java.security.NoSuchAlgorithmException;
@@ -26,14 +28,16 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * See https://gist.github.com/jehrhardt/5167854
+ * See <a href="https://gist.github.com/jehrhardt/5167854">https://gist.github.com/jehrhardt/5167854</a>.
  */
 public class KeySizeTest
 {
+    private static final Logger logger = LoggerFactory.getLogger( KeySizeTest.class );
+
     @Before
     public void testAssumptions()
     {
-        Assume.assumeTrue( System.getProperty("java.runtime.name").contains("OpenJDK") );
+        Assume.assumeTrue( System.getProperty( "java.runtime.name" ).contains( "OpenJDK" ) );
     }
 
     @Test
@@ -47,10 +51,10 @@ public class KeySizeTest
         }
         catch ( NoSuchAlgorithmException e )
         {
-            e.printStackTrace();
+            logger.error( "Error getting max allowed key length for AES", e );
         }
 
-        assertThat( "You can only test this project with unlimited strength ciphers.", allowedKeyLength >= 2147483647, equalTo( true ) );
+        assertThat( "You can only test this project with unlimited strength ciphers.", allowedKeyLength == Integer.MAX_VALUE, equalTo( true ) );
     }
 
     @Test

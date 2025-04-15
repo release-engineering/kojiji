@@ -32,7 +32,8 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.VERSION;
 import static com.redhat.red.build.koji.model.json.util.Verifications.checkNull;
 
 @JsonTypeName("rpm")
-public class RPMBuildComponent extends BuildComponent {
+public class RPMBuildComponent extends BuildComponent
+{
 
     @JsonProperty(NAME)
     @DataKey( NAME )

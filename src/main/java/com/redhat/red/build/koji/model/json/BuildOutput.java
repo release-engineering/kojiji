@@ -51,35 +51,35 @@ import static com.redhat.red.build.koji.model.json.util.Verifications.checkStrin
 @StructPart
 public class BuildOutput
 {
-    @JsonProperty(BUILDROOT_ID)
+    @JsonProperty( BUILDROOT_ID )
     @DataKey( BUILDROOT_ID )
     private int buildrootId;
 
-    @JsonProperty(FILENAME)
+    @JsonProperty( FILENAME )
     @DataKey( FILENAME )
     private String filename;
 
-    @JsonProperty(FILESIZE)
+    @JsonProperty( FILESIZE )
     @DataKey( FILESIZE )
     private long fileSize;
 
-    @JsonProperty(ARCH)
+    @JsonProperty( ARCH )
     @DataKey( ARCH )
     private String arch;
 
-    @JsonProperty(CHECKSUM_TYPE)
+    @JsonProperty( CHECKSUM_TYPE )
     @DataKey( CHECKSUM_TYPE )
     private String checksumType;
 
-    @JsonProperty(CHECKSUM)
+    @JsonProperty( CHECKSUM )
     @DataKey( CHECKSUM )
     private String checksum;
 
-    @JsonProperty(TYPE)
+    @JsonProperty( TYPE )
     @DataKey( TYPE )
     private String outputType;
 
-    @JsonProperty(EXTRA_INFO)
+    @JsonProperty( EXTRA_INFO )
     @JsonInclude( Include.NON_NULL )
     @DataKey( EXTRA_INFO )
     private FileExtraInfo extraInfo;
@@ -90,7 +90,7 @@ public class BuildOutput
     public BuildOutput( @JsonProperty( BUILDROOT_ID ) int buildrootId, @JsonProperty( FILENAME ) String filename,
                         @JsonProperty( FILESIZE ) int fileSize, @JsonProperty( ARCH ) String arch,
                         @JsonProperty( CHECKSUM_TYPE ) String checksumType, @JsonProperty( CHECKSUM ) String checksum,
-                        @JsonProperty( TYPE ) String outputType, @JsonProperty(EXTRA_INFO) FileExtraInfo extraInfo )
+                        @JsonProperty( TYPE ) String outputType, @JsonProperty( EXTRA_INFO ) FileExtraInfo extraInfo )
     {
         this.buildrootId = buildrootId;
         this.filename = filename;
@@ -293,8 +293,7 @@ public class BuildOutput
         public Builder withRemoteSourceFileInfoAndType( String checksum )
         {
             target.outputType = StandardOutputType.REMOTE_SOURCE_FILE.getName();
-            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo(new RemoteSourceFileExtraInfo( checksum ), null ) );
-
+            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo( new RemoteSourceFileExtraInfo( checksum ), null ) );
             return this;
         }
 
@@ -399,7 +398,7 @@ public class BuildOutput
     @Override
     public int hashCode()
     {
-        return Objects.hash(buildrootId, filename, fileSize, arch, checksumType, checksum, outputType, extraInfo);
+        return Objects.hash( buildrootId, filename, fileSize, arch, checksumType, checksum, outputType, extraInfo );
     }
 
     @Override

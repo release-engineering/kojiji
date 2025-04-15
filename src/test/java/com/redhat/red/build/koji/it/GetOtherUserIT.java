@@ -32,6 +32,6 @@ public class GetOtherUserIT
     {
         KojiClient client = newKojiClient();
         KojiUserInfo userInfo = client.getLoggedInUserInfo( "testuser" );
-        System.out.println(userInfo);
+        System.out.println( userInfo );
     }
 }

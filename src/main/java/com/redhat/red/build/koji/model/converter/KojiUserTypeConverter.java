@@ -37,14 +37,7 @@ public class KojiUserTypeConverter
         {
             return null;
         }
-        Integer intUserType = value.getValue();
-        if ( intUserType == null )
-        {
-            return null;
-        }
-        else
-        {
-            return intUserType;
-        }
+
+        return value.getValue();
     }
 }

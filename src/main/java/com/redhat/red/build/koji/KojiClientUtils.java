@@ -36,7 +36,7 @@ public class KojiClientUtils
     public static <T> MultiCallRequest buildMultiCallRequest( String method, List<T> args )
     {
         MultiCallRequest.Builder builder = getBuilder();
-        args.forEach(( arg ) -> {
+        args.forEach( ( arg ) -> {
             if ( arg instanceof List<?> )
             {
                 List<Object> rendered = new ArrayList<>();

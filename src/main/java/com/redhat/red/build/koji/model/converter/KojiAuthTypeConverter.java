@@ -34,14 +34,7 @@ public class KojiAuthTypeConverter
         {
             return null;
         }
-        Integer intAuthType = value.getValue();
-        if ( intAuthType == null )
-        {
-            return null;
-        }
-        else
-        {
-            return intAuthType;
-        }
+
+        return value.getValue();
     }
 }

@@ -44,23 +44,25 @@ public class KojiMavenBuildRequest
 
         if ( request.size() >= 3 )
         {
-            if ( request.get( 2 ) instanceof Map<?, ?> )
+            Object request2 = request.get( 2 );
+
+            if ( request2 instanceof Map<?, ?> )
             {
-                Map<?, ?> map = (Map) request.get( 2 );
+                Map<String, Object> map = (Map<String, Object>) request2;
                 Object obj = map.get( "jvm_options" );
                 if ( !isBlankObj( obj ) )
                 {
-                    jvmOptions = (List) obj;
+                    jvmOptions = (List<String>) obj;
                 }
                 obj = map.get( "profiles" );
                 if ( !isBlankObj( obj ) )
                 {
-                    profiles = (List) obj;
+                    profiles = (List<String>) obj;
                 }
                 obj = map.get( "deps" );
                 if ( !isBlankObj( obj ) )
                 {
-                    deps = (List) obj;
+                    deps = (List<String>) obj;
                 }
                 obj = map.get( "properties" );
                 if ( !isBlankObj( obj ) )
@@ -68,7 +70,7 @@ public class KojiMavenBuildRequest
                     properties = ( (Map<String, Object>) obj ).entrySet()
                                                               .stream()
                                                               .filter( et -> !isBlankObj( et.getValue() ) )
-                                                              .collect( Collectors.toMap( et -> et.getKey(),
+                                                              .collect( Collectors.toMap(Map.Entry::getKey,
                                                                                           et -> (String) et.getValue() ) );
                 }
             }

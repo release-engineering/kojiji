@@ -38,14 +38,6 @@ public class KojiChecksumTypeConverter
             return null;
         }
 
-        Integer intChecksumType = value.getValue();
-        if ( intChecksumType == null )
-        {
-            return null;
-        }
-        else
-        {
-            return intChecksumType;
-        }
+        return value.getValue();
     }
 }

@@ -20,8 +20,14 @@ import org.commonjava.rwx.vocab.Nil;
 /**
  * Created by ruhan on 1/9/18.
  */
-public class RWXUtil
+public final class RWXUtil
 {
+    private RWXUtil()
+    {
+        throw new UnsupportedOperationException( "This is a utility class and cannot be instantiated" );
+    }
+
+
     public static boolean isBlankObj( Object xmlrpcObj )
     {
         return ( xmlrpcObj == null ) || ( xmlrpcObj instanceof Nil );

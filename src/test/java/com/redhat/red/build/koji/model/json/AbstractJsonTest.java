@@ -15,7 +15,6 @@
  */
 package com.redhat.red.build.koji.model.json;
 
-import com.redhat.red.build.koji.model.generated.Model_Registry;
 import com.redhat.red.build.koji.model.json.util.KojiObjectMapper;
 import org.commonjava.atlas.maven.ident.ref.SimpleProjectVersionRef;
 

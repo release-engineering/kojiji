@@ -32,12 +32,16 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_TASK_INFO;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 /**
  * Before running these tests, you need to set VM argument -Dkoji.hubUrl
- * These tests are ignored by default. They depends on the external Koji server content.
+ * These tests are ignored by default.
+ * They depend on the external Koji server content.
  */
 public class ExternalHttpClientTest
 {
@@ -86,8 +90,8 @@ public class ExternalHttpClientTest
         List<KojiBuildInfo> ret = client.listBuildsContaining( gav, null );
         for ( KojiBuildInfo info : ret )
         {
-            System.out.println( ">>> " + info.toString() );
-            assertTrue( "KojiBuildInfo[javax.activation-activation-1.1_rev_1-1]".equals( info.toString() ) );
+            System.out.println( ">>> " + info.toString());
+            assertEquals( "KojiBuildInfo[javax.activation-activation-1.1_rev_1-1]", info.toString() );
         }
     }
 
@@ -114,10 +118,10 @@ public class ExternalHttpClientTest
 
         for ( List<KojiArchiveInfo> archiveInfos : ret )
         {
-            System.out.println(">>>");
+            System.out.println( ">>>" );
             for ( KojiArchiveInfo archiveInfo : archiveInfos )
             {
-                System.out.println("   >>>" + archiveInfo);
+                System.out.println(  "   >>>" + archiveInfo );
             }
         }
     }
@@ -132,13 +136,13 @@ public class ExternalHttpClientTest
 
         Map<Integer, List<KojiTagInfo>> ret = client.listTags( buildIds, null );
         List<KojiTagInfo> l = ret.get( 731240 );
-        assertTrue( l != null );
+        assertNotNull( l );
 
         l = ret.get( 0 );
-        assertTrue( l == null );
+        assertNull( l );
 
         l = ret.get( 731239 );
-        assertTrue( l != null );
+        assertNotNull( l );
     }
 
 }

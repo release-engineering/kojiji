@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 /**
  * Created by jdcasey on 2/8/16.
@@ -34,9 +35,10 @@ public class MiscProofs
             throws IOException
     {
         Path basePath = Paths.get( "/home/jdcasey/.config/hexchat" );
-        Files.walk( basePath ).filter( Files::isRegularFile).forEach( ( path)->{
-            System.out.println(basePath.relativize( path ));
-        });
+        try ( Stream<Path> stream = Files.walk( basePath ).filter( Files::isRegularFile ) )
+        {
+            stream.forEach( ( path ) -> System.out.println( basePath.relativize( path ) ) );
+        }
     }
 
 }

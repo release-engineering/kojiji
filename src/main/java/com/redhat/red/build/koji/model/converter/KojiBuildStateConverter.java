@@ -37,14 +37,7 @@ public class KojiBuildStateConverter
         {
             return null;
         }
-        Integer intState = value.getValue();
-        if ( intState == null )
-        {
-            return null;
-        }
-        else
-        {
-            return intState;
-        }
+
+        return value.getValue();
     }
 }

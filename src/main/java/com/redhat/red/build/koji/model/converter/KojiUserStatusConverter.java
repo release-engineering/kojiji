@@ -42,14 +42,6 @@ public class KojiUserStatusConverter
             return null;
         }
 
-        Integer intUserStatus = value.getValue();
-        if ( intUserStatus == null )
-        {
-            return null;
-        }
-        else
-        {
-            return intUserStatus;
-        }
+        return value.getValue();
     }
 }

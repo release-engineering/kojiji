@@ -16,8 +16,6 @@
 package com.redhat.red.build.koji.http.httpclient4;
 
 import com.redhat.red.build.koji.model.xmlrpc.messages.VoidResponse;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -68,21 +66,27 @@ public class HC4SyncObjectClient
     {
         if ( metricRegistry == null )
         {
-            return RetryUtils.withRetry( () -> doCall(request, responseType, urlBuilder, requestModifier) );
+            return RetryUtils.withRetry( () -> doCall( request, responseType, urlBuilder, requestModifier ) );
         }
 
         // Apply global and per request metric
 
-        final Timer.Context timerContext = metricRegistry.timer( name( getClass(), "call" ) ).time();
-        final Timer.Context requestTimerContext = metricRegistry.timer( name( request.getClass(), "call" ) ).time();
-        try
+        try ( final Timer.Context timerContext = metricRegistry.timer( name( getClass(), "call" ) ).time();
+             final Timer.Context requestTimerContext = metricRegistry.timer( name( request.getClass(), "call" ) ).time() )
         {
-            return RetryUtils.withRetry( () -> doCall(request, responseType, urlBuilder, requestModifier) );
+            try
+            {
+                return RetryUtils.withRetry( () -> doCall( request, responseType, urlBuilder, requestModifier ) );
+            }
+            finally
+            {
+                timerContext.stop();
+                requestTimerContext.stop();
+            }
         }
-        finally
+        catch ( Exception e )
         {
-            timerContext.stop();
-            requestTimerContext.stop();
+            throw new XmlRpcException( e.getMessage(), e );
         }
     }
 
@@ -139,7 +143,7 @@ public class HC4SyncObjectClient
             if ( Void.class.equals( responseType ) )
             {
                 final ObjectResponseHandler<VoidResponse> handler =
-                                new ObjectResponseHandler<VoidResponse>( VoidResponse.class );
+                                new ObjectResponseHandler<>( VoidResponse.class );
                 client.execute( method, handler );
 
                 handler.throwExceptions();
@@ -147,7 +151,7 @@ public class HC4SyncObjectClient
             }
             else
             {
-                final ObjectResponseHandler<T> handler = new ObjectResponseHandler<T>( responseType );
+                final ObjectResponseHandler<T> handler = new ObjectResponseHandler<>( responseType );
                 final T response = client.execute( method, handler );
 
                 handler.throwExceptions();
@@ -155,15 +159,7 @@ public class HC4SyncObjectClient
 
             }
         }
-        catch ( final ClientProtocolException e )
-        {
-            throw new XmlRpcTransportException( "Call failed: " + methodName, request, e );
-        }
-        catch ( final IOException e )
-        {
-            throw new XmlRpcTransportException( "Call failed: " + methodName, request, e );
-        }
-        catch ( JHttpCException e )
+        catch ( final IOException | JHttpCException e )
         {
             throw new XmlRpcTransportException( "Call failed: " + methodName, request, e );
         }
@@ -187,8 +183,10 @@ public class HC4SyncObjectClient
             try
             {
                 httpFactory.close();
-            } catch (IOException e) {
-
+            }
+            catch ( IOException e )
+            {
+                // do nothing
             }
         }
     }

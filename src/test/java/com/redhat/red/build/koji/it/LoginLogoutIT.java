@@ -33,6 +33,6 @@ public class LoginLogoutIT
         KojiClient client = newKojiClient();
         KojiSessionInfo sessionInfo = client.login();
         client.logout( sessionInfo );
-        System.out.println(sessionInfo);
+        System.out.println( sessionInfo );
     }
 }

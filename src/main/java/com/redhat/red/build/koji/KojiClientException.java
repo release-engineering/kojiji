@@ -31,34 +31,46 @@ public class KojiClientException
 
     private transient String formattedMessage;
 
-    public KojiClientException(String format, Throwable cause, Object... params) {
-        super(format, cause);
+    public KojiClientException( String format, Throwable cause, Object... params )
+    {
+        super( format, cause );
         this.params = params;
     }
 
-    public KojiClientException(String format, Object... params) {
-        super(format);
+    public KojiClientException( String format, Object... params )
+    {
+        super( format );
         this.params = params;
     }
 
     @Override
     public synchronized String getMessage() {
-        if (formattedMessage == null) {
+        if ( formattedMessage == null )
+        {
             final String format = super.getMessage();
-            if (params == null || params.length < 1) {
+            if ( params == null || params.length < 1 )
+            {
                 formattedMessage = format;
-            } else {
+            }
+            else
+            {
                 final String original = super.getMessage();
-                try {
-                    formattedMessage = String.format(
-                            format.replaceAll("\\{\\}", "%s"), params);
-                } catch (final Error | Exception e) {
+                try
+                {
+                    formattedMessage = String.format( format.replace( "{}", "%s" ), params );
+                }
+                catch ( final Error | Exception e )
+                {
                 }
 
-                if (formattedMessage == null || original == formattedMessage) {
-                    try {
+                if ( formattedMessage == null || original == formattedMessage )
+                {
+                    try
+                    {
                         formattedMessage = MessageFormat.format( format, params );
-                    } catch (final Error | Exception e) {
+                    }
+                    catch ( final Error | Exception e )
+                    {
                         formattedMessage = format;
                         throw e;
                     }
@@ -80,13 +92,13 @@ public class KojiClientException
     private Object writeReplace() {
         final Object[] newParams = new Object[params.length];
         int i = 0;
-        for (final Object object : params) {
-            newParams[i] = String.valueOf(object);
+        for ( final Object object : params )
+        {
+            newParams[i] = String.valueOf( object );
             i++;
         }
 
         params = newParams;
         return this;
     }
-
 }

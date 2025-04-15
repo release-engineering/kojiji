@@ -28,16 +28,16 @@ import org.commonjava.rwx.anno.StructPart;
 @StructPart
 public class BuildTool
 {
-    @JsonProperty(NAME)
+    @JsonProperty( NAME )
     @DataKey( NAME )
     private String name;
 
-    @JsonProperty(VERSION)
+    @JsonProperty( VERSION )
     @DataKey( VERSION )
     private String version;
 
     @JsonCreator
-    public BuildTool( @JsonProperty(NAME) String name, @JsonProperty(VERSION) String version )
+    public BuildTool( @JsonProperty( NAME ) String name, @JsonProperty( VERSION ) String version )
     {
         this.name = name;
         this.version = version;
