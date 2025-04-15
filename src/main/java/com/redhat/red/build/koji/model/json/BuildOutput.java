@@ -30,6 +30,7 @@ import org.commonjava.rwx.anno.StructPart;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -281,10 +282,18 @@ public class BuildOutput
             return this;
         }
 
+        public Builder withRemoteSourcesInfoAndType( List<String> archives, String name, String url )
+        {
+            target.outputType = StandardOutputType.remote_sources.getName();
+            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo( new RemoteSourcesExtraInfo( archives, name, url ) ) );
+
+            return this;
+        }
+
         public Builder withRemoteSourceFileInfoAndType( String checksum )
         {
             target.outputType = StandardOutputType.REMOTE_SOURCE_FILE.getName();
-            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo(new RemoteSourceFileExtraInfo(checksum), null) );
+            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo(new RemoteSourceFileExtraInfo( checksum ), null ) );
 
             return this;
         }
