@@ -24,9 +24,14 @@ import org.commonjava.atlas.npm.ident.ref.NpmPackageRef;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
+import java.util.Objects;
+
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.BUILD_SYSTEM;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.CONTAINER_KOJI_TASK_ID;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BUILD_ID;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.EXTERNAL_BUILD_URL;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.FILESYSTEM_KOJI_TASK_ID;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMAGE_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMPORT_INITIATOR;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NPM_INFO;
@@ -47,6 +52,10 @@ public class BuildExtraInfo
     @JsonProperty( NPM_INFO )
     @DataKey( NPM_INFO )
     private NpmExtraInfo npmExtraInfo;
+
+    @JsonProperty( IMAGE_INFO )
+    @DataKey( IMAGE_INFO )
+    private ImageExtraInfo imageExtraInfo;
 
     @JsonProperty( EXTERNAL_BUILD_ID )
     @DataKey( EXTERNAL_BUILD_ID )
@@ -72,7 +81,20 @@ public class BuildExtraInfo
     @DataKey( TYPEINFO )
     private TypeInfoExtraInfo typeInfo;
 
+    @JsonProperty( CONTAINER_KOJI_TASK_ID )
+    @DataKey( CONTAINER_KOJI_TASK_ID )
+    private Integer containerKojiTaskId;
+
+    @JsonProperty( FILESYSTEM_KOJI_TASK_ID )
+    @DataKey( FILESYSTEM_KOJI_TASK_ID )
+    private Integer filesystemKojiTaskId;
+
     public BuildExtraInfo(){}
+
+    public BuildExtraInfo( ImageExtraInfo imageExtraInfo )
+    {
+        this.imageExtraInfo = imageExtraInfo;
+    }
 
     public BuildExtraInfo( MavenExtraInfo mavenExtraInfo )
     {
@@ -92,6 +114,16 @@ public class BuildExtraInfo
     public BuildExtraInfo( NpmPackageRef nv )
     {
         this.npmExtraInfo = new NpmExtraInfo( nv );
+    }
+
+    public ImageExtraInfo getImageExtraInfo()
+    {
+        return imageExtraInfo;
+    }
+
+    public void setImageExtraInfo( ImageExtraInfo imageExtraInfo )
+    {
+        this.imageExtraInfo = imageExtraInfo;
     }
 
     public MavenExtraInfo getMavenExtraInfo()
@@ -168,62 +200,57 @@ public class BuildExtraInfo
         this.typeInfo = typeInfo;
     }
 
+    public void setContainerKojiTaskId( Integer containerKojiTaskId )
+    {
+        this.containerKojiTaskId = containerKojiTaskId;
+    }
+
+    public Integer getContainerKojiTaskId()
+    {
+        return containerKojiTaskId;
+    }
+
+    public void setFilesystemKojiTaskId( Integer filesystemKojiTaskId )
+    {
+        this.filesystemKojiTaskId = filesystemKojiTaskId;
+    }
+
+    public Integer getFilesystemKojiTaskId()
+    {
+        return filesystemKojiTaskId;
+    }
+
     @Override
     public boolean equals( Object o )
     {
-        if ( this == o )
-        {
-            return true;
-        }
-        if ( !( o instanceof BuildExtraInfo ) )
+        if ( o == null || getClass() != o.getClass() )
         {
             return false;
         }
 
         BuildExtraInfo that = (BuildExtraInfo) o;
-
-        if ( getMavenExtraInfo() != null )
-        {
-            return getMavenExtraInfo().equals( that.getMavenExtraInfo() );
-        }
-        else if ( getNpmExtraInfo() != null )
-        {
-            return getNpmExtraInfo().equals( that.getNpmExtraInfo() );
-        }
-        else if ( getTypeInfo() != null )
-        {
-            return getTypeInfo().equals( that.getTypeInfo() );
-        }
-        else
-        {
-            return that.getMavenExtraInfo() == null && that.getNpmExtraInfo() == null;
-        }
+        return Objects.equals( mavenExtraInfo, that.mavenExtraInfo) && Objects.equals(npmExtraInfo, that.npmExtraInfo) && Objects.equals(imageExtraInfo, that.imageExtraInfo) && Objects.equals(externalBuildId, that.externalBuildId) && Objects.equals(buildSystem, that.buildSystem) && Objects.equals(externalBuildUrl, that.externalBuildUrl) && Objects.equals(importInitiator, that.importInitiator) && Objects.equals(scmTag, that.scmTag) && Objects.equals(typeInfo, that.typeInfo) && Objects.equals(containerKojiTaskId, that.containerKojiTaskId) && Objects.equals(filesystemKojiTaskId, that.filesystemKojiTaskId );
     }
 
     @Override
-    public int hashCode()
-    {
-        int result = mavenExtraInfo != null ? mavenExtraInfo.hashCode() : 0;
-        result = 31 * result + ( npmExtraInfo != null ? npmExtraInfo.hashCode() : 0 );
-        result = 31 * result + ( typeInfo != null ? typeInfo.hashCode() : 0 );
-        return result;
+    public int hashCode() {
+        return Objects.hash( mavenExtraInfo, npmExtraInfo, imageExtraInfo, externalBuildId, buildSystem, externalBuildUrl, importInitiator, scmTag, typeInfo, containerKojiTaskId, filesystemKojiTaskId );
     }
 
     @Override
-    public String toString()
-    {
-        if ( getMavenExtraInfo() != null )
-        {
-            return "FileExtraInfo{" + "mavenExtraInfo=" + mavenExtraInfo + "}";
-        }
-        else if ( getNpmExtraInfo() != null )
-        {
-            return "FileExtraInfo{" + "npmExtraInfo=" + npmExtraInfo + "}";
-        }
-        else if ( getTypeInfo() != null )
-        {
-            return "FileExtraInfo{" + "typeInfo=" + typeInfo + "}";
-        }
-        return "null";
+    public String toString() {
+        return "BuildExtraInfo{" +
+                "mavenExtraInfo=" + mavenExtraInfo +
+                ", npmExtraInfo=" + npmExtraInfo +
+                ", imageExtraInfo=" + imageExtraInfo +
+                ", externalBuildId='" + externalBuildId + '\'' +
+                ", buildSystem='" + buildSystem + '\'' +
+                ", externalBuildUrl='" + externalBuildUrl + '\'' +
+                ", importInitiator='" + importInitiator + '\'' +
+                ", scmTag='" + scmTag + '\'' +
+                ", typeInfo=" + typeInfo +
+                ", containerKojiTaskId=" + containerKojiTaskId +
+                ", filesystemKojiTaskId=" + filesystemKojiTaskId +
+                '}';
     }
 }
