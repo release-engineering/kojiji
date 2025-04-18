@@ -20,105 +20,111 @@ package com.redhat.red.build.koji.model.json;
  */
 public final class KojiJsonConstants
 {
+    public static final int DEFAULT_METADATA_VERSION = 0;
+
     public static final String ARCH = "arch";
 
     public static final String ARCHIVES = "archives";
 
-    public static final String TYPE = "type";
-
-    public static final String OS = "os";
-
-    public static final String BUILDROOT_ID = "buildroot_id";
-
-    public static final String FILENAME = "filename";
-
-    public static final String FILESIZE = "filesize";
-
-    public static final String CHECKSUM_TYPE = "checksum_type";
-
-    public static final String CHECKSUM = "checksum";
-
-    public static final String NAME = "name";
-
-    public static final String VERSION = "version";
-
-    public static final String RELEASE = "release";
-
-    public static final String SOURCE = "source";
-
-    public static final String START_TIME = "start_time";
-
-    public static final String END_TIME = "end_time";
-
-    public static final String ID = "id";
-
-    public static final String HOST = "host";
-
-    public static final String CONTENT_GENERATOR = "content_generator";
-
-    public static final String CONTAINER = "container";
-
-    public static final String TOOLS = "tools";
-
-    public static final String COMPONENTS = "components";
-
-    public static final String OUTPUT = "output";
-
-    public static final String EXTRA_INFO = "extra";
+    public static final String ARTIFACT_ID = "artifact_id";
 
     public static final String BUILD = "build";
 
+    public static final String BUILD_SYSTEM = "build_system";
+
+    public static final String BUILDROOT_ID = "buildroot_id";
+
     public static final String BUILDROOTS = "buildroots";
 
-    public static final String METADATA_VERSION = "metadata_version";
+    public static final String CHECKSUM = "checksum";
 
-    public static final int DEFAULT_METADATA_VERSION = 0;
+    public static final String CHECKSUM_TYPE = "checksum_type";
 
-    public static final String MD5_CHECKSUM_TYPE = "md5";
+    public static final String COMPONENTS = "components";
 
-    public static final String LOG_OUTPUT_TYPE = "log";
+    public static final String CONTAINER = "container";
 
-    public static final String MAVEN_OUTPUT_TYPE = "maven";
+    public static final String CONTENT_GENERATOR = "content_generator";
+
+    public static final String CONTAINER_KOJI_TASK_ID = "container_koji_task_id";
+
+    public static final String END_TIME = "end_time";
 
     public static final String EPOCH = "epoch";
-
-    public static final String SIGMD5 = "sigmd5";
-
-    public static final String SIGNATURE = "signature";
-
-    public static final String URL = "url";
-
-    public static final String REVISION = "revision";
-
-    public static final String RPM = "rpm";
-
-    public static final String FILE = "file";
-
-    public static final String GROUP_ID = "group_id";
-
-    public static final String ARTIFACT_ID = "artifact_id";
-
-    public static final String MAVEN_INFO = "maven";
-
-    public static final String NPM_INFO = "npm";
-
-    public static final String NPM_TYPE_INFO = "npm";
-
-    public static final String REMOTE_SOURCES = "remote-sources";
-
-    public static final String REMOTE_SOURCE_FILE = "remote-source-file";
-
-    public static final String TYPEINFO = "typeinfo";
 
     public static final String EXTERNAL_BUILD_ID = "external_build_id";
 
     public static final String EXTERNAL_BUILD_URL = "external_build_system";
 
-    public static final String BUILD_SYSTEM = "build_system";
+    public static final String EXTRA_INFO = "extra";
+
+    public static final String FILE = "file";
+
+    public static final String FILENAME = "filename";
+
+    public static final String FILESIZE = "filesize";
+
+    public static final String FILESYSTEM_KOJI_TASK_ID = "filesystem_koji_task_id";
+
+    public static final String GROUP_ID = "group_id";
+
+    public static final String HOST = "host";
+
+    public static final String ID = "id";
+
+    public static final String IMAGE_INFO = "image";
 
     public static final String IMPORT_INITIATOR = "import_initiator";
 
+    public static final String LOG_OUTPUT_TYPE = "log";
+
+    public static final String MAVEN_INFO = "maven";
+
+    public static final String MAVEN_OUTPUT_TYPE = "maven";
+
+    public static final String MD5_CHECKSUM_TYPE = "md5";
+
+    public static final String METADATA_VERSION = "metadata_version";
+
+    public static final String NAME = "name";
+
+    public static final String NPM_INFO = "npm";
+
+    public static final String NPM_TYPE_INFO = "npm";
+
+    public static final String OS = "os";
+
+    public static final String OUTPUT = "output";
+
+    public static final String RELEASE = "release";
+
+    public static final String REMOTE_SOURCE_FILE = "remote-source-file";
+
+    public static final String REMOTE_SOURCES = "remote-sources";
+
+    public static final String REVISION = "revision";
+
+    public static final String RPM = "rpm";
+
     public static final String SCM_TAG = "scmTag";
+
+    public static final String SIGMD5 = "sigmd5";
+
+    public static final String SIGNATURE = "signature";
+
+    public static final String SOURCE = "source";
+
+    public static final String START_TIME = "start_time";
+
+    public static final String TOOLS = "tools";
+
+    public static final String TYPE = "type";
+
+    public static final String TYPEINFO = "typeinfo";
+
+    public static final String URL = "url";
+
+    public static final String VERSION = "version";
 
     private KojiJsonConstants(){}
 
