@@ -51,10 +51,11 @@ jobs:
     - name: Build the Maven verify phase
       run: mvn -B -V clean verify -Prun-its -Pci
 
-
-    - uses: s4u/maven-settings-action@v2.8.0
+    - uses: s4u/maven-settings-action@v3.1.0
       if: ${{ github.event_name == 'push' }}
       with:
+        sonatypeSnapshots: true
+        githubServer: false
         servers: |
           [{
               "id": "sonatype-nexus-snapshots",
