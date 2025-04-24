@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (C) 2015 Red Hat, Inc. (jcasey@redhat.com)
+    Copyright (C) 2015 Red Hat, Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.redhat.rcm</groupId>
         <artifactId>redhat-releng-tools</artifactId>
-        <version>7</version>
+        <version>11</version>
     </parent>
 
     <groupId>com.redhat.red.build</groupId>
@@ -423,6 +423,17 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.7.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>${version.plugin.license}</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>src/test/resources/**</exclude>
+                            <exclude>research/**</exclude>
+                        </excludes>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
