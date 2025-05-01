@@ -58,7 +58,7 @@ public class FileExtraInfo
         this.typeInfo = typeInfo;
     }
 
-    public FileExtraInfo( @JsonProperty( TYPEINFO ) TypeInfoExtraInfo typeInfo)
+    public FileExtraInfo( @JsonProperty( TYPEINFO ) TypeInfoExtraInfo typeInfo )
     {
         this.typeInfo = typeInfo;
     }

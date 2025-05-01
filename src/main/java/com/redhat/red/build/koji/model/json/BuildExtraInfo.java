@@ -35,7 +35,9 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMAGE_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMPORT_INITIATOR;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NPM_INFO;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.OSBS_BUILD;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.SCM_TAG;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.SUBMITTER;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPEINFO;
 
 /**
@@ -45,6 +47,14 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPEINFO;
 @JsonInclude( Include.NON_NULL )
 public class BuildExtraInfo
 {
+    @JsonProperty(  CONTAINER_KOJI_TASK_ID  )
+    @DataKey( CONTAINER_KOJI_TASK_ID )
+    private Integer containerKojiTaskId;
+
+    @JsonProperty( FILESYSTEM_KOJI_TASK_ID )
+    @DataKey( FILESYSTEM_KOJI_TASK_ID )
+    private Integer filesystemKojiTaskId;
+
     @JsonProperty( MAVEN_INFO )
     @DataKey( MAVEN_INFO )
     private MavenExtraInfo mavenExtraInfo;
@@ -77,17 +87,17 @@ public class BuildExtraInfo
     @DataKey( SCM_TAG )
     private String scmTag;
 
+    @JsonProperty( OSBS_BUILD )
+    @DataKey( OSBS_BUILD )
+    private OsbsBuildExtraInfo osbsBuild;
+
+    @JsonProperty( SUBMITTER )
+    @DataKey( SUBMITTER )
+    private String submitter;
+
     @JsonProperty( TYPEINFO )
     @DataKey( TYPEINFO )
     private TypeInfoExtraInfo typeInfo;
-
-    @JsonProperty( CONTAINER_KOJI_TASK_ID )
-    @DataKey( CONTAINER_KOJI_TASK_ID )
-    private Integer containerKojiTaskId;
-
-    @JsonProperty( FILESYSTEM_KOJI_TASK_ID )
-    @DataKey( FILESYSTEM_KOJI_TASK_ID )
-    private Integer filesystemKojiTaskId;
 
     public BuildExtraInfo(){}
 
@@ -136,11 +146,13 @@ public class BuildExtraInfo
         this.mavenExtraInfo = mavenExtraInfo;
     }
 
-    public NpmExtraInfo getNpmExtraInfo() {
+    public NpmExtraInfo getNpmExtraInfo()
+    {
         return npmExtraInfo;
     }
 
-    public void setNpmExtraInfo(NpmExtraInfo npmExtraInfo) {
+    public void setNpmExtraInfo( NpmExtraInfo npmExtraInfo )
+    {
         this.npmExtraInfo = npmExtraInfo;
     }
 
@@ -154,19 +166,23 @@ public class BuildExtraInfo
         this.externalBuildId = externalBuildId;
     }
 
-    public String getBuildSystem() {
+    public String getBuildSystem()
+    {
         return buildSystem;
     }
 
-    public void setBuildSystem(String buildSystem) {
+    public void setBuildSystem( String buildSystem )
+    {
         this.buildSystem = buildSystem;
     }
 
-    public String getExternalBuildUrl() {
+    public String getExternalBuildUrl()
+    {
         return externalBuildUrl;
     }
 
-    public void setExternalBuildUrl(String externalBuildUrl) {
+    public void setExternalBuildUrl( String externalBuildUrl )
+    {
         this.externalBuildUrl = externalBuildUrl;
     }
 
@@ -220,6 +236,26 @@ public class BuildExtraInfo
         return filesystemKojiTaskId;
     }
 
+    public OsbsBuildExtraInfo getOsbsBuild()
+    {
+        return osbsBuild;
+    }
+
+    public void setOsbsBuild( OsbsBuildExtraInfo osbsBuild )
+    {
+        this.osbsBuild = osbsBuild;
+    }
+
+    public String getSubmitter()
+    {
+        return submitter;
+    }
+
+    public void setSubmitter( String submitter )
+    {
+        this.submitter = submitter;
+    }
+
     @Override
     public boolean equals( Object o )
     {
@@ -228,19 +264,22 @@ public class BuildExtraInfo
             return false;
         }
 
-        BuildExtraInfo that = (BuildExtraInfo) o;
-        return Objects.equals( mavenExtraInfo, that.mavenExtraInfo) && Objects.equals(npmExtraInfo, that.npmExtraInfo) && Objects.equals(imageExtraInfo, that.imageExtraInfo) && Objects.equals(externalBuildId, that.externalBuildId) && Objects.equals(buildSystem, that.buildSystem) && Objects.equals(externalBuildUrl, that.externalBuildUrl) && Objects.equals(importInitiator, that.importInitiator) && Objects.equals(scmTag, that.scmTag) && Objects.equals(typeInfo, that.typeInfo) && Objects.equals(containerKojiTaskId, that.containerKojiTaskId) && Objects.equals(filesystemKojiTaskId, that.filesystemKojiTaskId );
+        BuildExtraInfo that = (BuildExtraInfo ) o;
+        return Objects.equals( mavenExtraInfo, that.mavenExtraInfo ) && Objects.equals( npmExtraInfo, that.npmExtraInfo ) && Objects.equals( imageExtraInfo, that.imageExtraInfo ) && Objects.equals( externalBuildId, that.externalBuildId ) && Objects.equals( buildSystem, that.buildSystem ) && Objects.equals( externalBuildUrl, that.externalBuildUrl ) && Objects.equals( importInitiator, that.importInitiator ) && Objects.equals( scmTag, that.scmTag ) && Objects.equals( typeInfo, that.typeInfo ) && Objects.equals( containerKojiTaskId, that.containerKojiTaskId ) && Objects.equals( filesystemKojiTaskId, that.filesystemKojiTaskId ) && Objects.equals( osbsBuild, that.osbsBuild ) && Objects.equals( submitter, that.submitter );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( mavenExtraInfo, npmExtraInfo, imageExtraInfo, externalBuildId, buildSystem, externalBuildUrl, importInitiator, scmTag, typeInfo, containerKojiTaskId, filesystemKojiTaskId );
+        return Objects.hash( mavenExtraInfo, npmExtraInfo, imageExtraInfo, externalBuildId, buildSystem, externalBuildUrl, importInitiator, scmTag, typeInfo, containerKojiTaskId, filesystemKojiTaskId, osbsBuild, submitter );
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "BuildExtraInfo{" +
-                "mavenExtraInfo=" + mavenExtraInfo +
+                "containerKojiTaskId=" + containerKojiTaskId +
+                ", filesystemKojiTaskId=" + filesystemKojiTaskId +
+                ", mavenExtraInfo=" + mavenExtraInfo +
                 ", npmExtraInfo=" + npmExtraInfo +
                 ", imageExtraInfo=" + imageExtraInfo +
                 ", externalBuildId='" + externalBuildId + '\'' +
@@ -249,8 +288,8 @@ public class BuildExtraInfo
                 ", importInitiator='" + importInitiator + '\'' +
                 ", scmTag='" + scmTag + '\'' +
                 ", typeInfo=" + typeInfo +
-                ", containerKojiTaskId=" + containerKojiTaskId +
-                ", filesystemKojiTaskId=" + filesystemKojiTaskId +
+                ", osbsBuild=" + osbsBuild +
+                ", submitter='" + submitter + '\'' +
                 '}';
     }
 }

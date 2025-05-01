@@ -16,6 +16,7 @@
 package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redhat.red.build.koji.model.converter.StringListConverter;
 import org.commonjava.rwx.anno.Converter;
@@ -27,13 +28,9 @@ import java.util.Objects;
 
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.ARCHIVES;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NAME;
-import static com.redhat.red.build.koji.model.json.KojiJsonConstants.URL;
 
-/**
- * Created by dwalluck on 2025-04-09.
- */
 @StructPart
-public class RemoteSourcesExtraInfo
+public class IcmExtraInfo
 {
     @JsonProperty( ARCHIVES )
     @DataKey( ARCHIVES )
@@ -44,21 +41,16 @@ public class RemoteSourcesExtraInfo
     @DataKey( NAME )
     private String name;
 
-    @JsonProperty( URL )
-    @DataKey( URL )
-    private String url;
-
-    public RemoteSourcesExtraInfo()
+    public IcmExtraInfo()
     {
 
     }
 
     @JsonCreator
-    public RemoteSourcesExtraInfo( @JsonProperty( ARCHIVES ) List<String> archives, @JsonProperty( NAME ) String name, @JsonProperty( URL ) String url )
+    public IcmExtraInfo( @JsonProperty( ARCHIVES ) List<String> archives, @JsonProperty( NAME ) String name )
     {
         this.archives = archives;
         this.name = name;
-        this.url = url;
     }
 
     public List<String> getArchives()
@@ -81,16 +73,6 @@ public class RemoteSourcesExtraInfo
         this.name = name;
     }
 
-    public String getUrl()
-    {
-        return url;
-    }
-
-    public void setUrl( String url )
-    {
-        this.url = url;
-    }
-
     @Override
     public boolean equals( Object o )
     {
@@ -99,19 +81,22 @@ public class RemoteSourcesExtraInfo
             return false;
         }
 
-        RemoteSourcesExtraInfo that = (RemoteSourcesExtraInfo) o;
-        return Objects.equals( archives, that.archives ) && Objects.equals( name, that.name ) && Objects.equals( url, that.url );
+        IcmExtraInfo that = (IcmExtraInfo) o;
+        return Objects.equals( archives, that.archives ) && Objects.equals( name, that.name );
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash( archives, name, url );
+        return Objects.hash( archives, name );
     }
 
     @Override
     public String toString()
     {
-        return "RemoteSourcesExtraInfo{archives=" + archives + ", name='" + name + '\'' + ", url='" + url + "'}";
+        return "IcmExtraInfo{" +
+                "archives=" + archives +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

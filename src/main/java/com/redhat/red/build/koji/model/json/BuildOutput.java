@@ -282,10 +282,10 @@ public class BuildOutput
             return this;
         }
 
-        public Builder withRemoteSourcesInfoAndType( List<String> archives, String name, String url )
+        public Builder withRemoteSourcesInfoAndType( List<RemoteSourcesExtraInfo> sourcesExtraInfo )
         {
             target.outputType = StandardOutputType.remote_sources.getName();
-            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo( new RemoteSourcesExtraInfo( archives, name, url ) ) );
+            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo( sourcesExtraInfo ) );
 
             return this;
         }
@@ -293,7 +293,7 @@ public class BuildOutput
         public Builder withRemoteSourceFileInfoAndType( String checksum )
         {
             target.outputType = StandardOutputType.REMOTE_SOURCE_FILE.getName();
-            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo( new RemoteSourceFileExtraInfo( checksum ), null ) );
+            target.extraInfo = new FileExtraInfo( new TypeInfoExtraInfo( new RemoteSourceFileExtraInfo( checksum ), null, null ) );
             return this;
         }
 

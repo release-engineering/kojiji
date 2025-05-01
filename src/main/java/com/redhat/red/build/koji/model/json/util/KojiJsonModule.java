@@ -16,7 +16,7 @@
 package com.redhat.red.build.koji.model.json.util;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.redhat.red.build.koji.model.json.BuildExtraInfo;
+//import com.redhat.red.build.koji.model.json.BuildExtraInfo;
 import com.redhat.red.build.koji.model.json.BuildSource;
 import com.redhat.red.build.koji.model.json.FileExtraInfo;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
@@ -39,8 +39,8 @@ public class KojiJsonModule
         addSerializer( Date.class, new SecondsSinceEpochSerializer() );
         addDeserializer( Date.class, new SecondsSinceEpochDeserializer() );
 
-        addSerializer( BuildExtraInfo.class, new BuildExtraInfoSerializer( BuildExtraInfo.class ) );
-        addDeserializer( BuildExtraInfo.class, new BuildExtraInfoDeserializer() );
+        //addSerializer( BuildExtraInfo.class, new BuildExtraInfoSerializer( BuildExtraInfo.class ) );
+        //addDeserializer( BuildExtraInfo.class, new BuildExtraInfoDeserializer() );
 
         addSerializer( FileExtraInfo.class, new FileExtraInfoSerializer( FileExtraInfo.class ) );
         addDeserializer( FileExtraInfo.class, new FileExtraInfoDeserializer() );
