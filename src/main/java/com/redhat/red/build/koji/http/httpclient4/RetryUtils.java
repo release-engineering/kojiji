@@ -23,7 +23,7 @@ import java.net.ConnectException;
 
 public class RetryUtils
 {
-    private static final Logger log = LoggerFactory.getLogger( RetryUtils.class );
+    private static final Logger logger = LoggerFactory.getLogger( RetryUtils.class );
 
     public static final int DEFAULT_RETRY_COUNT = 3;
 
@@ -57,7 +57,7 @@ public class RetryUtils
 
                 if ( e.getCause() instanceof ConnectException )
                 {
-                    log.info( "ConnectException {}/{}, Waiting for {} second(s) before next retry ...", e.getCause().getClass(), e.getCause().getMessage(), interval );
+                    logger.info( "ConnectException {}/{}, Waiting for {} second(s) before next retry ...", e.getCause().getClass(), e.getCause().getMessage(), interval );
                     try
                     {
                         Thread.sleep( interval * 1000l );

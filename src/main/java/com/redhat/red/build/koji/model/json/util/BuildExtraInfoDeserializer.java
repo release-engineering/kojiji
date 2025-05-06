@@ -22,10 +22,12 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.redhat.red.build.koji.model.json.BuildExtraInfo;
+import com.redhat.red.build.koji.model.json.ImageExtraInfo;
 import com.redhat.red.build.koji.model.json.MavenExtraInfo;
 
 import java.io.IOException;
 
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMAGE_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
 
 /**
@@ -58,6 +60,14 @@ public class BuildExtraInfoDeserializer
 
                         MavenExtraInfo mvnInfo = (MavenExtraInfo) mvnDeser.deserialize( jp, ctxt );
                         return new BuildExtraInfo( mvnInfo );
+                    }
+                    case ( IMAGE_INFO ):
+                    {
+                        JsonDeserializer<Object> imageDeser =
+                                ctxt.findRootValueDeserializer( ctxt.constructType( ImageExtraInfo.class ) );
+
+                        ImageExtraInfo imageInfo = (ImageExtraInfo) imageDeser.deserialize( jp, ctxt );
+                        return new BuildExtraInfo( imageInfo );
                     }
                     default:
                     {

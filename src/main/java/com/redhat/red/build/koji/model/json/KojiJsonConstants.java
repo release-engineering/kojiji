@@ -70,6 +70,8 @@ public final class KojiJsonConstants
 
     public static final String HOST = "host";
 
+    public static final String ICM_INFO = "icm";
+
     public static final String ID = "id";
 
     public static final String IMAGE_INFO = "image";
@@ -94,6 +96,8 @@ public final class KojiJsonConstants
 
     public static final String OS = "os";
 
+    public static final String OSBS_BUILD = "osbs_build";
+
     public static final String OUTPUT = "output";
 
     public static final String RELEASE = "release";
@@ -115,6 +119,8 @@ public final class KojiJsonConstants
     public static final String SOURCE = "source";
 
     public static final String START_TIME = "start_time";
+
+    public static final String SUBMITTER = "submitter";
 
     public static final String TOOLS = "tools";
 

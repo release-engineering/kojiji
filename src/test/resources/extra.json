@@ -1,0 +1,140 @@
+{
+    "container_koji_task_id": 65888573,
+    "image": {
+        "help": null,
+        "index": {
+            "digests": {
+                "application/vnd.docker.distribution.manifest.list.v2+json": "sha256:4a0c89af8c0cbaafd369b505b7783eab15cd6f5af1c5ffcf0f424aacadc4dca9"
+            },
+            "floating_tags": [
+                "assembly.stream",
+                "v4.14.0",
+                "v4.14",
+                "v4.14.0.20241113.044138"
+            ],
+            "pull": [
+                "registry/rh-osbs/openshift-ose-cluster-cloud-controller-manager-operator@sha256:4a0c89af8c0cbaafd369b505b7783eab15cd6f5af1c5ffcf0f424aacadc4dca9",
+                "registry/rh-osbs/openshift-ose-cluster-cloud-controller-manager-operator:v4.14.0-202411130434.p0.ga0b9c0d.assembly.stream.el8"
+            ],
+            "tags": [
+                "v4.14.0-202411130434.p0.ga0b9c0d.assembly.stream.el8"
+            ],
+            "unique_tags": [
+                "rhaos-4.14-rhel-8-containers-candidate-74394-20241113062440"
+            ]
+        },
+        "isolated": false,
+        "media_types": [
+            "application/vnd.docker.distribution.manifest.list.v2+json",
+            "application/vnd.docker.distribution.manifest.v1+json",
+            "application/vnd.docker.distribution.manifest.v2+json"
+        ],
+        "parent_build_id": 3388882,
+        "parent_image_builds": {
+            "registry/rh-osbs/openshift-golang-builder:v1.20.12-202410181045.g92d4921.el8": {
+                "id": 3347950,
+                "nvr": "openshift-golang-builder-container-v1.20.12-202410181045.g92d4921.el8"
+            },
+            "registry/rh-osbs/openshift-ose-base:v4.14.0.20241113.044138": {
+                "id": 3388882,
+                "nvr": "openshift-enterprise-base-container-v4.14.0-202411130434.p0.g03e5f40.assembly.stream.el8"
+            }
+        },
+        "parent_images": [
+            "openshift/golang-builder:v1.20.12-202410181045.g92d4921.el8",
+            "openshift/ose-base:v4.14.0.20241113.044138"
+        ],
+        "remote_sources": [
+            {
+                "name": "cachito-gomod-with-deps",
+                "url": "https://cachito/api/v1/requests/1755373"
+            }
+        ],
+        "yum_repourls": [
+            "https://pkgs/cgit/containers/ose-cluster-cloud-controller-manager-operator/plain/.oit/signed.repo?h=rhaos-4.14-rhel-8&id=8a4559dd22257ed70022838ef0df242622da92c5"
+        ]
+    },
+    "osbs_build": {
+        "engine": "podman",
+        "kind": "container_build",
+        "subtypes": []
+    },
+    "submitter": "osbs-brew-access",
+    "typeinfo": {
+        "icm": {
+            "archives": [
+                "icm-s390x.json",
+                "icm-ppc64le.json",
+                "icm-x86_64.json",
+                "icm-aarch64.json"
+            ],
+            "name": "icm"
+        },
+        "image": {
+            "help": null,
+            "index": {
+                "digests": {
+                    "application/vnd.docker.distribution.manifest.list.v2+json": "sha256:4a0c89af8c0cbaafd369b505b7783eab15cd6f5af1c5ffcf0f424aacadc4dca9"
+                },
+                "floating_tags": [
+                    "assembly.stream",
+                    "v4.14.0",
+                    "v4.14",
+                    "v4.14.0.20241113.044138"
+                ],
+                "pull": [
+                    "registry/rh-osbs/openshift-ose-cluster-cloud-controller-manager-operator@sha256:4a0c89af8c0cbaafd369b505b7783eab15cd6f5af1c5ffcf0f424aacadc4dca9",
+                    "registry/rh-osbs/openshift-ose-cluster-cloud-controller-manager-operator:v4.14.0-202411130434.p0.ga0b9c0d.assembly.stream.el8"
+                ],
+                "tags": [
+                    "v4.14.0-202411130434.p0.ga0b9c0d.assembly.stream.el8"
+                ],
+                "unique_tags": [
+                    "rhaos-4.14-rhel-8-containers-candidate-74394-20241113062440"
+                ]
+            },
+            "isolated": false,
+            "media_types": [
+                "application/vnd.docker.distribution.manifest.list.v2+json",
+                "application/vnd.docker.distribution.manifest.v1+json",
+                "application/vnd.docker.distribution.manifest.v2+json"
+            ],
+            "parent_build_id": 3388882,
+            "parent_image_builds": {
+                "registry/rh-osbs/openshift-golang-builder:v1.20.12-202410181045.g92d4921.el8": {
+                    "id": 3347950,
+                    "nvr": "openshift-golang-builder-container-v1.20.12-202410181045.g92d4921.el8"
+                },
+                "registry/rh-osbs/openshift-ose-base:v4.14.0.20241113.044138": {
+                    "id": 3388882,
+                    "nvr": "openshift-enterprise-base-container-v4.14.0-202411130434.p0.g03e5f40.assembly.stream.el8"
+                }
+            },
+            "parent_images": [
+                "openshift/golang-builder:v1.20.12-202410181045.g92d4921.el8",
+                "openshift/ose-base:v4.14.0.20241113.044138"
+            ],
+            "remote_sources": [
+                {
+                    "name": "cachito-gomod-with-deps",
+                    "url": "https://cachito/api/v1/requests/1755373"
+                }
+            ],
+            "yum_repourls": [
+                "https://pkgs/cgit/containers/ose-cluster-cloud-controller-manager-operator/plain/.oit/signed.repo?h=rhaos-4.14-rhel-8&id=8a4559dd22257ed70022838ef0df242622da92c5"
+            ]
+        },
+        "remote-sources": [
+            {
+                "archives": [
+                    "remote-source-cachito-gomod-with-deps.json",
+                    "remote-source-cachito-gomod-with-deps.tar.gz",
+                    "remote-source-cachito-gomod-with-deps.env.json",
+                    "remote-source-cachito-gomod-with-deps.config.json"
+                ],
+                "name": "cachito-gomod-with-deps",
+                "url": "https://cachito/api/v1/requests/1755373"
+            }
+        ]
+    }
+}
