@@ -24,8 +24,8 @@ public enum StandardOutputType
     maven("maven"),
     remote_sources("remote-sources"),
     REMOTE_SOURCE_FILE("remote-source-file"),
-    npm("npm");
-
+    npm("npm"),
+    rpm("rpm");
     private String name;
 
     StandardOutputType(String name) {

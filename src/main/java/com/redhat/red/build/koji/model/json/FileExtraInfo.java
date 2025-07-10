@@ -16,9 +16,8 @@
 package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
@@ -46,16 +45,16 @@ public class FileExtraInfo
     @DataKey( TYPEINFO )
     private TypeInfoExtraInfo typeInfo;
 
-    public FileExtraInfo( @JsonProperty( MAVEN_INFO ) MavenExtraInfo mavenExtraInfo )
-    {
-        this.mavenExtraInfo = mavenExtraInfo;
-    }
-
     public FileExtraInfo( @JsonProperty( NPM_INFO ) NpmExtraInfo npmExtraInfo,
             @JsonProperty( TYPEINFO ) TypeInfoExtraInfo typeInfo )
     {
         this.npmExtraInfo = npmExtraInfo;
         this.typeInfo = typeInfo;
+    }
+
+    public FileExtraInfo( @JsonProperty( MAVEN_INFO ) MavenExtraInfo mavenExtraInfo )
+    {
+        this.mavenExtraInfo = mavenExtraInfo;
     }
 
     public FileExtraInfo( @JsonProperty( TYPEINFO ) TypeInfoExtraInfo typeInfo )

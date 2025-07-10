@@ -276,8 +276,17 @@ public class BuildOutput
             target.outputType = StandardOutputType.npm.getName();
 
             NpmExtraInfo npmExtraInfo = new NpmExtraInfo( ref.getName(), ref.getVersion().toString() );
-            TypeInfoExtraInfo typeInfo = new TypeInfoExtraInfo( NpmTypeInfoExtraInfo.getInstance() );
+            TypeInfoExtraInfo typeInfo = new TypeInfoExtraInfo( EmptyTypeInfoExtraInfo.getInstance() );
             target.extraInfo = new FileExtraInfo( npmExtraInfo, typeInfo );
+
+            return this;
+        }
+
+        public Builder withRpmInfoAndType()
+        {
+            target.outputType = StandardOutputType.rpm.getName();
+            TypeInfoExtraInfo typeInfo = new TypeInfoExtraInfo( EmptyTypeInfoExtraInfo.getInstance() );
+            target.extraInfo = new FileExtraInfo( typeInfo );
 
             return this;
         }

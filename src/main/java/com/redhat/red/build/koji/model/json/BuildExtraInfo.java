@@ -16,9 +16,8 @@
 package com.redhat.red.build.koji.model.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
 import org.commonjava.atlas.npm.ident.ref.NpmPackageRef;
 import org.commonjava.rwx.anno.DataKey;
@@ -34,6 +33,7 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.FILESYSTEM_
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMAGE_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMPORT_INITIATOR;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_RPM;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NPM_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.OSBS_BUILD;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.SCM_TAG;
@@ -86,6 +86,10 @@ public class BuildExtraInfo
     @JsonProperty( SCM_TAG )
     @DataKey( SCM_TAG )
     private String scmTag;
+
+    @JsonProperty( MAVEN_RPM )
+    @DataKey( MAVEN_RPM )
+    private String mavenRpm;
 
     @JsonProperty( OSBS_BUILD )
     @DataKey( OSBS_BUILD )
@@ -291,5 +295,13 @@ public class BuildExtraInfo
                 ", osbsBuild=" + osbsBuild +
                 ", submitter='" + submitter + '\'' +
                 '}';
+    }
+
+    public String getMavenRpm() {
+        return mavenRpm;
+    }
+
+    public void setMavenRpm(String mavenRpm) {
+        this.mavenRpm = mavenRpm;
     }
 }

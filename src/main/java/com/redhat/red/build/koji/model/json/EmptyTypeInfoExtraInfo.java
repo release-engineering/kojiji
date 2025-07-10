@@ -21,19 +21,19 @@ import org.commonjava.rwx.anno.StructPart;
  * Created by pkocandr on 06/22/21
  */
 @StructPart
-public class NpmTypeInfoExtraInfo
+public class EmptyTypeInfoExtraInfo
 {
-    private static NpmTypeInfoExtraInfo instance;
+    private static EmptyTypeInfoExtraInfo instance;
 
-    public NpmTypeInfoExtraInfo()
+    public EmptyTypeInfoExtraInfo()
     {
     }
 
-    public static NpmTypeInfoExtraInfo getInstance() {
+    public static EmptyTypeInfoExtraInfo getInstance() {
         if (instance == null)
         {
             // if instance is null, initialize
-            instance = new NpmTypeInfoExtraInfo();
+            instance = new EmptyTypeInfoExtraInfo();
         }
         return instance;
     }
@@ -41,6 +41,6 @@ public class NpmTypeInfoExtraInfo
     @Override
     public String toString()
     {
-        return "NpmTypeInfoExtraInfo{}";
+        return "EmptyTypeInfoExtraInfo{}";
     }
 }

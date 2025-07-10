@@ -84,6 +84,8 @@ public final class KojiJsonConstants
 
     public static final String MAVEN_OUTPUT_TYPE = "maven";
 
+    public static final String MAVEN_RPM = "maven_rpm";
+
     public static final String MD5_CHECKSUM_TYPE = "md5";
 
     public static final String METADATA_VERSION = "metadata_version";
