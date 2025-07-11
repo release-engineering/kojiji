@@ -153,7 +153,7 @@ public class FileExtraInfo
         {
             return "FileExtraInfo{" + "npmExtraInfo=" + npmExtraInfo + "}";
         }
-        else if ( getMavenExtraInfo() != null )
+        else if ( getTypeInfo() != null )
         {
             return "FileExtraInfo{" + "typeInfo=" + typeInfo + "}";
         }

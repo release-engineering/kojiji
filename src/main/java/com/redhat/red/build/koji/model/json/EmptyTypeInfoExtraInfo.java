@@ -21,17 +21,14 @@ import org.commonjava.rwx.anno.StructPart;
  * Created by pkocandr on 06/22/21
  */
 @StructPart
-public class EmptyTypeInfoExtraInfo
-{
+public class EmptyTypeInfoExtraInfo {
     private static EmptyTypeInfoExtraInfo instance;
 
-    public EmptyTypeInfoExtraInfo()
-    {
+    public EmptyTypeInfoExtraInfo() {
     }
 
     public static EmptyTypeInfoExtraInfo getInstance() {
-        if (instance == null)
-        {
+        if (instance == null) {
             // if instance is null, initialize
             instance = new EmptyTypeInfoExtraInfo();
         }
@@ -39,8 +36,15 @@ public class EmptyTypeInfoExtraInfo
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "EmptyTypeInfoExtraInfo{}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof EmptyTypeInfoExtraInfo)) {
+            return false;
+        }
+        return true;
     }
 }

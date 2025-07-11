@@ -285,9 +285,6 @@ public class BuildOutput
         public Builder withRpmInfoAndType()
         {
             target.outputType = StandardOutputType.rpm.getName();
-            TypeInfoExtraInfo typeInfo = new TypeInfoExtraInfo( EmptyTypeInfoExtraInfo.getInstance() );
-            target.extraInfo = new FileExtraInfo( typeInfo );
-
             return this;
         }
 

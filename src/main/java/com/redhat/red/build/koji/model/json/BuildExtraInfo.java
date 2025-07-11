@@ -269,12 +269,12 @@ public class BuildExtraInfo
         }
 
         BuildExtraInfo that = (BuildExtraInfo ) o;
-        return Objects.equals( mavenExtraInfo, that.mavenExtraInfo ) && Objects.equals( npmExtraInfo, that.npmExtraInfo ) && Objects.equals( imageExtraInfo, that.imageExtraInfo ) && Objects.equals( externalBuildId, that.externalBuildId ) && Objects.equals( buildSystem, that.buildSystem ) && Objects.equals( externalBuildUrl, that.externalBuildUrl ) && Objects.equals( importInitiator, that.importInitiator ) && Objects.equals( scmTag, that.scmTag ) && Objects.equals( typeInfo, that.typeInfo ) && Objects.equals( containerKojiTaskId, that.containerKojiTaskId ) && Objects.equals( filesystemKojiTaskId, that.filesystemKojiTaskId ) && Objects.equals( osbsBuild, that.osbsBuild ) && Objects.equals( submitter, that.submitter );
+        return Objects.equals( mavenExtraInfo, that.mavenExtraInfo ) && Objects.equals( npmExtraInfo, that.npmExtraInfo ) && Objects.equals( imageExtraInfo, that.imageExtraInfo ) && Objects.equals( externalBuildId, that.externalBuildId ) && Objects.equals( buildSystem, that.buildSystem ) && Objects.equals( externalBuildUrl, that.externalBuildUrl ) && Objects.equals( importInitiator, that.importInitiator ) && Objects.equals( scmTag, that.scmTag ) && Objects.equals( mavenRpm, that.mavenRpm )&& Objects.equals( typeInfo, that.typeInfo ) && Objects.equals( containerKojiTaskId, that.containerKojiTaskId ) && Objects.equals( filesystemKojiTaskId, that.filesystemKojiTaskId ) && Objects.equals( osbsBuild, that.osbsBuild ) && Objects.equals( submitter, that.submitter );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( mavenExtraInfo, npmExtraInfo, imageExtraInfo, externalBuildId, buildSystem, externalBuildUrl, importInitiator, scmTag, typeInfo, containerKojiTaskId, filesystemKojiTaskId, osbsBuild, submitter );
+        return Objects.hash( mavenExtraInfo, npmExtraInfo, imageExtraInfo, externalBuildId, buildSystem, externalBuildUrl, importInitiator, scmTag, mavenRpm, typeInfo, containerKojiTaskId, filesystemKojiTaskId, osbsBuild, submitter );
     }
 
     @Override
@@ -291,6 +291,7 @@ public class BuildExtraInfo
                 ", externalBuildUrl='" + externalBuildUrl + '\'' +
                 ", importInitiator='" + importInitiator + '\'' +
                 ", scmTag='" + scmTag + '\'' +
+                ", mavenRpm='" + mavenRpm + '\'' +
                 ", typeInfo=" + typeInfo +
                 ", osbsBuild=" + osbsBuild +
                 ", submitter='" + submitter + '\'' +

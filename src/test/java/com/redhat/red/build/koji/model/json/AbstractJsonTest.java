@@ -16,6 +16,7 @@
 package com.redhat.red.build.koji.model.json;
 
 import com.redhat.red.build.koji.model.json.util.KojiObjectMapper;
+import com.redhat.red.build.koji.model.xmlrpc.KojiBtype;
 import org.commonjava.atlas.maven.ident.ref.SimpleProjectVersionRef;
 
 import java.util.Arrays;
@@ -42,6 +43,11 @@ public class AbstractJsonTest
     }
 
     protected BuildDescription newBuildDescription()
+            throws VerificationException {
+        return newBuildDescription(KojiBtype.maven);
+    }
+
+    protected BuildDescription newBuildDescription(KojiBtype type)
             throws VerificationException
     {
         Calendar cal = Calendar.getInstance();
@@ -56,12 +62,18 @@ public class AbstractJsonTest
         cal.setTime( new Date() );
         cal.set( Calendar.MILLISECOND, 0 );
 
-        BuildDescription src = builder.withEndTime( cal.getTime() )
+        switch (type) {
+            case maven:
+                builder.withMavenInfoAndType(mainGav);
+                break;
+            case rpm:
+                builder.withRpmInfoAndType(mainGav);
+                break;
+        }
+
+        return builder.withEndTime( cal.getTime() )
                                                                           .withBuildSource( newBuildSource() )
                                                                           .build();
-
-        src.setExtraInfo( new BuildExtraInfo( mainGav ) );
-        return src;
     }
 
     protected BuildHost newBuildHost()
