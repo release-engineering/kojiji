@@ -30,6 +30,7 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'release-engineering/kojiji' && github.event_name == 'pull_request'
     name: Build with maven
     runs-on: ubuntu-latest
     env:
@@ -64,7 +65,8 @@ jobs:
         uses: stCarolas/setup-maven@v5
         with:
           maven-version:  3.9.8
-      - uses: s4u/maven-settings-action@v3.1.0
+      - name: Maven Settings
+        uses: s4u/maven-settings-action@v3.1.0
         with:
           sonatypeSnapshots: true
           githubServer: false
