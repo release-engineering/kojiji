@@ -94,4 +94,12 @@ public class BuildSource
         result = 31 * result + ( getRevision() != null ? getRevision().hashCode() : 0 );
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "BuildSource{" +
+                "url='" + url + '\'' +
+                ", revision='" + revision + '\'' +
+                '}';
+    }
 }

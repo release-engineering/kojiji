@@ -16,23 +16,25 @@
 package com.redhat.red.build.koji.model.json;
 
 /**
- * Created by jdcasey on 2/16/16.
+ * Created by pkocandr on 06/22/21
  */
-public enum StandardOutputType
-{
-    log("log"),
-    maven("maven"),
-    remote_sources("remote-sources"),
-    REMOTE_SOURCE_FILE("remote-source-file"),
-    npm("npm"),
-    rpm("rpm");
-    private String name;
+abstract public class EmptyTypeInfoExtraInfo {
 
-    StandardOutputType(String name) {
-        this.name = name;
+    public EmptyTypeInfoExtraInfo() {
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public String toString() {
+        return "EmptyTypeInfoExtraInfo{}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof EmptyTypeInfoExtraInfo)) {
+            return false;
+        }
+        return true;
     }
 }
+
+

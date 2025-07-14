@@ -282,6 +282,12 @@ public class BuildOutput
             return this;
         }
 
+        public Builder withRpmInfoAndType()
+        {
+            target.outputType = StandardOutputType.rpm.getName();
+            return this;
+        }
+
         public Builder withRemoteSourcesInfoAndType( List<RemoteSourcesExtraInfo> sourcesExtraInfo )
         {
             target.outputType = StandardOutputType.remote_sources.getName();

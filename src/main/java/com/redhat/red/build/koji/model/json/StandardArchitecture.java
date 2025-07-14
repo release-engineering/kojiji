@@ -20,5 +20,5 @@ package com.redhat.red.build.koji.model.json;
  */
 public enum StandardArchitecture
 {
-    i386, x86_64, noarch;
+    i386, x86_64, noarch, src;
 }

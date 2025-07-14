@@ -262,6 +262,23 @@ public class BuildDescription
             return this;
         }
 
+        public Builder withRpmInfoAndType(ProjectVersionRef gav )
+        {
+            if ( target.extraInfo == null )
+            {
+                target.extraInfo = new BuildExtraInfo();
+            }
+            target.extraInfo.setMavenRpm(gav.toString());
+
+            if (target.extraInfo.getTypeInfo() == null)
+            {
+                target.extraInfo.setTypeInfo( new TypeInfoExtraInfo() );
+            }
+            target.extraInfo.getTypeInfo().setRpmTypeInfoExtraInfo( RpmTypeInfoExtraInfo.getInstance() );
+
+            return this;
+        }
+
         public Builder withNpmInfoAndType( NpmPackageRef nv )
         {
             NpmExtraInfo npmExtraInfo = new NpmExtraInfo( nv.getName(), nv.getVersion().toString() );

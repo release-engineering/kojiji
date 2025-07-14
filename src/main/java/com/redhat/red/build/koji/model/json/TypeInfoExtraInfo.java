@@ -31,6 +31,7 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.IMAGE_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.NPM_TYPE_INFO;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.REMOTE_SOURCES;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.REMOTE_SOURCE_FILE;
+import static com.redhat.red.build.koji.model.json.KojiJsonConstants.RPM;
 
 /**
  * Created by jbrazdil on 2021-04-08.
@@ -50,6 +51,10 @@ public class TypeInfoExtraInfo
     @JsonProperty( NPM_TYPE_INFO )
     @DataKey( NPM_TYPE_INFO )
     private NpmTypeInfoExtraInfo npmTypeInfoExtraInfo;
+
+    @JsonProperty( RPM )
+    @DataKey( RPM )
+    private RpmTypeInfoExtraInfo rpmTypeInfoExtraInfo;
 
     @JsonProperty( IMAGE_INFO )
     @DataKey( IMAGE_INFO )
@@ -114,6 +119,16 @@ public class TypeInfoExtraInfo
         this.npmTypeInfoExtraInfo = npmTypeInfoExtraInfo;
     }
 
+    public RpmTypeInfoExtraInfo getRpmTypeInfoExtraInfo()
+    {
+        return rpmTypeInfoExtraInfo;
+    }
+
+    public void setRpmTypeInfoExtraInfo( RpmTypeInfoExtraInfo rpmTypeInfoExtraInfo )
+    {
+        this.rpmTypeInfoExtraInfo = rpmTypeInfoExtraInfo;
+    }
+
     public ImageExtraInfo getImageExtraInfo()
     {
         return imageExtraInfo;
@@ -143,17 +158,17 @@ public class TypeInfoExtraInfo
         }
 
         TypeInfoExtraInfo that = (TypeInfoExtraInfo) o;
-        return Objects.equals( remoteSourcesExtraInfo, that.remoteSourcesExtraInfo ) && Objects.equals( remoteSourceFileExtraInfo, that.remoteSourceFileExtraInfo ) && Objects.equals( npmTypeInfoExtraInfo, that.npmTypeInfoExtraInfo ) && Objects.equals( imageExtraInfo, that.imageExtraInfo ) && Objects.equals( icmExtraInfo, that.icmExtraInfo );
+        return Objects.equals( remoteSourcesExtraInfo, that.remoteSourcesExtraInfo ) && Objects.equals( remoteSourceFileExtraInfo, that.remoteSourceFileExtraInfo ) && Objects.equals( npmTypeInfoExtraInfo, that.npmTypeInfoExtraInfo ) && Objects.equals( rpmTypeInfoExtraInfo, that.rpmTypeInfoExtraInfo )&& Objects.equals( imageExtraInfo, that.imageExtraInfo ) && Objects.equals( icmExtraInfo, that.icmExtraInfo );
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash( remoteSourcesExtraInfo, remoteSourceFileExtraInfo, npmTypeInfoExtraInfo, imageExtraInfo, icmExtraInfo );
+        return Objects.hash( remoteSourcesExtraInfo, remoteSourceFileExtraInfo, npmTypeInfoExtraInfo, rpmTypeInfoExtraInfo, imageExtraInfo, icmExtraInfo );
     }
 
     @Override
     public String toString() {
-        return "TypeInfoExtraInfo{remoteSourcesExtraInfo=" + remoteSourcesExtraInfo + ", remoteSourceFileExtraInfo=" + remoteSourceFileExtraInfo + ", npmTypeInfoExtraInfo=" + npmTypeInfoExtraInfo + ", imageExtraInfo=" + imageExtraInfo + ", icmExtraInfo=" + icmExtraInfo + '}';
+        return "TypeInfoExtraInfo{remoteSourcesExtraInfo=" + remoteSourcesExtraInfo + ", remoteSourceFileExtraInfo=" + remoteSourceFileExtraInfo + ", npmTypeInfoExtraInfo=" + npmTypeInfoExtraInfo + ", rpmTypeInfoExtraInfo=" + rpmTypeInfoExtraInfo + ", imageExtraInfo=" + imageExtraInfo + ", icmExtraInfo=" + icmExtraInfo + '}';
     }
 }
