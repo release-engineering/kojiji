@@ -276,7 +276,7 @@ public class BuildOutput
             target.outputType = StandardOutputType.npm.getName();
 
             NpmExtraInfo npmExtraInfo = new NpmExtraInfo( ref.getName(), ref.getVersion().toString() );
-            TypeInfoExtraInfo typeInfo = new TypeInfoExtraInfo( EmptyTypeInfoExtraInfo.getInstance() );
+            TypeInfoExtraInfo typeInfo = new TypeInfoExtraInfo( NpmTypeInfoExtraInfo.getInstance() );
             target.extraInfo = new FileExtraInfo( npmExtraInfo, typeInfo );
 
             return this;

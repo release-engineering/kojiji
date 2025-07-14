@@ -15,24 +15,12 @@
  */
 package com.redhat.red.build.koji.model.json;
 
-import org.commonjava.rwx.anno.StructPart;
-
 /**
  * Created by pkocandr on 06/22/21
  */
-@StructPart
-public class EmptyTypeInfoExtraInfo {
-    private static EmptyTypeInfoExtraInfo instance;
+abstract public class EmptyTypeInfoExtraInfo {
 
     public EmptyTypeInfoExtraInfo() {
-    }
-
-    public static EmptyTypeInfoExtraInfo getInstance() {
-        if (instance == null) {
-            // if instance is null, initialize
-            instance = new EmptyTypeInfoExtraInfo();
-        }
-        return instance;
     }
 
     @Override
@@ -48,3 +36,5 @@ public class EmptyTypeInfoExtraInfo {
         return true;
     }
 }
+
+

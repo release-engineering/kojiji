@@ -50,11 +50,11 @@ public class TypeInfoExtraInfo
 
     @JsonProperty( NPM_TYPE_INFO )
     @DataKey( NPM_TYPE_INFO )
-    private EmptyTypeInfoExtraInfo npmTypeInfoExtraInfo;
+    private NpmTypeInfoExtraInfo npmTypeInfoExtraInfo;
 
     @JsonProperty( RPM )
     @DataKey( RPM )
-    private EmptyTypeInfoExtraInfo rpmTypeInfoExtraInfo;
+    private RpmTypeInfoExtraInfo rpmTypeInfoExtraInfo;
 
     @JsonProperty( IMAGE_INFO )
     @DataKey( IMAGE_INFO )
@@ -66,7 +66,7 @@ public class TypeInfoExtraInfo
 
     @JsonCreator
     public TypeInfoExtraInfo( @JsonProperty( REMOTE_SOURCE_FILE ) RemoteSourceFileExtraInfo sourceFileInfo,
-                              @JsonProperty( NPM_TYPE_INFO ) EmptyTypeInfoExtraInfo npm,
+                              @JsonProperty( NPM_TYPE_INFO ) NpmTypeInfoExtraInfo npm,
                               @JsonProperty( REMOTE_SOURCES ) List<RemoteSourcesExtraInfo> remoteSourcesExtraInfo )
     {
         this.remoteSourceFileExtraInfo = sourceFileInfo;
@@ -80,7 +80,7 @@ public class TypeInfoExtraInfo
         this.remoteSourcesExtraInfo = sourcesExtraInfo;
     }
 
-    public TypeInfoExtraInfo( @JsonProperty( NPM_TYPE_INFO ) EmptyTypeInfoExtraInfo npm )
+    public TypeInfoExtraInfo( @JsonProperty( NPM_TYPE_INFO ) NpmTypeInfoExtraInfo npm )
     {
         this.npmTypeInfoExtraInfo = npm;
     }
@@ -109,22 +109,22 @@ public class TypeInfoExtraInfo
         this.remoteSourceFileExtraInfo = remoteSourceFileExtraInfo;
     }
 
-    public EmptyTypeInfoExtraInfo getNpmTypeInfoExtraInfo()
+    public NpmTypeInfoExtraInfo getNpmTypeInfoExtraInfo()
     {
         return npmTypeInfoExtraInfo;
     }
 
-    public void setNpmTypeInfoExtraInfo( EmptyTypeInfoExtraInfo npmTypeInfoExtraInfo )
+    public void setNpmTypeInfoExtraInfo( NpmTypeInfoExtraInfo npmTypeInfoExtraInfo )
     {
         this.npmTypeInfoExtraInfo = npmTypeInfoExtraInfo;
     }
 
-    public EmptyTypeInfoExtraInfo getRpmTypeInfoExtraInfo()
+    public RpmTypeInfoExtraInfo getRpmTypeInfoExtraInfo()
     {
         return rpmTypeInfoExtraInfo;
     }
 
-    public void setRpmTypeInfoExtraInfo( EmptyTypeInfoExtraInfo rpmTypeInfoExtraInfo )
+    public void setRpmTypeInfoExtraInfo( RpmTypeInfoExtraInfo rpmTypeInfoExtraInfo )
     {
         this.rpmTypeInfoExtraInfo = rpmTypeInfoExtraInfo;
     }

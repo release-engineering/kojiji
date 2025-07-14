@@ -274,7 +274,7 @@ public class BuildDescription
             {
                 target.extraInfo.setTypeInfo( new TypeInfoExtraInfo() );
             }
-            target.extraInfo.getTypeInfo().setRpmTypeInfoExtraInfo( EmptyTypeInfoExtraInfo.getInstance() );
+            target.extraInfo.getTypeInfo().setRpmTypeInfoExtraInfo( RpmTypeInfoExtraInfo.getInstance() );
 
             return this;
         }
@@ -295,7 +295,7 @@ public class BuildDescription
             {
                 target.extraInfo.setTypeInfo( new TypeInfoExtraInfo() );
             }
-            target.extraInfo.getTypeInfo().setNpmTypeInfoExtraInfo( EmptyTypeInfoExtraInfo.getInstance() );
+            target.extraInfo.getTypeInfo().setNpmTypeInfoExtraInfo( NpmTypeInfoExtraInfo.getInstance() );
 
             return this;
         }
