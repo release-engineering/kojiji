@@ -36,32 +36,43 @@ jobs:
       MAVEN_OPTS: "-Xmx4096m -Xms2048m -XX:MaxMetaspaceSize=4096m -Xss8m"
     steps:
     - uses: actions/checkout@v4
-
     - name: Set up JDK 11 for x64
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '11'
         distribution: 'temurin'
         architecture: x64
-
-    - uses: s4u/maven-settings-action@v2.8.0
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v5
       with:
-        sonatypeSnapshots: true
-
+        maven-version:  3.9.8
     - name: Build the Maven verify phase
-      run: mvn -B -V clean verify -Prun-its -Pci
+      run: mvn -B -V verify -Pci
 
-    - uses: s4u/maven-settings-action@v3.1.0
-      if: ${{ github.event_name == 'push' }}
-      with:
-        sonatypeSnapshots: true
-        githubServer: false
-        servers: |
-          [{
-              "id": "sonatype-nexus-snapshots",
-              "username": "${{ secrets.SONATYPE_USERNAME }}",
-              "password": "${{ secrets.SONATYPE_PASSWORD }}"
-          }]
-    - name: Deploy the artifact
-      if: ${{ github.event_name == 'push' }}
-      run: mvn help:effective-settings -B -V clean deploy -e
+  snapshot:
+    if: github.repository == 'release-engineering/kojiji' && github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 11 for x64
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          architecture: x64
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version:  3.9.8
+      - uses: s4u/maven-settings-action@v3.1.0
+        with:
+          sonatypeSnapshots: true
+          githubServer: false
+          servers: |
+            [{
+                "id": "central",
+                "username": "${{ secrets.SONATYPE_USERNAME }}",
+                "password": "${{ secrets.SONATYPE_PASSWORD }}"
+            }]
+      - name: Deploy
+        run: mvn -B -V org.apache.maven.plugins:maven-source-plugin:jar-no-fork deploy
