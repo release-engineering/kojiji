@@ -23,7 +23,7 @@ import com.redhat.red.build.koji.model.json.BuildSource;
 
 import java.io.IOException;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by jdcasey on 2/10/16.

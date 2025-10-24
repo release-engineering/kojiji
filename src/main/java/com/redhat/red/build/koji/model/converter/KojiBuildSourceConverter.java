@@ -20,7 +20,7 @@ import org.commonjava.rwx.core.Converter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by ruhan on 8/11/17.

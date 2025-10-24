@@ -21,7 +21,7 @@ import com.redhat.red.build.koji.config.KojiConfig;
 import com.redhat.red.build.koji.config.SimpleKojiConfigBuilder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
