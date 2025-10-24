@@ -41,7 +41,7 @@
 
     <properties>
         <enforcer.skip>true</enforcer.skip>
-        <javaVersion>1.8</javaVersion>
+        <javaVersion>11</javaVersion>
         <jhttpcVersion>1.16</jhttpcVersion>
         <rwxVersion>2.5</rwxVersion>
         <httpcVersion>4.4</httpcVersion>
