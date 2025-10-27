@@ -41,14 +41,14 @@
 
     <properties>
         <enforcer.skip>true</enforcer.skip>
-        <javaVersion>1.8</javaVersion>
-        <jhttpcVersion>1.6</jhttpcVersion>
-        <rwxVersion>2.4</rwxVersion>
+        <javaVersion>11</javaVersion>
+        <jhttpcVersion>1.16</jhttpcVersion>
+        <rwxVersion>2.5</rwxVersion>
         <httpcVersion>4.4</httpcVersion>
-        <atlasVersion>1.0.0</atlasVersion>
+        <atlasVersion>1.1.8</atlasVersion>
         <mockitoVersion>2.22.0</mockitoVersion>
         <kerbyVersion>2.1.0</kerbyVersion>
-        <o11yphantVersion>1.0</o11yphantVersion>
+        <o11yphantVersion>1.9.2</o11yphantVersion>
 
         <dbImage>postgres:9.4</dbImage>
         <hubImage>docker.io/buildchimp/koji-dojo-hub:dev</hubImage>
@@ -77,7 +77,7 @@
             <dependency>
                 <groupId>org.commonjava.boms</groupId>
                 <artifactId>web-commons-bom</artifactId>
-                <version>27</version>
+                <version>31</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -137,10 +137,6 @@
             <artifactId>jackson-annotations</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
@@ -159,6 +155,10 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -211,13 +211,13 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
-            <version>3.1.1</version>
+            <version>3.6.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model-builder</artifactId>
-            <version>3.1.1</version>
+            <version>3.6.3</version>
             <scope>test</scope>
         </dependency>
 

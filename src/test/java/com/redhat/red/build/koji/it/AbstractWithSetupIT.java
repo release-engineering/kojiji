@@ -29,7 +29,7 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 import static org.apache.commons.io.IOUtils.closeQuietly;
-import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.junit.Assert.fail;
 
 /**

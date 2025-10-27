@@ -15,7 +15,7 @@
  */
 package com.redhat.red.build.koji.model.converter;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.commonjava.rwx.core.Converter;
 
 import java.util.Arrays;
