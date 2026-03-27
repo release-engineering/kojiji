@@ -19,8 +19,6 @@ import com.redhat.red.build.koji.model.xmlrpc.messages.VoidResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.commonjava.o11yphant.metrics.api.MetricRegistry;
-import org.commonjava.o11yphant.metrics.api.Timer;
 import org.commonjava.rwx.anno.Request;
 import org.commonjava.rwx.api.RWXMapper;
 import org.commonjava.rwx.error.XmlRpcException;
@@ -40,54 +38,26 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 
-import static org.commonjava.o11yphant.metrics.util.NameUtils.name;
-
 public class HC4SyncObjectClient
 {
     private final HttpFactory httpFactory;
 
     private final SiteConfig siteConfig;
 
-    private final MetricRegistry metricRegistry;
-
     private final String[] extraPath;
 
     public HC4SyncObjectClient( final HttpFactory httpFactory, final SiteConfig siteConfig,
-                                final MetricRegistry metricRegistry, String... extraPath )
+                                String... extraPath )
     {
         this.httpFactory = httpFactory;
         this.siteConfig = siteConfig;
-        this.metricRegistry = metricRegistry;
         this.extraPath = extraPath;
     }
 
     public <T> T call( final Object request, final Class<T> responseType, final UrlBuilder urlBuilder,
                        final RequestModifier requestModifier ) throws XmlRpcException
     {
-        if ( metricRegistry == null )
-        {
-            return RetryUtils.withRetry( () -> doCall( request, responseType, urlBuilder, requestModifier ) );
-        }
-
-        // Apply global and per request metric
-
-        try ( final Timer.Context timerContext = metricRegistry.timer( name( getClass(), "call" ) ).time();
-             final Timer.Context requestTimerContext = metricRegistry.timer( name( request.getClass(), "call" ) ).time() )
-        {
-            try
-            {
-                return RetryUtils.withRetry( () -> doCall( request, responseType, urlBuilder, requestModifier ) );
-            }
-            finally
-            {
-                timerContext.stop();
-                requestTimerContext.stop();
-            }
-        }
-        catch ( Exception e )
-        {
-            throw new XmlRpcException( e.getMessage(), e );
-        }
+        return RetryUtils.withRetry( () -> doCall( request, responseType, urlBuilder, requestModifier ) );
     }
 
     private <T> T doCall( final Object request, final Class<T> responseType, final UrlBuilder urlBuilder,
