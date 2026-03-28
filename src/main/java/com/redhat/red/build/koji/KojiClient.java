@@ -33,7 +33,6 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.commonjava.atlas.maven.ident.ref.ProjectRef;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
-import org.commonjava.o11yphant.metrics.api.MetricRegistry;
 import org.commonjava.rwx.api.RWXMapper;
 import org.commonjava.rwx.core.Registry;
 import org.commonjava.rwx.error.XmlRpcException;
@@ -100,8 +99,6 @@ public class KojiClient
 
     private ExecutorService executorService;
 
-    private MetricRegistry metricRegistry;
-
     private KojiObjectMapper objectMapper;
 
     private KojiConfig config;
@@ -164,20 +161,13 @@ public class KojiClient
         };
     }
 
-    public KojiClient( KojiConfig config, PasswordManager passwordManager, ExecutorService executorService,
-                       MetricRegistry metricRegistry ) throws KojiClientException
+    public KojiClient( KojiConfig config, PasswordManager passwordManager, ExecutorService executorService )
+                    throws KojiClientException
     {
         this.config = config;
         this.httpFactory = new HttpFactory( passwordManager );
         this.executorService = executorService;
-        this.metricRegistry = metricRegistry;
         setup();
-    }
-
-    public KojiClient( KojiConfig config, PasswordManager passwordManager, ExecutorService executorService )
-                    throws KojiClientException
-    {
-        this( config, passwordManager, executorService, null );
     }
 
     @Override
@@ -203,7 +193,7 @@ public class KojiClient
         logger.debug( "SETUP: Starting KojiClient for: {}", config.getKojiURL() );
         try
         {
-            xmlrpcClient = new HC4SyncObjectClient( httpFactory, config.getKojiSiteConfig(), metricRegistry );
+            xmlrpcClient = new HC4SyncObjectClient( httpFactory, config.getKojiSiteConfig() );
         }
         catch ( IOException e )
         {

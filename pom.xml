@@ -48,7 +48,6 @@
         <atlasVersion>1.1.8</atlasVersion>
         <mockitoVersion>2.22.0</mockitoVersion>
         <kerbyVersion>2.1.0</kerbyVersion>
-        <o11yphantVersion>1.9.2</o11yphantVersion>
 
         <dbImage>postgres:9.4</dbImage>
         <hubImage>docker.io/buildchimp/koji-dojo-hub:dev</hubImage>
@@ -114,12 +113,6 @@
                 <version>${kerbyVersion}</version>
             </dependency>
 
-            <!-- metrics support-->
-            <dependency>
-                <groupId>org.commonjava.util</groupId>
-                <artifactId>o11yphant-metrics-api</artifactId>
-                <version>${o11yphantVersion}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -226,10 +219,6 @@
             <artifactId>kerb-client</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.commonjava.util</groupId>
-            <artifactId>o11yphant-metrics-api</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
