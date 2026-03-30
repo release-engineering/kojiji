@@ -57,7 +57,7 @@ public class HC4SyncObjectClient
     public <T> T call( final Object request, final Class<T> responseType, final UrlBuilder urlBuilder,
                        final RequestModifier requestModifier ) throws XmlRpcException
     {
-        return RetryUtils.withRetry( () -> doCall( request, responseType, urlBuilder, requestModifier ) );
+        return RetryUtils.withRetry( () -> doCall( request, responseType, urlBuilder, requestModifier ), request );
     }
 
     private <T> T doCall( final Object request, final Class<T> responseType, final UrlBuilder urlBuilder,
