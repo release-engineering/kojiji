@@ -419,7 +419,7 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>3.22.0</version>
                 </plugin>
                 <plugin>
                     <groupId>com.mycila</groupId>
