@@ -17,8 +17,6 @@ package com.redhat.red.build.koji.model.json.util;
 
 import java.util.Set;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 /**
  * Created by jdcasey on 2/16/16.
  */
@@ -27,7 +25,7 @@ public final class Verifications
 
     public static void checkString( String value, Set<String> missing, String format, Object... params )
     {
-        if ( isEmpty( value ) )
+        if ( value == null || value.isBlank() )
         {
             missing.add( String.format( format, params ) );
         }

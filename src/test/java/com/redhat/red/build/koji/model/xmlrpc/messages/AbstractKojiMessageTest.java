@@ -16,7 +16,7 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.generated.Model_Registry;
-import org.apache.commons.io.IOUtils;
+import com.redhat.red.build.koji.testutil.TestResourceUtils;
 import org.commonjava.rwx.api.RWXMapper;
 import org.commonjava.rwx.core.Registry;
 import org.junit.Assert;
@@ -67,7 +67,7 @@ public class AbstractKojiMessageTest
                 Assert.fail( "Cannot find message XML file on classpath: " + resource );
             }
 
-            return IOUtils.toString( is, StandardCharsets.UTF_8 );
+            return new String( is.readAllBytes(), StandardCharsets.UTF_8 );
         }
     }
 

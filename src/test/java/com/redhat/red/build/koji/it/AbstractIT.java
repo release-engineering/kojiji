@@ -18,10 +18,9 @@ package com.redhat.red.build.koji.it;
 import com.redhat.red.build.koji.it.util.KojiTestUtil;
 import com.redhat.red.build.koji.KojiClient;
 import com.redhat.red.build.koji.config.KojiConfig;
+import com.redhat.red.build.koji.model.util.StringUtils;
 import com.redhat.red.build.koji.config.SimpleKojiConfigBuilder;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.redhat.red.build.koji.testutil.TestResourceUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -47,6 +46,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -111,7 +111,7 @@ public class AbstractIT
             Logger logger = LoggerFactory.getLogger( getClass() );
             try
             {
-                logger.info( "Client Key/Cert PEM contents:\n\n{}\n\n", FileUtils.readFileToString( clientKeyCertPem, StandardCharsets.UTF_8 ) );
+                logger.info( "Client Key/Cert PEM contents:\n\n{}\n\n", Files.readString( clientKeyCertPem.toPath(), StandardCharsets.UTF_8 ) );
             }
             catch ( IOException e )
             {
@@ -124,7 +124,7 @@ public class AbstractIT
             File serverCertsPem = getServerCertsPem( client );
             try
             {
-                logger.info( "Server PEM contents:\n\n{}\n\n", FileUtils.readFileToString( serverCertsPem, StandardCharsets.UTF_8 ) );
+                logger.info( "Server PEM contents:\n\n{}\n\n", Files.readString( serverCertsPem.toPath(), StandardCharsets.UTF_8 ) );
             }
             catch ( IOException e )
             {
@@ -236,7 +236,7 @@ public class AbstractIT
             {
                 try ( FileOutputStream stream = new FileOutputStream( targetFile ) )
                 {
-                    IOUtils.copy( response.getEntity().getContent(), stream );
+                    response.getEntity().getContent().transferTo( stream );
 
                     return targetFile;
                 }
@@ -322,7 +322,7 @@ public class AbstractIT
         String host = System.getProperty( NON_SSL_HOST );
         String port = System.getProperty( NON_SSL_PORT );
 
-        if ( StringUtils.isEmpty( host ) || StringUtils.isEmpty( port ) )
+        if ( host == null || host.isBlank() || port == null || port.isBlank() )
         {
             fail(
                     "Non-SSL host/port properties are missing. Did you forget to configure the docker-maven-plugin?" );
@@ -336,7 +336,7 @@ public class AbstractIT
         String host = System.getProperty( SSL_HOST );
         String port = System.getProperty( SSL_PORT );
 
-        if ( StringUtils.isEmpty( host ) || StringUtils.isEmpty( port ) )
+        if ( host == null || host.isBlank() || port == null || port.isBlank() )
         {
             fail( "SSL host/port properties are missing. Did you forget to configure the docker-maven-plugin?" );
         }
@@ -358,7 +358,7 @@ public class AbstractIT
     //                String extra = "";
     //                if ( response.getEntity() != null )
     //                {
-    //                    String body = IOUtils.toString( response.getEntity().getContent(), StandardCharsets.UTF_8 );
+    //                    String body = new String( response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8 );
     //                    extra = "\nBody:\n\n" + body;
     //                }
     //
@@ -383,7 +383,7 @@ public class AbstractIT
                 String extra = "";
                 if ( response.getEntity() != null )
                 {
-                    String body = IOUtils.toString( response.getEntity().getContent(), StandardCharsets.UTF_8 );
+                    String body = new String( response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8 );
                     extra = "\nBody:\n\n" + body;
                 }
 
@@ -409,7 +409,7 @@ public class AbstractIT
                 String extra = "";
                 if ( response.getEntity() != null )
                 {
-                    String body = IOUtils.toString( response.getEntity().getContent(), StandardCharsets.UTF_8 );
+                    String body = new String( response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8 );
                     extra = "\nBody:\n\n" + body;
                 }
 

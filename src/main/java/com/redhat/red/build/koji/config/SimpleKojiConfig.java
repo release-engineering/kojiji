@@ -15,7 +15,6 @@
  */
 package com.redhat.red.build.koji.config;
 
-import org.apache.commons.io.FileUtils;
 import org.commonjava.util.jhttpc.model.SiteConfig;
 import org.commonjava.util.jhttpc.model.SiteConfigBuilder;
 import org.commonjava.util.jhttpc.model.SiteTrustType;
@@ -23,6 +22,7 @@ import org.commonjava.util.jhttpc.model.SiteTrustType;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import static org.commonjava.util.jhttpc.model.SiteConfig.DEFAULT_CONNECTION_POOL_TIMEOUT_SECONDS;
 
@@ -113,7 +113,7 @@ public class SimpleKojiConfig
 
                 if ( keyCert.exists() )
                 {
-                    builder.withKeyCertPem( FileUtils.readFileToString( keyCert, StandardCharsets.UTF_8 ) );
+                    builder.withKeyCertPem( Files.readString( keyCert.toPath(), StandardCharsets.UTF_8 ) );
                 }
             }
 
@@ -123,7 +123,7 @@ public class SimpleKojiConfig
 
                 if ( serverCert.exists() )
                 {
-                    builder.withServerCertPem( FileUtils.readFileToString( serverCert, StandardCharsets.UTF_8 ) );
+                    builder.withServerCertPem( Files.readString( serverCert.toPath(), StandardCharsets.UTF_8 ) );
                 }
             }
 

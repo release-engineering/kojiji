@@ -41,7 +41,7 @@
 
     <properties>
         <enforcer.skip>true</enforcer.skip>
-        <javaVersion>11</javaVersion>
+        <maven.compiler.release>${javaVersion}</maven.compiler.release>
         <jhttpcVersion>1.16</jhttpcVersion>
         <rwxVersion>2.5</rwxVersion>
         <httpcVersion>4.4</httpcVersion>
@@ -130,10 +130,6 @@
             <artifactId>jackson-annotations</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.commonjava.rwx</groupId>
             <artifactId>rwx</artifactId>
         </dependency>
@@ -150,14 +146,6 @@
             <artifactId>httpcore</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <scope>runtime</scope>
@@ -165,11 +153,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -397,10 +380,8 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.15.0</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
                         <encoding>UTF-8</encoding>
                         <generatedSourcesDirectory>${project.build.directory}/generated-sources/
                         </generatedSourcesDirectory>

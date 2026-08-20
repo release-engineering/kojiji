@@ -25,12 +25,12 @@ import com.redhat.red.build.koji.model.json.StandardArchitecture;
 import com.redhat.red.build.koji.model.json.StandardBuildType;
 import com.redhat.red.build.koji.model.json.StandardChecksum;
 import com.redhat.red.build.koji.model.json.VerificationException;
+import com.redhat.red.build.koji.model.util.DigestUtils;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiSessionInfo;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
 import com.redhat.red.build.koji.model.xmlrpc.messages.CreateTagRequest;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.IOUtils;
+import com.redhat.red.build.koji.testutil.TestResourceUtils;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
@@ -39,10 +39,13 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,10 +58,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -184,7 +189,13 @@ public class ImportBuildConnectionStressIT
     public static void loadWords()
             throws IOException
     {
-        words = IOUtils.readLines( Thread.currentThread().getContextClassLoader().getResourceAsStream( "words" ), StandardCharsets.UTF_8 );
+        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("words");
+        assertNotNull(in);
+
+        try (BufferedReader reader = new BufferedReader( new InputStreamReader(in, StandardCharsets.UTF_8 ) ) )
+        {
+            words = reader.lines().collect( Collectors.toList() );
+        }
     }
 
     private Supplier<ImportFile> addPom( ProjectVersionRef gav, KojiImport.Builder importBuilder )

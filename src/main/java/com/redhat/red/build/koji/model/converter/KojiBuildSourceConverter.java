@@ -20,8 +20,6 @@ import org.commonjava.rwx.core.Converter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 /**
  * Created by ruhan on 8/11/17.
  */
@@ -37,7 +35,7 @@ public class KojiBuildSourceConverter implements Converter<BuildSource>
             return null;
         }
         String[] parts = String.valueOf( object ).split( "#" );
-        if ( parts.length < 2 || isEmpty( parts[0] ) || isEmpty( parts[1] ) )
+        if ( parts.length < 2 || parts[0] == null || parts[0].isBlank() || parts[1] == null || parts[1].isBlank() )
         {
             logger.warn( "Invalid build-source: '{}'. Must be of format '<base-url>#<commit-ish>'", object );
         }

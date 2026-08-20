@@ -15,7 +15,7 @@
  */
 package com.redhat.red.build.koji.it;
 
-import org.apache.commons.io.IOUtils;
+import com.redhat.red.build.koji.testutil.TestResourceUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -28,8 +28,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-import static org.apache.commons.io.IOUtils.closeQuietly;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.junit.Assert.fail;
 
 /**
@@ -64,7 +62,7 @@ public class AbstractWithSetupIT
             fail( String.format( "Failed to execute GET request: %s. Reason: %s", url, e.getMessage() ) );
         }
 
-        String result = IOUtils.toString( response.getEntity().getContent(), StandardCharsets.UTF_8 );
+        String result = new String( response.getEntity().getContent().readAllBytes(), StandardCharsets.UTF_8 );
 
         System.out.println( result );
 
@@ -88,7 +86,7 @@ public class AbstractWithSetupIT
             p.load( is );
             p.stringPropertyNames().forEach( ( fname ) -> {
                 String targetPath = p.getProperty( fname );
-                if ( isEmpty( targetPath ) )
+                if ( targetPath == null || targetPath.isBlank() )
                 {
                     fail( "No target path for staging file: " + fname + "!" );
                 }

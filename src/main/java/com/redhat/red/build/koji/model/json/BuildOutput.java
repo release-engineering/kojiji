@@ -20,8 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.FileUtils;
+import com.redhat.red.build.koji.model.util.DigestUtils;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
 import org.commonjava.atlas.npm.ident.ref.NpmPackageRef;
 import org.commonjava.rwx.anno.DataKey;
@@ -29,6 +28,7 @@ import org.commonjava.rwx.anno.StructPart;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -258,7 +258,7 @@ public class BuildOutput
             target.filename = file.getName();
             target.fileSize = (int) file.length();
             target.checksumType = MD5_CHECKSUM_TYPE;
-            target.checksum = DigestUtils.md5Hex( FileUtils.readFileToByteArray( file ) );
+            target.checksum = DigestUtils.md5Hex( Files.readAllBytes( file.toPath() ) );
 
             return this;
         }
