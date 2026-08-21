@@ -16,7 +16,6 @@
 package com.redhat.red.build.koji;
 
 import com.redhat.red.build.koji.config.KojiConfig;
-import com.redhat.red.build.koji.kerberos.KrbAuthenticator;
 import com.redhat.red.build.koji.model.ImportFile;
 import com.redhat.red.build.koji.model.KojiImportResult;
 import com.redhat.red.build.koji.model.generated.Model_Registry;
@@ -241,46 +240,10 @@ public class KojiClient
         }
     }
 
-    public KojiSessionInfo krbLogin()
-            throws KojiClientException
-    {
-        checkConnection();
-
-        try
-        {
-            KrbAuthenticator krbAuthenticator = new KrbAuthenticator( config );
-
-            String encodedApReq = krbAuthenticator.prepareRequest();
-
-            KrbLoginResponse loginResponse =
-                    xmlrpcClient.call( new KrbLoginRequest( encodedApReq ), KrbLoginResponse.class, NO_OP_URL_BUILDER, STANDARD_REQUEST_MODIFIER );
-
-            if ( loginResponse == null )
-            {
-                throw new KojiClientException( "Failed to get loginResponse" );
-            }
-
-            KojiSessionInfo session = krbAuthenticator.handleResponse( loginResponse );
-
-            setLoggedInUser( session );
-
-            return session;
-        }
-        catch ( XmlRpcException e )
-        {
-            throw new KojiClientException( "Failed to login: %s", e, e.getMessage() );
-        }
-    }
-
     public KojiSessionInfo login()
             throws KojiClientException
     {
         checkConnection();
-
-        if ( config.getKrbService() != null )
-        {
-            return krbLogin();
-        }
 
         try
         {
