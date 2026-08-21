@@ -36,9 +36,5 @@ public interface KojiConfig
 
     String getKrbKeytab();
 
-    String getKrbPassword();
-
     String getKrbPrincipal();
-
-    String getKrbService();
 }

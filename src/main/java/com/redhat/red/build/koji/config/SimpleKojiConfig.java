@@ -58,28 +58,23 @@ public class SimpleKojiConfig
 
     private String krbKeytab;
 
-    private String krbPassword;
-
     private String krbPrincipal;
-
-    private String krbService;
 
     private SiteConfig kojiSiteConfig;
 
     @Deprecated
     public SimpleKojiConfig( String id, String kojiURL, String clientKeyCertificateFile, String clientCertificatePassword,
                              String serverCertificateFile, Integer timeout, Boolean trustSelfSigned, Integer maxConnections,
-                             String krbService, String krbPrincipal, String krbPassword, String krbCCache, String krbKeytab )
+                             String krbPrincipal, String krbCCache, String krbKeytab )
     {
         this( id, kojiURL, clientKeyCertificateFile, clientCertificatePassword, serverCertificateFile, timeout, null,
-              trustSelfSigned, maxConnections, krbService, krbPrincipal, krbPassword, krbCCache, krbKeytab );
+              trustSelfSigned, maxConnections, krbPrincipal, krbCCache, krbKeytab );
     }
 
     public SimpleKojiConfig( String id, String kojiURL, String clientKeyCertificateFile,
                              String clientCertificatePassword, String serverCertificateFile, Integer timeout,
                              Integer connectionPoolTimeout, Boolean trustSelfSigned, Integer maxConnections,
-                             String krbService, String krbPrincipal, String krbPassword, String krbCCache,
-                             String krbKeytab )
+                             String krbPrincipal, String krbCCache, String krbKeytab )
     {
 
         this.clientKeyCertificateFile = clientKeyCertificateFile;
@@ -91,9 +86,7 @@ public class SimpleKojiConfig
         this.id = id;
         this.kojiURL = kojiURL;
         this.maxConnections = maxConnections;
-        this.krbService = krbService;
         this.krbPrincipal = krbPrincipal;
-        this.krbPassword = krbPassword;
         this.krbCCache = krbCCache;
         this.krbKeytab = krbKeytab;
     }
@@ -203,20 +196,8 @@ public class SimpleKojiConfig
     }
 
     @Override
-    public String getKrbPassword()
-    {
-        return krbPassword;
-    }
-
-    @Override
     public String getKrbPrincipal()
     {
         return krbPrincipal;
-    }
-
-    @Override
-    public String getKrbService()
-    {
-        return krbService;
     }
 }

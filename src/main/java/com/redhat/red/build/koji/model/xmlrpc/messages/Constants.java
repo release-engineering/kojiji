@@ -62,8 +62,6 @@ public class Constants
 
     public static final String GET_WIN_BUILD = "getWinBuild";
 
-    public static final String KRB_LOGIN = "krbLogin";
-
     public static final String LIST_ARCHIVES = "listArchives";
 
     public static final String LIST_BUILDS = "listBuilds";
