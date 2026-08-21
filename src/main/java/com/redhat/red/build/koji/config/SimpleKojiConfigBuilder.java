@@ -46,11 +46,7 @@ public class SimpleKojiConfigBuilder
 
     private String krbKeytab;
 
-    private String krbPassword;
-
     private String krbPrincipal;
-
-    private String krbService;
 
     private SiteConfig kojiSiteConfig;
 
@@ -68,7 +64,7 @@ public class SimpleKojiConfigBuilder
     {
         return new SimpleKojiConfig( kojiSiteId, kojiURL, clientKeyCertificateFile, kojiClientCertificatePassword,
                                      serverCertificateFile, timeout, connectionPoolTimeout, trustSelfSigned,
-                                     maxConnections, krbService, krbPrincipal, krbPassword, krbCCache, krbKeytab );
+                                     maxConnections, krbPrincipal, krbCCache, krbKeytab );
     }
 
     public String getClientKeyCertificateFile()
@@ -192,17 +188,6 @@ public class SimpleKojiConfigBuilder
         return this;
     }
 
-    public String getKrbPassword()
-    {
-        return krbPassword;
-    }
-
-    public SimpleKojiConfigBuilder withKrbPassword( String krbPassword )
-    {
-        this.krbPassword = krbPassword;
-        return this;
-    }
-
     public String getKrbPrincipal()
     {
         return krbPrincipal;
@@ -211,17 +196,6 @@ public class SimpleKojiConfigBuilder
     public SimpleKojiConfigBuilder withKrbPrincipal( String krbPrincipal )
     {
         this.krbPrincipal = krbPrincipal;
-        return this;
-    }
-
-    public String getKrbService()
-    {
-        return krbService;
-    }
-
-    public SimpleKojiConfigBuilder withKrbService( String krbService )
-    {
-        this.krbService = krbService;
         return this;
     }
 
