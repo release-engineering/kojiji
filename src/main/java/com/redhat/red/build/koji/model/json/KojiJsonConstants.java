@@ -82,6 +82,8 @@ public final class KojiJsonConstants
 
     public static final String MAVEN_INFO = "maven";
 
+    public static final String MODULE_INFO = "module";
+
     public static final String MAVEN_OUTPUT_TYPE = "maven";
 
     public static final String MAVEN_RPM = "maven_rpm";
