@@ -19,9 +19,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.redhat.rcm</groupId>
-        <artifactId>redhat-releng-tools</artifactId>
-        <version>12</version>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>53</version>
     </parent>
 
     <groupId>com.redhat.red.build</groupId>
@@ -41,13 +41,22 @@
 
     <properties>
         <enforcer.skip>true</enforcer.skip>
-        <maven.compiler.release>${javaVersion}</maven.compiler.release>
         <jhttpcVersion>1.16</jhttpcVersion>
         <rwxVersion>2.5</rwxVersion>
-        <httpcVersion>4.4</httpcVersion>
+        <httpcVersion>4.4.16</httpcVersion>
+        <httpclientVersion>4.5.14</httpclientVersion>
         <atlasVersion>1.1.8</atlasVersion>
         <mockitoVersion>5.23.0</mockitoVersion>
         <kerbyVersion>2.1.2</kerbyVersion>
+        <logbackVersion>1.5.32</logbackVersion>
+        <junitVersion>4.13.2</junitVersion>
+        <hamcrestVersion>3.0</hamcrestVersion>
+        <jacksonVersion>2.21.2</jacksonVersion>
+        <slf4jVersion>2.0.17</slf4jVersion>
+        <mavenVersion>3.6.3</mavenVersion>
+
+        <plugin.jacoco.version>0.8.13</plugin.jacoco.version>
+        <plugin.docker-maven.version>0.15.16</plugin.docker-maven.version>
 
         <dbImage>postgres:9.4</dbImage>
         <hubImage>docker.io/buildchimp/koji-dojo-hub:dev</hubImage>
@@ -67,16 +76,22 @@
         <docker.container.koji-hub.ip>localhost</docker.container.koji-hub.ip>
         <docker.container.koji-hub.net.ci-network.ip>localhost</docker.container.koji-hub.net.ci-network.ip>
         <koji-hub-address>${docker.container.koji-hub.ip}</koji-hub-address>
-
-        <plugin.jacoco.version>0.8.13</plugin.jacoco.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.commonjava.boms</groupId>
-                <artifactId>web-commons-bom</artifactId>
-                <version>34</version>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jacksonVersion}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-bom</artifactId>
+                <version>${slf4jVersion}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -112,7 +127,44 @@
                 <artifactId>kerb-client</artifactId>
                 <version>${kerbyVersion}</version>
             </dependency>
-
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logbackVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logbackVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junitVersion}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-core</artifactId>
+                <version>${hamcrestVersion}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclientVersion}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${httpcVersion}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -187,13 +239,13 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
-            <version>3.6.3</version>
+            <version>${mavenVersion}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model-builder</artifactId>
-            <version>3.6.3</version>
+            <version>${mavenVersion}</version>
             <scope>test</scope>
         </dependency>
 
@@ -207,14 +259,6 @@
     <build>
         <pluginManagement>
             <plugins>
-               <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                   <artifactId>maven-javadoc-plugin</artifactId>
-                   <version>3.12.0</version>
-                   <configuration>
-                      <source>${javaVersion}</source>
-                   </configuration>
-                </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
@@ -259,7 +303,7 @@
                 <plugin>
                     <groupId>io.fabric8</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
-                    <version>0.15.16</version>
+                    <version>${plugin.docker-maven.version}</version>
                     <configuration>
                         <images>
                             <image>
@@ -325,7 +369,6 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
                     <executions>
                         <execution>
                             <id>record-docker-properties</id>
@@ -356,7 +399,6 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.5.6</version>
                     <executions>
                         <execution>
                             <id>functional-tests</id>
@@ -380,7 +422,6 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.15.0</version>
                     <configuration>
                         <encoding>UTF-8</encoding>
                         <generatedSourcesDirectory>${project.build.directory}/generated-sources/
@@ -395,12 +436,10 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.22.0</version>
                 </plugin>
                 <plugin>
                     <groupId>com.mycila</groupId>
@@ -456,5 +495,4 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
             </build>
         </profile>
     </profiles>
-
 </project>
