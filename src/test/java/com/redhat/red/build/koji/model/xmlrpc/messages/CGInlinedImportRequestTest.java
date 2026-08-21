@@ -20,7 +20,7 @@ import com.redhat.red.build.koji.model.json.KojiImport;
 import com.redhat.red.build.koji.model.json.StandardArchitecture;
 import com.redhat.red.build.koji.model.json.StandardBuildType;
 import com.redhat.red.build.koji.model.json.StandardChecksum;
-import org.apache.commons.codec.digest.DigestUtils;
+import com.redhat.red.build.koji.model.util.DigestUtils;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
 import org.commonjava.atlas.maven.ident.ref.SimpleProjectVersionRef;
 import org.commonjava.rwx.api.RWXMapper;

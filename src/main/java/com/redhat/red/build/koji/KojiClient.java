@@ -81,8 +81,6 @@ import static com.redhat.red.build.koji.model.xmlrpc.KojiXmlRpcConstants.*;
 
 import static com.redhat.red.build.koji.model.xmlrpc.messages.Constants.GET_BUILD;
 import static com.redhat.red.build.koji.model.xmlrpc.messages.MultiCallRequest.getBuilder;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.http.client.utils.HttpClientUtils.closeQuietly;
 
 /**
@@ -428,7 +426,7 @@ public class KojiClient
                         xmlrpcClient.call( new LogoutRequest(), StatusResponse.class, sessionUrlBuilder( session ),
                                            STANDARD_REQUEST_MODIFIER );
 
-                if ( isNotEmpty( response.getError() ) )
+                if ( response.getError() != null && !response.getError().isBlank() )
                 {
                     logger.error( "Failed to logout from Koji: {}", response.getError() );
                 }
@@ -1439,7 +1437,7 @@ public class KojiClient
             if ( add )
             {
                 String owner = ownerName;
-                if ( isEmpty( owner ) )
+                if ( owner == null || owner.isBlank() )
                 {
                     owner = session.getUserInfo().getUserName();
                 }

@@ -23,8 +23,6 @@ import com.redhat.red.build.koji.model.json.BuildSource;
 
 import java.io.IOException;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 /**
  * Created by jdcasey on 2/10/16.
  */
@@ -43,7 +41,7 @@ public class BuildSourceDeserializer
         String urlAndRev = jp.getText();
         String[] parts = urlAndRev.split( "#" );
 
-        if ( parts.length < 2 || isEmpty( parts[0] ) || isEmpty( parts[1] ) )
+        if ( parts.length < 2 || parts[0] == null || parts[0].isBlank() || parts[1] == null || parts[1].isBlank() )
         {
             throw new KojiJsonException(
                     "Invalid build-source: '" + urlAndRev + "'. Must be of format '<base-url>#<commit-ish>'",

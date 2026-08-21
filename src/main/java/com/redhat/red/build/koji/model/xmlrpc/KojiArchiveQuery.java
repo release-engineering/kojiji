@@ -21,8 +21,6 @@ import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
 /**
  * Created by jdcasey on 5/6/16.
  */
@@ -85,7 +83,7 @@ public class KojiArchiveQuery extends KojiQuery
             StringBuilder sb = new StringBuilder();
             sb.append( ar.getArtifactId() ).append( '-' ).append( ar.getVersionString() );
             String classifier = ( ar ).getClassifier();
-            if ( isNotEmpty( classifier ) )
+            if ( classifier != null && !classifier.isBlank() )
             {
                 sb.append( '-' ).append( classifier );
             }

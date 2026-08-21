@@ -15,11 +15,13 @@
  */
 package com.redhat.red.build.koji.testutil;
 
-import org.apache.commons.io.IOUtils;
-
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -36,18 +38,7 @@ public final class TestResourceUtils
         try ( InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream( resource ) )
         {
             assertNotNull( "Unable to load test resource: " + resource, in );
-            return IOUtils.toByteArray( in );
+            return in.readAllBytes();
         }
     }
-
-    public static String readTestResourceString( String resource )
-            throws IOException
-    {
-        try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream( resource ))
-        {
-            assertNotNull( "Unable to load test resource: " + resource, in );
-            return IOUtils.toString( in, StandardCharsets.UTF_8 );
-        }
-    }
-
 }

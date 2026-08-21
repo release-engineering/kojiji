@@ -13,38 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.red.build.koji.model.converter;
-
-import com.redhat.red.build.koji.model.util.StringUtils;
-import org.commonjava.rwx.core.Converter;
+package com.redhat.red.build.koji.model.util;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 
-/**
- * Created by ruhan on 8/11/17.
- */
-public class StringListConverter
-                implements Converter<List<String>>
+public final class StringUtils
 {
+    private StringUtils(){}
 
-    @Override
-    public List<String> parse( Object object )
+    public static String join( Iterable<?> elements, String delimiter )
     {
-        if ( object == null )
+        if ( elements == null )
         {
             return null;
         }
-        return Arrays.asList( String.valueOf( object ).split( "\\s+" ) );
+
+        StringJoiner joiner = new StringJoiner( Objects.toString( delimiter, "" ) );
+        elements.forEach(element -> joiner.add( Objects.toString( element, "" ) ) );
+        return joiner.toString();
     }
 
-    @Override
-    public Object render( List<String> value )
+    public static String join( Object[] elements, String delimiter )
     {
-        if ( value == null )
-        {
-            return null;
-        }
-        return StringUtils.join( value, " " );
+        return elements != null ? join( Arrays.asList( elements ), delimiter ) : null;
     }
 }

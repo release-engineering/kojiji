@@ -15,7 +15,6 @@
  */
 package com.redhat.red.build.koji.http.httpclient4;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ResponseHandler;
@@ -61,7 +60,7 @@ public class ObjectResponseHandler<T>
         if ( status.getStatusCode() > 199 && status.getStatusCode() < 203 )
         {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            IOUtils.copy( resp.getEntity().getContent(), baos );
+            resp.getEntity().getContent().transferTo( baos );
 
             if ( logger.isTraceEnabled() )
             {

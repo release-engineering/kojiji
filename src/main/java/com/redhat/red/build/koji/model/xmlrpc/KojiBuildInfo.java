@@ -21,7 +21,6 @@ import com.redhat.red.build.koji.model.converter.KojiBuildStateConverter;
 import com.redhat.red.build.koji.model.converter.TimestampConverter;
 import com.redhat.red.build.koji.model.util.ExternalizableUtils;
 
-import org.apache.commons.lang3.StringUtils;
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
 import org.commonjava.atlas.maven.ident.ref.SimpleProjectVersionRef;
 import org.commonjava.rwx.anno.Converter;
@@ -318,7 +317,7 @@ public class KojiBuildInfo
     @JsonIgnore
     public ProjectVersionRef getGAV()
     {
-        if ( StringUtils.isEmpty( mavenGroupId ) || StringUtils.isEmpty( mavenArtifactId ) )
+        if ( ( mavenGroupId == null || mavenGroupId.isBlank() ) || ( mavenArtifactId == null || mavenArtifactId.isBlank() ) )
         {
             return null;
         }

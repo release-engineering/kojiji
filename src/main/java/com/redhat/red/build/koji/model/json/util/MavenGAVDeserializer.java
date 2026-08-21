@@ -29,7 +29,6 @@ import java.io.IOException;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.ARTIFACT_ID;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.GROUP_ID;
 import static com.redhat.red.build.koji.model.json.KojiJsonConstants.VERSION;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Created by jdcasey on 2/10/16.
@@ -82,7 +81,7 @@ public class MavenGAVDeserializer
             }
         }
 
-        if ( isEmpty( g ) || isEmpty( a ) || isEmpty( v ) )
+        if ( g == null || g.isBlank() || a == null || a.isBlank() || v == null || v.isBlank() )
         {
             throw new KojiJsonException( "Invalid GAV: " + g + ":" + a + ":" + v );
         }
