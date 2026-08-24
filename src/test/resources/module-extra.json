@@ -1,0 +1,13 @@
+{
+    "typeinfo": {
+        "module": {
+            "module_build_service_id": 12345,
+            "content_koji_tag": "module-testmodule-private_user_rhel_8.1.0-8010020260821115618-a01ab0a2",
+            "modulemd_str": "---\ndocument: modulemd\nversion: 2\ndata:\n  name: testmodule\n  stream: \"private_user_rhel_8.1.0\"\n",
+            "name": "testmodule",
+            "stream": "private_user_rhel_8.1.0",
+            "version": "8010020260821115618",
+            "context": "a01ab0a2"
+        }
+    }
+}
