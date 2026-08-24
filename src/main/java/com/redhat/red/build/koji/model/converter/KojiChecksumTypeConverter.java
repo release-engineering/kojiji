@@ -27,6 +27,11 @@ public class KojiChecksumTypeConverter
     @Override
     public KojiChecksumType parse( Object object )
     {
+        if ( object == null )
+        {
+            return null;
+        }
+
         return KojiChecksumType.fromInteger( (Integer) object );
     }
 
