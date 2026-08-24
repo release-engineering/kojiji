@@ -37,13 +37,13 @@ public enum KojiUserType
     {
         for ( KojiUserType type : values() )
         {
-            if ( value == type.getValue() )
+            if ( type.getValue().equals( value ) )
             {
                 return type;
             }
         }
 
-        throw new IllegalArgumentException( String.format( "Unknown KojiUserType value: %d", value ) );
+        throw new IllegalArgumentException( "Unknown KojiUserType value: " + value );
     }
 
 }

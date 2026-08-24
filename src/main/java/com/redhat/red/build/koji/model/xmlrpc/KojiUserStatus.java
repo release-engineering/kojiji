@@ -36,12 +36,12 @@ public enum KojiUserStatus
     {
         for ( KojiUserStatus status : values() )
         {
-            if ( value == status.getValue() )
+            if ( status.getValue().equals( value ) )
             {
                 return status;
             }
         }
 
-        throw new IllegalArgumentException( String.format( "Unknown KojiUserStatus value: %d", value ) );
+        throw new IllegalArgumentException( "Unknown KojiUserStatus value: " + value );
     }
 }
