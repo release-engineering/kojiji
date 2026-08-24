@@ -39,8 +39,8 @@ public class KojiPackageQuery extends KojiQuery
     @DataKey( "inherited" )
     private Boolean inherited;
 
-//    @DataKey( "with_dupes" )
-//    private boolean withDuplicates;
+    @DataKey( "with_dups" )
+    private Boolean withDuplicates;
 
     @DataKey( "event" )
     private Integer eventId;
@@ -159,21 +159,21 @@ public class KojiPackageQuery extends KojiQuery
         return this;
     }
 
-//    public boolean isWithDuplicates()
-//    {
-//        return withDuplicates;
-//    }
-//
-//    public void setWithDuplicates( boolean withDuplicates )
-//    {
-//        this.withDuplicates = withDuplicates;
-//    }
-//
-//    public KojiPackageQuery withDuplicates( boolean withDuplicates )
-//    {
-//        this.withDuplicates = withDuplicates;
-//        return this;
-//    }
+    public Boolean getWithDuplicates()
+    {
+        return withDuplicates;
+    }
+
+    public void setWithDuplicates( Boolean withDuplicates )
+    {
+        this.withDuplicates = withDuplicates;
+    }
+
+    public KojiPackageQuery withDuplicates( boolean withDuplicates )
+    {
+        this.withDuplicates = withDuplicates;
+        return this;
+    }
 
     public Integer getEventId()
     {
