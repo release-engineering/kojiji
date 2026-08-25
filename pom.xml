@@ -54,7 +54,7 @@
         <mavenVersion>3.9.16</mavenVersion>
 
         <plugin.jacoco.version>0.8.15</plugin.jacoco.version>
-        <plugin.docker-maven.version>0.15.16</plugin.docker-maven.version>
+        <plugin.docker-maven.version>0.49.0</plugin.docker-maven.version>
 
         <dbImage>postgres:9.4</dbImage>
         <hubImage>docker.io/buildchimp/koji-dojo-hub:dev</hubImage>
