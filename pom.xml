@@ -46,7 +46,6 @@
         <httpclientVersion>4.5.14</httpclientVersion>
         <atlasVersion>1.1.8</atlasVersion>
         <mockitoVersion>5.23.0</mockitoVersion>
-        <kerbyVersion>2.1.2</kerbyVersion>
         <logbackVersion>1.5.34</logbackVersion>
         <junitVersion>4.13.2</junitVersion>
         <hamcrestVersion>3.0</hamcrestVersion>
@@ -122,11 +121,6 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>${mockitoVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.kerby</groupId>
-                <artifactId>kerb-client</artifactId>
-                <version>${kerbyVersion}</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
@@ -248,11 +242,6 @@
             <artifactId>maven-model-builder</artifactId>
             <version>${mavenVersion}</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.kerby</groupId>
-            <artifactId>kerb-client</artifactId>
         </dependency>
 
     </dependencies>
