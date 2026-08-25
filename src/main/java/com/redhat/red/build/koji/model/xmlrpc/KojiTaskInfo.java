@@ -38,7 +38,7 @@ public class KojiTaskInfo
 {
     private static final long serialVersionUID = -4033517639092179002L;
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     @DataKey( "id" )
     private int taskId;
@@ -47,7 +47,7 @@ public class KojiTaskInfo
     private double weight;
 
     @DataKey( "parent" )
-    private int parentTaskId;
+    private Integer parentTaskId;
 
     @DataKey( "channel_id" )
     private int channelId;
@@ -60,14 +60,14 @@ public class KojiTaskInfo
     private String label;
 
     @DataKey( "priority" )
-    private int priority;
+    private Integer priority;
 
     @DataKey( "completion_time" )
     @Converter( TimestampConverter.class )
     private Date completionTime;
 
     @DataKey( "state" )
-    private int state;
+    private Integer state;
 
     @DataKey( "create_time" )
     @Converter( TimestampConverter.class )
@@ -77,7 +77,7 @@ public class KojiTaskInfo
     private int ownerId;
 
     @DataKey( "host_id" )
-    private int hostId;
+    private Integer hostId;
 
     @DataKey( "method" )
     private String method;
@@ -113,12 +113,12 @@ public class KojiTaskInfo
         this.weight = weight;
     }
 
-    public int getParentTaskId()
+    public Integer getParentTaskId()
     {
         return parentTaskId;
     }
 
-    public void setParentTaskId( int parentTaskId )
+    public void setParentTaskId( Integer parentTaskId )
     {
         this.parentTaskId = parentTaskId;
     }
@@ -153,12 +153,12 @@ public class KojiTaskInfo
         this.label = label;
     }
 
-    public int getPriority()
+    public Integer getPriority()
     {
         return priority;
     }
 
-    public void setPriority( int priority )
+    public void setPriority( Integer priority )
     {
         this.priority = priority;
     }
@@ -173,12 +173,12 @@ public class KojiTaskInfo
         this.completionTime = completionTime;
     }
 
-    public int getState()
+    public Integer getState()
     {
         return state;
     }
 
-    public void setState( int state )
+    public void setState( Integer state )
     {
         this.state = state;
     }
@@ -203,12 +203,12 @@ public class KojiTaskInfo
         this.ownerId = ownerId;
     }
 
-    public int getHostId()
+    public Integer getHostId()
     {
         return hostId;
     }
 
-    public void setHostId( int hostId )
+    public void setHostId( Integer hostId )
     {
         this.hostId = hostId;
     }
@@ -276,16 +276,16 @@ public class KojiTaskInfo
         out.writeInt( VERSION );
         out.writeInt( taskId );
         out.writeDouble( weight );
-        out.writeInt( parentTaskId );
+        out.writeObject( parentTaskId );
         out.writeInt( channelId );
         out.writeObject( startTime );
         ExternalizableUtils.writeUTF( out, label );
-        out.writeInt( priority );
+        out.writeObject( priority );
         out.writeObject( completionTime );
-        out.writeInt( state );
+        out.writeObject( state );
         out.writeObject( createTime );
         out.writeInt( ownerId );
-        out.writeInt( hostId );
+        out.writeObject( hostId );
         ExternalizableUtils.writeUTF( out, method );
         ExternalizableUtils.writeUTF( out, arch );
         out.writeObject( request );
@@ -298,23 +298,23 @@ public class KojiTaskInfo
     {
         int version = in.readInt();
 
-        if ( version != 1 )
+        if ( version <= 0 || version > 2 )
         {
             throw new IOException( "Invalid version: " + version );
         }
 
         this.taskId = in.readInt();
         this.weight = in.readDouble();
-        this.parentTaskId = in.readInt();
+        this.parentTaskId = (Integer) in.readObject();
         this.channelId = in.readInt();
         this.startTime = (Date) in.readObject();
         this.label = ExternalizableUtils.readUTF( in );
-        this.priority = in.readInt();
+        this.priority = (Integer) in.readObject();
         this.completionTime = (Date) in.readObject();
-        this.state = in.readInt();
+        this.state = (Integer) in.readObject();
         this.createTime = (Date) in.readObject();
         this.ownerId = in.readInt();
-        this.hostId = in.readInt();
+        this.hostId = (Integer) in.readObject();
         this.method = ExternalizableUtils.readUTF( in );
         this.arch = ExternalizableUtils.readUTF( in );
         this.request = (List<Object>) in.readObject();
