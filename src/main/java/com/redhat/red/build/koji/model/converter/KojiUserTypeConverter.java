@@ -27,6 +27,11 @@ public class KojiUserTypeConverter
     @Override
     public KojiUserType parse( Object object )
     {
+        if ( object == null )
+        {
+            return null;
+        }
+
         return KojiUserType.fromInteger( (Integer) object );
     }
 

@@ -24,6 +24,11 @@ public class KojiAuthTypeConverter
     @Override
     public KojiAuthType parse( Object object )
     {
+        if ( object == null )
+        {
+            return null;
+        }
+
         return KojiAuthType.fromInteger( (Integer) object );
     }
 
