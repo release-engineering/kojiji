@@ -73,7 +73,7 @@ public class KojiTaskInfo
     @Converter( TimestampConverter.class )
     private Date createTime;
 
-    @DataKey( "owner_id" )
+    @DataKey( "owner" )
     private int ownerId;
 
     @DataKey( "host_id" )

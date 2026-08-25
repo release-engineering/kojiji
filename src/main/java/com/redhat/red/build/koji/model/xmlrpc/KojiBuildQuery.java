@@ -65,11 +65,11 @@ public class KojiBuildQuery extends KojiQuery
     private Date createdAfter;
 
     @Converter( TimestampConverter.class )
-    @DataKey( "completedBefore" )
+    @DataKey( "completeBefore" )
     private Date completedBefore;
 
     @Converter( TimestampConverter.class )
-    @DataKey( "completedAfter" )
+    @DataKey( "completeAfter" )
     private Date completedAfter;
 
     public KojiBuildQuery()
