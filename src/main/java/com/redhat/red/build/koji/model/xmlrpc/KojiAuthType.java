@@ -38,13 +38,13 @@ public enum KojiAuthType
     {
         for ( KojiAuthType type : values() )
         {
-            if ( value == type.getValue() )
+            if ( type.getValue().equals( value ) )
             {
                 return type;
             }
         }
 
-        throw new IllegalArgumentException( String.format( "Unknown KojiAuthType value: %d", value ) );
+        throw new IllegalArgumentException( "Unknown KojiAuthType value: " + value );
     }
 
 }

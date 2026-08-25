@@ -61,7 +61,7 @@ public enum KojiBuildState
                 return state;
             }
         }
-        throw new IllegalArgumentException( String.format( "Unknown KojiBuildState value: %i", value ) );
+        throw new IllegalArgumentException( "Unknown KojiBuildState value: " + value );
     }
 
 }
