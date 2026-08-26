@@ -17,8 +17,11 @@ package com.redhat.red.build.koji.model.xmlrpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.red.build.koji.model.converter.KojiBuildStateConverter;
 import com.redhat.red.build.koji.model.converter.TimestampConverter;
+import com.redhat.red.build.koji.model.json.BuildExtraInfo;
+import com.redhat.red.build.koji.model.json.util.KojiObjectMapper;
 import com.redhat.red.build.koji.model.util.ExternalizableUtils;
 
 import org.commonjava.atlas.maven.ident.ref.ProjectVersionRef;
@@ -26,6 +29,8 @@ import org.commonjava.atlas.maven.ident.ref.SimpleProjectVersionRef;
 import org.commonjava.rwx.anno.Converter;
 import org.commonjava.rwx.anno.DataKey;
 import org.commonjava.rwx.anno.StructPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -35,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.redhat.red.build.koji.model.util.DateUtils.toUTC;
 
@@ -48,6 +54,10 @@ public class KojiBuildInfo
     private static final int VERSION = 2;
 
     private static final long serialVersionUID = -2380549426149135636L;
+
+    private static final Logger logger = LoggerFactory.getLogger( KojiBuildInfo.class );
+
+    private static final ObjectMapper MAPPER = new KojiObjectMapper();
 
     @DataKey( "build_id" )
     @JsonProperty( "build_id" )
@@ -383,6 +393,25 @@ public class KojiBuildInfo
     public void setExtra( Map<String, Object> extra )
     {
         this.extra = extra;
+    }
+
+    @JsonIgnore
+    public Optional<BuildExtraInfo> getExtraInfo()
+    {
+        if ( extra == null || extra.isEmpty() )
+        {
+            return Optional.empty();
+        }
+
+        try
+        {
+            return Optional.ofNullable( MAPPER.convertValue( extra, BuildExtraInfo.class ) );
+        }
+        catch ( IllegalArgumentException e )
+        {
+            logger.warn( "Unable to parse extra for build id {}", id, e );
+            return Optional.empty();
+        }
     }
 
     @Override
