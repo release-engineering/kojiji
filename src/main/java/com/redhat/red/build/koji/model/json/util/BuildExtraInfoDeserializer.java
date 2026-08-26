@@ -36,6 +36,8 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.MAVEN_INFO;
 public class BuildExtraInfoDeserializer
         extends StdDeserializer<BuildExtraInfo>
 {
+    private static final long serialVersionUID = 1L;
+
     public BuildExtraInfoDeserializer()
     {
         super( BuildExtraInfo.class );

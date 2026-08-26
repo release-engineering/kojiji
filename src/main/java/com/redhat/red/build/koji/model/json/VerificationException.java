@@ -26,6 +26,9 @@ import java.util.Set;
 public class VerificationException
         extends KojiClientException
 {
+    private static final long serialVersionUID = 1L;
+
+    @SuppressWarnings( "serial" )
     private Set<String> missingProperties;
 
     public VerificationException( Set<String> missing )

@@ -27,6 +27,7 @@ public class KojiClientException
 {
     private static final long serialVersionUID = 1L;
 
+    @SuppressWarnings( "serial" )
     private Object[] params;
 
     private transient String formattedMessage;

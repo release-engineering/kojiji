@@ -20,9 +20,9 @@ import org.commonjava.rwx.error.XmlRpcException;
 public class XmlRpcTransportException
     extends XmlRpcException
 {
-
     private static final long serialVersionUID = 1L;
 
+    @SuppressWarnings( "serial" )
     private final Object request;
 
     public XmlRpcTransportException( final String format, final Object request, Object...params )

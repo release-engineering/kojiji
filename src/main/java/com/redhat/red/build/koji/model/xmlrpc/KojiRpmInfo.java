@@ -85,6 +85,7 @@ public class KojiRpmInfo
     private Boolean metadataOnly;
 
     @DataKey( "extra" )
+    @SuppressWarnings( "serial" )
     Map<String, Object> extra;
 
     @DataKey( "component_buildroot_id" )

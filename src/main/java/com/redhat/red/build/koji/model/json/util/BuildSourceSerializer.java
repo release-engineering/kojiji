@@ -29,6 +29,7 @@ import java.io.IOException;
 public class BuildSourceSerializer
         extends StdSerializer<BuildSource>
 {
+    private static final long serialVersionUID = 1L;
 
     public BuildSourceSerializer()
     {

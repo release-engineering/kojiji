@@ -33,6 +33,7 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.VERSION;
 public class MavenGAVSerializer<T extends ProjectVersionRef>
         extends StdSerializer<T>
 {
+    private static final long serialVersionUID = 1L;
 
     protected MavenGAVSerializer( Class<T> cls )
     {

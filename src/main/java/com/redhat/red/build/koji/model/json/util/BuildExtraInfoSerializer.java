@@ -30,6 +30,7 @@ import java.io.IOException;
 public class BuildExtraInfoSerializer<T extends BuildExtraInfo>
         extends StdSerializer<T>
 {
+    private static final long serialVersionUID = 1L;
 
     protected BuildExtraInfoSerializer( Class<T> cls )
     {

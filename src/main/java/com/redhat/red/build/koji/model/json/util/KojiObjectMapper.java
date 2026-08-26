@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 public class KojiObjectMapper
         extends ObjectMapper
 {
+    private static final long serialVersionUID = 1L;
 
     @SuppressWarnings( "deprecation" )
     public KojiObjectMapper()

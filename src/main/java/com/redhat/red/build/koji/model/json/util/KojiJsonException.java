@@ -24,6 +24,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class KojiJsonException
         extends JsonProcessingException
 {
+    private static final long serialVersionUID = 1L;
+
     public KojiJsonException( String message )
     {
         super( message );
