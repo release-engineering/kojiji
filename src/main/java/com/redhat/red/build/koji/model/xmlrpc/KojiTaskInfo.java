@@ -86,6 +86,7 @@ public class KojiTaskInfo
     private String arch;
 
     @DataKey( "request" )
+    @SuppressWarnings( "serial" )
     private List<Object> request;
 
     public KojiTaskInfo()

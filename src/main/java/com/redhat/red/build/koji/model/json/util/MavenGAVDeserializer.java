@@ -36,6 +36,8 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.VERSION;
 public class MavenGAVDeserializer
         extends StdDeserializer<SimpleProjectVersionRef>
 {
+    private static final long serialVersionUID = 1L;
+
     public MavenGAVDeserializer()
     {
         super( SimpleProjectVersionRef.class );

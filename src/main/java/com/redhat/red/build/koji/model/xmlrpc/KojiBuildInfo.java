@@ -127,6 +127,7 @@ public class KojiBuildInfo
     private String platform;
 
     @DataKey( "extra" )
+    @SuppressWarnings( "serial" )
     private Map<String, Object> extra;
 
     @DataKey( "source" )
@@ -134,6 +135,7 @@ public class KojiBuildInfo
     private String source;
 
     @JsonIgnore
+    @SuppressWarnings( "serial" )
     private List<KojiBtype> typeNames; // a build may contain more than one types, e.g., maven and rpm.
 
     @DataKey( "volume_name" )

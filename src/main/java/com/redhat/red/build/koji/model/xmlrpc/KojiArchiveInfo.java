@@ -84,10 +84,12 @@ public class KojiArchiveInfo
 
     @DataKey( "platforms" )
     @Converter( StringListConverter.class )
+    @SuppressWarnings( "serial" )
     private List<String> platforms;
 
     @DataKey( "flags" )
     @Converter( StringListConverter.class )
+    @SuppressWarnings( "serial" )
     private List<String> flags;
 
     @DataKey ( "arch" )
@@ -140,6 +142,7 @@ public class KojiArchiveInfo
     private Integer size;
 
     @DataKey( "extra" )
+    @SuppressWarnings( "serial" )
     Map<String, Object> extra;
 
     public KojiArchiveInfo()

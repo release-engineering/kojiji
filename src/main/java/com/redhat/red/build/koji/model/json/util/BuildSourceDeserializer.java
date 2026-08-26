@@ -29,6 +29,8 @@ import java.io.IOException;
 public class BuildSourceDeserializer
         extends StdDeserializer<BuildSource>
 {
+    private static final long serialVersionUID = 1L;
+
     public BuildSourceDeserializer()
     {
         super( BuildSource.class );

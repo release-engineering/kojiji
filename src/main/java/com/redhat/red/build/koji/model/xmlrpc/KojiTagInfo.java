@@ -56,6 +56,7 @@ public class KojiTagInfo
 
     @DataKey( "arches" )
     @Converter( StringListConverter.class )
+    @SuppressWarnings( "serial" )
     private List<String> arches;
 
     @DataKey( "locked" )

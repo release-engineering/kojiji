@@ -30,6 +30,8 @@ import java.util.Date;
 public class SecondsSinceEpochDeserializer
         extends StdDeserializer<Date>
 {
+    private static final long serialVersionUID = 1L;
+
     public SecondsSinceEpochDeserializer()
     {
         super( Date.class );

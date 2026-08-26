@@ -30,6 +30,8 @@ import java.util.Date;
 public class KojiJsonModule
         extends SimpleModule
 {
+    private static final long serialVersionUID = 1L;
+
     public KojiJsonModule(){
         addSerializer( ProjectVersionRef.class, new MavenGAVSerializer( ProjectVersionRef.class ) );
         addSerializer( SimpleProjectVersionRef.class, new MavenGAVSerializer( SimpleProjectVersionRef.class ) );
