@@ -45,7 +45,7 @@ public class FileExtraInfoSerializer<T extends FileExtraInfo>
         {
             jgen.writeStartObject();
             jgen.writeFieldName( KojiJsonConstants.MAVEN_INFO );
-            provider.defaultSerializeValue( ((FileExtraInfo) value).getMavenExtraInfo(), jgen );
+            provider.defaultSerializeValue( value.getMavenExtraInfo(), jgen );
             jgen.writeEndObject();
         }
         else
