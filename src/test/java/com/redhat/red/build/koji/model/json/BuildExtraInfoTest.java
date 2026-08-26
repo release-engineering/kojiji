@@ -20,6 +20,7 @@ import com.redhat.red.build.koji.model.json.util.KojiObjectMapper;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +43,11 @@ public class BuildExtraInfoTest
     public void testParsing() throws IOException {
         URL url = BuildExtraInfoTest.class.getResource( "/extra.json" );
         assertThat( url, notNullValue() );
-        BuildExtraInfo extra = MAPPER.readValue( url, BuildExtraInfo.class );
+        BuildExtraInfo extra;
+        try ( InputStream in = url.openStream() )
+        {
+            extra = MAPPER.readValue( in, BuildExtraInfo.class );
+        }
         assertThat( extra, notNullValue() );
         assertThat( extra.getContainerKojiTaskId(), equalTo( 65888573 ) );
         ImageExtraInfo image = extra.getImageExtraInfo();

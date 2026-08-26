@@ -56,7 +56,7 @@ public class MavenGAVDeserializer
         {
             if ( token == JsonToken.VALUE_STRING )
             {
-                String field = jp.getCurrentName();
+                String field = jp.currentName();
                 switch ( field )
                 {
                     case ( GROUP_ID ):

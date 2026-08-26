@@ -47,7 +47,7 @@ public class BuildSourceDeserializer
         {
             throw new KojiJsonException(
                     "Invalid build-source: '" + urlAndRev + "'. Must be of format '<base-url>#<commit-ish>'",
-                    jp.getCurrentLocation() );
+                    jp.currentLocation() );
         }
 
         BuildSource source = new BuildSource( parts[0] );

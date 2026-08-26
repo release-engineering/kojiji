@@ -20,6 +20,7 @@ import com.redhat.red.build.koji.model.json.util.KojiObjectMapper;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -35,7 +36,11 @@ public class ModuleExtraInfoTest
     {
         URL url = ModuleExtraInfoTest.class.getResource( "/module-extra.json" );
         assertThat( url, notNullValue() );
-        BuildExtraInfo extra = MAPPER.readValue( url, BuildExtraInfo.class );
+        BuildExtraInfo extra;
+        try ( InputStream in = url.openStream() )
+        {
+            extra = MAPPER.readValue( in, BuildExtraInfo.class );
+        }
         assertThat( extra, notNullValue() );
         TypeInfoExtraInfo typeInfo = extra.getTypeInfo();
         assertThat( typeInfo, notNullValue() );
