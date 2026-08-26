@@ -182,6 +182,12 @@ public class KojiRpmFileInfo
     }
 
     @Override
+    public int hashCode()
+    {
+        return Objects.hash( digest, digestAlgo, flags, group, md5, mode, mtime, name, size, user );
+    }
+
+    @Override
     public String toString()
     {
         return "KojiRpmFileInfo{" +

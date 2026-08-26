@@ -86,6 +86,12 @@ public class KojiRpmSignatureInfo
     }
 
     @Override
+    public int hashCode()
+    {
+        return Objects.hash( rpmId, sighash, sigkey );
+    }
+
+    @Override
     public String toString()
     {
         return "KojiRpmSignatureInfo{" +
