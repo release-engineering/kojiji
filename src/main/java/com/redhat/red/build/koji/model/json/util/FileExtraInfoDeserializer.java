@@ -50,7 +50,7 @@ public class FileExtraInfoDeserializer
         {
             if ( token == JsonToken.START_OBJECT )
             {
-                String field = jp.getCurrentName();
+                String field = jp.currentName();
                 switch ( field )
                 {
                     case ( MAVEN_INFO ):
@@ -63,7 +63,7 @@ public class FileExtraInfoDeserializer
                     }
                     default:
                     {
-                        throw new KojiJsonException( "Unknown extra_info type: " + field, jp.getCurrentLocation() );
+                        throw new KojiJsonException( "Unknown extra_info type: " + field, jp.currentLocation() );
                     }
                 }
             }
