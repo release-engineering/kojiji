@@ -61,7 +61,7 @@ public class ExternalizableUtilsTest
         {
             o1.writeExternal( out );
 
-            out.close();
+            out.flush();
 
             try ( ByteArrayInputStream bin = new ByteArrayInputStream( bout.toByteArray() ); ObjectInputStream in = new ObjectInputStream( bin ) )
             {
@@ -101,7 +101,7 @@ public class ExternalizableUtilsTest
         {
             o1.writeExternal( out );
 
-            out.close();
+            out.flush();
 
             try ( ByteArrayInputStream bin = new ByteArrayInputStream( bout.toByteArray() ); ObjectInputStream in = new ObjectInputStream( bin ) )
             {
@@ -124,7 +124,7 @@ public class ExternalizableUtilsTest
         {
             o1.writeExternal( out );
 
-            out.close();
+            out.flush();
 
             try ( ByteArrayInputStream bin = new ByteArrayInputStream( bout.toByteArray() ); ObjectInputStream in = new ObjectInputStream( bin ) )
             {
@@ -148,7 +148,7 @@ public class ExternalizableUtilsTest
         {
             o1.writeExternal( out );
 
-            out.close();
+            out.flush();
 
             try ( ByteArrayInputStream bin = new ByteArrayInputStream( bout.toByteArray() ); ObjectInputStream in = new ObjectInputStream( bin ) )
             {
@@ -188,7 +188,7 @@ public class ExternalizableUtilsTest
         {
             o1.writeExternal( out );
 
-            out.close();
+            out.flush();
 
             try ( ByteArrayInputStream bin = new ByteArrayInputStream( bout.toByteArray() ); ObjectInputStream in = new ObjectInputStream( bin ) )
             {
