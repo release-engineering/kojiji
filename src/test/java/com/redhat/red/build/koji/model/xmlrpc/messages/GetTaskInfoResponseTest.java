@@ -49,8 +49,8 @@ public class GetTaskInfoResponseTest
         Object obj = reqeust.get( 2 );
         assertTrue( obj instanceof Map );
 
-        Map m = (Map) obj;
-        List goals = (List) m.get( "goals" );
+        Map<?, ?> m = (Map<?, ?>) obj;
+        List<?> goals = (List<?>) m.get( "goals" );
 
         assertEquals( "install", goals.get( 0 ) );
         assertEquals( "javadoc:aggregate-jar", goals.get( 1 ) );
