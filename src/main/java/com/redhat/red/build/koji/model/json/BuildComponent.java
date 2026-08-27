@@ -33,7 +33,7 @@ import static com.redhat.red.build.koji.model.json.KojiJsonConstants.TYPE;
  *
  * @author Honza Brázdil &lt;jbrazdil@redhat.com&gt;
  */
-@JsonTypeInfo( use = Id.NAME, include = As.PROPERTY, property = TYPE )
+@JsonTypeInfo( use = Id.NAME, include = As.EXISTING_PROPERTY, property = TYPE, visible = true )
 @JsonSubTypes( {
 @JsonSubTypes.Type( value = FileBuildComponent.class, name = "file" ),
 @JsonSubTypes.Type( value = RPMBuildComponent.class, name = "rpm" )
