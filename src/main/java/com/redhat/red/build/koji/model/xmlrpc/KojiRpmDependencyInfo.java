@@ -98,6 +98,12 @@ public class KojiRpmDependencyInfo
     }
 
     @Override
+    public int hashCode()
+    {
+        return Objects.hash( name, version, flags, type );
+    }
+
+    @Override
     public String toString()
     {
         return "KojiRpmDependencyInfo{" +

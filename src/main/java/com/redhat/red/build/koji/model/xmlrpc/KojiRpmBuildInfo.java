@@ -39,6 +39,12 @@ public class KojiRpmBuildInfo
     }
 
     @Override
+    public int hashCode()
+    {
+        return KojiRpmBuildInfo.class.hashCode();
+    }
+
+    @Override
     public String toString()
     {
         return "KojiRpmBuildInfo";
