@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.json;
 
+import com.fasterxml.jackson.core.JsonParser;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -32,16 +33,18 @@ public class BuildComponentTest
     public void jsonRoundTripFile() throws VerificationException, IOException
     {
         FileBuildComponent src = new FileBuildComponent.Builder( "foo.txt" )
-                .withFileSize(42)
+                .withFileSize( 42 )
                 .withChecksum( "md5", "2a4b3cd54e6f" )
                 .build();
 
-        String json = mapper.writeValueAsString(src);
-        System.out.println(json);
+        String json = mapper.writeValueAsString( src );
+        System.out.println( json );
+
+        mapper.reader().with( JsonParser.Feature.STRICT_DUPLICATE_DETECTION ).readTree( json );
 
         BuildComponent out = mapper.readValue( json, BuildComponent.class );
 
-        assertThat(out, equalTo(src));
+        assertThat( out, equalTo( src ) );
     }
 
     @Test
@@ -56,6 +59,8 @@ public class BuildComponentTest
 
         String json = mapper.writeValueAsString( src );
         System.out.println( json );
+
+        mapper.reader().with( JsonParser.Feature.STRICT_DUPLICATE_DETECTION ).readTree( json );
 
         BuildComponent out = mapper.readValue( json, BuildComponent.class );
 
