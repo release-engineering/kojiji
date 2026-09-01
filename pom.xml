@@ -50,7 +50,7 @@
         <junitVersion>4.13.2</junitVersion>
         <hamcrestVersion>3.0</hamcrestVersion>
         <jacksonVersion>2.22.2</jacksonVersion>
-        <slf4jVersion>2.0.17</slf4jVersion>
+        <slf4jVersion>2.0.18</slf4jVersion>
         <mavenVersion>3.9.16</mavenVersion>
 
         <plugin.jacoco.version>0.8.15</plugin.jacoco.version>
