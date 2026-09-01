@@ -40,7 +40,7 @@
     </scm>
 
     <properties>
-        <jhttpcVersion>1.16</jhttpcVersion>
+        <jhttpcVersion>1.17</jhttpcVersion>
         <rwxVersion>2.5</rwxVersion>
         <httpcVersion>4.4.16</httpcVersion>
         <httpclientVersion>4.5.14</httpclientVersion>
