@@ -15,6 +15,7 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc;
 
+import com.redhat.red.build.koji.model.converter.TaskRequestConverter;
 import com.redhat.red.build.koji.model.converter.TimestampConverter;
 import com.redhat.red.build.koji.model.util.ExternalizableUtils;
 
@@ -86,6 +87,7 @@ public class KojiTaskInfo
     private String arch;
 
     @DataKey( "request" )
+    @Converter( TaskRequestConverter.class )
     @SuppressWarnings( "serial" )
     private List<Object> request;
 

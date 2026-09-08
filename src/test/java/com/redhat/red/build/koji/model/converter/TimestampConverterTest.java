@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redhat.red.build.koji.model.util;
+package com.redhat.red.build.koji.model.converter;
 
-import com.redhat.red.build.koji.model.converter.TimestampConverter;
 import org.junit.Test;
 
 import java.util.Date;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by jdcasey on 9/19/16.
@@ -36,7 +36,7 @@ public class TimestampConverterTest
         String dateString = "2015-02-24 16:03:34.451205";
         Date date = c.parse( dateString );
         String rendered = c.render( date ).toString();
-        System.out.println();
-        assertEquals( "2015-02-24 16:03:34", rendered);
+
+        assertThat( rendered, equalTo( "2015-02-24 16:03:34" ) );
     }
 }
