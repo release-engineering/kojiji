@@ -76,7 +76,7 @@ public class ObjectResponseHandler<T>
                 }
                 finally
                 {
-                    logger.info( "\n\n\nRecorded response to: {}\n\n\n", recording );
+                    logger.trace( "\n\n\nRecorded response to: {}\n\n\n", recording );
                 }
             }
 
