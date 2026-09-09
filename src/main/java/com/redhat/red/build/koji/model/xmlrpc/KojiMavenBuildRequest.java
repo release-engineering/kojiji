@@ -20,18 +20,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.redhat.red.build.koji.model.util.RWXUtil.getObjFromMap;
 import static com.redhat.red.build.koji.model.util.RWXUtil.isBlankObj;
+import static com.redhat.red.build.koji.model.util.RWXUtil.toBoolean;
+import static com.redhat.red.build.koji.model.util.RWXUtil.toStringList;
+import static com.redhat.red.build.koji.model.util.RWXUtil.toStringMap;
 
 public class KojiMavenBuildRequest
                 extends KojiBuildRequest
 {
-    private List<String> jvmOptions;
+    private String patches;
+
+    private String specfile;
+
+    private List<String> goals;
 
     private List<String> profiles;
 
-    private List<String> deps;
+    private List<String> packages;
+
+    private List<String> jvmOptions;
+
+    private List<String> mavenOptions;
 
     private Map<String, String> properties;
+
+    private Map<String, String> envs;
+
+    private boolean scratch;
+
+    private boolean skipTag;
+
+    private Integer repoId;
+
+    private List<KojiIdOrName> deps;
 
     public KojiMavenBuildRequest( List<Object> request )
     {
@@ -48,33 +70,28 @@ public class KojiMavenBuildRequest
 
             if ( request2 instanceof Map<?, ?> )
             {
+                @SuppressWarnings("unchecked")
                 Map<String, Object> map = (Map<String, Object>) request2;
-                Object obj = map.get( "jvm_options" );
-                if ( !isBlankObj( obj ) )
-                {
-                    jvmOptions = (List<String>) obj;
-                }
-                obj = map.get( "profiles" );
-                if ( !isBlankObj( obj ) )
-                {
-                    profiles = (List<String>) obj;
-                }
-                obj = map.get( "deps" );
-                if ( !isBlankObj( obj ) )
-                {
-                    deps = (List<String>) obj;
-                }
-                obj = map.get( "properties" );
-                if ( !isBlankObj( obj ) )
-                {
-                    properties = ( (Map<String, Object>) obj ).entrySet()
-                                                              .stream()
-                                                              .filter( et -> !isBlankObj( et.getValue() ) )
-                                                              .collect( Collectors.toMap(Map.Entry::getKey,
-                                                                                          et -> (String) et.getValue() ) );
-                }
+                patches = getObjFromMap( map, "patches", String.class );
+                specfile = getObjFromMap( map, "specfile", String.class );
+                goals = toStringList( map.get( "goals" ) );
+                profiles = toStringList( map.get( "profiles" ) );
+                packages = toStringList( map.get( "packages" ) );
+                jvmOptions = toStringList( map.get( "jvm_options" ) );
+                mavenOptions = toStringList( map.get( "maven_options" ) );
+                properties = toStringMap( map.get( "properties" ) );
+                envs = toStringMap( map.get( "envs" ) );
+                scratch = toBoolean( map.get( "scratch" ) );
+                skipTag = toBoolean( map.get( "skip_tag" ) );
+                repoId = getObjFromMap( map, "repo_id", Integer.class );
+                deps = toIdOrNameList( map.get( "deps" ) );
             }
         }
+    }
+
+    private static List<KojiIdOrName> toIdOrNameList( Object xmlrpcObj )
+    {
+        return !( xmlrpcObj instanceof List<?> ) ? null : ( (List<?>) xmlrpcObj ).stream().filter( dep -> !isBlankObj( dep ) ).map( KojiIdOrName::getFor ).collect( Collectors.toList() );
     }
 
     public String getScmUrl()
@@ -87,19 +104,39 @@ public class KojiMavenBuildRequest
         setSource( scmUrl );
     }
 
-    public List<String> getJvmOptions()
+    public String getPatches()
     {
-        if ( jvmOptions == null )
-        {
-            jvmOptions = Collections.emptyList();
-        }
-
-        return Collections.unmodifiableList( jvmOptions );
+        return patches;
     }
 
-    public void setJvmOptions( List<String> options )
+    public void setPatches( String patches )
     {
-        this.jvmOptions = options;
+        this.patches = patches;
+    }
+
+    public String getSpecfile()
+    {
+        return specfile;
+    }
+
+    public void setSpecfile( String specfile )
+    {
+        this.specfile = specfile;
+    }
+
+    public List<String> getGoals()
+    {
+        if ( goals == null )
+        {
+            goals = Collections.emptyList();
+        }
+
+        return Collections.unmodifiableList( goals );
+    }
+
+    public void setGoals( List<String> goals )
+    {
+        this.goals = goals;
     }
 
     public List<String> getProfiles()
@@ -117,19 +154,49 @@ public class KojiMavenBuildRequest
         this.profiles = profiles;
     }
 
-    public List<String> getDeps()
+    public List<String> getPackages()
     {
-        if ( deps == null )
+        if ( packages == null )
         {
-            deps = Collections.emptyList();
+            packages = Collections.emptyList();
         }
 
-        return Collections.unmodifiableList( deps );
+        return Collections.unmodifiableList( packages );
     }
 
-    public void setDeps( List<String> deps )
+    public void setPackages( List<String> packages )
     {
-        this.deps = deps;
+        this.packages = packages;
+    }
+
+    public List<String> getJvmOptions()
+    {
+        if ( jvmOptions == null )
+        {
+            jvmOptions = Collections.emptyList();
+        }
+
+        return Collections.unmodifiableList( jvmOptions );
+    }
+
+    public void setJvmOptions( List<String> options )
+    {
+        this.jvmOptions = options;
+    }
+
+    public List<String> getMavenOptions()
+    {
+        if ( mavenOptions == null )
+        {
+            mavenOptions = Collections.emptyList();
+        }
+
+        return Collections.unmodifiableList( mavenOptions );
+    }
+
+    public void setMavenOptions( List<String> mavenOptions )
+    {
+        this.mavenOptions = mavenOptions;
     }
 
     public Map<String, String> getProperties()
@@ -142,14 +209,90 @@ public class KojiMavenBuildRequest
         return Collections.unmodifiableMap( properties );
     }
 
-    public void setProperties( Map<String,String> properties )
+    public void setProperties( Map<String, String> properties )
     {
         this.properties = properties;
+    }
+
+    public Map<String, String> getEnvs()
+    {
+        if ( envs == null )
+        {
+            envs = Collections.emptyMap();
+        }
+
+        return Collections.unmodifiableMap( envs );
+    }
+
+    public void setEnvs( Map<String, String> envs )
+    {
+        this.envs = envs;
+    }
+
+    public boolean isScratch()
+    {
+        return scratch;
+    }
+
+    public void setScratch( boolean scratch )
+    {
+        this.scratch = scratch;
+    }
+
+    public boolean isSkipTag()
+    {
+        return skipTag;
+    }
+
+    public void setSkipTag( boolean skipTag )
+    {
+        this.skipTag = skipTag;
+    }
+
+    public Integer getRepoId()
+    {
+        return repoId;
+    }
+
+    public void setRepoId( Integer repoId )
+    {
+        this.repoId = repoId;
+    }
+
+    public List<KojiIdOrName> getDeps()
+    {
+        if ( deps == null )
+        {
+            deps = Collections.emptyList();
+        }
+
+        return Collections.unmodifiableList( deps );
+    }
+
+    public void setDeps( List<KojiIdOrName> deps )
+    {
+        this.deps = deps;
     }
 
     @Override
     public String toString()
     {
-        return "KojiMavenBuildRequest{source=" + source + ", target=" + target + ", options=" + jvmOptions + "}";
+        return "KojiMavenBuildRequest{" +
+                "source='" + source + '\'' +
+                ", target='" + target + '\'' +
+                ", patches='" + patches + '\'' +
+                ", specfile='" + specfile + '\'' +
+                ", goals=" + goals +
+                ", profiles=" + profiles +
+                ", packages=" + packages +
+                ", jvmOptions=" + jvmOptions +
+                ", mavenOptions=" + mavenOptions +
+                ", properties=" + properties +
+                ", envs=" + envs +
+                ", scratch=" + scratch +
+                ", skipTag=" + skipTag +
+                ", repoId=" + repoId +
+                ", deps=" + deps +
+                '}';
     }
 }
