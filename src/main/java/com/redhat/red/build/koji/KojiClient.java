@@ -1466,6 +1466,30 @@ public class KojiClient
             }, "Failed to load task info for: %s", taskId );
     }
 
+    public List<KojiTaskInfo> getTaskChildren( int taskId, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            GetTaskChildrenResponse response = xmlrpcClient.call( new GetTaskChildrenRequest( taskId ), GetTaskChildrenResponse.class,
+                                   sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            List<KojiTaskInfo> children = response.getChildren();
+            return children == null ? Collections.emptyList() : children;
+        }, "Failed to load task children for: %s", taskId );
+    }
+
+    public List<KojiTaskInfo> getTaskChildren( int taskId, boolean request, KojiSessionInfo session )
+            throws KojiClientException
+    {
+        return doXmlRpcAndThrow( ()->{
+            GetTaskChildrenResponse response = xmlrpcClient.call( new GetTaskChildrenRequest( taskId, request ), GetTaskChildrenResponse.class,
+                                   sessionUrlBuilder( session ), STANDARD_REQUEST_MODIFIER );
+
+            List<KojiTaskInfo> children = response.getChildren();
+            return children == null ? Collections.emptyList() : children;
+        }, "Failed to load task children for: %s", taskId );
+    }
+
     public KojiTaskRequest getTaskRequest( int taskId, KojiSessionInfo session )
             throws KojiClientException
     {

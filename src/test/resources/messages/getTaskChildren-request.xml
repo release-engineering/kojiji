@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<methodCall>
+    <methodName>getTaskChildren</methodName>
+    <params>
+        <param>
+            <value>
+                <int>12345678</int>
+            </value>
+        </param>
+        <param>
+            <value>
+                <boolean>1</boolean>
+            </value>
+        </param>
+    </params>
+</methodCall>
