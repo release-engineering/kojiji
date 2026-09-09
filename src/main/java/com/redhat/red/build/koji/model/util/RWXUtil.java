@@ -17,6 +17,10 @@ package com.redhat.red.build.koji.model.util;
 
 import org.commonjava.rwx.vocab.Nil;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * Created by ruhan on 1/9/18.
  */
@@ -31,5 +35,36 @@ public final class RWXUtil
     public static boolean isBlankObj( Object xmlrpcObj )
     {
         return ( xmlrpcObj == null ) || ( xmlrpcObj instanceof Nil );
+    }
+
+    public static <T> T getObj( Object xmlrpcObj, Class<T> type )
+    {
+        return !type.isInstance( xmlrpcObj ) ? null : type.cast( xmlrpcObj );
+    }
+
+    public static <T> T getObjFromList( List<?> list, int index, Class<T> type )
+    {
+        return ( list == null || index < 0 || list.size() <= index ) ? null : getObj( list.get( index ), type );
+    }
+
+    public static <T> T getObjFromMap( Map<?, ?> map, String key, Class<T> type )
+    {
+        return map == null ? null : getObj( map.get( key ), type );
+    }
+
+    public static boolean toBoolean( Object xmlrpcObj )
+    {
+        return Boolean.TRUE.equals( xmlrpcObj );
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public static List<String> toStringList( Object xmlrpcObj )
+    {
+        return !( xmlrpcObj instanceof List<?> ) ? null : (List<String>) xmlrpcObj;
+    }
+
+    public static Map<String, String> toStringMap( Object xmlrpcObj )
+    {
+        return !( xmlrpcObj instanceof Map<?, ?> ) ? null : ( (Map<?, ?>) xmlrpcObj ).entrySet().stream().filter( et -> !isBlankObj( et.getValue() ) ).collect( Collectors.toMap( et -> String.valueOf( et.getKey() ), et -> (String) et.getValue() ) );
     }
 }

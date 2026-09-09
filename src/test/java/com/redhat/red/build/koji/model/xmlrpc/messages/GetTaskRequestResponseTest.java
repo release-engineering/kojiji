@@ -16,6 +16,7 @@
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildRequest;
+import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskRequest;
 import org.junit.Test;
@@ -105,10 +106,10 @@ public class GetTaskRequestResponseTest
         List<String> options = mavenBuildRequest.getJvmOptions();
         assertTrue( options.contains( "-Xms512m" ) );
 
-        //assertTrue( mavenBuildRequest.getDeps().contains( "org.uberfire-uberfire-extensions-0.8.0.Final-1" ) );
         boolean hasUberfire = false;
-        for ( String s : mavenBuildRequest.getDeps() )
+        for ( KojiIdOrName dep : mavenBuildRequest.getDeps() )
         {
+            String s = dep.getName();
             assertTrue( s != null );
             if ( s.contains( "org.uberfire-uberfire-extensions-0.8.0.Final-1" ))
             {

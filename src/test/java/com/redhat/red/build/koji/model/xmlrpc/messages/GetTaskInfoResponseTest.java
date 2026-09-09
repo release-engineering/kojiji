@@ -15,15 +15,21 @@
  */
 package com.redhat.red.build.koji.model.xmlrpc.messages;
 
+import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
+import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
+import com.redhat.red.build.koji.model.xmlrpc.KojiTaskRequest;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Map.entry;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -42,11 +48,11 @@ public class GetTaskInfoResponseTest
                       taskInfo.getCreateTime() );
 
         // assert request field which is a list of objects with misc unknown types
-        List<Object> reqeust = taskInfo.getRequest();
-        assertEquals( "git://g.a.e.b.r.c/apache/cxf.git#154e3b7969fcf622aba3fb494b1b11f9215a9173", reqeust.get( 0 ));
-        assertEquals( "jb-eap-7.0-rhel-7-maven-candidate", reqeust.get( 1 ) );
+        List<Object> request = taskInfo.getRequest();
+        assertEquals( "git://g.a.e.b.r.c/apache/cxf.git#154e3b7969fcf622aba3fb494b1b11f9215a9173", request.get( 0 ));
+        assertEquals( "jb-eap-7.0-rhel-7-maven-candidate", request.get( 1 ) );
 
-        Object obj = reqeust.get( 2 );
+        Object obj = request.get( 2 );
         assertTrue( obj instanceof Map );
 
         Map<?, ?> m = (Map<?, ?>) obj;
@@ -54,6 +60,61 @@ public class GetTaskInfoResponseTest
 
         assertEquals( "install", goals.get( 0 ) );
         assertEquals( "javadoc:aggregate-jar", goals.get( 1 ) );
+    }
+
+    @Test
+    public void verifyVsCapturedHttp_maven() throws Exception
+    {
+        GetTaskResponse response = parseCapturedMessage( GetTaskResponse.class, "getTaskInfo-maven-response.xml" );
+        KojiTaskInfo taskInfo = response.getTaskInfo();
+        assertEquals( "maven", taskInfo.getMethod() );
+        KojiMavenBuildRequest request = (KojiMavenBuildRequest) new KojiTaskRequest( taskInfo.getRequest() ).asBuildRequest( taskInfo.getMethod() );
+        assertEquals( "git://example.com/messaging/activemq-artemis.git#2.6.3.jbossorg-00017", request.getScmUrl() );
+        assertEquals( "jb-amq-7-candidate", request.getTarget() );
+        assertEquals( "svn+http://example-svn.com/repos/mead/patches/org.rh-messaging.AMQ7-A-MQ7-parent/activemq-artemis/2.6.3.redhat-00017-1#1234", request.getPatches() );
+        assertThat( request.getProfiles(), equalTo( List.of( "release" ) ) );
+        assertThat( request.getPackages(), equalTo( List.of( "tar", "bzip2", "freetype", "fontconfig" ) ) );
+        assertThat( request.getMavenOptions(), equalTo( List.of( "-pl", "!tests/activemq5-unit-tests" ) ) );
+        assertThat( request.getProperties(), equalTo( Map.ofEntries( entry( "victims.updates", "offline" ),
+                                                                    entry( "xmlUpdate", "artemis-distribution/src/main/assembly/dep.xml://include[starts-with(.\\,'org.apache.tomcat')]:org.jboss.spec.javax.servlet:jboss-servlet-api_3.1_spec" ),
+                                                                    entry( "strictAlignment", "true" ),
+                                                                    entry( "dependencyExclusion.org.jboss.logmanager:jboss-logmanager@*", "2.0.7.Final-redhat-1" ),
+                                                                    entry( "enforceSkip", "false" ),
+                                                                    entry( "dependencyExclusion.org.apache.qpid:qpid-jms-client@*", "0.37.0.redhat-00001" ),
+                                                                    entry( "npmRegistryURL", "http://npm.example.com:12345" ),
+                                                                    entry( "npmDownloadRoot", "http://example.com/guest/staging/fuse/npm/dist/npm/" ),
+                                                                    entry( "dependencyExclusion.commons-beanutils:commons-beanutils@*", "1.9.3.redhat-1" ),
+                                                                    entry( "dependencyExclusion.org.apache.activemq.rest:artemis-rest@*", "2.6.3.redhat-00017" ),
+                                                                    entry( "skipTests", "true" ),
+                                                                    entry( "dependencyExclusion.com.github.sevntu.checkstyle:sevntu-checkstyle-maven-plugin@*", "1.21.0.redhat-2" ),
+                                                                    entry( "dependencyExclusion.org.jboss.slf4j:slf4j-jboss-logmanager@*", "1.0.3.GA-redhat-2" ),
+                                                                    entry( "pluginManagement", "org.jboss.amq7.component.management:amq7-parent:7.1.0.redhat-2" ),
+                                                                    entry( "dependencyExclusion.io.netty:netty-all@*", "4.1.28.Final-redhat-00001" ),
+                                                                    entry( "overrideTransitive", "false" ),
+                                                                    entry( "dependencyExclusion.org.apache.qpid:proton-j@*", "0.29.0.redhat-00001" ),
+                                                                    entry( "dependencyExclusion.org.apache.activemq:activemq-amqp@*", "5.11.0.redhat-630371" ),
+                                                                    entry( "dependencyExclusion.org.apache.activemq:activemq-client@*", "5.11.0.redhat-630371" ),
+                                                                    entry( "jsonUpdate", "artemis-website/npm-shrinkwrap.json:$..resolved:" ),
+                                                                    entry( "dependencyExclusion.org.jboss.logging:jboss-logging@*", "3.3.1.Final-redhat-1" ),
+                                                                    entry( "dependencyExclusion.org.hdrhistogram:HdrHistogram@*", "2.1.9.redhat-2" ),
+                                                                    entry( "versionOverride", "2.6.3" ),
+                                                                    entry( "dependencyExclusion.org.jolokia:*@*", "1.4.0.redhat-1" ),
+                                                                    entry( "dependencyExclusion.org.jboss.resteasy:*@*", "3.0.24.Final-redhat-1" ),
+                                                                    entry( "dependencyExclusion.com.google.guava:*@*", "20.0.0.redhat-1" ),
+                                                                    entry( "repoReportingRemoval", "true" ),
+                                                                    entry( "dependencyManagement", "org.jboss.amq7.component.management:amq7-dependency-management-all:7.1.0.redhat-2" ),
+                                                                    entry( "dependencyExclusion.org.slf4j:*@*", "1.7.25.redhat-00001" ),
+                                                                    entry( "dependencyRelocations.org.apache.tomcat:tomcat-servlet-api@org.jboss.spec.javax.servlet:jboss-servlet-api_3.1_spec", "1.0.0.Final-redhat-1" ),
+                                                                    entry( "nodeDownloadRoot", "http://example.com/guest/staging/fuse/npm/dist/" ),
+                                                                    entry( "versionSuffix", "redhat-00017" ),
+                                                                    entry( "dependencyExclusion.io.hawt:*@*", "1.4.0.redhat-630371" ),
+                                                                    entry( "dependencyExclusion.org.jgroups:jgroups@*", "3.6.13.Final-redhat-2" ),
+                                                                    entry( "rat.numUnapprovedLicenses", "2" ) ) ) );
+        assertThat( request.isScratch(), equalTo( true ) );
+        List<KojiIdOrName> deps = request.getDeps();
+        assertThat( deps.size(), equalTo( 1 ) );
+        assertThat( deps.get( 0 ).getId(), notNullValue() );
+        assertThat( deps.get( 0 ).getName(), nullValue() );
     }
 
     @Test
