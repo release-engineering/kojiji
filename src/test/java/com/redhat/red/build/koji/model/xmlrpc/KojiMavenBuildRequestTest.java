@@ -50,9 +50,9 @@ public class KojiMavenBuildRequestTest
                                                   entry( "scratch", true ),
                                                   entry( "skip_tag", true ),
                                                   entry( "repo_id", 1234 ) );
-        KojiMavenBuildRequest request = (KojiMavenBuildRequest) new KojiTaskRequest( List.of( SCM_URL, TARGET, opts ) ).asBuildRequest( "maven" );
+        KojiMavenBuildRequest request = (KojiMavenBuildRequest) new KojiTaskRequest( List.of( SCM_URL, TARGET, opts ) ).asBuildRequest( KojiTaskMethod.maven );
         assertThat( request.getScmUrl(), equalTo( SCM_URL ) );
-        assertThat( request.getTarget(), equalTo( TARGET ) );
+        assertThat( request.getTarget().getName(), equalTo( TARGET ) );
         assertThat( request.getPatches(), equalTo( PATCHES_URL ) );
         assertThat( request.getSpecfile(), equalTo( SPECFILE_URL ) );
         assertThat( request.getGoals(), equalTo( List.of( "install", "javadoc:aggregate-jar" ) ) );
@@ -70,7 +70,7 @@ public class KojiMavenBuildRequestTest
     @Test
     public void testEmptyOpts()
     {
-        KojiMavenBuildRequest request = (KojiMavenBuildRequest) new KojiTaskRequest( List.of( SCM_URL, TARGET ) ).asBuildRequest( "maven" );
+        KojiMavenBuildRequest request = (KojiMavenBuildRequest) new KojiTaskRequest( List.of( SCM_URL, TARGET ) ).asBuildRequest( KojiTaskMethod.maven );
         assertThat( request.getScmUrl(), equalTo( SCM_URL ) );
         assertThat( request.getProperties(), equalTo( Map.of() ) );
         assertThat( request.getGoals(), equalTo( List.of() ) );

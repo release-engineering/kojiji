@@ -246,6 +246,21 @@ public class KojiTaskInfo
         this.request = request;
     }
 
+    public KojiBuildRequest asBuildRequest()
+    {
+        if ( request == null )
+        {
+            throw new IllegalStateException("Request is null" );
+        }
+
+        if ( method == null )
+        {
+            throw new IllegalStateException( "Method is null" );
+        }
+
+        return new KojiTaskRequest( request ).asBuildRequest( KojiTaskMethod.fromString( method ) );
+    }
+
     @Override
     public boolean equals( Object o )
     {

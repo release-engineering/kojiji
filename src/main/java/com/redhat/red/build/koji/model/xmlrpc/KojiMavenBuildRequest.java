@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.redhat.red.build.koji.model.util.RWXUtil.getObjFromList;
 import static com.redhat.red.build.koji.model.util.RWXUtil.getObjFromMap;
 import static com.redhat.red.build.koji.model.util.RWXUtil.isBlankObj;
 import static com.redhat.red.build.koji.model.util.RWXUtil.toBoolean;
@@ -59,34 +60,26 @@ public class KojiMavenBuildRequest
     {
         super( request );
 
-        if ( request == null || request.isEmpty() )
+        Map<?, ?> map = getObjFromList( request, 2, Map.class );
+
+        if ( map == null )
         {
             return;
         }
 
-        if ( request.size() >= 3 )
-        {
-            Object request2 = request.get( 2 );
-
-            if ( request2 instanceof Map<?, ?> )
-            {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> map = (Map<String, Object>) request2;
-                patches = getObjFromMap( map, "patches", String.class );
-                specfile = getObjFromMap( map, "specfile", String.class );
-                goals = toStringList( map.get( "goals" ) );
-                profiles = toStringList( map.get( "profiles" ) );
-                packages = toStringList( map.get( "packages" ) );
-                jvmOptions = toStringList( map.get( "jvm_options" ) );
-                mavenOptions = toStringList( map.get( "maven_options" ) );
-                properties = toStringMap( map.get( "properties" ) );
-                envs = toStringMap( map.get( "envs" ) );
-                scratch = toBoolean( map.get( "scratch" ) );
-                skipTag = toBoolean( map.get( "skip_tag" ) );
-                repoId = getObjFromMap( map, "repo_id", Integer.class );
-                deps = toIdOrNameList( map.get( "deps" ) );
-            }
-        }
+        patches = getObjFromMap( map, "patches", String.class );
+        specfile = getObjFromMap( map, "specfile", String.class );
+        goals = toStringList( map.get( "goals" ) );
+        profiles = toStringList( map.get( "profiles" ) );
+        packages = toStringList( map.get( "packages" ) );
+        jvmOptions = toStringList( map.get( "jvm_options" ) );
+        mavenOptions = toStringList( map.get( "maven_options" ) );
+        properties = toStringMap( map.get( "properties" ) );
+        envs = toStringMap( map.get( "envs" ) );
+        scratch = toBoolean( map.get( "scratch" ) );
+        skipTag = toBoolean( map.get( "skip_tag" ) );
+        repoId = getObjFromMap( map, "repo_id", Integer.class );
+        deps = toIdOrNameList( map.get( "deps" ) );
     }
 
     private static List<KojiIdOrName> toIdOrNameList( Object xmlrpcObj )
@@ -279,7 +272,7 @@ public class KojiMavenBuildRequest
     {
         return "KojiMavenBuildRequest{" +
                 "source='" + source + '\'' +
-                ", target='" + target + '\'' +
+                ", target=" + target +
                 ", patches='" + patches + '\'' +
                 ", specfile='" + specfile + '\'' +
                 ", goals=" + goals +

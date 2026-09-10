@@ -1151,7 +1151,18 @@ public class KojiClient
     public List<KojiRpmInfo> listBuildRPMs( String buildName, KojiSessionInfo session )
             throws KojiClientException
     {
-        return listBuildRPMs( KojiIdOrName.getFor( buildName ), session );
+        KojiIdOrName build;
+
+        try
+        {
+            build = new KojiIdOrName( Integer.parseInt( buildName ) );
+        }
+        catch ( NumberFormatException e )
+        {
+            build = new KojiIdOrName( buildName );
+        }
+
+        return listBuildRPMs( build, session );
     }
 
     public List<KojiRpmInfo> listBuildRPMs( KojiIdOrName build, KojiSessionInfo session )

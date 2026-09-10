@@ -18,6 +18,7 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 import com.redhat.red.build.koji.model.xmlrpc.KojiBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildRequest;
+import com.redhat.red.build.koji.model.xmlrpc.KojiTaskMethod;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskRequest;
 import org.junit.Test;
 
@@ -97,9 +98,9 @@ public class GetTaskRequestResponseTest
 
         KojiTaskRequest kojiTaskRequest = new KojiTaskRequest( parsed.getTaskRequestInfo() );
 
-        KojiBuildRequest buildRequest = kojiTaskRequest.asBuildRequest();
+        KojiBuildRequest buildRequest = kojiTaskRequest.asBuildRequest( KojiTaskMethod.maven );
         assertEquals( source, buildRequest.getSource());
-        assertEquals( target, buildRequest.getTarget() );
+        assertEquals( target, buildRequest.getTarget().getName() );
 
         KojiMavenBuildRequest mavenBuildRequest = kojiTaskRequest.asMavenBuildRequest();
         assertEquals( source, mavenBuildRequest.getScmUrl() );

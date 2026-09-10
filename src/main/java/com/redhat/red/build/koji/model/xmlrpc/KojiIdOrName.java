@@ -18,6 +18,10 @@ package com.redhat.red.build.koji.model.xmlrpc;
 import com.redhat.red.build.koji.model.converter.KojiIdOrNameConverter;
 import org.commonjava.rwx.anno.Converter;
 
+import java.util.Map;
+
+import static com.redhat.red.build.koji.model.util.RWXUtil.getObjFromMap;
+
 /**
  * Created by jdcasey on 1/15/16.
  */
@@ -30,23 +34,26 @@ public class KojiIdOrName
 
     public static KojiIdOrName getFor( Object value )
     {
+        if ( value instanceof Map<?, ?> )
+        {
+            Map<?, ?> map = (Map<?, ?>) value;
+
+            if ( map.containsKey( "id" ) )
+            {
+                Integer id = getObjFromMap( map, "id", Integer.class );
+                return id == null ? null : new KojiIdOrName( id );
+            }
+
+            String name = getObjFromMap( map, "name", String.class );
+            return name == null ? null : new KojiIdOrName( name );
+        }
+
         if ( value instanceof Integer )
         {
             return new KojiIdOrName( (Integer) value );
         }
 
-        KojiIdOrName result;
-        try
-        {
-            int i = Integer.parseInt( value.toString() );
-            result = new KojiIdOrName( i );
-        }
-        catch ( NumberFormatException e )
-        {
-            result = new KojiIdOrName( value.toString() );
-        }
-
-        return result;
+        return value instanceof String ? new KojiIdOrName( (String) value ) : null;
     }
 
     public KojiIdOrName()
@@ -86,9 +93,6 @@ public class KojiIdOrName
     @Override
     public String toString()
     {
-        return "KojiIdOrName{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
-                '}';
+        return String.valueOf( id == null ? name : id );
     }
 }
