@@ -49,33 +49,26 @@ public class KojiTaskRequest
         return this;
     }
 
+    @Deprecated
     public KojiBuildRequest asBuildRequest()
     {
-        KojiBuildRequest buildRequest = new KojiBuildRequest( request );
-        return buildRequest;
+        return asBuildRequest( KojiTaskMethod.build );
     }
 
     public KojiMavenBuildRequest asMavenBuildRequest()
     {
-        KojiMavenBuildRequest mavenBuildRequest = new KojiMavenBuildRequest( request );
-        return mavenBuildRequest;
+        return new KojiMavenBuildRequest( request );
     }
 
+    public KojiBuildRequest asBuildRequest( KojiTaskMethod method )
+    {
+        return method.asBuildRequest( request );
+    }
+
+    @Deprecated
     public KojiBuildRequest asBuildRequest( String method )
     {
-        if ( method.equals( "build" ) )
-        {
-            KojiBuildRequest buildRequest = new KojiBuildRequest( request );
-            return buildRequest;
-        }
-
-        if ( method.equals( "maven" ) )
-        {
-            KojiMavenBuildRequest mavenBuildRequest = new KojiMavenBuildRequest( request );
-            return mavenBuildRequest;
-        }
-
-        return null;
+        return asBuildRequest( KojiTaskMethod.fromString( method ) );
     }
 
     @Override

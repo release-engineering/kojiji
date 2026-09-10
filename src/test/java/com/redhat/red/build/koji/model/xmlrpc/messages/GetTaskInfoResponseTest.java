@@ -18,7 +18,6 @@ package com.redhat.red.build.koji.model.xmlrpc.messages;
 import com.redhat.red.build.koji.model.xmlrpc.KojiIdOrName;
 import com.redhat.red.build.koji.model.xmlrpc.KojiMavenBuildRequest;
 import com.redhat.red.build.koji.model.xmlrpc.KojiTaskInfo;
-import com.redhat.red.build.koji.model.xmlrpc.KojiTaskRequest;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -68,9 +67,9 @@ public class GetTaskInfoResponseTest
         GetTaskResponse response = parseCapturedMessage( GetTaskResponse.class, "getTaskInfo-maven-response.xml" );
         KojiTaskInfo taskInfo = response.getTaskInfo();
         assertEquals( "maven", taskInfo.getMethod() );
-        KojiMavenBuildRequest request = (KojiMavenBuildRequest) new KojiTaskRequest( taskInfo.getRequest() ).asBuildRequest( taskInfo.getMethod() );
+        KojiMavenBuildRequest request = (KojiMavenBuildRequest) taskInfo.asBuildRequest();
         assertEquals( "git://example.com/messaging/activemq-artemis.git#2.6.3.jbossorg-00017", request.getScmUrl() );
-        assertEquals( "jb-amq-7-candidate", request.getTarget() );
+        assertEquals( "jb-amq-7-candidate", request.getTarget().getName() );
         assertEquals( "svn+http://example-svn.com/repos/mead/patches/org.rh-messaging.AMQ7-A-MQ7-parent/activemq-artemis/2.6.3.redhat-00017-1#1234", request.getPatches() );
         assertThat( request.getProfiles(), equalTo( List.of( "release" ) ) );
         assertThat( request.getPackages(), equalTo( List.of( "tar", "bzip2", "freetype", "fontconfig" ) ) );

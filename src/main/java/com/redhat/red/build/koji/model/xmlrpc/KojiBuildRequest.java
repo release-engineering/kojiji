@@ -17,31 +17,27 @@ package com.redhat.red.build.koji.model.xmlrpc;
 
 import java.util.List;
 
+import static com.redhat.red.build.koji.model.util.RWXUtil.getObjFromList;
+
 public class KojiBuildRequest
 {
     protected String source;
 
-    protected String target;
+    protected KojiIdOrName target;
+
+    protected KojiBuildRequest()
+    {
+    }
 
     public KojiBuildRequest( List<Object> request )
     {
-        if ( request == null || request.isEmpty() )
-        {
-            return;
-        }
+        this.source = getObjFromList( request, 0, String.class );
+        this.target = getTargetFromList( request, 1 );
+    }
 
-        if ( request.size() >= 2 )
-        {
-            if ( request.get( 0 ) instanceof String )
-            {
-                this.source = (String) request.get( 0 );
-            }
-
-            if ( request.get( 1 ) instanceof String )
-            {
-                this.target = (String) request.get( 1 );
-            }
-        }
+    protected static KojiIdOrName getTargetFromList( List<?> request, int index )
+    {
+        return KojiIdOrName.getFor( getObjFromList( request, index, Object.class ) );
     }
 
     public String getSource()
@@ -54,12 +50,12 @@ public class KojiBuildRequest
         this.source = source;
     }
 
-    public String getTarget()
+    public KojiIdOrName getTarget()
     {
         return target;
     }
 
-    public void setTarget( String target )
+    public void setTarget( KojiIdOrName target )
     {
         this.target = target;
     }
