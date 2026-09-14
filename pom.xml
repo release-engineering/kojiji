@@ -485,4 +485,13 @@ docker.containers.koji-hub.ports.443/tcp.port=${koji-hub-https-port}
             </build>
         </profile>
     </profiles>
+
+    <repositories>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+  </repositories>
 </project>
