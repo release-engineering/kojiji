@@ -44,7 +44,7 @@
         <rwxVersion>2.5</rwxVersion>
         <httpcVersion>4.4.16</httpcVersion>
         <httpclientVersion>4.5.14</httpclientVersion>
-        <atlasVersion>1.2.2</atlasVersion>
+        <atlasVersion>1.2.3</atlasVersion>
         <mockitoVersion>5.23.0</mockitoVersion>
         <logbackVersion>1.6.3</logbackVersion>
         <junitVersion>4.13.2</junitVersion>
