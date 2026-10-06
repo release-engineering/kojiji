@@ -51,7 +51,7 @@
         <hamcrestVersion>3.0</hamcrestVersion>
         <jacksonVersion>2.22.2</jacksonVersion>
         <slf4jVersion>2.0.19</slf4jVersion>
-        <mavenVersion>3.9.16</mavenVersion>
+        <mavenVersion>3.10.0</mavenVersion>
 
         <plugin.jacoco.version>0.8.15</plugin.jacoco.version>
         <plugin.docker-maven.version>0.49.0</plugin.docker-maven.version>
