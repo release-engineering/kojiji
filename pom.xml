@@ -45,7 +45,7 @@
         <httpcVersion>4.4.16</httpcVersion>
         <httpclientVersion>4.5.14</httpclientVersion>
         <atlasVersion>1.2.3</atlasVersion>
-        <mockitoVersion>5.23.0</mockitoVersion>
+        <mockitoVersion>5.24.0</mockitoVersion>
         <logbackVersion>1.6.4</logbackVersion>
         <junitVersion>4.13.2</junitVersion>
         <hamcrestVersion>3.0</hamcrestVersion>
