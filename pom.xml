@@ -46,7 +46,7 @@
         <httpclientVersion>4.5.14</httpclientVersion>
         <atlasVersion>1.2.3</atlasVersion>
         <mockitoVersion>5.24.0</mockitoVersion>
-        <logbackVersion>1.6.4</logbackVersion>
+        <logbackVersion>1.6.5</logbackVersion>
         <junitVersion>4.13.2</junitVersion>
         <hamcrestVersion>3.0</hamcrestVersion>
         <jacksonVersion>2.22.3</jacksonVersion>
