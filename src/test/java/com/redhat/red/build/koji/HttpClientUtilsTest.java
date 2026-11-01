@@ -44,9 +44,7 @@ public class HttpClientUtilsTest
         final InputStream inputStream = Mockito.mock( InputStream.class );
 
         Mockito.when( client.execute( request ) ).thenReturn( response );
-        Mockito.when( response.getEntity() ).thenReturn( entity );
-        Mockito.when( entity.isStreaming() ).thenReturn( Boolean.TRUE );
-        Mockito.when( entity.getContent() ).thenReturn( inputStream );
+        setupHttpEntityIsStreamingAndGetEntityAndGetContentStubs(response, entity, inputStream);
 
         closeQuietly( client );
         Mockito.verify( inputStream, never() ).close();
@@ -64,9 +62,7 @@ public class HttpClientUtilsTest
         final HttpEntity entity = Mockito.mock( HttpEntity.class );
         final InputStream inputStream = Mockito.mock( InputStream.class );
 
-        Mockito.when( response.getEntity() ).thenReturn( entity );
-        Mockito.when( entity.isStreaming() ).thenReturn( Boolean.TRUE );
-        Mockito.when( entity.getContent() ).thenReturn( inputStream );
+        setupHttpEntityIsStreamingAndGetEntityAndGetContentStubs(response, entity, inputStream);
 
         response.close();
         Mockito.verify( inputStream, never() ).close();
@@ -84,12 +80,16 @@ public class HttpClientUtilsTest
         final HttpEntity entity = Mockito.mock( HttpEntity.class );
         final InputStream inputStream = Mockito.mock( InputStream.class );
 
-        Mockito.when( response.getEntity() ).thenReturn( entity );
-        Mockito.when( entity.isStreaming() ).thenReturn( Boolean.TRUE );
-        Mockito.when( entity.getContent() ).thenReturn( inputStream );
+        setupHttpEntityIsStreamingAndGetEntityAndGetContentStubs(response, entity, inputStream);
 
         closeQuietly( response );
         Mockito.verify( inputStream ).close();
         Mockito.verify( response ).close();
+    }
+
+    private void setupHttpEntityIsStreamingAndGetEntityAndGetContentStubs(CloseableHttpResponse response, HttpEntity entity, InputStream inputStream) throws Exception {
+        Mockito.when(response.getEntity()).thenReturn(entity);
+        Mockito.when(entity.isStreaming()).thenReturn(Boolean.TRUE);
+        Mockito.when(entity.getContent()).thenReturn(inputStream);
     }
 }
